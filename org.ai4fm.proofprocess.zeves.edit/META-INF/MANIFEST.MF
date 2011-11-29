@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.ai4fm.proofprocess.zeves.edit;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Bundle-Activator: org.ai4fm.proofprocess.zeves.provider.ZEvesProofProcessEditPlugin$Implementation
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.ai4fm.proofprocess.zeves.provider
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.edit;visibility:=reexport,
+ org.ai4fm.proofprocess;visibility:=reexport,
+ org.ai4fm.proofprocess.edit;visibility:=reexport,
+ org.ai4fm.proofprocess.zeves;visibility:=reexport
+Bundle-ActivationPolicy: lazy

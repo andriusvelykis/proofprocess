@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="proofprocess"
+    nsURI="http://org/ai4fm/proofprocess/v0" nsPrefix="proof">
+  <eClassifiers xsi:type="ecore:EClass" name="Attempt" abstract="true">
+    <eOperations name="getAttempts" upperBound="-1" eType="#//Attempt"/>
+    <eOperations name="getCompositionType" lowerBound="1" eType="#//CompositionType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intent" lowerBound="1"
+        eType="#//Intent"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Intent">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProofObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
+        eType="#//ProofProperty"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="content" lowerBound="1"
+        eType="#//ProofReference" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProofProperty">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProofReference" abstract="true" interface="true">
+    <eOperations name="getText" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AttemptSet">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attempts" upperBound="-1"
+        eType="#//AttemptGroup" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="CompositionType">
+    <eLiterals name="SEQUENTIAL"/>
+    <eLiterals name="PARALLEL" value="1" literal="PARALLEL"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AttemptGroup" eSuperTypes="#//Attempt">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="compositionType" lowerBound="1"
+        eType="#//CompositionType" defaultValueLiteral="SEQUENTIAL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attempts" upperBound="-1"
+        eType="#//Attempt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contained" upperBound="-1"
+        eType="#//Attempt" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AttemptEntry" eSuperTypes="#//Attempt">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="content" lowerBound="1"
+        eType="#//ProofReference" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" lowerBound="1"
+        upperBound="-1" eType="#//ProofObject" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputs" upperBound="-1"
+        eType="#//ProofObject" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.ai4fm.proofprocess.zeves.ui.views.ProofProcessView"
+            id="org.ai4fm.proofprocess.zeves.ui.proofProcessView"
+            name="Proof Process"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.ai4fm.proofprocess.zeves.ui.ZEvesProofUIPlugin">
+      </startup>
+   </extension>
+
+</plugin>
