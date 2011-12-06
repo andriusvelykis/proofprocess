@@ -6,7 +6,7 @@
   \SECTION proofprocess \parents standard\_toolkit
 \end{zsection}
 
-\newcommand{\todo}[1]{[\mbox{\textbf{TODO:~#1}}]}
+\newcommand{\todo}[1]{\[\mbox{\textbf{TODO:~#1}}\]}
 
 \begin{itemize}
 	\item TERM: abstract notion of terms, maybe use Mural's indices if needed
@@ -14,12 +14,14 @@
 	\item PID: gives a unique id to proof reference. \todo{undecided if for pointer to proof step or to what?}
 	\item NAME: name is a ``pointer'' usually from a theorem/conjecture name to be used for various purposes.
 	\item INTENT: the WhyM tags
+	\item EVIDENCE: abstract type for evidence-based proof results. Use a mapping for ZEves/Isabelle/ETC
+	\item PROOSCRIPT: like name, it's a string, but could be realised as a free-type for proof language involved?
+		e.g., $PS ::= Uses \ldata NAME \rdata | Apply \ldata NAME \cross TERM \rdata$ and so on.
 \end{itemize}
 \begin{zed}
-    [TERM, LOC, PID, NAME, INTENT, TEXT]
+    [TERM, LOC, PID, NAME, INTENT, TEXT, EVIDENCE, PROOFSCRIPT]
     \\
-    % could have more structure as a constructor: or a schema where you could create a instantiation of the proof tag
-    ProofTag ::= Use | Apply
+    ZEvesThmUsageTag ::= Use | Rule | GRule | FRule
 \end{zed}
 
 \begin{itemize}
@@ -42,7 +44,7 @@
 	goal: TERM \\
 	source: LOC \\
 	pid: PID \\
-	evidence: NAME \pfun \power~ProofTag
+	evidence: EVIDENCE
 \end{schema}
 \begin{description}
 	\item we are seeing this as the local state of an overall proof attempt that leads to the complete proof of involved goals.
@@ -55,19 +57,88 @@
 		the underlying details.
 \end{description}
 
+\begin{itemize}
+	\item For ZEves, the evidence needed is just the complete proof command name as a proof script
+	\item The lemmas used with the appropriate usage tag
+\end{itemize}
+\begin{schema}{ZEvesEvidence}
+	proofCommand: PROOFSCRIPT \\
+	usedLemmas: NAME \pfun ZEvesThmUsageTag
+\end{schema}
+%
+The next function maps all evidence to a uniquely determined $ZEvesEvidence$ schema.
+This makes the $ProofRef$ above ZEves specific, ex:
+%
+\[
+	ProofRef \implies zeves\_evidence~(evidence)
+\]
+% 
+and then I get the ZEves' specific proof evidence. Similarly for others. The existence
+of such a function is taken as given. It might not need to be bijective, though
+%
+\begin{axdef}
+	zeves\_evidence: EVIDENCE \bij ZEvesEvidence
+\end{axdef}
+%
+\begin{schema}{ZEvesProofRef}
+   ProofRef \\
+   ZEvesEvidence
+\where
+   zeves\_evidence~(evidence) = \theta ZEvesEvidence
+\end{schema}
+
 $INTENT$ might be instantiated to more concrete values/types later on.
 \begin{schema}{Intent}
 	tag: INTENT \\
 	desc: TEXT
 \end{schema}
 
+\begin{schema}{ProofInfo}
+	Intent
+	\\
+	% some more stuff
+\end{schema}
+
+To represent attempts, we describe a proof tree type:
+\begin{itemize}
+	\item leafs contain a proof reference --- to be specialised towards different tools
+	\item nodes encode the ``language'' involving composition (as $\seq_1$) and parallelism (as $\power_1$)
+		e.g., $\langle \{ PT1, PT2 \}, \{ PT3 \} \rangle$ is the sequential composition of proof trees within
+			each set in parallel like  (PT1 || PT2) ; PT3.
+	\item both have the corresponding intent that lead to what they generate
+	\item \todo{We also had this $\seq_1~(\bag_1~ProofTree)$ for the case where $P1 || P1$}
+\end{itemize}
+\begin{zed}
+	% nice but limiting in the possible linguistics possibilities
+	ProofTree0 ::= leaf0 \ldata ProofRef \cross ProofInfo \rdata \\
+			\t1 | node0 \ldata \seq_1~(\power_1~ProofTree0) \cross ProofInfo \rdata 
+	\\
+	% for optional intent? Or just use null for it axiomatically?
+	OptPI ::= NonePI | Some \ldata ProofInfo \rdata
+	\\
+	ProofTree ::= Leaf \ldata ProofRef \cross OptPI \rdata \\ % or just ProofInto? 
+			\t1 | Seq \ldata (ProofTree \cross ProofTree) \cross OptPI \rdata \\
+			\t1 | Par \ldata (ProofTree \cross ProofTree) \cross OptPI \rdata \\
+			\t1 | Decor \ldata ProofTree \cross OptPI \rdata \\ % useful for multi-layered intent
+			%\t1 | whatever else....	
+	\\
+	ProofStatus ::= Axiom | Ignore | Qed | Unfinished
+	\\
+	AttemptKind ::= Blind | Guided | Because \ldata ProofTree \rdata | Clue \ldata ProofTree \rdata
+\end{zed}
+
 \begin{schema}{Attempt}
 	intent: Intent \\
-	desc: TEXT
+	desc: TEXT \\
+	kind: AttemptKind \\
+	pt: ProofTree
 \end{schema}
 
 \begin{schema}{Proof}
-		
+	atts: \seq_1~Attempt \\
+	pstatus: ProofStatus \\
+	label: NAME \\
+	goal: TERM
 \end{schema}
 
 TODO/TOTHINK
