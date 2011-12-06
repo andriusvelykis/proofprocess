@@ -1,0 +1,77 @@
+\documentclass{article}
+\usepackage{czt}
+
+\begin{document}
+\begin{zsection}
+  \SECTION proofprocess \parents standard\_toolkit
+\end{zsection}
+
+\newcommand{\todo}[1]{[\mbox{\textbf{TODO:~#1}}]}
+
+\begin{itemize}
+	\item TERM: abstract notion of terms, maybe use Mural's indices if needed
+	\item LOC: like CZT LocAnn (e.g., file name, start/end char position, line/col number, etc)
+	\item PID: gives a unique id to proof reference. \todo{undecided if for pointer to proof step or to what?}
+	\item NAME: name is a ``pointer'' usually from a theorem/conjecture name to be used for various purposes.
+	\item INTENT: the WhyM tags
+\end{itemize}
+\begin{zed}
+    [TERM, LOC, PID, NAME, INTENT, TEXT]
+    \\
+    % could have more structure as a constructor: or a schema where you could create a instantiation of the proof tag
+    ProofTag ::= Use | Apply
+\end{zed}
+
+\begin{itemize}
+	\item goal: an abstract reference to what's being proved. 
+		hopefully there will be no need (or at least a controlled need) for knowing the underlying structure
+		
+	\item source: might be useful later for refinement when involving logging
+	
+	\item pid: uniqueness (e.g., same goal and evidence but for different proof cases)
+	
+	\item evidence: mapping from pointer (NAME) to proof tag
+		depending on the tool/technique involved, different maps from NAME to proof reference or lemma database or tactics etc
+		can be used to see what kind of evidence that name refers to. The proof tag result is a set of markers to say how was
+		it possible to get to the goal? Or should we have two goals: original and changed through the chain of evidence? 
+		
+		in ZEves' case, the evidence map will be the used lemma names mapped to the tactics they've applied (e.g., use/apply/pbr/etc).
+		\todo{Somewhere else, there is another map saying what kind of lemma each of these names were (E.g., rule, frule, grule, etc).}		
+\end{itemize}
+\begin{schema}{ProofRef}
+	goal: TERM \\
+	source: LOC \\
+	pid: PID \\
+	evidence: NAME \pfun \power~ProofTag
+\end{schema}
+\begin{description}
+	\item we are seeing this as the local state of an overall proof attempt that leads to the complete proof of involved goals.
+		there might be some needed assumption about how (changing) goals get to match how the prover handles them.
+	
+	\item \todo{what is this akin to what in WhyM.vdmsl? Conjecture to some extent?}
+	
+	\item in a way we are distancing ourselves a bit from WhyM here --- we are trying to bridge the two, given one is closer to
+		domain modelling, the other to the actual (EMF) implementation. Hopefully they will match/agree in principle, if not in
+		the underlying details.
+\end{description}
+
+$INTENT$ might be instantiated to more concrete values/types later on.
+\begin{schema}{Intent}
+	tag: INTENT \\
+	desc: TEXT
+\end{schema}
+
+\begin{schema}{Attempt}
+	intent: Intent \\
+	desc: TEXT
+\end{schema}
+
+\begin{schema}{Proof}
+		
+\end{schema}
+
+TODO/TOTHINK
+* duplicate attempts (with the same proof script): ask the user if this is just a replay or a fresh new attempt. assume it's
+  replay, leave the user to choose/config it
+
+\end{document}
