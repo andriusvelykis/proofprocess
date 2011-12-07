@@ -8,6 +8,12 @@
 
 \newcommand{\todo}[1]{\[\mbox{\textbf{TODO:~#1}}\]}
 
+From \textsf{WhyM.vdmsl}, we are leaving out theory, conjecture, definition, context and focusing here 
+on the $Attempt$ and $Proof$ strcutures only, in so far as determining the necessary annotations to go
+around the actual proof within different provers. These contexts might be needed and shall be theorem
+prover specific (e.g., see EVIDENCE below). For definition (or indeed TERMs), we might need to have 
+it explicit here (e.g., even if with mural's indices like structure).
+
 \begin{itemize}
 	\item TERM: abstract notion of terms, maybe use Mural's indices if needed
 	\item LOC: like CZT LocAnn (e.g., file name, start/end char position, line/col number, etc)
@@ -92,11 +98,33 @@ $INTENT$ might be instantiated to more concrete values/types later on.
 	tag: INTENT \\
 	desc: TEXT
 \end{schema}
-
+%
+Proof info is the intent behind some part of the attempt plus anything
+else that might become relevant/necessary.
+%
 \begin{schema}{ProofInfo}
 	Intent
 	\\
 	% some more stuff
+\end{schema}
+%
+Proof properties might have in/out parameters. These properties are like
+$commutes(Term1, Term2)$ or $sums(in2, in2, out4)$. They are boolean-valued
+uninterpreted functions(?) with parameters. We tag the parameters with different
+structures needed.
+%
+\begin{zed}
+	PropParam ::= NameParam \ldata NAME \rdata \\
+			\t1	| TermParam \ldata TERM \rdata %\\
+			%\t1 | ????
+\end{zed}
+%
+The property then is its tag and in/out params. 
+\todo{where to attach them? At attempt or at yet to be defined "Definition" schema?}.
+%
+\begin{schema}{Property}
+	tag: NAME \\
+	in, out: \seq~PropParam
 \end{schema}
 
 To represent attempts, we describe a proof tree type:
@@ -107,6 +135,12 @@ To represent attempts, we describe a proof tree type:
 			each set in parallel like  (PT1 || PT2) ; PT3.
 	\item both have the corresponding intent that lead to what they generate
 	\item \todo{We also had this $\seq_1~(\bag_1~ProofTree)$ for the case where $P1 || P1$}
+	\item ...
+	\item To enable more flexibility, we describe the type as a language with seq/par/leaf, and a new one 
+		called decoarator: it decorates a tree with extra intent (e.g., when wanting to group things together
+		or when wanting to have two intent info for a leaf.
+		
+	\item from WhyM, get attempt kind as a marked for the way the attempt is.
 \end{itemize}
 \begin{zed}
 	% nice but limiting in the possible linguistics possibilities
@@ -120,20 +154,37 @@ To represent attempts, we describe a proof tree type:
 			\t1 | Seq \ldata (ProofTree \cross ProofTree) \cross OptPI \rdata \\
 			\t1 | Par \ldata (ProofTree \cross ProofTree) \cross OptPI \rdata \\
 			\t1 | Decor \ldata ProofTree \cross OptPI \rdata \\ % useful for multi-layered intent
+			%\t1 | Group \ldata \power~ProofTree \cross OptPI \rdata \\ ??? but not ProofTree; then what?
 			%\t1 | whatever else....	
 	\\
 	ProofStatus ::= Axiom | Ignore | Qed | Unfinished
 	\\
 	AttemptKind ::= Blind | Guided | Because \ldata ProofTree \rdata | Clue \ldata ProofTree \rdata
 \end{zed}
-
+%
+And attempt captures the (sub-)proof-tree with intent 
+\begin{itemize}
+	\item the kind of attempt as in its relationship with the proof tree involved
+	\item the proof-tree (might be incomplete) of the current attempt
+	\item \todo{How about properties? Should they belong to an attempt or not? 
+		There is a case for having them, yet we may suffer from this choice as it might
+		clutter the information around needed to infer what's relevant. Definitions should
+		have properties as well.}
+\end{itemize}
+%
 \begin{schema}{Attempt}
-	intent: Intent \\
-	desc: TEXT \\
 	kind: AttemptKind \\
 	pt: ProofTree
 \end{schema}
-
+%
+A proof is a series of attempts with its original goal
+%
+\begin{itemize}
+	\item atts: attempt sequence
+	\item pstatus: 
+	\item label: name for this proof script
+	\item goal: original goal term
+\end{itemize}
 \begin{schema}{Proof}
 	atts: \seq_1~Attempt \\
 	pstatus: ProofStatus \\
