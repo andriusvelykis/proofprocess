@@ -3,9 +3,17 @@
 \documentclass[ColouredAnnotations]{blue-book}
 \usepackage{hyperref}
 \usepackage{url}
+\usepackage{float}
 
 \usepackage[color,tkkeyword]{bbczt}
-\usepackage{appendix}
+
+\newfloat{Example}{tbp}{lop}
+
+\hypersetup{
+colorlinks=true,
+urlcolor=cyan,
+pdfborder= 0 0 0
+}
 
 
 
@@ -37,15 +45,15 @@
 	
 \newcommand{\z}[1]{\ensuremath{\color{ZedColor}#1}}
 
-\newcommand{\proofprocess}{\textit{ProofProcess}~}
-%\newcommand{\proofprocess}{Proof~Process~}
+\newcommand{\proofprocess}{\textit{ProofProcess}}
+%\newcommand{\proofprocess}{Proof~Process}
 
 \newcommand{\mural}{{\sl mural}}
 
 
 
 \NoteNumber{???}                 % the number
-\title{\proofprocess Model}                      % the title
+\title{The \proofprocess{} model}                      % the title
 \author{Andrius Velykis and Leo Freitas}             % the author
 
 \begin{document}
@@ -54,48 +62,137 @@
 
 \section{Introduction}
 
-\todo{Write one}
-
-\section{The Model}
+\section{The model}
 
 \begin{zsection}
   \SECTION proofprocess \parents standard\_toolkit
 \end{zsection}
 
-
+\anote{\textbf{Section header text unfinished, start from \S\ref{sec:terms}.}}
+%
 From \textsf{WhyM.vdmsl}, we are leaving out theory, conjecture, definition, context and focusing here 
 on the $Attempt$ and $Proof$ structures only, in so far as determining the necessary annotations to go
 around the actual proof within different provers. These contexts might be needed and shall be theorem
 prover specific (e.g., see TRACE below). For definition (or indeed TERMs), we might need to have 
 it explicit here (e.g., even if with mural's indices like structure).
 
+\todo{Add illustrating examples for important parts of the model}
+
+\anote{\textit{Leo's:} In a way we are distancing ourselves a bit from WhyM here---we are trying to bridge the two,
+given one is closer to domain modelling, the other to the actual (EMF) implementation. Hopefully 
+they will match/agree in principle, if not in the underlying details.}
+
 %
 % ---------------------------------
-\subsection{General Types}
+\subsection{Proof terms}\label{sec:terms}
+
+The proof process captures how and why the expert manipulates of proof terms to prove the goal. 
+Thus proof terms are at the core of the data model. However, the terms across different theorem provers
+and proof systems are not represented in a uniform way, and may have different meanings and assumptions
+associated with them. We aim to have the \proofprocess{} model generic and applicable to different
+theorem provers. Therefore, we need a general solution to referencing terms when capturing and
+describing the proof process.
+
+We do not propose a uniform representation of proof terms, which would cover different proof
+systems.\todo{Add some arguments why? E.g. different logics, different calculi, etc. Furthermore,
+within different systems terms are represented with varying level of detail, and even with different
+storage solutions (e.g. plain text, EMF, \mural{} indices, etc.).}
+Instead, we opt for keeping the proof terms specific to their proof systems. This would allow
+different proof systems to reference the proof terms with the appropriate model richness. This
+does introduce the obstacle that different proof systems would be unable to interpret terms
+recorded by other systems. However, we believe that the proposed concept of 
+\textit{Properties} (\S\ref{sec:properties}) could provide a generic
+way of interaction between the provers by recording the important properties of 
+terms and the proof process. Alternatively, there could be translators that would
+support translating one prover's representation to be understood by another.
+
+By allowing prover specific reference to proof terms, we assume that the model does not need
+to understand the proof term itself. Therefore we model proof terms as members of an 
+uninterpreted given type \z{TERM}.
 
 \begin{description}
 %
-\item[\z{TERM}]\label{use:term}
+\item[\z{TERM}]
 An abstract notion of terms within a proof system. They are theorem prover specific, 
-and could represent complex terms, their subterms and other concepts as needed. They should account for
-theory changes, e.g. the same term but with the meaning of some of its parts changed would be a 
-different term. For more details see Section \ref{ex:term}.%
-\inwhym{\z{TERM} covers $Term$ and $Sequent$.}\invoc{Terms are not typed and are assumed to be of whatever type is needed for the constraint.}
+and could represent complex terms, their subterms and other concepts as needed. Terms
+account for changes in the proof system and reference particular version of a proof term
+together with all associated context.%
+\inwhym{\z{TERM} covers $Term$, $Sequent$ and $Id$.}%
+\invoc{Terms are not typed and are assumed to be of whatever type is needed for the constraint.}
+Read on for further information on the particulars of \z{TERM}.
 %
 \item[\z{NAME}]
-A name is used for labelling theorems/conjectures or other purposes.
+Names are used for labelling theorems/conjectures or for other purposes. They are used when
+term version and associated context is not important.
+%
+\end{description}
+%
+\begin{zed}
+    [TERM, NAME]
+\end{zed}
+%
+The terms, represented by the given type \z{TERM}, are taken to mean any combination of
+possible sub-terms, which are terms in their own way. Furthermore, terms would also represent other elements
+of specification, such as used lemmas, etc. There are further assumptions about the \z{TERM} type, 
+and the refinement for specific theorem
+provers should take them into account. \todo{Formalise the assumptions on \z{TERM}?}
+
+There could be different ways of representing a \z{TERM} specifically. One way would be to use indices as 
+in the \mural~system \cite{JJLM91}. This would allow for simple and unique references, however they 
+would need to carry the whole snapshot of theory around to know what each index is mapped to.
+
+For Z specifications and proof scripts, a simplistic approach of writing a term would be its Unicode or
+\LaTeX{} representation. However, at a particular point such term would mean different things. A good
+example would be schemas, which internal representation may be changed while keeping the same name.
+For that reason, we assume that two terms are equal only if they are equal semantically. So two different
+schemas with the same name would be different. The same would apply for operators, lemmas, or other 
+concepts in a particular proof system, which would allow for the representation to change. Technically,
+two instances of the same specification, but based on different versions of a theory library, would
+have to be assumed to be different, unless there would be any way of ensuring that the meaning of the term
+has not changed in regards to using it in the proof process. We would also assume that sets of terms
+from different proof languages/systems are disjoint, since showing semantic equality 
+would prove very difficult.
+
+This issue of term equality is important to identify the traces in the proof process. We must make sure that
+we can recognise the same goal being proven. The model assumes that \z{Proof} (\S\ref{sec:proof}) would 
+represent a family of attempts on the same proof---thus on the same goal. If the goal (or terms within
+the goal) have been affected by some changes to the specification, we may no longer be proving the same
+thing, and it should warrant creation of a new \z{Proof}.
+
+Other ideas to consider when identifying terms is whether they are global, local, bound, etc.
+
+By using a given type \z{TERM}, we assume that the equality of two \z{TERM}s means that they 
+represent exactly the same term.
+
+%
+% ---------------------------------
+\subsection{Proof intent}\label{sec:intent}
+
+The expert's insight during the proof is the most valuable part of the proof process capture. There
+are good amounts of finished proof scripts already available for different proof systems. Little of them,
+however, have associated information of \textbf{how} or \textbf{why} was a particular proof step taken
+or a certain tactic applied. Understanding the proof usually requires re-running the proof script
+and analysing the changing goals with hope to get the general idea of the original proof process.
+
+The \proofprocess{} model tags the intent---\textbf{how}/\textbf{why}---of the proof process 
+using \z{INTENT} given type.
+
+\begin{description}
 %
 \item[\z{INTENT}]
-The intent represents a tag that captures why a particular proof process step was taken. The collection
-of all intents would allow to build a vocabulary of how proof is done. Each tag would have an associated
-textual description (via \z{intent\_desc}), explaining what a particular intent already in the 
-vocabulary means.
+The intent represents a tag that captures why a particular proof process step was taken.%
+\inwhym{\z{INTENT} is the same as $WhyTag$, but with provision for user-specified tags.}%
+\invoc{\z{INTENT} tags can become names of \textit{strategies}.}
+The collection of all intents would allow to build a vocabulary of how proof is done. 
+Each tag would have an associated textual description (via \z{intent\_desc}), explaining 
+what a particular intent (already in the vocabulary) means.
 
-If needed, additional narrative on particulars of a certain ``why'' in a proof could be associated 
-to the elements in the proof tree. Thus \z{INTENT} would be left for general tagging. However, 
-domain-specific intents would be perfectly good addition to the vocabulary.
+If needed, additional narrative on particulars of a certain \textbf{why} in a proof could be associated 
+to the elements in the proof tree. Thus \z{INTENT} would be left for general tagging.
 
-Intents could be predefined, or could be collected during the proof process. 
+Intents could be predefined, or could be collected during the proof process. Domain-specific intents 
+are expected to be added to the vocabulary, we do not restrict only to ``official'' proof
+intents.
 %
 \item[\z{TEXT}]
 Text input.
@@ -103,7 +200,7 @@ Text input.
 \end{description}
 %
 \begin{zed}
-    [TERM, NAME, INTENT, TEXT]
+    [INTENT, TEXT]
 \end{zed}
 %
 \begin{axdef}
@@ -112,22 +209,35 @@ Text input.
 
 %
 % ---------------------------------
-\subsection{Proof Reference and Trace}
+\subsection{Proof step and trace}
+
+A proof in a proof system consists of a number of proof steps. We consider the proof step to be
+a proof unit that advances or transforms the goal being proven within a proof. In tactic based
+theorem provers, such step would be a single tactic application. The consideration of what to
+treat as a single proof step, would be theorem prover specific.
+
+The proof step must have a corresponding entry in the theorem prover. While the user could
+create and structure other parts of the \proofprocess{} model 
+(e.g. the \z{Seq} nodes---\S\ref{sec:prooftree}) arbitrarily, 
+the proof steps must map actual steps in the theorem prover to the proof process structure.
+
+Recording the actual proof steps and referencing them are by their nature very prover specific
+activities. Abstract data types \z{TRACE} and \z{LOC} are used to model the proof step information
+and physical location, respectively. The prover-specific models (e.g. in \S\ref{sec:zevestrace})
+would map these to actual structures. 
 
 \begin{description}
 \item[\z{TRACE}]
 The trace in proof references defines the content of the proof step. It should deterministically 
 (and hopefully minimally) identify a particular trace element, and describe how one got from the
-before goal, to the after goal. For \textit{Z/Eves}, the trace consists of tactic name, goal on 
-which the tactic was applied, and the goal that was resulted after applying. Furthermore, Z/Eves 
-trace should contain all ``configurations'' of the tactic used, such as \textit{lemmas used}, 
-\textit{invocations}, case number, or other significant trace elements. 
-\todo{Identify all significant elements for \textit{Z/Eves} trace.}
+before goal, to the after goal. For example, \textit{Z/Eves trace} would record the goals, 
+applied tactic, used lemmas, case number and other information
+(see \S\ref{sec:zevestrace} for details).
 
 For other proof systems, the trace may be similar, or may be completely different. For example, 
 when calling an outside tool, e.g. a SMT solver, the trace may contain the goal (or the prepared 
 SMT input), as well as SMT configuration that was used. For \textit{Isabelle}, it would include the 
-trace --- which hopefully will be rich enough.
+trace---which hopefully will be rich enough.
 
 \item[\z{LOC}]
 An abstract representation of a proof script location.\inwhym{\z{LOC} is similar to $Script$.}
@@ -145,19 +255,25 @@ structure position).
     [TRACE, LOC]
 \end{zed}
 
-A \z{ProofRef} carries the information from the actual proof tactic that was applied. Therefore, the
+A \z{ProofStep} carries the information from the actual proof step that was applied. Therefore, the
 information is very prover specific.
 
 \begin{description}
-\item[\z{goal\_before}, \z{goal\_after}]
+\item[\z{in\_goal}, \z{out\_goal}]\label{desc:proofstep:goals}
 Abstract references to what's being proved, and the result of applying the proof step. 
 Hopefully there will be no need (or at least a controlled need) for knowing the underlying structure.
 We need both the before and after goal, because of possibility for parallelism. For example, if previous
 tactic produced several goals, subsequent tactics may be parallel and each use just one of them. Thus
 we need to mark which goals are actually being used in the step, and what does the step produce.
+
+The model requires at least one \z{in\_goal} for the proof reference. In different proof systems,
+a goal may be represented by one or more goal sequents (e.g. in \textit{Isabelle} they may be
+separated, in other systems they may be represented together). Modelling the goal via a sequence
+allows for these different representations. \textbf{However, we assume that 0 \z{out\_goal}s mean that
+there is nothing left to prove.} 
 		
 \item[\z{source}]
-A hook to the logging framework - indicates the location where the proof step can be found. Since the
+A hook to the logging framework---indicates the location where the proof step can be found. Since the
 proof process is designed to handle change of specification, the proof step location may point to an
 old specification, which has changed since. Therefore there exists a need for a logging framework as well.
 See the description of \z{LOC} above for details on the data type.
@@ -168,21 +284,39 @@ the proof step. See the description of \z{TRACE} above for details.
 
 \end{description}
 
-\begin{schema}{ProofRef}
-	goal\_before: TERM \\
-	goal\_after: TERM \\
+\begin{schema}{ProofStep}
+	in\_goal: \seq_{1}~TERM \\
+	out\_goal: \seq~TERM \\
 	source: LOC \\
 	trace: TRACE
 \end{schema}
 
-\subsubsection{\textit{Z/Eves} Trace}
+\subsubsection{\textit{Z/Eves} trace}\label{sec:zevestrace}
+
+For \textit{Z/Eves}, the trace consists of the proof command---tactic with argumens, goal on 
+which the tactic was applied, and the goal that was resulted after applying. Furthermore, Z/Eves 
+trace should contain all ``configurations'' of the tactic used, such as \textit{lemmas used}, 
+\textit{invocations}, \textit{case number}, or other significant trace elements. 
+\todo{Identify all significant elements for \textit{Z/Eves} trace.}
 
 \begin{description}
 \item[\z{PROOFCOMMAND}]
-A proof command represents \textit{Z/Eves} proof commands. At the moment it is just a term, so is 
-theorem-prover specific. If we choose to formalise \textit{Z/Eves} proof commands, it could be realised as a free-type, e.g.,
-\z{PC ::= Uses \ldata NAME \rdata | Apply \ldata NAME \cross TERM \rdata} and so on.
+A proof command represents \textit{Z/Eves} proof commands.%
+\inwhym{\z{PROOFCOMMAND} is similar to $Script$ if the script is captured in the model.}
+At the moment it is just a term, so is 
+theorem-prover specific. If we choose to formalise \textit{Z/Eves} proof commands, it could be realised as a free-type, e.g.,%
+%
+\[
+	PC ::= Uses \ldata NAME \rdata | Apply \ldata NAME \cross TERM \rdata
+\]
+% 
+and so on.
 
+\item[\z{ZEvesTraceType}]
+During a tactic application, Z/Eves may use various lemmas or transform specific terms within the goal.
+This is especially true for advanced automatic tactics such as \textit{prove by reduce}. These
+different types of ``using'' are listed in \z{ZEvesTraceType}. 
+%
 \end{description}
 
 \begin{zed}
@@ -191,44 +325,72 @@ theorem-prover specific. If we choose to formalise \textit{Z/Eves} proof command
     ZEvesTraceType ::= Use | Apply | Rule | GRule | FRule | Invoke | Instantiate | Split
 \end{zed}
 
-\anote{\textit{Review - out of date?:}
-We are seeing this as the local state of an overall proof attempt that leads to the 
-complete proof of involved goals. There might be some needed assumption about how (changing) 
-goals get to match how the prover handles them.
-\todo{what is this akin to what in WhyM.vdmsl? Conjecture to some extent?}
-	
-In a way we are distancing ourselves a bit from WhyM here --- we are trying to bridge the two,
-given one is closer to domain modelling, the other to the actual (EMF) implementation. Hopefully 
-they will match/agree in principle, if not in the underlying details.
-}
+The \z{ZEvesTrace} models a record of \textit{Z/Eves} proof step.
 
-\acomment{Using just NAME to indicate lemmas is not appropriate, because the actual content of
-a lemma may change, while the name is kept. For that reason, a NAME with the same properties as TERM
-should be used.}
+\begin{description}
+\item[\z{in\_goal}, \z{out\_goal}]
+For the trace to be self-sufficient, we include \textit{before} and \textit{after} goals, which
+are modelled as in \z{ProofStep} (\S\ref{desc:proofstep:goals}). 
+		
+\item[\z{proof\_command}]
+The proof command (\textit{Z/Eves} tactic with arguments), as described in the \z{PROOFCOMMAND}
+data type above.
+	
+\item[\z{case}]
+The case number of the proof step. When multiple goals exists, \textit{cases} command allows
+proving each goal separately, indicated with the case number.
+\todo{Do not use \z{TEXT} as the type for \z{case}?}
+
+\item[\z{config}]
+A mapping of all important elements of the tactic application trace. This is especially important
+for automatic tactics like \textit{prove by reduce}, which perform a number of smaller tactics
+in a loop. Thus to identify what such a tactic has actually done, and how it differs from another
+instance of \textit{prove by reduce}, we need to store the details. These are stored as a mapping
+from terms to their ``usage'' type. Note that the same term (or lemma) is not used in several
+ways within the same tactic application.
+
+We are using \z{TERM}s here, because content of lemmas can change in a specification. Therefore
+using simpler \z{NAME}s is not appropriate. With \z{TERM} we can reference a particular version
+and context of a lemma that was used in the proof step.
+
+\end{description}
+%
 \begin{schema}{ZEvesTrace}
-	goal\_before: TERM \\
-	goal\_after: TERM \\
+	in\_goal: \seq_{1}~TERM \\
+	out\_goal: \seq~TERM \\
 	proof\_command: PROOFCOMMAND \\
 	case: TEXT \\
 	config: TERM \pfun ZEvesTraceType
 \end{schema}
 %
-The next function maps all evidence to a uniquely determined $ZEvesTrace$ schema.
-This makes the $ProofRef$ above ZEves specific, ex:
-%
-\[
-	ProofRef \implies zeves\_trace~(trace)
-\]
-% 
-and then I get the ZEves' specific proof evidence. Similarly for others. The existence
-of such a function is taken as given. It might not need to be bijective, though
+
+To go from an abstract \z{ProofStep} and its \z{trace} to a prover specific \z{ZEvesTrace}
+we use a function \z{zeves\_trace}. It maps abstract \z{TRACE} references to \textit{Z/Eves}
+specific data. The existence of such a function is taken as given.
 %
 \begin{axdef}
-	zeves\_trace: TRACE \bij ZEvesTrace
+	zeves\_trace: TRACE \pinj ZEvesTrace \\
+	zeves\_trace: TRACE \psurj ZEvesTrace
 \end{axdef}
 %
-\begin{schema}{ZEvesProofRef}
-   ProofRef \\
+Note that the function is both injective and surjective, but partial. This means that all
+specific \z{ZEvesTrace} have only one abstract \z{TRACE} reference mapping to them. However,
+there are \z{TRACE}s, which do not map to \z{ZEvesTrace}---they would map to other theorem
+prover data instead.
+
+\anote{\textit{Leo's, review:} To make the $ProofStep$ above ZEves specific, ex:
+%
+\[
+	ProofStep \implies zeves\_trace~(trace)
+\]
+%
+we get the \textit{Z/Eves'} specific proof trace. Similarly approach would be taken for 
+other theorem provers.}
+
+The \z{ZEvesProofStep} encapsulates the generic \z{ProofStep} with a specific \z{ZEvesTrace}.
+%
+\begin{schema}{ZEvesProofStep}
+   ProofStep \\
    ZEvesTrace
 \where
    zeves\_trace~(trace) = \theta ZEvesTrace
@@ -236,21 +398,39 @@ of such a function is taken as given. It might not need to be bijective, though
 
 %
 % ---------------------------------
-\subsection{Properties}
+\subsection{Proof properties}\label{sec:properties}
 
-Proof properties are boolean-valued uninterpreted functions with parameters. The actual meanings of
-the properties would depend on how the \proofprocess model is used. Also, the user may want to add
-whatever properties are felt necessary.
+The proof \textit{properties} are instruments to mark important parts of the proof process
+in a formal way. They can be used to mark (tag) prerequisites to a proof step, hints that 
+lead to taking that step, intended outputs and basically any relevant information about 
+the proof process.
+
+Furthermore, we expect \textit{properties} to be generic and as prover independent as possible.
+The idea is that it is not needed to interpret the goal, and instead significant properties 
+of the goal are to be identified and recorded. Thus when the proof process is referred to afterwards,
+it would be enough to analyse the properties only.
+
+Proof properties are boolean-valued uninterpreted functions with parameters.%
+\inwhym{There is no similar concept to \textit{properties}, since the proof terms are encoded
+in the \textit{WhyM} model. The $AttemptKind$ types $<CLUES>$ and $<BECAUSE>$ are somewhat
+related, since they intended to reference properties of a proof step.}%
+\invoc{The \textit{constraints} on the input/output of \textit{strategy} are central to 
+describing the strategy without using the actual proof language. \textit{Properties} are
+derived from these constraints.}%
+%
+The actual meanings of the properties would depend on how the \proofprocess{} model is used. 
+Also, the user may want to add whatever properties are felt necessary.
 
 With such mechanism, we could define any property on anything. Below are several examples:
 \begin{itemize}
 \item Properties on goals: $has\_inductable\_terms(goal1)$;
-\item Properties on terms: $commutes(term1, term2)$;
+\item Properties on terms: $commutes(term1, term2)$, $of\_shape(pattern1, term1)$;
 \item Properties on lemmas used and terms applied: $unfolds\_smartly(lemma1, term1)$;
 \item Weird properties: $sums(2, 2, 4)$ and others.
 \end{itemize}
 
-The property given type is very similar to the \z{INTENT}.
+We represent properties as \z{PROPERTY} given type. It is very similar to the 
+\z{INTENT} type (\S\ref{sec:intent}).
 
 \begin{zed}
     [PROPERTY]
@@ -259,6 +439,21 @@ The property given type is very similar to the \z{INTENT}.
 \begin{axdef}
 	property\_desc: PROPERTY \fun TEXT
 \end{axdef}
+%
+Note that we may differentiate whether certain properties are set by user, or inferred
+by algorithms. The separation may have different effects on how we treat the properties.
+For example, user may be mistaken in the analysis and assign an incorrect property (e.g.
+mark something \textit{commutative}, which it is not). However, user set properties are
+actual expert insight---and may indicate which properties drove the proof step.
+
+On the other hand, automatically inferred properties may be more robust, however they may
+pollute the proof process with unnecessary data. Further questions can be raised, e.g.
+how do we treat inferred properties, which are based on previous user-set ones. For example,
+the user marks a certain property in a goal as important and domain-specific, such as
+$removable\_wheels(term1)$. Now if a term has similar property in another proof, we may want
+to infer that automatically---but it would still may have the original user's significance.
+
+The type of property is modelled in \z{PropType}.
 %
 \begin{zed}
 % Don't know whether we need the NAME params, especially since we are using TERM
@@ -269,24 +464,59 @@ The property given type is very similar to the \z{INTENT}.
 	PropType ::= User | Inferred
 \end{zed}
 %
-An instance of a \z{PROPERTY} use also has a type (e.g. if the user marked it, or it was inferred
-automatically) and a sequence of parameter values.
+Since \z{PROPERTY} is like a property ``tag'', when using it in the proof process, we need
+an instance of that ``tag''---\z{Property} schema captures this.
+%
+\begin{description}
+\item[\z{name}]
+Reference to the singleton \z{PROPERTY} tag.
+		
+\item[\z{type}]
+Type of the property, e.g. if this instance was set by user, or inferred automatically.
+	
+\item[\z{params}]
+The specific parameters of the property instance. At the moment we do not define the 
+\textit{templates} for properties, so there is no way of checking whether the number
+of parameters and their types are correct for a given property.
+\todo{Model property templates?}
+
+Note that we require a property to have at least one parameter at the moment.
+\todo{Investigate whether properties without parameters are needed.}
+
+\end{description}
 %
 \begin{schema}{Property}
 	name: PROPERTY \\
 	type: PropType \\
 	%params: \seq~PropParam
-	params: \seq~TERM
+	params: \seq_{1}~TERM
 \end{schema}
 
 %
 % ---------------------------------
-\subsection{Proof Information}
+\subsection{Proof information}
 %
+We should be able to capture the full \textbf{how/why} of the proof process at any point
+during the proof process. For a particular instance, this contains the intent, notes on
+what drove and affected the step, and anything else that may become relevant necessary.
+We encapsulate all this information in the \z{ProofInfo} structure.
+
 Proof info is the intent behind some part of the attempt plus anything else that might 
 become relevant/necessary. The proof info will be attached to every element in the 
 proof tree, and will carry the intent and properties of it. 
-
+%
+\begin{description}
+\item[\z{why}]
+The intent attached to the proof process entry---captures why a particular step was
+taken.
+		
+\item[\z{narrative}]
+While \z{INTENT} has a general description via \z{intent\_desc} function, the \z{narrative}
+field allows adding additional information about why a particular step was taken. The
+\z{narrative} would be specific to a given attempt, and may explain how a particular intent
+is interpreted in that attempt.
+	
+\item[\z{in\_props}, \z{out\_props}]
 We see the need for properties on both incoming and outgoing goal and context. On the first glance, 
 because of the way proof steps are ordered, it may seem that outgoing properties are not that
 necessary, because outgoing properties of one would be incoming properties of another.
@@ -300,6 +530,13 @@ Furthermore, if an incoming goal is split into several outgoing goals, we may wa
 but the information of ``several goals appeared'' may be lost in the next steps, if each of 
 the goals is handled separately.
 
+\item[\z{score}]
+Some measure of the proof step, allowing to rank the proof steps in a certain way.%
+\inwhym{Similar to $Score$.}%
+Note that the concept has not been investigated enough yet.
+\todo{Do not use \z{TEXT} as the type for \z{score}?}
+
+\end{description}
 %
 \begin{schema}{ProofInfo}
 	why: INTENT \\
@@ -315,8 +552,9 @@ the goals is handled separately.
 	% NOTE: Solve the Optional ProofInfo somehow
 \end{schema}
 %
-Since the \z{ProofInfo} object will be attached to every element in the proof tree, there may
-be cases when no information is available to store in the \z{ProofInfo}. For that reason,
+Since the \z{ProofInfo} object will be attached to every element in the 
+proof tree (\S\ref{sec:prooftree}), there may be cases when no information is 
+available to store in the \z{ProofInfo}. For that reason,
 we define a special type of intent to tag ``empty'' proof infos.
 \begin{axdef}
 	intent\_undef : INTENT
@@ -324,21 +562,34 @@ we define a special type of intent to tag ``empty'' proof infos.
 
 %
 % ---------------------------------
-\subsection{Proof Tree}
+\subsection{Proof tree}\label{sec:prooftree}
 
-A \z{ProofEntry} is used for leafs in the \z{ProofTree} - the leafs represent actual proof steps
-(e.g. \textit{Isabelle} tactic application). Thus they contain the proof reference in addition to
-the \z{ProofInfo} that is attached to every element in the proof tree.
+The proof process is modelled as a rooted tree. Each tree branch must end with a \z{Leaf} entry,
+which represents an actual proof step. Therefore, the proof process structure may be arbitrary,
+but eventually must be based on actual proof steps. The other tree nodes are used to
+indicate the order of underlying proof (e.g. sequential or parallel), or to provide place for
+adding additional tagging and proof process information (i.e. decorate).
+\todo{Contrast with other approaches, e.g. why a graph structure was not used? Add references 
+to the proof graph in Omega system?}
 
+The leafs in the proof tree carry both the proof process information---\z{ProofInfo}, and reference 
+to the actual proof step (e.g. a tactic application)---\z{ProofStep}. All this is encapsulated in 
+the \z{ProofEntry} structure.
+%
 \begin{schema}{ProofEntry}
 	ProofInfo \\
-	ProofRef
+	ProofStep
 \end{schema}
+%
+The nodes of the tree are specific to the \proofprocess{} model and each carries only the
+\z{ProofInfo} together with references to related proof tree elements.
 
-To represent attempts, we describe a proof tree type \z{ProofTree}:
+To represent attempts, we describe a proof tree type \z{ProofTree}:%
+\inwhym{The structure of attempts---the proof tree---is not modelled in the 
+latest version of \textit{WhyM}.}%
 \begin{description}
 \item[\z{Leaf}]
-Contains a proof reference --- to be specialised towards different tools
+Contains a proof reference---to be specialised towards different tools.
 
 \item[\z{Seq}]
 Encodes the sequential composition of proof trees contained in the \z{\seq_1~ProofTree}.
@@ -347,13 +598,14 @@ Encodes the sequential composition of proof trees contained in the \z{\seq_1~Pro
 Encodes the parallelism of proof trees contained in the \z{\finset_1~ProofTree}.
 
 \item[\z{Decor}]
-Decorates a tree with extra intent (e.g., when wanting to have two intent info for a leaf).
+Decorates a tree with extra intent (e.g., when wanting to have multiple intent tags 
+for a proof step).
 
 \end{description}
-
+%
 \begin{zed}
 	% nice but limiting in the possible linguistics possibilities
-%	ProofTree0 ::= leaf0 \ldata ProofRef \cross ProofInfo \rdata \\
+%	ProofTree0 ::= leaf0 \ldata ProofStep \cross ProofInfo \rdata \\
 %			\t1 | node0 \ldata \seq_1~(\power_1~ProofTree0) \cross ProofInfo \rdata 
 %	\\
 	% for optional intent? Or just use null for it axiomatically?
@@ -370,16 +622,82 @@ Decorates a tree with extra intent (e.g., when wanting to have two intent info f
 %
 \todo{Check whether using \z{\finset_1~ProofTree} is ok for \z{Par}. Maybe use \z{\seq_1~ProofTree}?}
 \todo{Analyse how to (if at all needed) tag proof steps with gaps - maybe we need different structure?}
+\todo{What if we want to group disparate tree elements? The tree structure would not allow for that.}
 %
-\todo{What if there are multiple intents that are all handled by the same proof step? For example,
+%\anote{\textit{Review - out of date?:}
+%Alternatively, we could encode the encode the ``language'' involving 
+%composition (as $\seq_1$) and parallelism (as $\power_1$)
+%e.g., $\langle \{ PT1, PT2 \}, \{ PT3 \} \rangle$ is the sequential composition of proof trees within
+%each set in parallel like  $(PT1 || PT2) ; PT3$.
+%
+%We also had this $\seq_1~(bag_1~ProofTree)$ for the case where $P1 || P1$}
+%
+
+A \z{ProofTree} should be read depth-first to extract the encoded proof process. Note that in the case
+of a parallel node, the branches can be taken in arbitrary order, however all must be taken before
+advancing to the parallel node's sibling.
+\todo{Formalise the \z{ProofTree} traversal?}
+%
+Such traversal means that a \z{ProofTree} node abstracts and encapsulates the underlying 
+tree structure, essentially hiding the proof details. In Example \ref{ex:prooftree}, nodes
+\textit{Prepare Induction} and \textit{Do Induction} describe the whole proof needed at a
+high level, and hides the actual details. The details can be examined by traversing the children
+of these nodes.
+
+\begin{Example}
+\caption{A sketch example of a \z{ProofTree} with attached intents.}
+\label{ex:prooftree}
+\anote{
+\em
+\z{Seq} Do Inductive Proof%
+%
+	\begin{itemize}
+	\item \z{Seq} Prepare Induction%
+		\begin{itemize}
+		\item \z{Leaf} Step1
+		\item \z{Leaf} Step2
+		\end{itemize}%
+	\item \z{Par} Do Induction%
+		\begin{itemize}
+		\item \z{Seq} Base Case%
+			\begin{itemize}
+			\item \z{Leaf} Step3
+			\item \z{Leaf} Step4
+			\end{itemize}%
+		\item \z{Seq} Step Case%
+			\begin{itemize}
+			\item \z{Decor} Do Something Fancy%
+				\begin{itemize}
+				\item \z{Leaf} Step5
+				\end{itemize}%
+			\item \z{Leaf} Step6
+			\end{itemize}%
+		\end{itemize}%
+	\end{itemize}%
+}%
+\end{Example}
+
+%
+% ---------------------------------
+\subsubsection{Mapping proof process to the \z{ProofTree} structure}\label{sec:prooftree}
+
+The structure of \z{ProofTree} is designed to allow the proof process recorded in a flexible way.
+Intents and other \textbf{why} information can be attached in various places, and the proof steps
+can be grouped and decorated arbitrarily. In the end, mapping an actual proof process to the
+structure can be chosen by the user or appropriate tools. Several ideas about situations that may
+arise are given below.
+
+\paragraph{Multiple intents on a proof step.}
+%
+What if there are multiple intents that are all handled by the same proof step? For example,
 say we have a simple induction, and a single tactic application would do both \textit{Prepare Induction}
-and \textit{Do Induction} intents? There could be several ways of handling this:
+and \textit{Do Induction} intents? There could be several ways of handling this:%
 \begin{itemize}
 \item
 Define a new intent, e.g. \textit{Solve Induction} or a combo intent \textit{Prepare and Do Induction}. 
 This, however does not look very extensible if there are some domain specific intents which get handled
 different combinations - it would produce a lot of ``cross-intent'' combo intents.
-
+%
 \item
 Nest a number of proof tree elements, e.g. using \z{Decor} type in \z{ProofTree}. This would allow
 tagging all needed intents, and would also provide means of adding properties important for the 
@@ -390,56 +708,63 @@ For example, would this signal that both steps need to be so to use the underlyi
 At the moment the hunch is that ``depth order'' will not matter, and nested intents would be 
 OR-ed,\footnote{It would mean that the tactic applied is good for either such cases 
 of \textit{Prepare Induction} or \textit{Do Induction}.} Still, need to review this further.
-
+%
 \item
 To have the advantages of multi-tagging, but without nesting, we would need to forfeit the tree
 structure and use a graph structure instead. Then we could branch on different intents, and
 reconvene back into the tactic. Following depth-first, it would produce several ways to the same tactic,
 basically OR-ing the intents.
-
+%
 \end{itemize}
-}
-
-\anote{\textit{Review - out of date?:}
-\begin{description}
-\item[\z{leafs}] contain a proof reference --- to be specialised towards different tools
-\item[\z{nodes}] encode the ``language'' involving composition (as $\seq_1$) and parallelism (as $\power_1$)
-e.g., $\langle \{ PT1, PT2 \}, \{ PT3 \} \rangle$ is the sequential composition of proof trees within
-each set in parallel like  (PT1 || PT2) ; PT3.
-\item[\z{both}] have the corresponding intent that lead to what they generate
-\item[\z{...}]
-\end{description}
-
-We also had this $\seq_1~(bag_1~ProofTree)$ for the case where $P1 || P1$}
 
 %
 % ---------------------------------
-\subsection{Proof (Attempt Set)}
+\subsection{Proof attempts}\label{sec:proof}
+%
+During an interactive proof, an expert may try several attempts at the goal. It is rarely a case
+that the perfect final proof is reached by the first attempt. To capture the proof process
+fully, we need to record all attempts, because even failed attempts may contain useful insight
+into the expert's proof process.
 
+An attempt contains a single proof tree, which may be unfinished---i.e. there may be 
+outstanding goals in the last proof step(s) of the proof tree.%
+\todo{Write how ``outstanding goals'' are collected for a complex \z{ProofTree} structure. For
+example, that the \z{out\_goal} of an unfinished \z{Par} node consists of all outstanding
+\z{out\_goals} of its children \z{Leaf} structures.
+The text should also include invariant that for two children of a \z{Seq} node, which go
+one after another, the \z{out\_goal} of the first one must match the \z{in\_goal} of the 
+second one. Also the goals in the proof must be all accounted for in the proof steps, or
+they will be unfinished.
+
+Formalise all this.}
 %
-\begin{zed}
-	\\
-	ProofStatus ::= Axiom | Ignore | Qed | Unfinished
-	\\
-	AttemptKind ::= Blind | Guided | Because \ldata ProofTree \rdata | Clue \ldata ProofTree \rdata
-\end{zed}
+The proof tree with any associated data is encapsulated in the \z{Attempt} structure.
 %
-And attempt captures the (sub-)proof-tree with intent 
-\begin{itemize}
-	\item the kind of attempt as in its relationship with the proof tree involved
-	\item the proof-tree (might be incomplete) of the current attempt
-	\item \todo{How about properties? Should they belong to an attempt or not? 
-		There is a case for having them, yet we may suffer from this choice as it might
-		clutter the information around needed to infer what's relevant. Definitions should
-		have properties as well.}
-\end{itemize}
+\begin{description}
+\item[\z{tree}]
+The proof tree---might be incomplete---of the current attempt.
+%
+\item[\z{properties}(?)]
+There is a case for having properties as in \z{ProofInfo} for the \z{Attempt} as well, where
+they would capture high-level properties of the whole attempt. We need to investigate, whether
+this can be captured in the proof tree itself. We want to avoid cluttering the information 
+around needed to infer what's relevant.
+\todo{Definitions---when modelled---should have properties as well.}
+
+Similarly, we may want to capture attempt-level \z{INTENT} as well.%
+\inwhym{The $AttemptKind$ aims to capture the high-level intent, such as $<BLIND>$, $<GUIDED>$, etc.}
+However, all this may be easily attached to the proof tree, e.g. by decorating the root node 
+of the proof tree with the intent and properties.
+%
+\end{description}
 %
 \begin{schema}{Attempt}
-	kind: AttemptKind \\
-	pt: ProofTree
+	tree: ProofTree
 \end{schema}
 %
 
+\todo{Write about when a new attempt is derived from the old one.}
+%
 %\acomment{The proof below is not completely defined yet. The label and goal by themselves are 
 %not rich enough to deterministically identify whether a proof is the same as stored in the model. 
 %Several things which could influence that are: the context of the goal - e.g. additional lemmas 
@@ -455,82 +780,41 @@ And attempt captures the (sub-)proof-tree with intent
 %context of each element in the tree is the context of its $Attempt$, and if we would extract the proof tree
 %as a separate attempt, it would get the context copied from the extracted to the new $Attempt$.}
 
-A proof is a series of attempts with its original goal
+The \z{Proof} structure relates what needs to be proved together with all attempts at proving it.
 %
 \begin{description}
-\item[\z{atts}]
-All attempts in the particular proof. The later attempts are added to the end of the sequence.
-
-\item[\z{pstatus}] 
-The proof status.
-\todo{Can we derive this from the attempts, or do we need it explicitly?}
-
-\item[\z{label}] 
-Name for this proof script, or of the associated conjecture that is being proved.
-
 \item[\z{goal}]
-Original goal term. Note that this captures change of goal terms, as well as change of context or
-associated libraries.
+The original goal term. Note that using \z{TERM}, it captures change of goal terms, as well as 
+change of context or associated libraries. So if the context, or the definition of goal terms
+change, it will make a different goal that is being proved. Therefore it would be recorded
+in a separate \z{Proof} structure.
 \todo{Review whether all context would be captured in this way. Is there an impact for different
 prover versions, etc?}
-
+%
+\item[\z{label}] 
+Name for this proof script, or of the associated conjecture that is being proved.
+%
+\item[\z{atts}]
+All attempts in the particular proof. The later attempts are added to the end of the sequence.
+Note that we are not concerned with the outcome of the attempts.%
+\inwhym{The proof status was being captured with $EvidenceTag$.}
+The \proofprocess{} model aims to capture the proof process, not to become a proof assistant. 
+Furthermore, the status of the proof may be checked by analysing the attempts---if at least 
+one attempt has no outstanding goals, it means that the proof is complete.
+%
 \end{description}
 %
 \begin{schema}{Proof}
-	atts: \seq_1~Attempt \\
-	pstatus: ProofStatus \\
+	goal: TERM \\
 	label: NAME \\
-	goal: TERM
+	atts: \seq_1~Attempt
 \end{schema}
 
-\todo{(TO THINK) duplicate attempts (with the same proof script): ask the user if this is just a replay or a fresh new attempt. assume it's
-  replay, leave the user to choose/config it \acomment{Do we need some flag in the data model? Or it would be a UI decision more likely..}}
-  
-%
-% ---------------------------------
-\appendix
-\section{Explanations and Examples}
+\todo{(Implementation details?) Duplicate attempts (with the same proof script): 
+ask the user if this is just a replay or a fresh new attempt. assume it's replay, 
+leave the user to choose/config it.
 
-\subsection{Terms}\label{ex:term}
-
-The given type \z{TERM} (Section \ref{use:term}) is an abstract notion of terms within some proof language.
-The \proofprocess model is designed to be generic and used across different proof systems. This means
-that the way of representing a term would be prover-specific. A term is taken to mean any combination of
-possible sub-terms, which are terms in their own way. Furthermore, terms would also represent other elements
-of specification, such as used lemmas, etc.
-
-However, we use the given type \z{TERM} with a number assumptions, and the refinement for specific theorem
-provers should take them into account. \todo{Formalise the assumptions on \z{TERM}?}
-
-There could be different ways of representing a \z{TERM} specifically. One way would be to use indices as 
-in the \mural~system \cite{JJLM91}. This would allow for simple and unique references, however they 
-would need to carry the whole snapshot of theory around to know what each index is mapped to.
-
-For Z specifications and proof scripts, a simplistic approach of writing a term would be its Unicode or
-\LaTeX{} representation. However, at a particular point such term would mean different things. A good
-example would be schemas, which internal representation may be changed while keeping the same name.
-For that reason, we assume that two terms are equal only if they are equal semantically. So two different
-schemas with the same name would be different. The same would apply for operators, lemmas, or other 
-concepts in a particular proof system, which would allow for the representation to change.
-\footnote{This would suggest that even two instances of the same specification, but based on 
-different versions of theory library, would be different.}
-
-This issue of term equality is important to identify the traces in the proof process. We must make sure that
-we can recognise if it is the same goal that is being proven. The model assumes that \z{Proof} would 
-represent a family of attempts on the same proof - thus on the same goal. If the goal (or terms within
-the goal) have been affected by some changes to the specification, we may no longer be proving the same
-thing, and it should warrant creation of a new \z{Proof}.
-
-Other ideas to consider when identifying terms is whether they are global, local, bound, etc.
-
-Note, that the \z{TERM} goes even further with what it can represent, and a \z{TERM} could be a collection
-of terms, e.g. a \z{goal: TERM} could represent one or more goal sequents (e.g. in Isabelle they may be
-separated, in other systems they may be represented together).
-\todo{Maybe represent as multiple goals from the start? E.g. \z{goal: \seq TERM}. This would allow
-for a concept that 0 goals means nothing is left to prove.}
-
-By using a given type \z{TERM}, we assume that the equality of two \z{TERM}s means exactly that they 
-represent exactly the same term.
+Do we need some flag in the data model? Or it would be a UI decision more likely...}
 
 \bibliographystyle{plain}
 \bibliography{AI4FM}
