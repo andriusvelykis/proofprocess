@@ -50,6 +50,11 @@ pdfborder= 0 0 0
 
 \newcommand{\mural}{{\sl mural}}
 
+\newcommand{\cq}[1]{\textbf{#1(??CBJ)}}
+\newcommand{\cp}[1]{\textit{#1(+CBJ)}}
+\newcommand{\cc}[1]
+	{\anote{\textit{CBJ:} #1}}
+
 
 
 \NoteNumber{???}                 % the number
@@ -72,7 +77,7 @@ pdfborder= 0 0 0
 %
 From \textsf{WhyM.vdmsl}, we are leaving out theory, conjecture, definition, context and focusing here 
 on the $Attempt$ and $Proof$ structures only, in so far as determining the necessary annotations to go
-around the actual proof within different provers. These contexts might be needed and shall be theorem
+around the actual proof within different provers. These contexts might be needed and will be theorem
 prover specific (e.g., see TRACE below). For definition (or indeed TERMs), we might need to have 
 it explicit here (e.g., even if with mural's indices like structure).
 
@@ -86,25 +91,27 @@ they will match/agree in principle, if not in the underlying details.}
 % ---------------------------------
 \subsection{Proof terms}\label{sec:terms}
 
-The proof process captures how and why the expert manipulates of proof terms to prove the goal. 
+The proof process captures how and why the expert manipulates proof terms to prove the goal. 
 Thus proof terms are at the core of the data model. However, the terms across different theorem provers
 and proof systems are not represented in a uniform way, and may have different meanings and assumptions
-associated with them. We aim to have the \proofprocess{} model generic and applicable to different
+associated with them. \cp{We aim to have the \proofprocess{} model generic and applicable to different
 theorem provers. Therefore, we need a general solution to referencing terms when capturing and
-describing the proof process.
+describing the proof process.}
 
 We do not propose a uniform representation of proof terms, which would cover different proof
 systems.\todo{Add some arguments why? E.g. different logics, different calculi, etc. Furthermore,
 within different systems terms are represented with varying level of detail, and even with different
 storage solutions (e.g. plain text, EMF, \mural{} indices, etc.).}
-Instead, we opt for keeping the proof terms specific to their proof systems. This would allow
+\cp{Instead, we opt for keeping the proof terms specific to their proof systems. This would allow
 different proof systems to reference the proof terms with the appropriate model richness. This
 does introduce the obstacle that different proof systems would be unable to interpret terms
-recorded by other systems. However, we believe that the proposed concept of 
+recorded by other systems.} However, we believe that the proposed concept of 
 \textit{Properties} (\S\ref{sec:properties}) could provide a generic
 way of interaction between the provers by recording the important properties of 
 terms and the proof process. Alternatively, there could be translators that would
 support translating one prover's representation to be understood by another.
+
+\cc{(not related idea) Inheritance of theories to help with finding similar concepts.}
 
 By allowing prover specific reference to proof terms, we assume that the model does not need
 to understand the proof term itself. Therefore we model proof terms as members of an 
@@ -115,7 +122,7 @@ uninterpreted given type \z{TERM}.
 \item[\z{TERM}]
 An abstract notion of terms within a proof system. They are theorem prover specific, 
 and could represent complex terms, their subterms and other concepts as needed. Terms
-account for changes in the proof system and reference particular version of a proof term
+account for changes in the proof system and reference a particular version of a proof term
 together with all associated context.%
 \inwhym{\z{TERM} covers $Term$, $Sequent$ and $Id$.}%
 \invoc{Terms are not typed and are assumed to be of whatever type is needed for the constraint.}
@@ -143,14 +150,14 @@ would need to carry the whole snapshot of theory around to know what each index 
 
 For Z specifications and proof scripts, a simplistic approach of writing a term would be its Unicode or
 \LaTeX{} representation. However, at a particular point such term would mean different things. A good
-example would be schemas, which internal representation may be changed while keeping the same name.
-For that reason, we assume that two terms are equal only if they are equal semantically. So two different
+example would be schemas, whose internal representation may be changed while keeping the same name.
+For that reason, we assume that two terms are equal only if they are equal \cq{semantically}. So two different
 schemas with the same name would be different. The same would apply for operators, lemmas, or other 
 concepts in a particular proof system, which would allow for the representation to change. Technically,
 two instances of the same specification, but based on different versions of a theory library, would
 have to be assumed to be different, unless there would be any way of ensuring that the meaning of the term
 has not changed in regards to using it in the proof process. We would also assume that sets of terms
-from different proof languages/systems are disjoint, since showing semantic equality 
+from different proof languages/systems are disjoint, since showing \cp{semantic equality} 
 would prove very difficult.
 
 This issue of term equality is important to identify the traces in the proof process. We must make sure that
@@ -161,14 +168,14 @@ thing, and it should warrant creation of a new \z{Proof}.
 
 Other ideas to consider when identifying terms is whether they are global, local, bound, etc.
 
-By using a given type \z{TERM}, we assume that the equality of two \z{TERM}s means that they 
-represent exactly the same term.
+\cq{By using a given type \z{TERM}, we assume that the equality of two \z{TERM}s means that they 
+represent exactly the same term.}
 
 %
 % ---------------------------------
 \subsection{Proof intent}\label{sec:intent}
 
-The expert's insight during the proof is the most valuable part of the proof process capture. There
+\cp{The expert's insight during the proof is the most valuable part of the proof process capture.} There
 are good amounts of finished proof scripts already available for different proof systems. Little of them,
 however, have associated information of \textbf{how} or \textbf{why} was a particular proof step taken
 or a certain tactic applied. Understanding the proof usually requires re-running the proof script
@@ -188,7 +195,7 @@ Each tag would have an associated textual description (via \z{intent\_desc}), ex
 what a particular intent (already in the vocabulary) means.
 
 If needed, additional narrative on particulars of a certain \textbf{why} in a proof could be associated 
-to the elements in the proof tree. Thus \z{INTENT} would be left for general tagging.
+with the elements in the proof tree. Thus \z{INTENT} would be left for general tagging.
 
 Intents could be predefined, or could be collected during the proof process. Domain-specific intents 
 are expected to be added to the vocabulary, we do not restrict only to ``official'' proof
@@ -213,10 +220,10 @@ Text input.
 
 A proof in a proof system consists of a number of proof steps. We consider the proof step to be
 a proof unit that advances or transforms the goal being proven within a proof. In tactic based
-theorem provers, such step would be a single tactic application. The consideration of what to
+theorem provers, such a step would be a single tactic application. The consideration of what to
 treat as a single proof step, would be theorem prover specific.
 
-The proof step must have a corresponding entry in the theorem prover. While the user could
+The proof step must have a corresponding \cq{entry} in the theorem prover. While the user could
 create and structure other parts of the \proofprocess{} model 
 (e.g. the \z{Seq} nodes---\S\ref{sec:prooftree}) arbitrarily, 
 the proof steps must map actual steps in the theorem prover to the proof process structure.
@@ -233,6 +240,8 @@ The trace in proof references defines the content of the proof step. It should d
 before goal, to the after goal. For example, \textit{Z/Eves trace} would record the goals, 
 applied tactic, used lemmas, case number and other information
 (see \S\ref{sec:zevestrace} for details).
+
+\cc{+ higher level of abstraction}
 
 For other proof systems, the trace may be similar, or may be completely different. For example, 
 when calling an outside tool, e.g. a SMT solver, the trace may contain the goal (or the prepared 
@@ -262,7 +271,7 @@ information is very prover specific.
 \item[\z{in\_goal}, \z{out\_goal}]\label{desc:proofstep:goals}
 Abstract references to what's being proved, and the result of applying the proof step. 
 Hopefully there will be no need (or at least a controlled need) for knowing the underlying structure.
-We need both the before and after goal, because of possibility for parallelism. For example, if previous
+We need both the before and after goal, because of the possibility for parallelism. For example, if previous
 tactic produced several goals, subsequent tactics may be parallel and each use just one of them. Thus
 we need to mark which goals are actually being used in the step, and what does the step produce.
 
@@ -277,6 +286,7 @@ A hook to the logging framework---indicates the location where the proof step ca
 proof process is designed to handle change of specification, the proof step location may point to an
 old specification, which has changed since. Therefore there exists a need for a logging framework as well.
 See the description of \z{LOC} above for details on the data type.
+\cc{ref?}
 	
 \item[\z{trace}]
 The content of the proof step, including all configuration necessary to deterministically ``rerun''
@@ -292,6 +302,8 @@ the proof step. See the description of \z{TRACE} above for details.
 \end{schema}
 
 \subsubsection{\textit{Z/Eves} trace}\label{sec:zevestrace}
+
+\cc{check: abstraction?}
 
 For \textit{Z/Eves}, the trace consists of the proof command---tactic with argumens, goal on 
 which the tactic was applied, and the goal that was resulted after applying. Furthermore, Z/Eves 
@@ -325,7 +337,8 @@ different types of ``using'' are listed in \z{ZEvesTraceType}.
     ZEvesTraceType ::= Use | Apply | Rule | GRule | FRule | Invoke | Instantiate | Split
 \end{zed}
 
-The \z{ZEvesTrace} models a record of \textit{Z/Eves} proof step.
+\cq{The \z{ZEvesTrace} models a record of \textit{Z/Eves} proof step.}
+\cc{ZEvesTraceType?}
 
 \begin{description}
 \item[\z{in\_goal}, \z{out\_goal}]
@@ -349,7 +362,7 @@ instance of \textit{prove by reduce}, we need to store the details. These are st
 from terms to their ``usage'' type. Note that the same term (or lemma) is not used in several
 ways within the same tactic application.
 
-We are using \z{TERM}s here, because content of lemmas can change in a specification. Therefore
+We are using \z{TERM}s here, because the content of lemmas can change in a specification. Therefore
 using simpler \z{NAME}s is not appropriate. With \z{TERM} we can reference a particular version
 and context of a lemma that was used in the proof step.
 
@@ -405,10 +418,10 @@ in a formal way. They can be used to mark (tag) prerequisites to a proof step, h
 lead to taking that step, intended outputs and basically any relevant information about 
 the proof process.
 
-Furthermore, we expect \textit{properties} to be generic and as prover independent as possible.
-The idea is that it is not needed to interpret the goal, and instead significant properties 
+\cp{Furthermore, we expect \textit{properties} to be generic and as prover independent as possible.
+The idea is that \cq{it} is not needed to interpret the goal, and instead significant properties 
 of the goal are to be identified and recorded. Thus when the proof process is referred to afterwards,
-it would be enough to analyse the properties only.
+it would be enough to analyse the properties only.}
 
 Proof properties are boolean-valued uninterpreted functions with parameters.%
 \inwhym{There is no similar concept to \textit{properties}, since the proof terms are encoded
@@ -422,12 +435,14 @@ The actual meanings of the properties would depend on how the \proofprocess{} mo
 Also, the user may want to add whatever properties are felt necessary.
 
 With such mechanism, we could define any property on anything. Below are several examples:
+\cp{
 \begin{itemize}
 \item Properties on goals: $has\_inductable\_terms(goal1)$;
 \item Properties on terms: $commutes(term1, term2)$, $of\_shape(pattern1, term1)$;
-\item Properties on lemmas used and terms applied: $unfolds\_smartly(lemma1, term1)$;
+\item Properties on lemmas used and terms applied: $unfolds\_\cq{smartly}(lemma1, term1)$;
 \item Weird properties: $sums(2, 2, 4)$ and others.
 \end{itemize}
+}
 
 We represent properties as \z{PROPERTY} given type. It is very similar to the 
 \z{INTENT} type (\S\ref{sec:intent}).
@@ -496,9 +511,9 @@ Note that we require a property to have at least one parameter at the moment.
 % ---------------------------------
 \subsection{Proof information}
 %
-We should be able to capture the full \textbf{how/why} of the proof process at any point
+We should be able to capture the full \textbf{how/why} of the proof process \cq{at any point}
 during the proof process. For a particular instance, this contains the intent, notes on
-what drove and affected the step, and anything else that may become relevant necessary.
+what drove and affected the step, and anything else that may become \cq{relevant necessary}.
 We encapsulate all this information in the \z{ProofInfo} structure.
 
 Proof info is the intent behind some part of the attempt plus anything else that might 
@@ -520,7 +535,7 @@ is interpreted in that attempt.
 We see the need for properties on both incoming and outgoing goal and context. On the first glance, 
 because of the way proof steps are ordered, it may seem that outgoing properties are not that
 necessary, because outgoing properties of one would be incoming properties of another.
-Nevertheless, we I believe that in some cases they would be needed.
+Nevertheless, I believe that in some cases they would be needed.
 
 For example, we may want to tag certain properties of the goal that were achieved by the step, 
 which will not be immediately used. Technically, this could be retrieved by some ``look-ahead'', 
@@ -531,7 +546,7 @@ but the information of ``several goals appeared'' may be lost in the next steps,
 the goals is handled separately.
 
 \item[\z{score}]
-Some measure of the proof step, allowing to rank the proof steps in a certain way.%
+\cp{Some measure of the proof step, allowing to rank the proof steps in a certain way.}%
 \inwhym{Similar to $Score$.}%
 Note that the concept has not been investigated enough yet.
 \todo{Do not use \z{TEXT} as the type for \z{score}?}
