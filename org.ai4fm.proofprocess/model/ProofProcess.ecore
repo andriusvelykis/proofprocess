@@ -22,11 +22,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="ProofReference" abstract="true" interface="true">
     <eOperations name="getText" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AttemptSet">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attempts" upperBound="-1"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Term" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Loc" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Trace" abstract="true" interface="true"/>
