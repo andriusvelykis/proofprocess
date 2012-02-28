@@ -85,6 +85,7 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Attempt">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="proof" lowerBound="1" eType="#//ProofElem"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="proof" lowerBound="1" eType="#//ProofElem"
+        containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
