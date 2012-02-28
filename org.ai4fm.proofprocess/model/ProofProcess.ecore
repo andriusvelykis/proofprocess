@@ -9,11 +9,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="&quot;&quot;"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ProofObject">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="content" lowerBound="1"
-        containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Term" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Loc" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Trace" abstract="true" interface="true"/>
