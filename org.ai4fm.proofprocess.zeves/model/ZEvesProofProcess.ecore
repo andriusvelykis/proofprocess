@@ -22,7 +22,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="ProofActivity" eSuperTypes="#//Activity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="proofRef" eType="ecore:EClass ../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//ProofEntry"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ZEvesProofReference" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//ProofReference">
+  <eClassifiers xsi:type="ecore:EClass" name="ZEvesTrace" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Trace">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filePath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"
         containment="true"/>
