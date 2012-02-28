@@ -90,6 +90,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="name" lowerBound="1" eType="#//PropertyDef"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//PropertyType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="params" lowerBound="1"
-        upperBound="-1" eType="#//Term"/>
+        upperBound="-1" eType="#//Term" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
