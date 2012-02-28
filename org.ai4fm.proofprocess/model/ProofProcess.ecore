@@ -92,4 +92,23 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="params" lowerBound="1"
         upperBound="-1" eType="#//Term" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProofElem" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="info" lowerBound="1" eType="#//ProofInfo"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProofEntry" eSuperTypes="#//ProofElem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="proofStep" lowerBound="1"
+        eType="#//ProofStep" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProofSeq" eSuperTypes="#//ProofElem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entries" lowerBound="1"
+        upperBound="-1" eType="#//ProofElem" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProofParallel" eSuperTypes="#//ProofElem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entries" ordered="false"
+        lowerBound="1" upperBound="-1" eType="#//ProofElem" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProofDecor" eSuperTypes="#//ProofElem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entry" lowerBound="1" eType="#//ProofElem"
+        containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>
