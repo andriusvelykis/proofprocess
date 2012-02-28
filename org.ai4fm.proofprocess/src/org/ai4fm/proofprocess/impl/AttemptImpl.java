@@ -7,13 +7,11 @@
 package org.ai4fm.proofprocess.impl;
 
 import org.ai4fm.proofprocess.Attempt;
-import org.ai4fm.proofprocess.CompositionType;
-import org.ai4fm.proofprocess.Intent;
+import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -28,43 +26,22 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.impl.AttemptImpl#getDescription <em>Description</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.impl.AttemptImpl#getIntent <em>Intent</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.AttemptImpl#getProof <em>Proof</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public abstract class AttemptImpl extends EObjectImpl implements Attempt {
+public class AttemptImpl extends EObjectImpl implements Attempt {
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
+	 * The cached value of the '{@link #getProof() <em>Proof</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDescription()
+	 * @see #getProof()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String DESCRIPTION_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDescription()
-	 * @generated
-	 * @ordered
-	 */
-	protected String description = DESCRIPTION_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getIntent() <em>Intent</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getIntent()
-	 * @generated
-	 * @ordered
-	 */
-	protected Intent intent;
+	protected ProofElem proof;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -90,8 +67,8 @@ public abstract class AttemptImpl extends EObjectImpl implements Attempt {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getDescription() {
-		return description;
+	public ProofElem getProof() {
+		return proof;
 	}
 
 	/**
@@ -99,28 +76,14 @@ public abstract class AttemptImpl extends EObjectImpl implements Attempt {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setDescription(String newDescription) {
-		String oldDescription = description;
-		description = newDescription;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.ATTEMPT__DESCRIPTION, oldDescription, description));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Intent getIntent() {
-		if (intent != null && intent.eIsProxy()) {
-			InternalEObject oldIntent = (InternalEObject)intent;
-			intent = (Intent)eResolveProxy(oldIntent);
-			if (intent != oldIntent) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProofProcessPackage.ATTEMPT__INTENT, oldIntent, intent));
-			}
+	public NotificationChain basicSetProof(ProofElem newProof, NotificationChain msgs) {
+		ProofElem oldProof = proof;
+		proof = newProof;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProofProcessPackage.ATTEMPT__PROOF, oldProof, newProof);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
-		return intent;
+		return msgs;
 	}
 
 	/**
@@ -128,8 +91,18 @@ public abstract class AttemptImpl extends EObjectImpl implements Attempt {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Intent basicGetIntent() {
-		return intent;
+	public void setProof(ProofElem newProof) {
+		if (newProof != proof) {
+			NotificationChain msgs = null;
+			if (proof != null)
+				msgs = ((InternalEObject)proof).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.ATTEMPT__PROOF, null, msgs);
+			if (newProof != null)
+				msgs = ((InternalEObject)newProof).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.ATTEMPT__PROOF, null, msgs);
+			msgs = basicSetProof(newProof, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.ATTEMPT__PROOF, newProof, newProof));
 	}
 
 	/**
@@ -137,33 +110,13 @@ public abstract class AttemptImpl extends EObjectImpl implements Attempt {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setIntent(Intent newIntent) {
-		Intent oldIntent = intent;
-		intent = newIntent;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.ATTEMPT__INTENT, oldIntent, intent));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<Attempt> getAttempts() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public CompositionType getCompositionType() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ProofProcessPackage.ATTEMPT__PROOF:
+				return basicSetProof(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -174,11 +127,8 @@ public abstract class AttemptImpl extends EObjectImpl implements Attempt {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ProofProcessPackage.ATTEMPT__DESCRIPTION:
-				return getDescription();
-			case ProofProcessPackage.ATTEMPT__INTENT:
-				if (resolve) return getIntent();
-				return basicGetIntent();
+			case ProofProcessPackage.ATTEMPT__PROOF:
+				return getProof();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -191,11 +141,8 @@ public abstract class AttemptImpl extends EObjectImpl implements Attempt {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ProofProcessPackage.ATTEMPT__DESCRIPTION:
-				setDescription((String)newValue);
-				return;
-			case ProofProcessPackage.ATTEMPT__INTENT:
-				setIntent((Intent)newValue);
+			case ProofProcessPackage.ATTEMPT__PROOF:
+				setProof((ProofElem)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -209,11 +156,8 @@ public abstract class AttemptImpl extends EObjectImpl implements Attempt {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ProofProcessPackage.ATTEMPT__DESCRIPTION:
-				setDescription(DESCRIPTION_EDEFAULT);
-				return;
-			case ProofProcessPackage.ATTEMPT__INTENT:
-				setIntent((Intent)null);
+			case ProofProcessPackage.ATTEMPT__PROOF:
+				setProof((ProofElem)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -227,28 +171,10 @@ public abstract class AttemptImpl extends EObjectImpl implements Attempt {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ProofProcessPackage.ATTEMPT__DESCRIPTION:
-				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-			case ProofProcessPackage.ATTEMPT__INTENT:
-				return intent != null;
+			case ProofProcessPackage.ATTEMPT__PROOF:
+				return proof != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (description: ");
-		result.append(description);
-		result.append(')');
-		return result.toString();
 	}
 
 } //AttemptImpl

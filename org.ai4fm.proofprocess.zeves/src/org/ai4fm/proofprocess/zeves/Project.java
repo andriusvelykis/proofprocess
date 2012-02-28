@@ -6,8 +6,8 @@
  */
 package org.ai4fm.proofprocess.zeves;
 
-import org.ai4fm.proofprocess.AttemptSet;
 import org.ai4fm.proofprocess.Intent;
+import org.ai4fm.proofprocess.Proof;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -88,7 +88,7 @@ public interface Project extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Proofs</b></em>' containment reference list.
-	 * The list contents are of type {@link org.ai4fm.proofprocess.AttemptSet}.
+	 * The list contents are of type {@link org.ai4fm.proofprocess.Proof}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Proofs</em>' containment reference list isn't clear,
@@ -100,7 +100,7 @@ public interface Project extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<AttemptSet> getProofs();
+	EList<Proof> getProofs();
 
 	/**
 	 * Returns the value of the '<em><b>Activities</b></em>' containment reference list.

@@ -6,7 +6,8 @@
  */
 package org.ai4fm.proofprocess.zeves.util;
 
-import org.ai4fm.proofprocess.ProofReference;
+import org.ai4fm.proofprocess.Loc;
+import org.ai4fm.proofprocess.Trace;
 
 import org.ai4fm.proofprocess.zeves.*;
 
@@ -86,16 +87,24 @@ public class ZEvesProofProcessAdapterFactory extends AdapterFactoryImpl {
 				return createProofActivityAdapter();
 			}
 			@Override
-			public Adapter caseZEvesProofReference(ZEvesProofReference object) {
-				return createZEvesProofReferenceAdapter();
+			public Adapter caseZEvesTrace(ZEvesTrace object) {
+				return createZEvesTraceAdapter();
 			}
 			@Override
 			public Adapter casePosition(Position object) {
 				return createPositionAdapter();
 			}
 			@Override
-			public Adapter caseProofReference(ProofReference object) {
-				return createProofReferenceAdapter();
+			public Adapter caseTextLoc(TextLoc object) {
+				return createTextLocAdapter();
+			}
+			@Override
+			public Adapter caseTrace(Trace object) {
+				return createTraceAdapter();
+			}
+			@Override
+			public Adapter caseLoc(Loc object) {
+				return createLocAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -160,16 +169,16 @@ public class ZEvesProofProcessAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.zeves.ZEvesProofReference <em>ZEves Proof Reference</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace <em>ZEves Trace</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofReference
+	 * @see org.ai4fm.proofprocess.zeves.ZEvesTrace
 	 * @generated
 	 */
-	public Adapter createZEvesProofReferenceAdapter() {
+	public Adapter createZEvesTraceAdapter() {
 		return null;
 	}
 
@@ -188,16 +197,44 @@ public class ZEvesProofProcessAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofReference <em>Proof Reference</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.zeves.TextLoc <em>Text Loc</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.ProofReference
+	 * @see org.ai4fm.proofprocess.zeves.TextLoc
 	 * @generated
 	 */
-	public Adapter createProofReferenceAdapter() {
+	public Adapter createTextLocAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Trace <em>Trace</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.Trace
+	 * @generated
+	 */
+	public Adapter createTraceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Loc <em>Loc</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.Loc
+	 * @generated
+	 */
+	public Adapter createLocAdapter() {
 		return null;
 	}
 

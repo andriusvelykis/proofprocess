@@ -59,25 +59,25 @@ public class ProofActivityItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addAttemptPropertyDescriptor(object);
+			addProofRefPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Attempt feature.
+	 * This adds a property descriptor for the Proof Ref feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addAttemptPropertyDescriptor(Object object) {
+	protected void addProofRefPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_ProofActivity_attempt_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ProofActivity_attempt_feature", "_UI_ProofActivity_type"),
-				 ZEvesProofProcessPackage.Literals.PROOF_ACTIVITY__ATTEMPT,
+				 getString("_UI_ProofActivity_proofRef_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ProofActivity_proofRef_feature", "_UI_ProofActivity_type"),
+				 ZEvesProofProcessPackage.Literals.PROOF_ACTIVITY__PROOF_REF,
 				 true,
 				 false,
 				 true,

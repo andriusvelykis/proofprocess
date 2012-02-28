@@ -6,7 +6,8 @@
  */
 package org.ai4fm.proofprocess.zeves.util;
 
-import org.ai4fm.proofprocess.ProofReference;
+import org.ai4fm.proofprocess.Loc;
+import org.ai4fm.proofprocess.Trace;
 
 import org.ai4fm.proofprocess.zeves.*;
 
@@ -91,16 +92,23 @@ public class ZEvesProofProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ZEvesProofProcessPackage.ZEVES_PROOF_REFERENCE: {
-				ZEvesProofReference zEvesProofReference = (ZEvesProofReference)theEObject;
-				T result = caseZEvesProofReference(zEvesProofReference);
-				if (result == null) result = caseProofReference(zEvesProofReference);
+			case ZEvesProofProcessPackage.ZEVES_TRACE: {
+				ZEvesTrace zEvesTrace = (ZEvesTrace)theEObject;
+				T result = caseZEvesTrace(zEvesTrace);
+				if (result == null) result = caseTrace(zEvesTrace);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case ZEvesProofProcessPackage.POSITION: {
 				Position position = (Position)theEObject;
 				T result = casePosition(position);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ZEvesProofProcessPackage.TEXT_LOC: {
+				TextLoc textLoc = (TextLoc)theEObject;
+				T result = caseTextLoc(textLoc);
+				if (result == null) result = caseLoc(textLoc);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -154,17 +162,17 @@ public class ZEvesProofProcessSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>ZEves Proof Reference</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>ZEves Trace</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>ZEves Proof Reference</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>ZEves Trace</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseZEvesProofReference(ZEvesProofReference object) {
+	public T caseZEvesTrace(ZEvesTrace object) {
 		return null;
 	}
 
@@ -184,17 +192,47 @@ public class ZEvesProofProcessSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Proof Reference</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Text Loc</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Proof Reference</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Text Loc</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseProofReference(ProofReference object) {
+	public T caseTextLoc(TextLoc object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Trace</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Trace</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTrace(Trace object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Loc</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Loc</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLoc(Loc object) {
 		return null;
 	}
 

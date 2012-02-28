@@ -12,9 +12,10 @@ import org.ai4fm.proofprocess.zeves.Activity;
 import org.ai4fm.proofprocess.zeves.Position;
 import org.ai4fm.proofprocess.zeves.Project;
 import org.ai4fm.proofprocess.zeves.ProofActivity;
+import org.ai4fm.proofprocess.zeves.TextLoc;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
-import org.ai4fm.proofprocess.zeves.ZEvesProofReference;
+import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -56,7 +57,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass zEvesProofReferenceEClass = null;
+	private EClass zEvesTraceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -64,6 +65,13 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * @generated
 	 */
 	private EClass positionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass textLocEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -224,7 +232,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProofActivity_Attempt() {
+	public EReference getProofActivity_ProofRef() {
 		return (EReference)proofActivityEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -233,8 +241,8 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getZEvesProofReference() {
-		return zEvesProofReferenceEClass;
+	public EClass getZEvesTrace() {
+		return zEvesTraceEClass;
 	}
 
 	/**
@@ -242,8 +250,8 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getZEvesProofReference_FilePath() {
-		return (EAttribute)zEvesProofReferenceEClass.getEStructuralFeatures().get(0);
+	public EAttribute getZEvesTrace_Markup() {
+		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -251,8 +259,8 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getZEvesProofReference_Position() {
-		return (EReference)zEvesProofReferenceEClass.getEStructuralFeatures().get(1);
+	public EAttribute getZEvesTrace_Goal() {
+		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -260,8 +268,8 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getZEvesProofReference_Markup() {
-		return (EAttribute)zEvesProofReferenceEClass.getEStructuralFeatures().get(2);
+	public EAttribute getZEvesTrace_UsedLemmas() {
+		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -269,8 +277,8 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getZEvesProofReference_Goal() {
-		return (EAttribute)zEvesProofReferenceEClass.getEStructuralFeatures().get(3);
+	public EAttribute getZEvesTrace_Text() {
+		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -278,26 +286,8 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getZEvesProofReference_UsedLemmas() {
-		return (EAttribute)zEvesProofReferenceEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getZEvesProofReference_Text() {
-		return (EAttribute)zEvesProofReferenceEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getZEvesProofReference_Case() {
-		return (EAttribute)zEvesProofReferenceEClass.getEStructuralFeatures().get(6);
+	public EAttribute getZEvesTrace_Case() {
+		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -325,6 +315,33 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 */
 	public EAttribute getPosition_Length() {
 		return (EAttribute)positionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTextLoc() {
+		return textLocEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTextLoc_FilePath() {
+		return (EAttribute)textLocEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTextLoc_Position() {
+		return (EReference)textLocEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -367,20 +384,22 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 		createEAttribute(activityEClass, ACTIVITY__TIMESTAMP);
 
 		proofActivityEClass = createEClass(PROOF_ACTIVITY);
-		createEReference(proofActivityEClass, PROOF_ACTIVITY__ATTEMPT);
+		createEReference(proofActivityEClass, PROOF_ACTIVITY__PROOF_REF);
 
-		zEvesProofReferenceEClass = createEClass(ZEVES_PROOF_REFERENCE);
-		createEAttribute(zEvesProofReferenceEClass, ZEVES_PROOF_REFERENCE__FILE_PATH);
-		createEReference(zEvesProofReferenceEClass, ZEVES_PROOF_REFERENCE__POSITION);
-		createEAttribute(zEvesProofReferenceEClass, ZEVES_PROOF_REFERENCE__MARKUP);
-		createEAttribute(zEvesProofReferenceEClass, ZEVES_PROOF_REFERENCE__GOAL);
-		createEAttribute(zEvesProofReferenceEClass, ZEVES_PROOF_REFERENCE__USED_LEMMAS);
-		createEAttribute(zEvesProofReferenceEClass, ZEVES_PROOF_REFERENCE__TEXT);
-		createEAttribute(zEvesProofReferenceEClass, ZEVES_PROOF_REFERENCE__CASE);
+		zEvesTraceEClass = createEClass(ZEVES_TRACE);
+		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__MARKUP);
+		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__GOAL);
+		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__USED_LEMMAS);
+		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__TEXT);
+		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__CASE);
 
 		positionEClass = createEClass(POSITION);
 		createEAttribute(positionEClass, POSITION__OFFSET);
 		createEAttribute(positionEClass, POSITION__LENGTH);
+
+		textLocEClass = createEClass(TEXT_LOC);
+		createEAttribute(textLocEClass, TEXT_LOC__FILE_PATH);
+		createEReference(textLocEClass, TEXT_LOC__POSITION);
 	}
 
 	/**
@@ -415,13 +434,14 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 
 		// Add supertypes to classes
 		proofActivityEClass.getESuperTypes().add(this.getActivity());
-		zEvesProofReferenceEClass.getESuperTypes().add(theProofProcessPackage.getProofReference());
+		zEvesTraceEClass.getESuperTypes().add(theProofProcessPackage.getTrace());
+		textLocEClass.getESuperTypes().add(theProofProcessPackage.getLoc());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(projectEClass, Project.class, "Project", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getProject_Label(), ecorePackage.getEString(), "label", null, 0, 1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProject_ZEvesVersion(), ecorePackage.getEString(), "zEvesVersion", null, 0, 1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProject_Proofs(), theProofProcessPackage.getAttemptSet(), null, "proofs", null, 0, -1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProject_Proofs(), theProofProcessPackage.getProof(), null, "proofs", null, 0, -1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProject_Activities(), this.getActivity(), null, "activities", null, 0, -1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProject_Intents(), theProofProcessPackage.getIntent(), null, "intents", null, 0, -1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -430,20 +450,22 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 		initEAttribute(getActivity_Timestamp(), ecorePackage.getEDate(), "timestamp", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(proofActivityEClass, ProofActivity.class, "ProofActivity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getProofActivity_Attempt(), theProofProcessPackage.getAttempt(), null, "attempt", null, 0, 1, ProofActivity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProofActivity_ProofRef(), theProofProcessPackage.getProofEntry(), null, "proofRef", null, 0, 1, ProofActivity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(zEvesProofReferenceEClass, ZEvesProofReference.class, "ZEvesProofReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getZEvesProofReference_FilePath(), ecorePackage.getEString(), "filePath", null, 0, 1, ZEvesProofReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getZEvesProofReference_Position(), this.getPosition(), null, "position", null, 0, 1, ZEvesProofReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getZEvesProofReference_Markup(), ecorePackage.getEString(), "markup", null, 0, 1, ZEvesProofReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getZEvesProofReference_Goal(), ecorePackage.getEString(), "goal", null, 0, 1, ZEvesProofReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getZEvesProofReference_UsedLemmas(), ecorePackage.getEString(), "usedLemmas", null, 0, -1, ZEvesProofReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getZEvesProofReference_Text(), ecorePackage.getEString(), "text", null, 1, 1, ZEvesProofReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getZEvesProofReference_Case(), ecorePackage.getEString(), "case", "\"\"", 1, 1, ZEvesProofReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(zEvesTraceEClass, ZEvesTrace.class, "ZEvesTrace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getZEvesTrace_Markup(), ecorePackage.getEString(), "markup", null, 0, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getZEvesTrace_Goal(), ecorePackage.getEString(), "goal", null, 0, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getZEvesTrace_UsedLemmas(), ecorePackage.getEString(), "usedLemmas", null, 0, -1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getZEvesTrace_Text(), ecorePackage.getEString(), "text", null, 1, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getZEvesTrace_Case(), ecorePackage.getEString(), "case", "\"\"", 1, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(positionEClass, Position.class, "Position", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPosition_Offset(), ecorePackage.getEInt(), "offset", null, 1, 1, Position.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPosition_Length(), ecorePackage.getEInt(), "length", null, 1, 1, Position.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(textLocEClass, TextLoc.class, "TextLoc", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTextLoc_FilePath(), ecorePackage.getEString(), "filePath", null, 0, 1, TextLoc.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTextLoc_Position(), this.getPosition(), null, "position", null, 0, 1, TextLoc.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

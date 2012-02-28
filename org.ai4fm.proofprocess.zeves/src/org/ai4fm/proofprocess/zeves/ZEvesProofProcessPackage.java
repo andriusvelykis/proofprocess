@@ -191,13 +191,13 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	int PROOF_ACTIVITY__TIMESTAMP = ACTIVITY__TIMESTAMP;
 
 	/**
-	 * The feature id for the '<em><b>Attempt</b></em>' reference.
+	 * The feature id for the '<em><b>Proof Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROOF_ACTIVITY__ATTEMPT = ACTIVITY_FEATURE_COUNT + 0;
+	int PROOF_ACTIVITY__PROOF_REF = ACTIVITY_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Proof Activity</em>' class.
@@ -209,32 +209,14 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	int PROOF_ACTIVITY_FEATURE_COUNT = ACTIVITY_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.ZEvesProofReferenceImpl <em>ZEves Proof Reference</em>}' class.
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl <em>ZEves Trace</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofReferenceImpl
-	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getZEvesProofReference()
+	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl
+	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getZEvesTrace()
 	 * @generated
 	 */
-	int ZEVES_PROOF_REFERENCE = 3;
-
-	/**
-	 * The feature id for the '<em><b>File Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ZEVES_PROOF_REFERENCE__FILE_PATH = ProofProcessPackage.PROOF_REFERENCE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Position</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ZEVES_PROOF_REFERENCE__POSITION = ProofProcessPackage.PROOF_REFERENCE_FEATURE_COUNT + 1;
+	int ZEVES_TRACE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Markup</b></em>' attribute.
@@ -243,7 +225,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ZEVES_PROOF_REFERENCE__MARKUP = ProofProcessPackage.PROOF_REFERENCE_FEATURE_COUNT + 2;
+	int ZEVES_TRACE__MARKUP = ProofProcessPackage.TRACE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Goal</b></em>' attribute.
@@ -252,7 +234,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ZEVES_PROOF_REFERENCE__GOAL = ProofProcessPackage.PROOF_REFERENCE_FEATURE_COUNT + 3;
+	int ZEVES_TRACE__GOAL = ProofProcessPackage.TRACE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Used Lemmas</b></em>' attribute list.
@@ -261,7 +243,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ZEVES_PROOF_REFERENCE__USED_LEMMAS = ProofProcessPackage.PROOF_REFERENCE_FEATURE_COUNT + 4;
+	int ZEVES_TRACE__USED_LEMMAS = ProofProcessPackage.TRACE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Text</b></em>' attribute.
@@ -270,7 +252,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ZEVES_PROOF_REFERENCE__TEXT = ProofProcessPackage.PROOF_REFERENCE_FEATURE_COUNT + 5;
+	int ZEVES_TRACE__TEXT = ProofProcessPackage.TRACE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Case</b></em>' attribute.
@@ -279,16 +261,16 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ZEVES_PROOF_REFERENCE__CASE = ProofProcessPackage.PROOF_REFERENCE_FEATURE_COUNT + 6;
+	int ZEVES_TRACE__CASE = ProofProcessPackage.TRACE_FEATURE_COUNT + 4;
 
 	/**
-	 * The number of structural features of the '<em>ZEves Proof Reference</em>' class.
+	 * The number of structural features of the '<em>ZEves Trace</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ZEVES_PROOF_REFERENCE_FEATURE_COUNT = ProofProcessPackage.PROOF_REFERENCE_FEATURE_COUNT + 7;
+	int ZEVES_TRACE_FEATURE_COUNT = ProofProcessPackage.TRACE_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.PositionImpl <em>Position</em>}' class.
@@ -326,6 +308,43 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int POSITION_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.TextLocImpl <em>Text Loc</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.zeves.impl.TextLocImpl
+	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getTextLoc()
+	 * @generated
+	 */
+	int TEXT_LOC = 5;
+
+	/**
+	 * The feature id for the '<em><b>File Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXT_LOC__FILE_PATH = ProofProcessPackage.LOC_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Position</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXT_LOC__POSITION = ProofProcessPackage.LOC_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Text Loc</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXT_LOC_FEATURE_COUNT = ProofProcessPackage.LOC_FEATURE_COUNT + 2;
 
 
 	/**
@@ -436,102 +455,80 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	EClass getProofActivity();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.ai4fm.proofprocess.zeves.ProofActivity#getAttempt <em>Attempt</em>}'.
+	 * Returns the meta object for the reference '{@link org.ai4fm.proofprocess.zeves.ProofActivity#getProofRef <em>Proof Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Attempt</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ProofActivity#getAttempt()
+	 * @return the meta object for the reference '<em>Proof Ref</em>'.
+	 * @see org.ai4fm.proofprocess.zeves.ProofActivity#getProofRef()
 	 * @see #getProofActivity()
 	 * @generated
 	 */
-	EReference getProofActivity_Attempt();
+	EReference getProofActivity_ProofRef();
 
 	/**
-	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.ZEvesProofReference <em>ZEves Proof Reference</em>}'.
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace <em>ZEves Trace</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>ZEves Proof Reference</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofReference
+	 * @return the meta object for class '<em>ZEves Trace</em>'.
+	 * @see org.ai4fm.proofprocess.zeves.ZEvesTrace
 	 * @generated
 	 */
-	EClass getZEvesProofReference();
+	EClass getZEvesTrace();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesProofReference#getFilePath <em>File Path</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>File Path</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofReference#getFilePath()
-	 * @see #getZEvesProofReference()
-	 * @generated
-	 */
-	EAttribute getZEvesProofReference_FilePath();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.ai4fm.proofprocess.zeves.ZEvesProofReference#getPosition <em>Position</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Position</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofReference#getPosition()
-	 * @see #getZEvesProofReference()
-	 * @generated
-	 */
-	EReference getZEvesProofReference_Position();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesProofReference#getMarkup <em>Markup</em>}'.
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getMarkup <em>Markup</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Markup</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofReference#getMarkup()
-	 * @see #getZEvesProofReference()
+	 * @see org.ai4fm.proofprocess.zeves.ZEvesTrace#getMarkup()
+	 * @see #getZEvesTrace()
 	 * @generated
 	 */
-	EAttribute getZEvesProofReference_Markup();
+	EAttribute getZEvesTrace_Markup();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesProofReference#getGoal <em>Goal</em>}'.
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getGoal <em>Goal</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Goal</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofReference#getGoal()
-	 * @see #getZEvesProofReference()
+	 * @see org.ai4fm.proofprocess.zeves.ZEvesTrace#getGoal()
+	 * @see #getZEvesTrace()
 	 * @generated
 	 */
-	EAttribute getZEvesProofReference_Goal();
+	EAttribute getZEvesTrace_Goal();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link org.ai4fm.proofprocess.zeves.ZEvesProofReference#getUsedLemmas <em>Used Lemmas</em>}'.
+	 * Returns the meta object for the attribute list '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getUsedLemmas <em>Used Lemmas</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute list '<em>Used Lemmas</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofReference#getUsedLemmas()
-	 * @see #getZEvesProofReference()
+	 * @see org.ai4fm.proofprocess.zeves.ZEvesTrace#getUsedLemmas()
+	 * @see #getZEvesTrace()
 	 * @generated
 	 */
-	EAttribute getZEvesProofReference_UsedLemmas();
+	EAttribute getZEvesTrace_UsedLemmas();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesProofReference#getText <em>Text</em>}'.
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getText <em>Text</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Text</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofReference#getText()
-	 * @see #getZEvesProofReference()
+	 * @see org.ai4fm.proofprocess.zeves.ZEvesTrace#getText()
+	 * @see #getZEvesTrace()
 	 * @generated
 	 */
-	EAttribute getZEvesProofReference_Text();
+	EAttribute getZEvesTrace_Text();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesProofReference#getCase <em>Case</em>}'.
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getCase <em>Case</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Case</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofReference#getCase()
-	 * @see #getZEvesProofReference()
+	 * @see org.ai4fm.proofprocess.zeves.ZEvesTrace#getCase()
+	 * @see #getZEvesTrace()
 	 * @generated
 	 */
-	EAttribute getZEvesProofReference_Case();
+	EAttribute getZEvesTrace_Case();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.Position <em>Position</em>}'.
@@ -564,6 +561,38 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getPosition_Length();
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.TextLoc <em>Text Loc</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Text Loc</em>'.
+	 * @see org.ai4fm.proofprocess.zeves.TextLoc
+	 * @generated
+	 */
+	EClass getTextLoc();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.TextLoc#getFilePath <em>File Path</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>File Path</em>'.
+	 * @see org.ai4fm.proofprocess.zeves.TextLoc#getFilePath()
+	 * @see #getTextLoc()
+	 * @generated
+	 */
+	EAttribute getTextLoc_FilePath();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.ai4fm.proofprocess.zeves.TextLoc#getPosition <em>Position</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Position</em>'.
+	 * @see org.ai4fm.proofprocess.zeves.TextLoc#getPosition()
+	 * @see #getTextLoc()
+	 * @generated
+	 */
+	EReference getTextLoc_Position();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -674,38 +703,22 @@ public interface ZEvesProofProcessPackage extends EPackage {
 		EClass PROOF_ACTIVITY = eINSTANCE.getProofActivity();
 
 		/**
-		 * The meta object literal for the '<em><b>Attempt</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Proof Ref</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROOF_ACTIVITY__ATTEMPT = eINSTANCE.getProofActivity_Attempt();
+		EReference PROOF_ACTIVITY__PROOF_REF = eINSTANCE.getProofActivity_ProofRef();
 
 		/**
-		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.ZEvesProofReferenceImpl <em>ZEves Proof Reference</em>}' class.
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl <em>ZEves Trace</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofReferenceImpl
-		 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getZEvesProofReference()
+		 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl
+		 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getZEvesTrace()
 		 * @generated
 		 */
-		EClass ZEVES_PROOF_REFERENCE = eINSTANCE.getZEvesProofReference();
-
-		/**
-		 * The meta object literal for the '<em><b>File Path</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ZEVES_PROOF_REFERENCE__FILE_PATH = eINSTANCE.getZEvesProofReference_FilePath();
-
-		/**
-		 * The meta object literal for the '<em><b>Position</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ZEVES_PROOF_REFERENCE__POSITION = eINSTANCE.getZEvesProofReference_Position();
+		EClass ZEVES_TRACE = eINSTANCE.getZEvesTrace();
 
 		/**
 		 * The meta object literal for the '<em><b>Markup</b></em>' attribute feature.
@@ -713,7 +726,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ZEVES_PROOF_REFERENCE__MARKUP = eINSTANCE.getZEvesProofReference_Markup();
+		EAttribute ZEVES_TRACE__MARKUP = eINSTANCE.getZEvesTrace_Markup();
 
 		/**
 		 * The meta object literal for the '<em><b>Goal</b></em>' attribute feature.
@@ -721,7 +734,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ZEVES_PROOF_REFERENCE__GOAL = eINSTANCE.getZEvesProofReference_Goal();
+		EAttribute ZEVES_TRACE__GOAL = eINSTANCE.getZEvesTrace_Goal();
 
 		/**
 		 * The meta object literal for the '<em><b>Used Lemmas</b></em>' attribute list feature.
@@ -729,7 +742,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ZEVES_PROOF_REFERENCE__USED_LEMMAS = eINSTANCE.getZEvesProofReference_UsedLemmas();
+		EAttribute ZEVES_TRACE__USED_LEMMAS = eINSTANCE.getZEvesTrace_UsedLemmas();
 
 		/**
 		 * The meta object literal for the '<em><b>Text</b></em>' attribute feature.
@@ -737,7 +750,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ZEVES_PROOF_REFERENCE__TEXT = eINSTANCE.getZEvesProofReference_Text();
+		EAttribute ZEVES_TRACE__TEXT = eINSTANCE.getZEvesTrace_Text();
 
 		/**
 		 * The meta object literal for the '<em><b>Case</b></em>' attribute feature.
@@ -745,7 +758,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ZEVES_PROOF_REFERENCE__CASE = eINSTANCE.getZEvesProofReference_Case();
+		EAttribute ZEVES_TRACE__CASE = eINSTANCE.getZEvesTrace_Case();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.PositionImpl <em>Position</em>}' class.
@@ -772,6 +785,32 @@ public interface ZEvesProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute POSITION__LENGTH = eINSTANCE.getPosition_Length();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.TextLocImpl <em>Text Loc</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.zeves.impl.TextLocImpl
+		 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getTextLoc()
+		 * @generated
+		 */
+		EClass TEXT_LOC = eINSTANCE.getTextLoc();
+
+		/**
+		 * The meta object literal for the '<em><b>File Path</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TEXT_LOC__FILE_PATH = eINSTANCE.getTextLoc_FilePath();
+
+		/**
+		 * The meta object literal for the '<em><b>Position</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TEXT_LOC__POSITION = eINSTANCE.getTextLoc_Position();
 
 	}
 

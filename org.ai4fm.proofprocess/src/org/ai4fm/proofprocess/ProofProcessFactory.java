@@ -35,49 +35,94 @@ public interface ProofProcessFactory extends EFactory {
 	Intent createIntent();
 
 	/**
-	 * Returns a new object of class '<em>Proof Object</em>'.
+	 * Returns a new object of class '<em>Proof Step</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Proof Object</em>'.
+	 * @return a new object of class '<em>Proof Step</em>'.
 	 * @generated
 	 */
-	ProofObject createProofObject();
+	ProofStep createProofStep();
 
 	/**
-	 * Returns a new object of class '<em>Proof Property</em>'.
+	 * Returns a new object of class '<em>Proof Info</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Proof Property</em>'.
+	 * @return a new object of class '<em>Proof Info</em>'.
 	 * @generated
 	 */
-	ProofProperty createProofProperty();
+	ProofInfo createProofInfo();
 
 	/**
-	 * Returns a new object of class '<em>Attempt Set</em>'.
+	 * Returns a new object of class '<em>Property Def</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Attempt Set</em>'.
+	 * @return a new object of class '<em>Property Def</em>'.
 	 * @generated
 	 */
-	AttemptSet createAttemptSet();
+	PropertyDef createPropertyDef();
 
 	/**
-	 * Returns a new object of class '<em>Attempt Group</em>'.
+	 * Returns a new object of class '<em>Property</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Attempt Group</em>'.
+	 * @return a new object of class '<em>Property</em>'.
 	 * @generated
 	 */
-	AttemptGroup createAttemptGroup();
+	Property createProperty();
 
 	/**
-	 * Returns a new object of class '<em>Attempt Entry</em>'.
+	 * Returns a new object of class '<em>Proof Entry</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Attempt Entry</em>'.
+	 * @return a new object of class '<em>Proof Entry</em>'.
 	 * @generated
 	 */
-	AttemptEntry createAttemptEntry();
+	ProofEntry createProofEntry();
+
+	/**
+	 * Returns a new object of class '<em>Proof Seq</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Proof Seq</em>'.
+	 * @generated
+	 */
+	ProofSeq createProofSeq();
+
+	/**
+	 * Returns a new object of class '<em>Proof Parallel</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Proof Parallel</em>'.
+	 * @generated
+	 */
+	ProofParallel createProofParallel();
+
+	/**
+	 * Returns a new object of class '<em>Proof Decor</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Proof Decor</em>'.
+	 * @generated
+	 */
+	ProofDecor createProofDecor();
+
+	/**
+	 * Returns a new object of class '<em>Attempt</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Attempt</em>'.
+	 * @generated
+	 */
+	Attempt createAttempt();
+
+	/**
+	 * Returns a new object of class '<em>Proof</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Proof</em>'.
+	 * @generated
+	 */
+	Proof createProof();
 
 	/**
 	 * Returns the package supported by this factory.

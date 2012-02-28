@@ -7,16 +7,23 @@
 package org.ai4fm.proofprocess.impl;
 
 import org.ai4fm.proofprocess.Attempt;
-import org.ai4fm.proofprocess.AttemptEntry;
-import org.ai4fm.proofprocess.AttemptGroup;
-import org.ai4fm.proofprocess.AttemptSet;
-import org.ai4fm.proofprocess.CompositionType;
 import org.ai4fm.proofprocess.Intent;
-import org.ai4fm.proofprocess.ProofObject;
+import org.ai4fm.proofprocess.Loc;
+import org.ai4fm.proofprocess.Proof;
+import org.ai4fm.proofprocess.ProofDecor;
+import org.ai4fm.proofprocess.ProofElem;
+import org.ai4fm.proofprocess.ProofEntry;
+import org.ai4fm.proofprocess.ProofInfo;
+import org.ai4fm.proofprocess.ProofParallel;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofProcessPackage;
-import org.ai4fm.proofprocess.ProofProperty;
-import org.ai4fm.proofprocess.ProofReference;
+import org.ai4fm.proofprocess.ProofSeq;
+import org.ai4fm.proofprocess.ProofStep;
+import org.ai4fm.proofprocess.Property;
+import org.ai4fm.proofprocess.PropertyDef;
+import org.ai4fm.proofprocess.PropertyType;
+import org.ai4fm.proofprocess.Term;
+import org.ai4fm.proofprocess.Trace;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -38,13 +45,6 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass attemptEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass intentEClass = null;
 
 	/**
@@ -52,49 +52,105 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass proofObjectEClass = null;
+	private EClass termEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass proofPropertyEClass = null;
+	private EClass locEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass proofReferenceEClass = null;
+	private EClass traceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass attemptSetEClass = null;
+	private EClass proofStepEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass attemptGroupEClass = null;
+	private EClass proofInfoEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass attemptEntryEClass = null;
+	private EClass propertyDefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EEnum compositionTypeEEnum = null;
+	private EClass propertyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass proofElemEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass proofEntryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass proofSeqEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass proofParallelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass proofDecorEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass attemptEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass proofEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum propertyTypeEEnum = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -162,33 +218,6 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getAttempt() {
-		return attemptEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getAttempt_Description() {
-		return (EAttribute)attemptEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getAttempt_Intent() {
-		return (EReference)attemptEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getIntent() {
 		return intentEClass;
 	}
@@ -207,8 +236,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getProofObject() {
-		return proofObjectEClass;
+	public EAttribute getIntent_Description() {
+		return (EAttribute)intentEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -216,8 +245,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProofObject_Properties() {
-		return (EReference)proofObjectEClass.getEStructuralFeatures().get(0);
+	public EClass getTerm() {
+		return termEClass;
 	}
 
 	/**
@@ -225,8 +254,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProofObject_Content() {
-		return (EReference)proofObjectEClass.getEStructuralFeatures().get(1);
+	public EClass getLoc() {
+		return locEClass;
 	}
 
 	/**
@@ -234,8 +263,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getProofProperty() {
-		return proofPropertyEClass;
+	public EClass getTrace() {
+		return traceEClass;
 	}
 
 	/**
@@ -243,8 +272,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProofProperty_Name() {
-		return (EAttribute)proofPropertyEClass.getEStructuralFeatures().get(0);
+	public EClass getProofStep() {
+		return proofStepEClass;
 	}
 
 	/**
@@ -252,8 +281,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getProofProperty_Description() {
-		return (EAttribute)proofPropertyEClass.getEStructuralFeatures().get(1);
+	public EReference getProofStep_InGoals() {
+		return (EReference)proofStepEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -261,8 +290,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getProofReference() {
-		return proofReferenceEClass;
+	public EReference getProofStep_OutGoals() {
+		return (EReference)proofStepEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -270,8 +299,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getAttemptSet() {
-		return attemptSetEClass;
+	public EReference getProofStep_Source() {
+		return (EReference)proofStepEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -279,8 +308,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getAttemptSet_Attempts() {
-		return (EReference)attemptSetEClass.getEStructuralFeatures().get(0);
+	public EReference getProofStep_Trace() {
+		return (EReference)proofStepEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -288,8 +317,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getAttemptSet_Label() {
-		return (EAttribute)attemptSetEClass.getEStructuralFeatures().get(1);
+	public EClass getProofInfo() {
+		return proofInfoEClass;
 	}
 
 	/**
@@ -297,8 +326,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getAttemptGroup() {
-		return attemptGroupEClass;
+	public EReference getProofInfo_Why() {
+		return (EReference)proofInfoEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -306,8 +335,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getAttemptGroup_CompositionType() {
-		return (EAttribute)attemptGroupEClass.getEStructuralFeatures().get(0);
+	public EAttribute getProofInfo_Narrative() {
+		return (EAttribute)proofInfoEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -315,8 +344,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getAttemptGroup_Attempts() {
-		return (EReference)attemptGroupEClass.getEStructuralFeatures().get(1);
+	public EReference getProofInfo_InProps() {
+		return (EReference)proofInfoEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -324,8 +353,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getAttemptGroup_Contained() {
-		return (EReference)attemptGroupEClass.getEStructuralFeatures().get(2);
+	public EReference getProofInfo_OutProps() {
+		return (EReference)proofInfoEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -333,8 +362,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getAttemptEntry() {
-		return attemptEntryEClass;
+	public EClass getPropertyDef() {
+		return propertyDefEClass;
 	}
 
 	/**
@@ -342,8 +371,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getAttemptEntry_Content() {
-		return (EReference)attemptEntryEClass.getEStructuralFeatures().get(0);
+	public EAttribute getPropertyDef_Name() {
+		return (EAttribute)propertyDefEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -351,8 +380,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getAttemptEntry_Inputs() {
-		return (EReference)attemptEntryEClass.getEStructuralFeatures().get(1);
+	public EAttribute getPropertyDef_Description() {
+		return (EAttribute)propertyDefEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -360,8 +389,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getAttemptEntry_Outputs() {
-		return (EReference)attemptEntryEClass.getEStructuralFeatures().get(2);
+	public EClass getProperty() {
+		return propertyEClass;
 	}
 
 	/**
@@ -369,8 +398,179 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EEnum getCompositionType() {
-		return compositionTypeEEnum;
+	public EReference getProperty_Name() {
+		return (EReference)propertyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getProperty_Type() {
+		return (EAttribute)propertyEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProperty_Params() {
+		return (EReference)propertyEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProofElem() {
+		return proofElemEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProofElem_Info() {
+		return (EReference)proofElemEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProofEntry() {
+		return proofEntryEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProofEntry_ProofStep() {
+		return (EReference)proofEntryEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProofSeq() {
+		return proofSeqEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProofSeq_Entries() {
+		return (EReference)proofSeqEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProofParallel() {
+		return proofParallelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProofParallel_Entries() {
+		return (EReference)proofParallelEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProofDecor() {
+		return proofDecorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProofDecor_Entry() {
+		return (EReference)proofDecorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getAttempt() {
+		return attemptEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAttempt_Proof() {
+		return (EReference)attemptEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProof() {
+		return proofEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProof_Goals() {
+		return (EReference)proofEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getProof_Label() {
+		return (EAttribute)proofEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProof_Attempts() {
+		return (EReference)proofEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getPropertyType() {
+		return propertyTypeEEnum;
 	}
 
 	/**
@@ -401,39 +601,62 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		isCreated = true;
 
 		// Create classes and their features
-		attemptEClass = createEClass(ATTEMPT);
-		createEAttribute(attemptEClass, ATTEMPT__DESCRIPTION);
-		createEReference(attemptEClass, ATTEMPT__INTENT);
-
 		intentEClass = createEClass(INTENT);
 		createEAttribute(intentEClass, INTENT__NAME);
+		createEAttribute(intentEClass, INTENT__DESCRIPTION);
 
-		proofObjectEClass = createEClass(PROOF_OBJECT);
-		createEReference(proofObjectEClass, PROOF_OBJECT__PROPERTIES);
-		createEReference(proofObjectEClass, PROOF_OBJECT__CONTENT);
+		termEClass = createEClass(TERM);
 
-		proofPropertyEClass = createEClass(PROOF_PROPERTY);
-		createEAttribute(proofPropertyEClass, PROOF_PROPERTY__NAME);
-		createEAttribute(proofPropertyEClass, PROOF_PROPERTY__DESCRIPTION);
+		locEClass = createEClass(LOC);
 
-		proofReferenceEClass = createEClass(PROOF_REFERENCE);
+		traceEClass = createEClass(TRACE);
 
-		attemptSetEClass = createEClass(ATTEMPT_SET);
-		createEReference(attemptSetEClass, ATTEMPT_SET__ATTEMPTS);
-		createEAttribute(attemptSetEClass, ATTEMPT_SET__LABEL);
+		proofStepEClass = createEClass(PROOF_STEP);
+		createEReference(proofStepEClass, PROOF_STEP__IN_GOALS);
+		createEReference(proofStepEClass, PROOF_STEP__OUT_GOALS);
+		createEReference(proofStepEClass, PROOF_STEP__SOURCE);
+		createEReference(proofStepEClass, PROOF_STEP__TRACE);
 
-		attemptGroupEClass = createEClass(ATTEMPT_GROUP);
-		createEAttribute(attemptGroupEClass, ATTEMPT_GROUP__COMPOSITION_TYPE);
-		createEReference(attemptGroupEClass, ATTEMPT_GROUP__ATTEMPTS);
-		createEReference(attemptGroupEClass, ATTEMPT_GROUP__CONTAINED);
+		proofInfoEClass = createEClass(PROOF_INFO);
+		createEReference(proofInfoEClass, PROOF_INFO__WHY);
+		createEAttribute(proofInfoEClass, PROOF_INFO__NARRATIVE);
+		createEReference(proofInfoEClass, PROOF_INFO__IN_PROPS);
+		createEReference(proofInfoEClass, PROOF_INFO__OUT_PROPS);
 
-		attemptEntryEClass = createEClass(ATTEMPT_ENTRY);
-		createEReference(attemptEntryEClass, ATTEMPT_ENTRY__CONTENT);
-		createEReference(attemptEntryEClass, ATTEMPT_ENTRY__INPUTS);
-		createEReference(attemptEntryEClass, ATTEMPT_ENTRY__OUTPUTS);
+		propertyDefEClass = createEClass(PROPERTY_DEF);
+		createEAttribute(propertyDefEClass, PROPERTY_DEF__NAME);
+		createEAttribute(propertyDefEClass, PROPERTY_DEF__DESCRIPTION);
+
+		propertyEClass = createEClass(PROPERTY);
+		createEReference(propertyEClass, PROPERTY__NAME);
+		createEAttribute(propertyEClass, PROPERTY__TYPE);
+		createEReference(propertyEClass, PROPERTY__PARAMS);
+
+		proofElemEClass = createEClass(PROOF_ELEM);
+		createEReference(proofElemEClass, PROOF_ELEM__INFO);
+
+		proofEntryEClass = createEClass(PROOF_ENTRY);
+		createEReference(proofEntryEClass, PROOF_ENTRY__PROOF_STEP);
+
+		proofSeqEClass = createEClass(PROOF_SEQ);
+		createEReference(proofSeqEClass, PROOF_SEQ__ENTRIES);
+
+		proofParallelEClass = createEClass(PROOF_PARALLEL);
+		createEReference(proofParallelEClass, PROOF_PARALLEL__ENTRIES);
+
+		proofDecorEClass = createEClass(PROOF_DECOR);
+		createEReference(proofDecorEClass, PROOF_DECOR__ENTRY);
+
+		attemptEClass = createEClass(ATTEMPT);
+		createEReference(attemptEClass, ATTEMPT__PROOF);
+
+		proofEClass = createEClass(PROOF);
+		createEReference(proofEClass, PROOF__GOALS);
+		createEAttribute(proofEClass, PROOF__LABEL);
+		createEReference(proofEClass, PROOF__ATTEMPTS);
 
 		// Create enums
-		compositionTypeEEnum = createEEnum(COMPOSITION_TYPE);
+		propertyTypeEEnum = createEEnum(PROPERTY_TYPE);
 	}
 
 	/**
@@ -464,51 +687,70 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		attemptGroupEClass.getESuperTypes().add(this.getAttempt());
-		attemptEntryEClass.getESuperTypes().add(this.getAttempt());
+		proofEntryEClass.getESuperTypes().add(this.getProofElem());
+		proofSeqEClass.getESuperTypes().add(this.getProofElem());
+		proofParallelEClass.getESuperTypes().add(this.getProofElem());
+		proofDecorEClass.getESuperTypes().add(this.getProofElem());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(attemptEClass, Attempt.class, "Attempt", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAttempt_Description(), ecorePackage.getEString(), "description", null, 0, 1, Attempt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAttempt_Intent(), this.getIntent(), null, "intent", null, 1, 1, Attempt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		addEOperation(attemptEClass, this.getAttempt(), "getAttempts", 0, -1, IS_UNIQUE, IS_ORDERED);
-
-		addEOperation(attemptEClass, this.getCompositionType(), "getCompositionType", 1, 1, IS_UNIQUE, IS_ORDERED);
-
 		initEClass(intentEClass, Intent.class, "Intent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIntent_Name(), ecorePackage.getEString(), "name", null, 1, 1, Intent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIntent_Name(), ecorePackage.getEString(), "name", "", 1, 1, Intent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIntent_Description(), ecorePackage.getEString(), "description", "\"\"", 1, 1, Intent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(proofObjectEClass, ProofObject.class, "ProofObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getProofObject_Properties(), this.getProofProperty(), null, "properties", null, 0, -1, ProofObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProofObject_Content(), this.getProofReference(), null, "content", null, 1, 1, ProofObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(termEClass, Term.class, "Term", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(proofPropertyEClass, ProofProperty.class, "ProofProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getProofProperty_Name(), ecorePackage.getEString(), "name", null, 1, 1, ProofProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProofProperty_Description(), ecorePackage.getEString(), "description", null, 0, 1, ProofProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(locEClass, Loc.class, "Loc", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(proofReferenceEClass, ProofReference.class, "ProofReference", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(traceEClass, Trace.class, "Trace", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		addEOperation(proofReferenceEClass, ecorePackage.getEString(), "getText", 1, 1, IS_UNIQUE, IS_ORDERED);
+		initEClass(proofStepEClass, ProofStep.class, "ProofStep", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProofStep_InGoals(), this.getTerm(), null, "inGoals", null, 1, -1, ProofStep.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProofStep_OutGoals(), this.getTerm(), null, "outGoals", null, 0, -1, ProofStep.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProofStep_Source(), this.getLoc(), null, "source", null, 0, 1, ProofStep.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProofStep_Trace(), this.getTrace(), null, "trace", null, 1, 1, ProofStep.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(attemptSetEClass, AttemptSet.class, "AttemptSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getAttemptSet_Attempts(), this.getAttemptGroup(), null, "attempts", null, 0, -1, AttemptSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAttemptSet_Label(), ecorePackage.getEString(), "label", null, 0, 1, AttemptSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(proofInfoEClass, ProofInfo.class, "ProofInfo", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProofInfo_Why(), this.getIntent(), null, "why", null, 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProofInfo_Narrative(), ecorePackage.getEString(), "narrative", "\"\"", 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProofInfo_InProps(), this.getProperty(), null, "inProps", null, 0, -1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProofInfo_OutProps(), this.getProperty(), null, "outProps", null, 0, -1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(attemptGroupEClass, AttemptGroup.class, "AttemptGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAttemptGroup_CompositionType(), this.getCompositionType(), "compositionType", "SEQUENTIAL", 1, 1, AttemptGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAttemptGroup_Attempts(), this.getAttempt(), null, "attempts", null, 0, -1, AttemptGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAttemptGroup_Contained(), this.getAttempt(), null, "contained", null, 0, -1, AttemptGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(propertyDefEClass, PropertyDef.class, "PropertyDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPropertyDef_Name(), ecorePackage.getEString(), "name", "", 1, 1, PropertyDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPropertyDef_Description(), ecorePackage.getEString(), "description", "\"\"", 1, 1, PropertyDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(attemptEntryEClass, AttemptEntry.class, "AttemptEntry", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getAttemptEntry_Content(), this.getProofReference(), null, "content", null, 1, 1, AttemptEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAttemptEntry_Inputs(), this.getProofObject(), null, "inputs", null, 1, -1, AttemptEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAttemptEntry_Outputs(), this.getProofObject(), null, "outputs", null, 0, -1, AttemptEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(propertyEClass, Property.class, "Property", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProperty_Name(), this.getPropertyDef(), null, "name", null, 1, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProperty_Type(), this.getPropertyType(), "type", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProperty_Params(), this.getTerm(), null, "params", null, 1, -1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(proofElemEClass, ProofElem.class, "ProofElem", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProofElem_Info(), this.getProofInfo(), null, "info", null, 1, 1, ProofElem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(proofEntryEClass, ProofEntry.class, "ProofEntry", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProofEntry_ProofStep(), this.getProofStep(), null, "proofStep", null, 1, 1, ProofEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(proofSeqEClass, ProofSeq.class, "ProofSeq", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProofSeq_Entries(), this.getProofElem(), null, "entries", null, 1, -1, ProofSeq.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(proofParallelEClass, ProofParallel.class, "ProofParallel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProofParallel_Entries(), this.getProofElem(), null, "entries", null, 1, -1, ProofParallel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+
+		initEClass(proofDecorEClass, ProofDecor.class, "ProofDecor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProofDecor_Entry(), this.getProofElem(), null, "entry", null, 1, 1, ProofDecor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(attemptEClass, Attempt.class, "Attempt", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getAttempt_Proof(), this.getProofElem(), null, "proof", null, 1, 1, Attempt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(proofEClass, Proof.class, "Proof", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProof_Goals(), this.getTerm(), null, "goals", null, 1, -1, Proof.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProof_Label(), ecorePackage.getEString(), "label", null, 1, 1, Proof.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProof_Attempts(), this.getAttempt(), null, "attempts", null, 1, -1, Proof.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
-		initEEnum(compositionTypeEEnum, CompositionType.class, "CompositionType");
-		addEEnumLiteral(compositionTypeEEnum, CompositionType.SEQUENTIAL);
-		addEEnumLiteral(compositionTypeEEnum, CompositionType.PARALLEL);
+		initEEnum(propertyTypeEEnum, PropertyType.class, "PropertyType");
+		addEEnumLiteral(propertyTypeEEnum, PropertyType.USER);
+		addEEnumLiteral(propertyTypeEEnum, PropertyType.INFERRED);
 
 		// Create resource
 		createResource(eNS_URI);

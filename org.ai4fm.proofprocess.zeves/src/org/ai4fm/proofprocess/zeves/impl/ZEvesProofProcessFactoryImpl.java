@@ -63,8 +63,9 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 			case ZEvesProofProcessPackage.PROJECT: return createProject();
 			case ZEvesProofProcessPackage.ACTIVITY: return createActivity();
 			case ZEvesProofProcessPackage.PROOF_ACTIVITY: return createProofActivity();
-			case ZEvesProofProcessPackage.ZEVES_PROOF_REFERENCE: return createZEvesProofReference();
+			case ZEvesProofProcessPackage.ZEVES_TRACE: return createZEvesTrace();
 			case ZEvesProofProcessPackage.POSITION: return createPosition();
+			case ZEvesProofProcessPackage.TEXT_LOC: return createTextLoc();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -105,9 +106,9 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ZEvesProofReference createZEvesProofReference() {
-		ZEvesProofReferenceImpl zEvesProofReference = new ZEvesProofReferenceImpl();
-		return zEvesProofReference;
+	public ZEvesTrace createZEvesTrace() {
+		ZEvesTraceImpl zEvesTrace = new ZEvesTraceImpl();
+		return zEvesTrace;
 	}
 
 	/**
@@ -118,6 +119,16 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	public Position createPosition() {
 		PositionImpl position = new PositionImpl();
 		return position;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TextLoc createTextLoc() {
+		TextLocImpl textLoc = new TextLocImpl();
+		return textLoc;
 	}
 
 	/**

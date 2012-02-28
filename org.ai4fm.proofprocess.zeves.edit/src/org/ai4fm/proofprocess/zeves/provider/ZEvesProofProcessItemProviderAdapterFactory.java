@@ -145,26 +145,26 @@ public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProce
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.zeves.ZEvesProofReference} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.zeves.ZEvesTrace} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ZEvesProofReferenceItemProvider zEvesProofReferenceItemProvider;
+	protected ZEvesTraceItemProvider zEvesTraceItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.zeves.ZEvesProofReference}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.zeves.ZEvesTrace}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createZEvesProofReferenceAdapter() {
-		if (zEvesProofReferenceItemProvider == null) {
-			zEvesProofReferenceItemProvider = new ZEvesProofReferenceItemProvider(this);
+	public Adapter createZEvesTraceAdapter() {
+		if (zEvesTraceItemProvider == null) {
+			zEvesTraceItemProvider = new ZEvesTraceItemProvider(this);
 		}
 
-		return zEvesProofReferenceItemProvider;
+		return zEvesTraceItemProvider;
 	}
 
 	/**
@@ -188,6 +188,29 @@ public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProce
 		}
 
 		return positionItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.zeves.TextLoc} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected TextLocItemProvider textLocItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.zeves.TextLoc}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createTextLocAdapter() {
+		if (textLocItemProvider == null) {
+			textLocItemProvider = new TextLocItemProvider(this);
+		}
+
+		return textLocItemProvider;
 	}
 
 	/**
@@ -292,8 +315,9 @@ public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProce
 		if (projectItemProvider != null) projectItemProvider.dispose();
 		if (activityItemProvider != null) activityItemProvider.dispose();
 		if (proofActivityItemProvider != null) proofActivityItemProvider.dispose();
-		if (zEvesProofReferenceItemProvider != null) zEvesProofReferenceItemProvider.dispose();
+		if (zEvesTraceItemProvider != null) zEvesTraceItemProvider.dispose();
 		if (positionItemProvider != null) positionItemProvider.dispose();
+		if (textLocItemProvider != null) textLocItemProvider.dispose();
 	}
 
 }

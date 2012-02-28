@@ -8,8 +8,8 @@ package org.ai4fm.proofprocess.zeves.impl;
 
 import java.util.Collection;
 
-import org.ai4fm.proofprocess.AttemptSet;
 import org.ai4fm.proofprocess.Intent;
+import org.ai4fm.proofprocess.Proof;
 
 import org.ai4fm.proofprocess.zeves.Activity;
 import org.ai4fm.proofprocess.zeves.Project;
@@ -95,7 +95,7 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<AttemptSet> proofs;
+	protected EList<Proof> proofs;
 
 	/**
 	 * The cached value of the '{@link #getActivities() <em>Activities</em>}' containment reference list.
@@ -183,9 +183,9 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<AttemptSet> getProofs() {
+	public EList<Proof> getProofs() {
 		if (proofs == null) {
-			proofs = new EObjectContainmentEList<AttemptSet>(AttemptSet.class, this, ZEvesProofProcessPackage.PROJECT__PROOFS);
+			proofs = new EObjectContainmentEList<Proof>(Proof.class, this, ZEvesProofProcessPackage.PROJECT__PROOFS);
 		}
 		return proofs;
 	}
@@ -271,7 +271,7 @@ public class ProjectImpl extends EObjectImpl implements Project {
 				return;
 			case ZEvesProofProcessPackage.PROJECT__PROOFS:
 				getProofs().clear();
-				getProofs().addAll((Collection<? extends AttemptSet>)newValue);
+				getProofs().addAll((Collection<? extends Proof>)newValue);
 				return;
 			case ZEvesProofProcessPackage.PROJECT__ACTIVITIES:
 				getActivities().clear();

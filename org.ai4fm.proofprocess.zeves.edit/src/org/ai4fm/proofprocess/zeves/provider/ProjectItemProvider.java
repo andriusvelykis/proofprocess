@@ -215,7 +215,7 @@ public class ProjectItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(ZEvesProofProcessPackage.Literals.PROJECT__PROOFS,
-				 ProofProcessFactory.eINSTANCE.createAttemptSet()));
+				 ProofProcessFactory.eINSTANCE.createProof()));
 
 		newChildDescriptors.add
 			(createChildParameter

@@ -53,13 +53,13 @@ public interface ZEvesProofProcessFactory extends EFactory {
 	ProofActivity createProofActivity();
 
 	/**
-	 * Returns a new object of class '<em>ZEves Proof Reference</em>'.
+	 * Returns a new object of class '<em>ZEves Trace</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>ZEves Proof Reference</em>'.
+	 * @return a new object of class '<em>ZEves Trace</em>'.
 	 * @generated
 	 */
-	ZEvesProofReference createZEvesProofReference();
+	ZEvesTrace createZEvesTrace();
 
 	/**
 	 * Returns a new object of class '<em>Position</em>'.
@@ -69,6 +69,15 @@ public interface ZEvesProofProcessFactory extends EFactory {
 	 * @generated
 	 */
 	Position createPosition();
+
+	/**
+	 * Returns a new object of class '<em>Text Loc</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Text Loc</em>'.
+	 * @generated
+	 */
+	TextLoc createTextLoc();
 
 	/**
 	 * Returns the package supported by this factory.

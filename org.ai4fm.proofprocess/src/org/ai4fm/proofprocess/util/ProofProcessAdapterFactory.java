@@ -72,36 +72,64 @@ public class ProofProcessAdapterFactory extends AdapterFactoryImpl {
 	protected ProofProcessSwitch<Adapter> modelSwitch =
 		new ProofProcessSwitch<Adapter>() {
 			@Override
-			public Adapter caseAttempt(Attempt object) {
-				return createAttemptAdapter();
-			}
-			@Override
 			public Adapter caseIntent(Intent object) {
 				return createIntentAdapter();
 			}
 			@Override
-			public Adapter caseProofObject(ProofObject object) {
-				return createProofObjectAdapter();
+			public Adapter caseTerm(Term object) {
+				return createTermAdapter();
 			}
 			@Override
-			public Adapter caseProofProperty(ProofProperty object) {
-				return createProofPropertyAdapter();
+			public Adapter caseLoc(Loc object) {
+				return createLocAdapter();
 			}
 			@Override
-			public Adapter caseProofReference(ProofReference object) {
-				return createProofReferenceAdapter();
+			public Adapter caseTrace(Trace object) {
+				return createTraceAdapter();
 			}
 			@Override
-			public Adapter caseAttemptSet(AttemptSet object) {
-				return createAttemptSetAdapter();
+			public Adapter caseProofStep(ProofStep object) {
+				return createProofStepAdapter();
 			}
 			@Override
-			public Adapter caseAttemptGroup(AttemptGroup object) {
-				return createAttemptGroupAdapter();
+			public Adapter caseProofInfo(ProofInfo object) {
+				return createProofInfoAdapter();
 			}
 			@Override
-			public Adapter caseAttemptEntry(AttemptEntry object) {
-				return createAttemptEntryAdapter();
+			public Adapter casePropertyDef(PropertyDef object) {
+				return createPropertyDefAdapter();
+			}
+			@Override
+			public Adapter caseProperty(Property object) {
+				return createPropertyAdapter();
+			}
+			@Override
+			public Adapter caseProofElem(ProofElem object) {
+				return createProofElemAdapter();
+			}
+			@Override
+			public Adapter caseProofEntry(ProofEntry object) {
+				return createProofEntryAdapter();
+			}
+			@Override
+			public Adapter caseProofSeq(ProofSeq object) {
+				return createProofSeqAdapter();
+			}
+			@Override
+			public Adapter caseProofParallel(ProofParallel object) {
+				return createProofParallelAdapter();
+			}
+			@Override
+			public Adapter caseProofDecor(ProofDecor object) {
+				return createProofDecorAdapter();
+			}
+			@Override
+			public Adapter caseAttempt(Attempt object) {
+				return createAttemptAdapter();
+			}
+			@Override
+			public Adapter caseProof(Proof object) {
+				return createProofAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -124,20 +152,6 @@ public class ProofProcessAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Attempt <em>Attempt</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.Attempt
-	 * @generated
-	 */
-	public Adapter createAttemptAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Intent <em>Intent</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -152,86 +166,198 @@ public class ProofProcessAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofObject <em>Proof Object</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Term <em>Term</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.ProofObject
+	 * @see org.ai4fm.proofprocess.Term
 	 * @generated
 	 */
-	public Adapter createProofObjectAdapter() {
+	public Adapter createTermAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofProperty <em>Proof Property</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Loc <em>Loc</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.ProofProperty
+	 * @see org.ai4fm.proofprocess.Loc
 	 * @generated
 	 */
-	public Adapter createProofPropertyAdapter() {
+	public Adapter createLocAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofReference <em>Proof Reference</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Trace <em>Trace</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.ProofReference
+	 * @see org.ai4fm.proofprocess.Trace
 	 * @generated
 	 */
-	public Adapter createProofReferenceAdapter() {
+	public Adapter createTraceAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.AttemptSet <em>Attempt Set</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofStep <em>Proof Step</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.AttemptSet
+	 * @see org.ai4fm.proofprocess.ProofStep
 	 * @generated
 	 */
-	public Adapter createAttemptSetAdapter() {
+	public Adapter createProofStepAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.AttemptGroup <em>Attempt Group</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofInfo <em>Proof Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.AttemptGroup
+	 * @see org.ai4fm.proofprocess.ProofInfo
 	 * @generated
 	 */
-	public Adapter createAttemptGroupAdapter() {
+	public Adapter createProofInfoAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.AttemptEntry <em>Attempt Entry</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.PropertyDef <em>Property Def</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.AttemptEntry
+	 * @see org.ai4fm.proofprocess.PropertyDef
 	 * @generated
 	 */
-	public Adapter createAttemptEntryAdapter() {
+	public Adapter createPropertyDefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Property <em>Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.Property
+	 * @generated
+	 */
+	public Adapter createPropertyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofElem <em>Proof Elem</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.ProofElem
+	 * @generated
+	 */
+	public Adapter createProofElemAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofEntry <em>Proof Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.ProofEntry
+	 * @generated
+	 */
+	public Adapter createProofEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofSeq <em>Proof Seq</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.ProofSeq
+	 * @generated
+	 */
+	public Adapter createProofSeqAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofParallel <em>Proof Parallel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.ProofParallel
+	 * @generated
+	 */
+	public Adapter createProofParallelAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofDecor <em>Proof Decor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.ProofDecor
+	 * @generated
+	 */
+	public Adapter createProofDecorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Attempt <em>Attempt</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.Attempt
+	 * @generated
+	 */
+	public Adapter createAttemptAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Proof <em>Proof</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.Proof
+	 * @generated
+	 */
+	public Adapter createProofAdapter() {
 		return null;
 	}
 

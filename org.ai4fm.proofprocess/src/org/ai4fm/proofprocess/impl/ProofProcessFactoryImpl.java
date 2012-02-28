@@ -62,11 +62,16 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ProofProcessPackage.INTENT: return createIntent();
-			case ProofProcessPackage.PROOF_OBJECT: return createProofObject();
-			case ProofProcessPackage.PROOF_PROPERTY: return createProofProperty();
-			case ProofProcessPackage.ATTEMPT_SET: return createAttemptSet();
-			case ProofProcessPackage.ATTEMPT_GROUP: return createAttemptGroup();
-			case ProofProcessPackage.ATTEMPT_ENTRY: return createAttemptEntry();
+			case ProofProcessPackage.PROOF_STEP: return createProofStep();
+			case ProofProcessPackage.PROOF_INFO: return createProofInfo();
+			case ProofProcessPackage.PROPERTY_DEF: return createPropertyDef();
+			case ProofProcessPackage.PROPERTY: return createProperty();
+			case ProofProcessPackage.PROOF_ENTRY: return createProofEntry();
+			case ProofProcessPackage.PROOF_SEQ: return createProofSeq();
+			case ProofProcessPackage.PROOF_PARALLEL: return createProofParallel();
+			case ProofProcessPackage.PROOF_DECOR: return createProofDecor();
+			case ProofProcessPackage.ATTEMPT: return createAttempt();
+			case ProofProcessPackage.PROOF: return createProof();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -80,8 +85,8 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case ProofProcessPackage.COMPOSITION_TYPE:
-				return createCompositionTypeFromString(eDataType, initialValue);
+			case ProofProcessPackage.PROPERTY_TYPE:
+				return createPropertyTypeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -95,8 +100,8 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-			case ProofProcessPackage.COMPOSITION_TYPE:
-				return convertCompositionTypeToString(eDataType, instanceValue);
+			case ProofProcessPackage.PROPERTY_TYPE:
+				return convertPropertyTypeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -117,9 +122,9 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProofObject createProofObject() {
-		ProofObjectImpl proofObject = new ProofObjectImpl();
-		return proofObject;
+	public ProofStep createProofStep() {
+		ProofStepImpl proofStep = new ProofStepImpl();
+		return proofStep;
 	}
 
 	/**
@@ -127,9 +132,9 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProofProperty createProofProperty() {
-		ProofPropertyImpl proofProperty = new ProofPropertyImpl();
-		return proofProperty;
+	public ProofInfo createProofInfo() {
+		ProofInfoImpl proofInfo = new ProofInfoImpl();
+		return proofInfo;
 	}
 
 	/**
@@ -137,9 +142,9 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AttemptSet createAttemptSet() {
-		AttemptSetImpl attemptSet = new AttemptSetImpl();
-		return attemptSet;
+	public PropertyDef createPropertyDef() {
+		PropertyDefImpl propertyDef = new PropertyDefImpl();
+		return propertyDef;
 	}
 
 	/**
@@ -147,9 +152,9 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AttemptGroup createAttemptGroup() {
-		AttemptGroupImpl attemptGroup = new AttemptGroupImpl();
-		return attemptGroup;
+	public Property createProperty() {
+		PropertyImpl property = new PropertyImpl();
+		return property;
 	}
 
 	/**
@@ -157,9 +162,9 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AttemptEntry createAttemptEntry() {
-		AttemptEntryImpl attemptEntry = new AttemptEntryImpl();
-		return attemptEntry;
+	public ProofEntry createProofEntry() {
+		ProofEntryImpl proofEntry = new ProofEntryImpl();
+		return proofEntry;
 	}
 
 	/**
@@ -167,8 +172,58 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CompositionType createCompositionTypeFromString(EDataType eDataType, String initialValue) {
-		CompositionType result = CompositionType.get(initialValue);
+	public ProofSeq createProofSeq() {
+		ProofSeqImpl proofSeq = new ProofSeqImpl();
+		return proofSeq;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ProofParallel createProofParallel() {
+		ProofParallelImpl proofParallel = new ProofParallelImpl();
+		return proofParallel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ProofDecor createProofDecor() {
+		ProofDecorImpl proofDecor = new ProofDecorImpl();
+		return proofDecor;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Attempt createAttempt() {
+		AttemptImpl attempt = new AttemptImpl();
+		return attempt;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Proof createProof() {
+		ProofImpl proof = new ProofImpl();
+		return proof;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PropertyType createPropertyTypeFromString(EDataType eDataType, String initialValue) {
+		PropertyType result = PropertyType.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
@@ -178,7 +233,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String convertCompositionTypeToString(EDataType eDataType, Object instanceValue) {
+	public String convertPropertyTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

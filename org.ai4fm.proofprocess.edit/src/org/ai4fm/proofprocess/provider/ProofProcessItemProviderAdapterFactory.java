@@ -99,118 +99,233 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofObject} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofStep} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ProofObjectItemProvider proofObjectItemProvider;
+	protected ProofStepItemProvider proofStepItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofObject}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofStep}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createProofObjectAdapter() {
-		if (proofObjectItemProvider == null) {
-			proofObjectItemProvider = new ProofObjectItemProvider(this);
+	public Adapter createProofStepAdapter() {
+		if (proofStepItemProvider == null) {
+			proofStepItemProvider = new ProofStepItemProvider(this);
 		}
 
-		return proofObjectItemProvider;
+		return proofStepItemProvider;
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofProperty} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofInfo} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ProofPropertyItemProvider proofPropertyItemProvider;
+	protected ProofInfoItemProvider proofInfoItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofProperty}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofInfo}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createProofPropertyAdapter() {
-		if (proofPropertyItemProvider == null) {
-			proofPropertyItemProvider = new ProofPropertyItemProvider(this);
+	public Adapter createProofInfoAdapter() {
+		if (proofInfoItemProvider == null) {
+			proofInfoItemProvider = new ProofInfoItemProvider(this);
 		}
 
-		return proofPropertyItemProvider;
+		return proofInfoItemProvider;
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.AttemptSet} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.PropertyDef} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AttemptSetItemProvider attemptSetItemProvider;
+	protected PropertyDefItemProvider propertyDefItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.AttemptSet}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.PropertyDef}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createAttemptSetAdapter() {
-		if (attemptSetItemProvider == null) {
-			attemptSetItemProvider = new AttemptSetItemProvider(this);
+	public Adapter createPropertyDefAdapter() {
+		if (propertyDefItemProvider == null) {
+			propertyDefItemProvider = new PropertyDefItemProvider(this);
 		}
 
-		return attemptSetItemProvider;
+		return propertyDefItemProvider;
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.AttemptGroup} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.Property} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AttemptGroupItemProvider attemptGroupItemProvider;
+	protected PropertyItemProvider propertyItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.AttemptGroup}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.Property}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createAttemptGroupAdapter() {
-		if (attemptGroupItemProvider == null) {
-			attemptGroupItemProvider = new AttemptGroupItemProvider(this);
+	public Adapter createPropertyAdapter() {
+		if (propertyItemProvider == null) {
+			propertyItemProvider = new PropertyItemProvider(this);
 		}
 
-		return attemptGroupItemProvider;
+		return propertyItemProvider;
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.AttemptEntry} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofEntry} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AttemptEntryItemProvider attemptEntryItemProvider;
+	protected ProofEntryItemProvider proofEntryItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.AttemptEntry}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofEntry}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createAttemptEntryAdapter() {
-		if (attemptEntryItemProvider == null) {
-			attemptEntryItemProvider = new AttemptEntryItemProvider(this);
+	public Adapter createProofEntryAdapter() {
+		if (proofEntryItemProvider == null) {
+			proofEntryItemProvider = new ProofEntryItemProvider(this);
 		}
 
-		return attemptEntryItemProvider;
+		return proofEntryItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofSeq} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ProofSeqItemProvider proofSeqItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofSeq}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createProofSeqAdapter() {
+		if (proofSeqItemProvider == null) {
+			proofSeqItemProvider = new ProofSeqItemProvider(this);
+		}
+
+		return proofSeqItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofParallel} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ProofParallelItemProvider proofParallelItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofParallel}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createProofParallelAdapter() {
+		if (proofParallelItemProvider == null) {
+			proofParallelItemProvider = new ProofParallelItemProvider(this);
+		}
+
+		return proofParallelItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofDecor} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ProofDecorItemProvider proofDecorItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofDecor}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createProofDecorAdapter() {
+		if (proofDecorItemProvider == null) {
+			proofDecorItemProvider = new ProofDecorItemProvider(this);
+		}
+
+		return proofDecorItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.Attempt} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected AttemptItemProvider attemptItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.Attempt}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createAttemptAdapter() {
+		if (attemptItemProvider == null) {
+			attemptItemProvider = new AttemptItemProvider(this);
+		}
+
+		return attemptItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.Proof} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ProofItemProvider proofItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.Proof}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createProofAdapter() {
+		if (proofItemProvider == null) {
+			proofItemProvider = new ProofItemProvider(this);
+		}
+
+		return proofItemProvider;
 	}
 
 	/**
@@ -313,11 +428,16 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 	 */
 	public void dispose() {
 		if (intentItemProvider != null) intentItemProvider.dispose();
-		if (proofObjectItemProvider != null) proofObjectItemProvider.dispose();
-		if (proofPropertyItemProvider != null) proofPropertyItemProvider.dispose();
-		if (attemptSetItemProvider != null) attemptSetItemProvider.dispose();
-		if (attemptGroupItemProvider != null) attemptGroupItemProvider.dispose();
-		if (attemptEntryItemProvider != null) attemptEntryItemProvider.dispose();
+		if (proofStepItemProvider != null) proofStepItemProvider.dispose();
+		if (proofInfoItemProvider != null) proofInfoItemProvider.dispose();
+		if (propertyDefItemProvider != null) propertyDefItemProvider.dispose();
+		if (propertyItemProvider != null) propertyItemProvider.dispose();
+		if (proofEntryItemProvider != null) proofEntryItemProvider.dispose();
+		if (proofSeqItemProvider != null) proofSeqItemProvider.dispose();
+		if (proofParallelItemProvider != null) proofParallelItemProvider.dispose();
+		if (proofDecorItemProvider != null) proofDecorItemProvider.dispose();
+		if (attemptItemProvider != null) attemptItemProvider.dispose();
+		if (proofItemProvider != null) proofItemProvider.dispose();
 	}
 
 }

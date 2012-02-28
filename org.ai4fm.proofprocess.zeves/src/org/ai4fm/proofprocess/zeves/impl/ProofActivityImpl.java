@@ -6,7 +6,7 @@
  */
 package org.ai4fm.proofprocess.zeves.impl;
 
-import org.ai4fm.proofprocess.Attempt;
+import org.ai4fm.proofprocess.ProofEntry;
 
 import org.ai4fm.proofprocess.zeves.ProofActivity;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ProofActivityImpl#getAttempt <em>Attempt</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ProofActivityImpl#getProofRef <em>Proof Ref</em>}</li>
  * </ul>
  * </p>
  *
@@ -33,14 +33,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	/**
-	 * The cached value of the '{@link #getAttempt() <em>Attempt</em>}' reference.
+	 * The cached value of the '{@link #getProofRef() <em>Proof Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getAttempt()
+	 * @see #getProofRef()
 	 * @generated
 	 * @ordered
 	 */
-	protected Attempt attempt;
+	protected ProofEntry proofRef;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -66,16 +66,16 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Attempt getAttempt() {
-		if (attempt != null && attempt.eIsProxy()) {
-			InternalEObject oldAttempt = (InternalEObject)attempt;
-			attempt = (Attempt)eResolveProxy(oldAttempt);
-			if (attempt != oldAttempt) {
+	public ProofEntry getProofRef() {
+		if (proofRef != null && proofRef.eIsProxy()) {
+			InternalEObject oldProofRef = (InternalEObject)proofRef;
+			proofRef = (ProofEntry)eResolveProxy(oldProofRef);
+			if (proofRef != oldProofRef) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ZEvesProofProcessPackage.PROOF_ACTIVITY__ATTEMPT, oldAttempt, attempt));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF, oldProofRef, proofRef));
 			}
 		}
-		return attempt;
+		return proofRef;
 	}
 
 	/**
@@ -83,8 +83,8 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Attempt basicGetAttempt() {
-		return attempt;
+	public ProofEntry basicGetProofRef() {
+		return proofRef;
 	}
 
 	/**
@@ -92,11 +92,11 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setAttempt(Attempt newAttempt) {
-		Attempt oldAttempt = attempt;
-		attempt = newAttempt;
+	public void setProofRef(ProofEntry newProofRef) {
+		ProofEntry oldProofRef = proofRef;
+		proofRef = newProofRef;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.PROOF_ACTIVITY__ATTEMPT, oldAttempt, attempt));
+			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF, oldProofRef, proofRef));
 	}
 
 	/**
@@ -107,9 +107,9 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROOF_ACTIVITY__ATTEMPT:
-				if (resolve) return getAttempt();
-				return basicGetAttempt();
+			case ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
+				if (resolve) return getProofRef();
+				return basicGetProofRef();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -122,8 +122,8 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROOF_ACTIVITY__ATTEMPT:
-				setAttempt((Attempt)newValue);
+			case ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
+				setProofRef((ProofEntry)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -137,8 +137,8 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROOF_ACTIVITY__ATTEMPT:
-				setAttempt((Attempt)null);
+			case ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
+				setProofRef((ProofEntry)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -152,8 +152,8 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROOF_ACTIVITY__ATTEMPT:
-				return attempt != null;
+			case ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
+				return proofRef != null;
 		}
 		return super.eIsSet(featureID);
 	}

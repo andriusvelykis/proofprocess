@@ -70,73 +70,102 @@ public class ProofProcessSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case ProofProcessPackage.ATTEMPT: {
-				Attempt attempt = (Attempt)theEObject;
-				T result = caseAttempt(attempt);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ProofProcessPackage.INTENT: {
 				Intent intent = (Intent)theEObject;
 				T result = caseIntent(intent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProofProcessPackage.PROOF_OBJECT: {
-				ProofObject proofObject = (ProofObject)theEObject;
-				T result = caseProofObject(proofObject);
+			case ProofProcessPackage.TERM: {
+				Term term = (Term)theEObject;
+				T result = caseTerm(term);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProofProcessPackage.PROOF_PROPERTY: {
-				ProofProperty proofProperty = (ProofProperty)theEObject;
-				T result = caseProofProperty(proofProperty);
+			case ProofProcessPackage.LOC: {
+				Loc loc = (Loc)theEObject;
+				T result = caseLoc(loc);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProofProcessPackage.PROOF_REFERENCE: {
-				ProofReference proofReference = (ProofReference)theEObject;
-				T result = caseProofReference(proofReference);
+			case ProofProcessPackage.TRACE: {
+				Trace trace = (Trace)theEObject;
+				T result = caseTrace(trace);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProofProcessPackage.ATTEMPT_SET: {
-				AttemptSet attemptSet = (AttemptSet)theEObject;
-				T result = caseAttemptSet(attemptSet);
+			case ProofProcessPackage.PROOF_STEP: {
+				ProofStep proofStep = (ProofStep)theEObject;
+				T result = caseProofStep(proofStep);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProofProcessPackage.ATTEMPT_GROUP: {
-				AttemptGroup attemptGroup = (AttemptGroup)theEObject;
-				T result = caseAttemptGroup(attemptGroup);
-				if (result == null) result = caseAttempt(attemptGroup);
+			case ProofProcessPackage.PROOF_INFO: {
+				ProofInfo proofInfo = (ProofInfo)theEObject;
+				T result = caseProofInfo(proofInfo);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProofProcessPackage.ATTEMPT_ENTRY: {
-				AttemptEntry attemptEntry = (AttemptEntry)theEObject;
-				T result = caseAttemptEntry(attemptEntry);
-				if (result == null) result = caseAttempt(attemptEntry);
+			case ProofProcessPackage.PROPERTY_DEF: {
+				PropertyDef propertyDef = (PropertyDef)theEObject;
+				T result = casePropertyDef(propertyDef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ProofProcessPackage.PROPERTY: {
+				Property property = (Property)theEObject;
+				T result = caseProperty(property);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ProofProcessPackage.PROOF_ELEM: {
+				ProofElem proofElem = (ProofElem)theEObject;
+				T result = caseProofElem(proofElem);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ProofProcessPackage.PROOF_ENTRY: {
+				ProofEntry proofEntry = (ProofEntry)theEObject;
+				T result = caseProofEntry(proofEntry);
+				if (result == null) result = caseProofElem(proofEntry);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ProofProcessPackage.PROOF_SEQ: {
+				ProofSeq proofSeq = (ProofSeq)theEObject;
+				T result = caseProofSeq(proofSeq);
+				if (result == null) result = caseProofElem(proofSeq);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ProofProcessPackage.PROOF_PARALLEL: {
+				ProofParallel proofParallel = (ProofParallel)theEObject;
+				T result = caseProofParallel(proofParallel);
+				if (result == null) result = caseProofElem(proofParallel);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ProofProcessPackage.PROOF_DECOR: {
+				ProofDecor proofDecor = (ProofDecor)theEObject;
+				T result = caseProofDecor(proofDecor);
+				if (result == null) result = caseProofElem(proofDecor);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ProofProcessPackage.ATTEMPT: {
+				Attempt attempt = (Attempt)theEObject;
+				T result = caseAttempt(attempt);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ProofProcessPackage.PROOF: {
+				Proof proof = (Proof)theEObject;
+				T result = caseProof(proof);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			default: return defaultCase(theEObject);
 		}
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Attempt</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Attempt</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseAttempt(Attempt object) {
-		return null;
 	}
 
 	/**
@@ -155,92 +184,212 @@ public class ProofProcessSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Proof Object</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Term</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Proof Object</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Term</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseProofObject(ProofObject object) {
+	public T caseTerm(Term object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Proof Property</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Loc</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Proof Property</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Loc</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseProofProperty(ProofProperty object) {
+	public T caseLoc(Loc object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Proof Reference</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Trace</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Proof Reference</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Trace</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseProofReference(ProofReference object) {
+	public T caseTrace(Trace object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Attempt Set</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Step</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Attempt Set</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Step</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAttemptSet(AttemptSet object) {
+	public T caseProofStep(ProofStep object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Attempt Group</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Info</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Attempt Group</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Info</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAttemptGroup(AttemptGroup object) {
+	public T caseProofInfo(ProofInfo object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Attempt Entry</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Property Def</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Attempt Entry</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Property Def</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAttemptEntry(AttemptEntry object) {
+	public T casePropertyDef(PropertyDef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProperty(Property object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Elem</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Elem</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProofElem(ProofElem object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Entry</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Entry</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProofEntry(ProofEntry object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Seq</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Seq</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProofSeq(ProofSeq object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Parallel</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Parallel</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProofParallel(ProofParallel object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Decor</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Decor</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProofDecor(ProofDecor object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Attempt</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Attempt</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAttempt(Attempt object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Proof</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Proof</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProof(Proof object) {
 		return null;
 	}
 
