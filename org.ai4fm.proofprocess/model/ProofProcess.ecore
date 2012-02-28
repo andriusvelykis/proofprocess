@@ -59,11 +59,13 @@
   <eClassifiers xsi:type="ecore:EClass" name="Trace" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ProofStep">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inGoals" lowerBound="1"
-        upperBound="-1" eType="#//Term"/>
+        upperBound="-1" eType="#//Term" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outGoals" upperBound="-1"
-        eType="#//Term"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Loc"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="trace" lowerBound="1" eType="#//Trace"/>
+        eType="#//Term" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Loc"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="trace" lowerBound="1" eType="#//Trace"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProofInfo">
     <eStructuralFeatures xsi:type="ecore:EReference" name="why" eType="#//Intent"/>
