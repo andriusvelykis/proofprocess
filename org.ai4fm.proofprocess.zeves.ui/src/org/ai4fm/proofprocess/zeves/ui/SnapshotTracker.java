@@ -750,6 +750,7 @@ public class SnapshotTracker {
 		ProofStep step = ProofProcessFactory.eINSTANCE.createProofStep();
 		step.setTrace(ref);
 		step.setSource(loc);
+		entry.setProofStep(step);
 		return entry;
 	}
 	
