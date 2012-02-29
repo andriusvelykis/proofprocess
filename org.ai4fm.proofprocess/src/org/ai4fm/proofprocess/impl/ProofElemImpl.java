@@ -12,6 +12,7 @@ import org.ai4fm.proofprocess.ProofProcessPackage;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -33,7 +34,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public abstract class ProofElemImpl extends EObjectImpl implements ProofElem {
 	/**
-	 * The cached value of the '{@link #getInfo() <em>Info</em>}' reference.
+	 * The cached value of the '{@link #getInfo() <em>Info</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getInfo()
@@ -67,14 +68,6 @@ public abstract class ProofElemImpl extends EObjectImpl implements ProofElem {
 	 * @generated
 	 */
 	public ProofInfo getInfo() {
-		if (info != null && info.eIsProxy()) {
-			InternalEObject oldInfo = (InternalEObject)info;
-			info = (ProofInfo)eResolveProxy(oldInfo);
-			if (info != oldInfo) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProofProcessPackage.PROOF_ELEM__INFO, oldInfo, info));
-			}
-		}
 		return info;
 	}
 
@@ -83,8 +76,14 @@ public abstract class ProofElemImpl extends EObjectImpl implements ProofElem {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProofInfo basicGetInfo() {
-		return info;
+	public NotificationChain basicSetInfo(ProofInfo newInfo, NotificationChain msgs) {
+		ProofInfo oldInfo = info;
+		info = newInfo;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_ELEM__INFO, oldInfo, newInfo);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -93,10 +92,31 @@ public abstract class ProofElemImpl extends EObjectImpl implements ProofElem {
 	 * @generated
 	 */
 	public void setInfo(ProofInfo newInfo) {
-		ProofInfo oldInfo = info;
-		info = newInfo;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_ELEM__INFO, oldInfo, info));
+		if (newInfo != info) {
+			NotificationChain msgs = null;
+			if (info != null)
+				msgs = ((InternalEObject)info).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_ELEM__INFO, null, msgs);
+			if (newInfo != null)
+				msgs = ((InternalEObject)newInfo).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_ELEM__INFO, null, msgs);
+			msgs = basicSetInfo(newInfo, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_ELEM__INFO, newInfo, newInfo));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ProofProcessPackage.PROOF_ELEM__INFO:
+				return basicSetInfo(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -108,8 +128,7 @@ public abstract class ProofElemImpl extends EObjectImpl implements ProofElem {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_ELEM__INFO:
-				if (resolve) return getInfo();
-				return basicGetInfo();
+				return getInfo();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}

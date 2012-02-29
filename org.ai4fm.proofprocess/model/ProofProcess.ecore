@@ -48,7 +48,8 @@
         upperBound="-1" eType="#//Term" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProofElem" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="info" lowerBound="1" eType="#//ProofInfo"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="info" lowerBound="1" eType="#//ProofInfo"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProofEntry" eSuperTypes="#//ProofElem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="proofStep" lowerBound="1"

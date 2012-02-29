@@ -358,7 +358,7 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_ELEM = 8;
 
 	/**
-	 * The feature id for the '<em><b>Info</b></em>' reference.
+	 * The feature id for the '<em><b>Info</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -386,7 +386,7 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_ENTRY = 9;
 
 	/**
-	 * The feature id for the '<em><b>Info</b></em>' reference.
+	 * The feature id for the '<em><b>Info</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -423,7 +423,7 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_SEQ = 10;
 
 	/**
-	 * The feature id for the '<em><b>Info</b></em>' reference.
+	 * The feature id for the '<em><b>Info</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -460,7 +460,7 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_PARALLEL = 11;
 
 	/**
-	 * The feature id for the '<em><b>Info</b></em>' reference.
+	 * The feature id for the '<em><b>Info</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -497,7 +497,7 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_DECOR = 12;
 
 	/**
-	 * The feature id for the '<em><b>Info</b></em>' reference.
+	 * The feature id for the '<em><b>Info</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -864,10 +864,10 @@ public interface ProofProcessPackage extends EPackage {
 	EClass getProofElem();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.ai4fm.proofprocess.ProofElem#getInfo <em>Info</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.ai4fm.proofprocess.ProofElem#getInfo <em>Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Info</em>'.
+	 * @return the meta object for the containment reference '<em>Info</em>'.
 	 * @see org.ai4fm.proofprocess.ProofElem#getInfo()
 	 * @see #getProofElem()
 	 * @generated
@@ -1265,7 +1265,7 @@ public interface ProofProcessPackage extends EPackage {
 		EClass PROOF_ELEM = eINSTANCE.getProofElem();
 
 		/**
-		 * The meta object literal for the '<em><b>Info</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Info</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
