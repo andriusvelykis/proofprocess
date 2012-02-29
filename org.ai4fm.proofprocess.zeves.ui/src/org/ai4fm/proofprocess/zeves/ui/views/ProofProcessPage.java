@@ -9,18 +9,18 @@ import java.util.List;
 
 import net.sourceforge.czt.eclipse.zeves.ZEvesImages;
 
-import org.ai4fm.proofprocess.Attempt;
-import org.ai4fm.proofprocess.AttemptEntry;
-import org.ai4fm.proofprocess.AttemptGroup;
-import org.ai4fm.proofprocess.CompositionType;
 import org.ai4fm.proofprocess.Intent;
+import org.ai4fm.proofprocess.ProofElem;
+import org.ai4fm.proofprocess.ProofEntry;
+import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
+import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.provider.ProofProcessEditPlugin;
 import org.ai4fm.proofprocess.zeves.Activity;
 import org.ai4fm.proofprocess.zeves.Project;
 import org.ai4fm.proofprocess.zeves.ProofActivity;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
-import org.ai4fm.proofprocess.zeves.ZEvesProofReference;
+import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 import org.ai4fm.proofprocess.zeves.ui.ProofManager;
 import org.ai4fm.proofprocess.zeves.ui.SnapshotTracker;
 import org.eclipse.core.databinding.observable.ChangeEvent;
@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.databinding.IEMFListProperty;
 import org.eclipse.emf.ecore.EObject;
@@ -124,10 +123,10 @@ public class ProofProcessPage extends Page {
 			@Override
 			public Image getImage(Object object) {
 				// FIXME quite a hack here
-				if (object instanceof AttemptEntry) {
-					AttemptEntry entry = (AttemptEntry) object;
-					if (entry.getContent() instanceof ZEvesProofReference) {
-						ZEvesProofReference ref = (ZEvesProofReference) entry.getContent();
+				if (object instanceof ProofEntry) {
+					ProofEntry entry = (ProofEntry) object;
+					if (entry.getProofStep().getTrace() instanceof ZEvesTrace) {
+						ZEvesTrace ref = (ZEvesTrace) entry.getProofStep().getTrace();
 						if ("true".equals(ref.getGoal())) {
 							return ZEvesImages.getImage(ZEvesImages.IMG_THEOREM_PROVED);
 						}
@@ -142,7 +141,7 @@ public class ProofProcessPage extends Page {
 			
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
-				Attempt lastAttempt = (Attempt) lastAttemptDelayed.getValue();
+				ProofEntry lastAttempt = (ProofEntry) lastAttemptDelayed.getValue();
 				if (lastAttempt == null) {
 					return;
 				}
@@ -170,7 +169,7 @@ public class ProofProcessPage extends Page {
 					Object lastValue = activitiesObservableList.get(activitiesObservableList.size() - 1);
 					
 					if (lastValue instanceof ProofActivity) {
-						Attempt lastAttempt = ((ProofActivity) lastValue).getAttempt();
+						ProofEntry lastAttempt = ((ProofActivity) lastValue).getProofRef();
 						lastAttemptObservable.setValue(lastAttempt);
 					}
 				}
@@ -182,7 +181,7 @@ public class ProofProcessPage extends Page {
 		}
 	}
 	
-	private void highlightAttempt(Attempt attempt) {
+	private void highlightAttempt(ProofEntry attempt) {
 		
 		List<EObject> parentList = new ArrayList<EObject>();
 		collectParents(attempt, parentList);
@@ -194,7 +193,7 @@ public class ProofProcessPage extends Page {
 		treeViewer.setSelection(new StructuredSelection(attempt), true);
 		
 		System.out.println("Expanding: " + path);
-		System.out.println("Delayed attempt: " + attempt.getDescription());
+		System.out.println("Delayed attempt: " + attempt.getInfo().getNarrative());
 	}
 	
 	private void collectParents(EObject obj, List<EObject> list) {
@@ -267,8 +266,8 @@ public class ProofProcessPage extends Page {
 		}
 
 		private List<?> getChildrenCustomized(Object parent) {
-			if (parent instanceof ZEvesProofReference) {
-				ZEvesProofReference ref = (ZEvesProofReference) parent;
+			if (parent instanceof ZEvesTrace) {
+				ZEvesTrace ref = (ZEvesTrace) parent;
 				List<String> lemmas = new ArrayList<String>(ref.getUsedLemmas());
 				
 				String proofCase = ref.getCase();
@@ -279,10 +278,10 @@ public class ProofProcessPage extends Page {
 				return lemmas;
 			}
 			
-			if (parent instanceof Attempt) {
-				Attempt attempt = (Attempt) parent;
-				if (attempt.getIntent() != null) {
-					return Arrays.asList(attempt.getIntent());
+			if (parent instanceof ProofElem) {
+				ProofElem attempt = (ProofElem) parent;
+				if (attempt.getInfo().getIntent() != null) {
+					return Arrays.asList(attempt.getInfo().getIntent());
 				}
 			}
 			
@@ -321,28 +320,28 @@ public class ProofProcessPage extends Page {
 				return;
 			}
 
-			List<Attempt> attempts = new ArrayList<Attempt>();
+			List<ProofElem> attempts = new ArrayList<ProofElem>();
 			for (Iterator<?> it = selection.iterator(); it.hasNext(); ) {
 				Object elem = it.next();
-				if (elem instanceof Attempt) {
-					attempts.add((Attempt) elem);
+				if (elem instanceof ProofElem) {
+					attempts.add((ProofElem) elem);
 				}
 			}
 			
 			if (attempts.isEmpty()) {
-				error("No attempts have been selected for grouping.");
+				error("No proof elements have been selected for grouping.");
 				return;
 			}
 			
-			Attempt first = attempts.get(0);
+			ProofElem first = attempts.get(0);
 			EObject parentContainer = first.eContainer();
-			if (!(parentContainer instanceof AttemptGroup)) {
+			if (!(parentContainer instanceof ProofElem)) {
 				error("Cannot group root attempts.");
 				return;
 			}
 			
-			AttemptGroup parentGroup = (AttemptGroup) parentContainer;
-			EList<Attempt> siblings = parentGroup.getAttempts();
+			ProofElem parentGroup = (ProofElem) parentContainer;
+			List<ProofElem> siblings = SnapshotTracker.getProofChildren(parentGroup);
 			
 			int sublistIndex = Collections.indexOfSubList(siblings, attempts);
 			if (sublistIndex < 0) {
@@ -391,18 +390,20 @@ public class ProofProcessPage extends Page {
 			String description = descDialog.getValue();
 			
 			// create new AttemptGroup
-			AttemptGroup group = ProofProcessFactory.eINSTANCE.createAttemptGroup();
-			group.setCompositionType(CompositionType.SEQUENTIAL);
-			group.setDescription(description);
-			group.setIntent(SnapshotTracker.findCreateIntent(proofProject, intentText));
+			ProofSeq group = ProofProcessFactory.eINSTANCE.createProofSeq();
+			ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
+			group.setInfo(info);
+			info.setNarrative(description);
+			info.setIntent(SnapshotTracker.findCreateIntent(proofProject, intentText));
 			
+			// TODO grouping Decor?
 			siblings.add(sublistIndex, group);
-			parentGroup.getContained().add(sublistIndex, group);
+//			parentGroup.getContained().add(sublistIndex, group);
 			
 //			SnapshotTracker.addToGroup(parentGroup, group);
 //			siblings.move(sublistIndex, group);
 			
-			for (Attempt attempt : attempts) {
+			for (ProofElem attempt : attempts) {
 				SnapshotTracker.addToGroup(group, attempt);
 				siblings.remove(attempt);
 			}

@@ -39,20 +39,25 @@ import net.sourceforge.czt.zeves.response.form.ZEvesName;
 
 import org.ai4fm.filehistory.FileVersion;
 import org.ai4fm.proofprocess.Attempt;
-import org.ai4fm.proofprocess.AttemptEntry;
-import org.ai4fm.proofprocess.AttemptGroup;
-import org.ai4fm.proofprocess.AttemptSet;
-import org.ai4fm.proofprocess.CompositionType;
 import org.ai4fm.proofprocess.Intent;
+import org.ai4fm.proofprocess.Proof;
+import org.ai4fm.proofprocess.ProofDecor;
+import org.ai4fm.proofprocess.ProofElem;
+import org.ai4fm.proofprocess.ProofEntry;
+import org.ai4fm.proofprocess.ProofInfo;
+import org.ai4fm.proofprocess.ProofParallel;
 import org.ai4fm.proofprocess.ProofProcessFactory;
-import org.ai4fm.proofprocess.ProofReference;
+import org.ai4fm.proofprocess.ProofSeq;
+import org.ai4fm.proofprocess.ProofStep;
+import org.ai4fm.proofprocess.Trace;
 import org.ai4fm.proofprocess.zeves.Activity;
 import org.ai4fm.proofprocess.zeves.Position;
 import org.ai4fm.proofprocess.zeves.Project;
 import org.ai4fm.proofprocess.zeves.ProofActivity;
+import org.ai4fm.proofprocess.zeves.TextLoc;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
-import org.ai4fm.proofprocess.zeves.ZEvesProofReference;
+import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
@@ -245,10 +250,10 @@ public class SnapshotTracker {
 				return;
 			}
 			
-			Attempt attempt = analyseProofEntry(proofProject, nonErrorProof, fileVersion);
+			ProofEntry attempt = analyseProofEntry(proofProject, nonErrorProof, fileVersion);
 			
 			ProofActivity proofActivity = ZEvesProofProcessFactory.eINSTANCE.createProofActivity();
-			proofActivity.setAttempt(attempt);
+			proofActivity.setProofRef(attempt);
 			
 			activity = proofActivity;
 			
@@ -274,16 +279,16 @@ public class SnapshotTracker {
 		}
 	}
 	
-	private Attempt analyseProofEntry(Project proofProject, List<ISnapshotEntry> proof, 
+	private ProofEntry analyseProofEntry(Project proofProject, List<ISnapshotEntry> proofSteps, 
 			FileVersion fileVersion) {
 		
-		Assert.isLegal(!proof.isEmpty());
+		Assert.isLegal(!proofSteps.isEmpty());
 		
-		ISnapshotEntry goalEntry = proof.get(0);
+		ISnapshotEntry goalEntry = proofSteps.get(0);
 		Assert.isLegal(goalEntry.getData().getProofStepIndex() == ZEvesSnapshot.GOAL_STEP_INDEX, 
 				"The first element in the proof must be the goal.");
 		
-		AttemptSet attemptSet = findCreateAttemptSet(proofProject, goalEntry);
+		Proof proof = findCreateProof(proofProject, goalEntry);
 		
 		// TODO add the goal as tactic entry?
 //		if (proofEntry.getSource() == null) {
@@ -291,43 +296,50 @@ public class SnapshotTracker {
 //			
 //		}
 		
-		List<AttemptEntry> attempts = new ArrayList<AttemptEntry>();
-		for (ISnapshotEntry proofEntry : proof) {
-			AttemptEntry attempt = createTacticAttempt(proofProject, fileVersion, proofEntry);
+		List<ProofEntry> attempts = new ArrayList<ProofEntry>();
+		for (ISnapshotEntry proofEntry : proofSteps) {
+			ProofEntry attempt = createTacticProofEntry(proofProject, fileVersion, proofEntry);
 			attempts.add(attempt);
 		}
 		
-		AttemptMatch match = findCreateAttemptTree(proofProject, attemptSet, attempts);
+		ProofElemMatch match = findCreateProofTree(proofProject, proof, attempts);
 		return match.attempt;
 	}
 	
 	private static final String ROOT_ATTEMPT_LABEL = "Root attempt #";
 
-	private AttemptMatch createAttemptTree(Project proofProject, AttemptSet attemptSet, AttemptEntry attempt) {
-		AttemptGroup rootAttempt = ProofProcessFactory.eINSTANCE.createAttemptGroup();
-		setNextRootDescription(attemptSet, rootAttempt);
+	private ProofElemMatch createProofTree(Project proofProject, Proof attemptSet, ProofEntry entry) {
+		ProofSeq rootEntry = ProofProcessFactory.eINSTANCE.createProofSeq();
+		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
+		rootEntry.setInfo(info);
+		
+		setNextRootDescription(attemptSet, info);
 		
 		Intent intent = findCreateIntent(proofProject, "Proof root");
-		rootAttempt.setIntent(intent);
+		info.setIntent(intent);
 		
-		attemptSet.getAttempts().add(rootAttempt);
+		Attempt attempt = ProofProcessFactory.eINSTANCE.createAttempt();
+		attempt.setProof(rootEntry);
 		
-		addToGroup(rootAttempt, attempt);
-		return new AttemptMatch(rootAttempt, Arrays.asList(attempt), attempt);
+		attemptSet.getAttempts().add(attempt);
+		
+		addToGroup(rootEntry, entry);
+		return new ProofElemMatch(attempt, Arrays.asList(entry), entry);
 	}
 
-	private void setNextRootDescription(AttemptSet attemptSet, AttemptGroup rootAttempt) {
+	private void setNextRootDescription(Proof attemptSet, ProofInfo rootInfo) {
 		int nextNo = maxRoot(attemptSet) + 1;
 		
-		rootAttempt.setDescription(ROOT_ATTEMPT_LABEL + nextNo);
+		rootInfo.setNarrative(ROOT_ATTEMPT_LABEL + nextNo);
 	}
 	
-	private int maxRoot(AttemptSet attemptSet) {
+	private int maxRoot(Proof attemptSet) {
 		
 		int max = 0;
 		
 		for (Attempt att : attemptSet.getAttempts()) {
-			String desc = att.getDescription();
+			ProofInfo rootInfo = att.getProof().getInfo();
+			String desc = rootInfo.getNarrative();
 			if (desc.startsWith(ROOT_ATTEMPT_LABEL)) {
 				String noStr = desc.substring(ROOT_ATTEMPT_LABEL.length());
 				
@@ -345,30 +357,30 @@ public class SnapshotTracker {
 		return max;
 	}
 	
-	private AttemptMatch findCreateAttemptTree(Project proofProject, AttemptSet attemptSet, 
-			List<AttemptEntry> attempts) {
+	private ProofElemMatch findCreateProofTree(Project proofProject, Proof attemptSet, 
+			List<ProofEntry> attempts) {
 
-		AttemptMatch matched = findMatchingAttemptTree(attemptSet, attempts);
+		ProofElemMatch matched = findMatchingProofTree(attemptSet, attempts);
 		if (matched != null) {
 			// found an attempt tree fully matching the given proof, use it
 			return matched;
 		}
 		
 		if (attempts.size() == 1) {
-			return createAttemptTree(proofProject, attemptSet, attempts.get(0));
+			return createProofTree(proofProject, attemptSet, attempts.get(0));
 		}
 		
 		/*
 		 * Continue recursively on the shorter attempts list (without the last
 		 * element), then add the removed element to the end.
 		 */
-		List<AttemptEntry> shorter = attempts.subList(0, attempts.size() - 1);
-		AttemptEntry attempt = attempts.get(attempts.size() - 1);
+		List<ProofEntry> shorter = attempts.subList(0, attempts.size() - 1);
+		ProofEntry attempt = attempts.get(attempts.size() - 1);
 		
-		AttemptMatch targetMatch;
+		ProofElemMatch targetMatch;
 		
 		// match shorter
-		AttemptMatch sMatch = findCreateAttemptTree(proofProject, attemptSet, shorter);
+		ProofElemMatch sMatch = findCreateProofTree(proofProject, attemptSet, shorter);
 		
 		/*
 		 * Check whether the last element has been matched (e.g. shorter matches
@@ -402,20 +414,20 @@ public class SnapshotTracker {
 		
 		// use the same group as the last entry has
 		// FIXME what about case splits?
-		AttemptGroup groupToAdd = getGroupToAdd(proofProject, targetMatch.attempt, attempt);
+		ProofElem groupToAdd = getGroupToAdd(proofProject, targetMatch.attempt, attempt);
 		addToGroup(groupToAdd, attempt);
 		
-		List<AttemptEntry> entriesPlus = new ArrayList<AttemptEntry>(targetMatch.allEntries);
+		List<ProofEntry> entriesPlus = new ArrayList<ProofEntry>(targetMatch.allEntries);
 		entriesPlus.add(attempt);
 		
-		return new AttemptMatch(targetMatch.rootGroup, entriesPlus, attempt);
+		return new ProofElemMatch(targetMatch.rootGroup, entriesPlus, attempt);
 	}
 	
-	private AttemptGroup getGroupToAdd(Project proofProject, AttemptEntry previous, AttemptEntry attempt) {
+	private ProofElem getGroupToAdd(Project proofProject, ProofEntry previous, ProofEntry attempt) {
 		
 		// TODO check cast
-		ZEvesProofReference refP = (ZEvesProofReference) previous.getContent();
-		ZEvesProofReference ref = (ZEvesProofReference) attempt.getContent();
+		ZEvesTrace refP = (ZEvesTrace) previous.getProofStep().getTrace();
+		ZEvesTrace ref = (ZEvesTrace) attempt.getProofStep().getTrace();
 		
 		List<Integer> proofCaseP = getProofCase(refP.getCase());
 		String caseStr = ref.getCase();
@@ -423,7 +435,7 @@ public class SnapshotTracker {
 		
 		if (proofCaseP.equals(proofCase)) {
 			// the same - add the attempt to the same group
-			return getGroup(previous);
+			return getParentProofElem(previous);
 		} else {
 			int sizeP = proofCaseP.size();
 			int size = proofCase.size();
@@ -439,37 +451,36 @@ public class SnapshotTracker {
 				return getGroupToAdd(proofProject, getPreviousEntry(getParentParallel(previous)), attempt);
 			} else {
 				// longer size, going deeper into the case
-				return addParallelBranch(proofProject, createParallel(proofProject, getGroup(previous)), caseStr);
+				return addParallelBranch(proofProject, createParallel(proofProject, getParentProofElem(previous)), caseStr);
 			}
 		}
 	}
 	
-	private AttemptGroup getGroup(Attempt entry) {
+	private ProofElem getParentProofElem(ProofElem entry) {
 		// TODO check cast
-		return (AttemptGroup) entry.eContainer();
+		return (ProofElem) entry.eContainer();
 	}
 	
-	private AttemptGroup getParentParallel(Attempt entry) {
+	private ProofParallel getParentParallel(ProofElem entry) {
 		EObject parent = entry.eContainer();
-		if (parent instanceof AttemptGroup) {
-			
-			AttemptGroup parentAttempt = (AttemptGroup) parent;
-			if (parentAttempt.getCompositionType() == CompositionType.PARALLEL) {
-				return parentAttempt;
-			} else {
-				return getParentParallel(parentAttempt);
-			}
+		
+		if (parent instanceof ProofParallel) {
+			return (ProofParallel) parent;
+		}
+		
+		if (parent instanceof ProofElem) {
+			return getParentParallel((ProofElem) parent);
 		}
 		
 		return null;
 	}
 	
-	private AttemptEntry getPreviousEntry(Attempt attempt) {
-		List<Attempt> siblings = getGroup(attempt).getAttempts();
+	private ProofEntry getPreviousEntry(ProofElem attempt) {
+		List<ProofElem> siblings = getProofChildren(getParentProofElem(attempt));
 		for (int i = siblings.indexOf(attempt) - 1; i >= 0; i--) {
-			Attempt previous = siblings.get(i);
-			if (previous instanceof AttemptEntry) {
-				return (AttemptEntry) previous;
+			ProofElem previous = siblings.get(i);
+			if (previous instanceof ProofEntry) {
+				return (ProofEntry) previous;
 			}
 		}
 		
@@ -477,70 +488,105 @@ public class SnapshotTracker {
 		//193
 	}
 	
-	private AttemptGroup addParallelBranch(Project proofProject, AttemptGroup parentParallel, String caseStr) {
-		Assert.isTrue(parentParallel.getCompositionType() == CompositionType.PARALLEL);
+	private ProofSeq addParallelBranch(Project proofProject, ProofParallel parentParallel, String caseStr) {
 		
-		AttemptGroup branch = ProofProcessFactory.eINSTANCE.createAttemptGroup();
-		branch.setCompositionType(CompositionType.SEQUENTIAL);
-		branch.setDescription("Case #" + caseStr);
-		branch.setIntent(findCreateIntent(proofProject, "Parallel Branch"));
+		ProofSeq branch = ProofProcessFactory.eINSTANCE.createProofSeq();
+		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
+		branch.setInfo(info);
+		info.setNarrative("Case #" + caseStr);
+		info.setIntent(findCreateIntent(proofProject, "Parallel Branch"));
 		
 		addToGroup(parentParallel, branch);
 		return branch;
 	}
 	
-	private AttemptGroup createParallel(Project proofProject, AttemptGroup parent) {
+	private ProofParallel createParallel(Project proofProject, ProofElem parent) {
 		
-		AttemptGroup parallel = ProofProcessFactory.eINSTANCE.createAttemptGroup();
-		parallel.setCompositionType(CompositionType.PARALLEL);
-		parallel.setDescription("Parallel attempts");
-		parallel.setIntent(findCreateIntent(proofProject, "Parallel"));
+		ProofParallel parallel = ProofProcessFactory.eINSTANCE.createProofParallel();
+		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
+		parallel.setInfo(info);
+		
+		info.setNarrative("Parallel attempts");
+		info.setIntent(findCreateIntent(proofProject, "Parallel"));
 		
 		addToGroup(parent, parallel);
 		return parallel;
 	}
 	
-	public static void addToGroup(AttemptGroup group, Attempt attempt) {
-		group.getAttempts().add(attempt);
-		group.getContained().add(attempt);
-	}
-	
-	private List<AttemptEntry> getAttemptEntriesDepthFirst(Attempt attempt) {
-		return getAttemptEntriesDepthFirst(attempt, true);
-	}
-	
-	private List<AttemptEntry> getAttemptEntriesDepthFirst(Attempt attempt, boolean includeParallel) {
+	public static void addToGroup(ProofElem group, ProofElem proofElem) {
+		if (group instanceof ProofSeq) {
+			((ProofSeq) group).getEntries().add(proofElem);
+//			group.getContained().add(proofElem);
+		}
 		
-		List<AttemptEntry> attempts = new ArrayList<AttemptEntry>();
+		if (group instanceof ProofParallel) {
+			((ProofParallel) group).getEntries().add(proofElem);
+		}
 		
-		for (Attempt child : attempt.getAttempts()) {
+		if (group instanceof ProofDecor) {
+			ProofDecor decor = (ProofDecor) group;
+			if (decor.getEntry() != null) {
+				throw new IllegalArgumentException("Cannot add to non-empty ProofDecor!");
+			}
 			
-			if (!includeParallel && child.getCompositionType() == CompositionType.PARALLEL) {
+			decor.setEntry(proofElem);
+		}
+		
+		throw new IllegalArgumentException("Cannot add to " + group.getClass().getSimpleName());
+	}
+	
+	private List<ProofEntry> getProofEntriesDepthFirst(ProofElem proofElem) {
+		return getProofEntriesDepthFirst(proofElem, true);
+	}
+	
+	private List<ProofEntry> getProofEntriesDepthFirst(ProofElem proofElem, boolean includeParallel) {
+		
+		List<ProofEntry> entries = new ArrayList<ProofEntry>();
+		
+		for (ProofElem child : getProofChildren(proofElem)) {
+			
+			if (!includeParallel && child instanceof ProofParallel) {
 				continue;
 			}
 			
-			attempts.addAll(getAttemptEntriesDepthFirst(child));
+			entries.addAll(getProofEntriesDepthFirst(child));
 			
-			if (child instanceof AttemptEntry) {
-				attempts.add((AttemptEntry) child);
+			if (child instanceof ProofEntry) {
+				entries.add((ProofEntry) child);
 			}
 		}
 		
-		return attempts;
+		return entries;
 	}
 	
-	private boolean matchAttempt(AttemptEntry a1, AttemptEntry a2) {
+	public static List<ProofElem> getProofChildren(ProofElem proofElem) {
+		if (proofElem instanceof ProofSeq) {
+			return ((ProofSeq) proofElem).getEntries();
+		}
 		
-		ProofReference ref1 = a1.getContent();
-		ProofReference ref2 = a2.getContent();
+		if (proofElem instanceof ProofParallel) {
+			return ((ProofParallel) proofElem).getEntries();
+		}
 		
-		if (ref1 instanceof ZEvesProofReference && ref2 instanceof ZEvesProofReference) {
+		if (proofElem instanceof ProofDecor) {
+			return Collections.singletonList(((ProofDecor) proofElem).getEntry());
+		}
+		
+		return Collections.emptyList();
+	}
+	
+	private boolean matchAttempt(ProofEntry a1, ProofEntry a2) {
+		
+		Trace ref1 = a1.getProofStep().getTrace();
+		Trace ref2 = a2.getProofStep().getTrace();
+		
+		if (ref1 instanceof ZEvesTrace && ref2 instanceof ZEvesTrace) {
 
 			EqualityHelper equalityHelper = new FeatureEqualityHelper(Arrays.asList(
-					ZEvesProofProcessPackage.eINSTANCE.getZEvesProofReference_Goal(),
-					ZEvesProofProcessPackage.eINSTANCE.getZEvesProofReference_Text(),
-					ZEvesProofProcessPackage.eINSTANCE.getZEvesProofReference_UsedLemmas(),
-					ZEvesProofProcessPackage.eINSTANCE.getZEvesProofReference_Case()));
+					ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Goal(),
+					ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Text(),
+					ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_UsedLemmas(),
+					ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Case()));
 			
 			return equalityHelper.equals(ref1, ref2);
 		}
@@ -548,43 +594,43 @@ public class SnapshotTracker {
 		return EcoreUtil.equals(a1, a2);
 	}
 	
-	private AttemptMatch findMatchingAttemptTree(AttemptSet attemptSet, List<AttemptEntry> entries) {
+	private ProofElemMatch findMatchingProofTree(Proof attemptSet, List<ProofEntry> entries) {
 		
-		List<AttemptGroup> roots = attemptSet.getAttempts();
-		for (int rIndex = roots.size() - 1; rIndex >= 0; rIndex--) {
-			AttemptGroup root = roots.get(rIndex);
-			List<AttemptEntry> rootEntries = getAttemptEntriesDepthFirst(root);
+		List<Attempt> attempts = attemptSet.getAttempts();
+		for (int rIndex = attempts.size() - 1; rIndex >= 0; rIndex--) {
+			Attempt root = attempts.get(rIndex);
+			List<ProofEntry> rootEntries = getProofEntriesDepthFirst(root.getProof());
 			if (rootEntries.size() < entries.size()) {
 				continue;
 			}
 			
 			boolean matching = true;
-			AttemptEntry lastMatch = null;
+			ProofEntry lastMatch = null;
 			for (int index = 0; index < entries.size(); index++) {
-				AttemptEntry rootEntry = rootEntries.get(index);
-				if (!matchAttempt(rootEntry, entries.get(index))) {
+				ProofEntry entry = rootEntries.get(index);
+				if (!matchAttempt(entry, entries.get(index))) {
 					matching = false;
 					break;
 				}
 				
-				lastMatch = rootEntry;
+				lastMatch = entry;
 			}
 			
 			if (matching) {
-				return new AttemptMatch(root, rootEntries, lastMatch);
+				return new ProofElemMatch(root, rootEntries, lastMatch);
 			}
 		}
 		
 		return null;
 	}
 	
-	private AttemptMatch copyAttemptTree(AttemptSet attemptSet, AttemptGroup sourceRoot, 
-			List<AttemptEntry> entriesToCopy) {
+	private ProofElemMatch copyAttemptTree(Proof attemptSet, Attempt sourceAttempt, 
+			List<ProofEntry> entriesToCopy) {
 		
 		Assert.isLegal(!entriesToCopy.isEmpty(), "Cannot copy an attempt tree with no entries");
 		
-		final Set<Attempt> parentEntries = new HashSet<Attempt>();
-		for (AttemptEntry entry : entriesToCopy) {
+		final Set<ProofElem> parentEntries = new HashSet<ProofElem>();
+		for (ProofEntry entry : entriesToCopy) {
 			collectParents(entry, parentEntries);
 		}
 		
@@ -594,7 +640,7 @@ public class SnapshotTracker {
 				
 				List<T> filtered = new ArrayList<T>();
 				for (T obj : eObjects) {
-					if (obj instanceof Attempt && !parentEntries.contains(obj)) {
+					if (obj instanceof ProofElem && !parentEntries.contains(obj)) {
 						// do not include this into the copy
 						continue;
 					}
@@ -606,7 +652,7 @@ public class SnapshotTracker {
 			}
 		};
 		
-		AttemptGroup result = (AttemptGroup) copier.copy(sourceRoot);
+		Attempt result = (Attempt) copier.copy(sourceAttempt);
 	    copier.copyReferences();
 		
 		// parent references still get copied within copyReferences(), but
@@ -619,38 +665,46 @@ public class SnapshotTracker {
 	    	}
 	    }
 	    
+	    // TODO maybe below is unnecessary if we have containments only?
 		for (Entry<EObject, EObject> copyEntry : copier.entrySet()) {
-			if (copyEntry.getValue() instanceof AttemptGroup) {
-				AttemptGroup group = (AttemptGroup) copyEntry.getValue();
-				group.getAttempts().retainAll(copiedParents);
+			if (copyEntry.getValue() instanceof ProofSeq) {
+				ProofSeq group = (ProofSeq) copyEntry.getValue();
+				group.getEntries().retainAll(copiedParents);
+			} else if (copyEntry.getValue() instanceof ProofParallel) {
+				ProofParallel group = (ProofParallel) copyEntry.getValue();
+				group.getEntries().retainAll(copiedParents);
+			} else if (copyEntry.getValue() instanceof ProofDecor) {
+				// TODO what do we do about decor here?
+//				ProofDecor group = (ProofDecor) copyEntry.getValue();
+//				group.getEntries().retainAll(copiedParents);
 			}
 		}
 		
-		setNextRootDescription(attemptSet, result);
+		setNextRootDescription(attemptSet, result.getProof().getInfo());
 	    
 		attemptSet.getAttempts().add(result);
 	    
-		List<AttemptEntry> copiedEntries = getAttemptEntriesDepthFirst(result);
+		List<ProofEntry> copiedEntries = getProofEntriesDepthFirst(result.getProof());
 		
-		return new AttemptMatch(result, copiedEntries, copiedEntries.get(copiedEntries.size() - 1));
+		return new ProofElemMatch(result, copiedEntries, copiedEntries.get(copiedEntries.size() - 1));
 	}
 	
-	private void collectParents(Attempt attempt, Set<Attempt> attempts) {
+	private void collectParents(ProofElem attempt, Set<ProofElem> attempts) {
 		// TODO how about when the attempt is referenced twice?
 		// Then one is not-containment reference
 		attempts.add(attempt);
 		
 		EObject parent = attempt.eContainer();
-		if (parent != null && parent instanceof Attempt) {
-			collectParents((Attempt) parent, attempts);
+		if (parent != null && parent instanceof ProofElem) {
+			collectParents((ProofElem) parent, attempts);
 		}
 	}
 	
-	private AttemptEntry createTacticAttempt(Project project, FileVersion fileVersion, 
+	private ProofEntry createTacticProofEntry(Project project, FileVersion fileVersion, 
 			ISnapshotEntry proofEntry) {
 		
 		// create tactic application attempt
-		AttemptEntry attempt = ProofProcessFactory.eINSTANCE.createAttemptEntry();
+		ProofEntry entry = ProofProcessFactory.eINSTANCE.createProofEntry();
 		
 		ZEvesOutput entryResult = (ZEvesOutput) proofEntry.getData().getResult();
 		
@@ -663,18 +717,23 @@ public class SnapshotTracker {
 			commandText = entryResult.getCommand().toString();
 		}
 		
-		attempt.setDescription("Tactic: " + commandText);
+		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
+		entry.setInfo(info);
+		
+		info.setNarrative("Tactic: " + commandText);
 		
 		Intent intent = findCreateIntent(project, "Tactic Application");
-		attempt.setIntent(intent);
+		info.setIntent(intent);
 		
-		ZEvesProofReference ref = ZEvesProofProcessFactory.eINSTANCE.createZEvesProofReference();
-		ref.setFilePath(fileVersion.getPath());
+		ZEvesTrace ref = ZEvesProofProcessFactory.eINSTANCE.createZEvesTrace();
 		ref.setGoal(entryResult.getFirstResult().toString());
 //		ref.setMarkup();
-		ref.setPosition(convertPos(proofEntry.getPosition()));
 		ref.setText(commandText);
 		ref.setCase(proofCaseStr(entryResult.getProofCase()));
+		
+		TextLoc loc = ZEvesProofProcessFactory.eINSTANCE.createTextLoc();
+		loc.setFilePath(fileVersion.getPath());
+		loc.setPosition(convertPos(proofEntry.getPosition()));
 		
 		Set<String> usedLemmas = new LinkedHashSet<String>();
 		
@@ -685,8 +744,10 @@ public class SnapshotTracker {
 		
 		ref.getUsedLemmas().addAll(usedLemmas);
 		
-		attempt.setContent(ref);
-		return attempt;
+		ProofStep step = ProofProcessFactory.eINSTANCE.createProofStep();
+		step.setTrace(ref);
+		step.setSource(loc);
+		return entry;
 	}
 	
 	private static String proofCaseStr(List<Integer> proofCase) {
@@ -737,30 +798,30 @@ public class SnapshotTracker {
 		return usedLemmas;
 	}
 	
-	private AttemptSet findCreateAttemptSet(Project project, ISnapshotEntry proofEntry) {
+	private Proof findCreateProof(Project project, ISnapshotEntry proofEntry) {
 		
 		String goalName = proofEntry.getData().getGoalName();
 		
-		List<AttemptSet> proofs = project.getProofs();
+		List<Proof> proofs = project.getProofs();
 		// go backwards and use the last one
 		for (int index = proofs.size() - 1; index >= 0; index--) {
-			AttemptSet attemptSet = proofs.get(index);
-			if (isTargetAttemptSet(goalName, attemptSet)) {
+			Proof proof = proofs.get(index);
+			if (isTargetProof(goalName, proof)) {
 				// FIXME also check the goal - may be the same name, different goal
-				// found attempt set
-				return attemptSet;
+				// found proof
+				return proof;
 			}
 		}
 		
 		// create new
-		AttemptSet targetAttemptSet = ProofProcessFactory.eINSTANCE.createAttemptSet();
-		targetAttemptSet.setLabel(goalName);
-		proofs.add(targetAttemptSet);
+		Proof targetProof = ProofProcessFactory.eINSTANCE.createProof();
+		targetProof.setLabel(goalName);
+		proofs.add(targetProof);
 		
-		return targetAttemptSet;
+		return targetProof;
 	}
 
-	private boolean isTargetAttemptSet(String goalName, AttemptSet attemptSet) {
+	private boolean isTargetProof(String goalName, Proof attemptSet) {
 		return goalName.equals(attemptSet.getLabel());
 	}
 	
@@ -883,14 +944,14 @@ public class SnapshotTracker {
 		
 	}
 	
-	private static class AttemptMatch {
+	private static class ProofElemMatch {
 		
-		private final AttemptGroup rootGroup;
-		private final List<AttemptEntry> allEntries;
-		private final AttemptEntry attempt;
+		private final Attempt rootGroup;
+		private final List<ProofEntry> allEntries;
+		private final ProofEntry attempt;
 		
-		public AttemptMatch(AttemptGroup rootGroup, List<AttemptEntry> allEntries,
-				AttemptEntry matchedAttempt) {
+		public ProofElemMatch(Attempt rootGroup, List<ProofEntry> allEntries,
+				ProofEntry matchedAttempt) {
 			super();
 			this.rootGroup = rootGroup;
 			this.allEntries = allEntries;
