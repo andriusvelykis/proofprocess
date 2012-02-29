@@ -38,10 +38,12 @@ public class FileHistoryManager {
 	 * Scheduling rule used for loading project resource.
 	 */
 	private static final ISchedulingRule SYNC_RULE = new ISchedulingRule() {
+		@Override
 		public boolean contains(ISchedulingRule rule) {
 			return rule == this;
 		}
 
+		@Override
 		public boolean isConflicting(ISchedulingRule rule) {
 			return rule == this;
 		}
