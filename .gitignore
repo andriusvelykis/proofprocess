@@ -3,6 +3,7 @@ org.ai4fm.filehistory.core/bin
 org.ai4fm.proofprocess/bin
 org.ai4fm.proofprocess.edit/bin
 org.ai4fm.proofprocess.project/bin
+org.ai4fm.proofprocess.project.edit/bin
 org.ai4fm.proofprocess.zeves/bin
 org.ai4fm.proofprocess.zeves.edit/bin
 org.ai4fm.proofprocess.zeves.ui/bin
