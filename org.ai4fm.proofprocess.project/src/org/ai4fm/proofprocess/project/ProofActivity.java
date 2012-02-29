@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves;
+package org.ai4fm.proofprocess.project;
 
 import org.ai4fm.proofprocess.ProofEntry;
 
@@ -16,11 +16,11 @@ import org.ai4fm.proofprocess.ProofEntry;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.ProofActivity#getProofRef <em>Proof Ref</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.ProofActivity#getProofRef <em>Proof Ref</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getProofActivity()
+ * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage#getProofActivity()
  * @model
  * @generated
  */
@@ -35,14 +35,14 @@ public interface ProofActivity extends Activity {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Proof Ref</em>' reference.
 	 * @see #setProofRef(ProofEntry)
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getProofActivity_ProofRef()
+	 * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage#getProofActivity_ProofRef()
 	 * @model
 	 * @generated
 	 */
 	ProofEntry getProofRef();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.zeves.ProofActivity#getProofRef <em>Proof Ref</em>}' reference.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.project.ProofActivity#getProofRef <em>Proof Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Proof Ref</em>' reference.

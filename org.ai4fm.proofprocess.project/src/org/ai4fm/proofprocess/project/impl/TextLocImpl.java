@@ -4,11 +4,11 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves.impl;
+package org.ai4fm.proofprocess.project.impl;
 
-import org.ai4fm.proofprocess.zeves.Position;
-import org.ai4fm.proofprocess.zeves.TextLoc;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.project.Position;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
+import org.ai4fm.proofprocess.project.TextLoc;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -26,8 +26,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.TextLocImpl#getFilePath <em>File Path</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.TextLocImpl#getPosition <em>Position</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.TextLocImpl#getFilePath <em>File Path</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.TextLocImpl#getPosition <em>Position</em>}</li>
  * </ul>
  * </p>
  *
@@ -80,7 +80,7 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ZEvesProofProcessPackage.Literals.TEXT_LOC;
+		return ProjectProofProcessPackage.Literals.TEXT_LOC;
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 		String oldFilePath = filePath;
 		filePath = newFilePath;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.TEXT_LOC__FILE_PATH, oldFilePath, filePath));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.TEXT_LOC__FILE_PATH, oldFilePath, filePath));
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 		Position oldPosition = position;
 		position = newPosition;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.TEXT_LOC__POSITION, oldPosition, newPosition);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.TEXT_LOC__POSITION, oldPosition, newPosition);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -137,14 +137,14 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 		if (newPosition != position) {
 			NotificationChain msgs = null;
 			if (position != null)
-				msgs = ((InternalEObject)position).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ZEvesProofProcessPackage.TEXT_LOC__POSITION, null, msgs);
+				msgs = ((InternalEObject)position).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProjectProofProcessPackage.TEXT_LOC__POSITION, null, msgs);
 			if (newPosition != null)
-				msgs = ((InternalEObject)newPosition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ZEvesProofProcessPackage.TEXT_LOC__POSITION, null, msgs);
+				msgs = ((InternalEObject)newPosition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProjectProofProcessPackage.TEXT_LOC__POSITION, null, msgs);
 			msgs = basicSetPosition(newPosition, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.TEXT_LOC__POSITION, newPosition, newPosition));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.TEXT_LOC__POSITION, newPosition, newPosition));
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.TEXT_LOC__POSITION:
+			case ProjectProofProcessPackage.TEXT_LOC__POSITION:
 				return basicSetPosition(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -169,9 +169,9 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.TEXT_LOC__FILE_PATH:
+			case ProjectProofProcessPackage.TEXT_LOC__FILE_PATH:
 				return getFilePath();
-			case ZEvesProofProcessPackage.TEXT_LOC__POSITION:
+			case ProjectProofProcessPackage.TEXT_LOC__POSITION:
 				return getPosition();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -185,10 +185,10 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.TEXT_LOC__FILE_PATH:
+			case ProjectProofProcessPackage.TEXT_LOC__FILE_PATH:
 				setFilePath((String)newValue);
 				return;
-			case ZEvesProofProcessPackage.TEXT_LOC__POSITION:
+			case ProjectProofProcessPackage.TEXT_LOC__POSITION:
 				setPosition((Position)newValue);
 				return;
 		}
@@ -203,10 +203,10 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.TEXT_LOC__FILE_PATH:
+			case ProjectProofProcessPackage.TEXT_LOC__FILE_PATH:
 				setFilePath(FILE_PATH_EDEFAULT);
 				return;
-			case ZEvesProofProcessPackage.TEXT_LOC__POSITION:
+			case ProjectProofProcessPackage.TEXT_LOC__POSITION:
 				setPosition((Position)null);
 				return;
 		}
@@ -221,9 +221,9 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.TEXT_LOC__FILE_PATH:
+			case ProjectProofProcessPackage.TEXT_LOC__FILE_PATH:
 				return FILE_PATH_EDEFAULT == null ? filePath != null : !FILE_PATH_EDEFAULT.equals(filePath);
-			case ZEvesProofProcessPackage.TEXT_LOC__POSITION:
+			case ProjectProofProcessPackage.TEXT_LOC__POSITION:
 				return position != null;
 		}
 		return super.eIsSet(featureID);

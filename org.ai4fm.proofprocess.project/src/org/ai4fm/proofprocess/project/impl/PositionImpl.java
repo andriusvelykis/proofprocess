@@ -4,10 +4,10 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves.impl;
+package org.ai4fm.proofprocess.project.impl;
 
-import org.ai4fm.proofprocess.zeves.Position;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.project.Position;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.PositionImpl#getOffset <em>Offset</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.PositionImpl#getLength <em>Length</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.PositionImpl#getOffset <em>Offset</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.PositionImpl#getLength <em>Length</em>}</li>
  * </ul>
  * </p>
  *
@@ -87,7 +87,7 @@ public class PositionImpl extends EObjectImpl implements Position {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ZEvesProofProcessPackage.Literals.POSITION;
+		return ProjectProofProcessPackage.Literals.POSITION;
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class PositionImpl extends EObjectImpl implements Position {
 		int oldOffset = offset;
 		offset = newOffset;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.POSITION__OFFSET, oldOffset, offset));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.POSITION__OFFSET, oldOffset, offset));
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class PositionImpl extends EObjectImpl implements Position {
 		int oldLength = length;
 		length = newLength;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.POSITION__LENGTH, oldLength, length));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.POSITION__LENGTH, oldLength, length));
 	}
 
 	/**
@@ -140,9 +140,9 @@ public class PositionImpl extends EObjectImpl implements Position {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.POSITION__OFFSET:
+			case ProjectProofProcessPackage.POSITION__OFFSET:
 				return getOffset();
-			case ZEvesProofProcessPackage.POSITION__LENGTH:
+			case ProjectProofProcessPackage.POSITION__LENGTH:
 				return getLength();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -156,10 +156,10 @@ public class PositionImpl extends EObjectImpl implements Position {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.POSITION__OFFSET:
+			case ProjectProofProcessPackage.POSITION__OFFSET:
 				setOffset((Integer)newValue);
 				return;
-			case ZEvesProofProcessPackage.POSITION__LENGTH:
+			case ProjectProofProcessPackage.POSITION__LENGTH:
 				setLength((Integer)newValue);
 				return;
 		}
@@ -174,10 +174,10 @@ public class PositionImpl extends EObjectImpl implements Position {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.POSITION__OFFSET:
+			case ProjectProofProcessPackage.POSITION__OFFSET:
 				setOffset(OFFSET_EDEFAULT);
 				return;
-			case ZEvesProofProcessPackage.POSITION__LENGTH:
+			case ProjectProofProcessPackage.POSITION__LENGTH:
 				setLength(LENGTH_EDEFAULT);
 				return;
 		}
@@ -192,9 +192,9 @@ public class PositionImpl extends EObjectImpl implements Position {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.POSITION__OFFSET:
+			case ProjectProofProcessPackage.POSITION__OFFSET:
 				return offset != OFFSET_EDEFAULT;
-			case ZEvesProofProcessPackage.POSITION__LENGTH:
+			case ProjectProofProcessPackage.POSITION__LENGTH:
 				return length != LENGTH_EDEFAULT;
 		}
 		return super.eIsSet(featureID);

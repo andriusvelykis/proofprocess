@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves;
+package org.ai4fm.proofprocess.project;
 
 import org.ai4fm.proofprocess.Loc;
 
@@ -16,12 +16,12 @@ import org.ai4fm.proofprocess.Loc;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.TextLoc#getFilePath <em>File Path</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.TextLoc#getPosition <em>Position</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.TextLoc#getFilePath <em>File Path</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.TextLoc#getPosition <em>Position</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getTextLoc()
+ * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage#getTextLoc()
  * @model
  * @generated
  */
@@ -36,14 +36,14 @@ public interface TextLoc extends Loc {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>File Path</em>' attribute.
 	 * @see #setFilePath(String)
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getTextLoc_FilePath()
+	 * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage#getTextLoc_FilePath()
 	 * @model
 	 * @generated
 	 */
 	String getFilePath();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.zeves.TextLoc#getFilePath <em>File Path</em>}' attribute.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.project.TextLoc#getFilePath <em>File Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>File Path</em>' attribute.
@@ -62,14 +62,14 @@ public interface TextLoc extends Loc {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Position</em>' containment reference.
 	 * @see #setPosition(Position)
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getTextLoc_Position()
+	 * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage#getTextLoc_Position()
 	 * @model containment="true"
 	 * @generated
 	 */
 	Position getPosition();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.zeves.TextLoc#getPosition <em>Position</em>}' containment reference.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.project.TextLoc#getPosition <em>Position</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Position</em>' containment reference.

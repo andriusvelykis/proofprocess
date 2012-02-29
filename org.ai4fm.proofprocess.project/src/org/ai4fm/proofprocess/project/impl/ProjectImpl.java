@@ -4,16 +4,16 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves.impl;
+package org.ai4fm.proofprocess.project.impl;
 
 import java.util.Collection;
 
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Proof;
 
-import org.ai4fm.proofprocess.zeves.Activity;
-import org.ai4fm.proofprocess.zeves.Project;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.project.Activity;
+import org.ai4fm.proofprocess.project.Project;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -36,11 +36,10 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ProjectImpl#getLabel <em>Label</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ProjectImpl#getZEvesVersion <em>ZEves Version</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ProjectImpl#getProofs <em>Proofs</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ProjectImpl#getActivities <em>Activities</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ProjectImpl#getIntents <em>Intents</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.ProjectImpl#getLabel <em>Label</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.ProjectImpl#getProofs <em>Proofs</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.ProjectImpl#getActivities <em>Activities</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.ProjectImpl#getIntents <em>Intents</em>}</li>
  * </ul>
  * </p>
  *
@@ -66,26 +65,6 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 * @ordered
 	 */
 	protected String label = LABEL_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getZEvesVersion() <em>ZEves Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getZEvesVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String ZEVES_VERSION_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getZEvesVersion() <em>ZEves Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getZEvesVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected String zEvesVersion = ZEVES_VERSION_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getProofs() <em>Proofs</em>}' containment reference list.
@@ -133,7 +112,7 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ZEvesProofProcessPackage.Literals.PROJECT;
+		return ProjectProofProcessPackage.Literals.PROJECT;
 	}
 
 	/**
@@ -154,28 +133,7 @@ public class ProjectImpl extends EObjectImpl implements Project {
 		String oldLabel = label;
 		label = newLabel;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.PROJECT__LABEL, oldLabel, label));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getZEvesVersion() {
-		return zEvesVersion;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setZEvesVersion(String newZEvesVersion) {
-		String oldZEvesVersion = zEvesVersion;
-		zEvesVersion = newZEvesVersion;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.PROJECT__ZEVES_VERSION, oldZEvesVersion, zEvesVersion));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.PROJECT__LABEL, oldLabel, label));
 	}
 
 	/**
@@ -185,7 +143,7 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 */
 	public EList<Proof> getProofs() {
 		if (proofs == null) {
-			proofs = new EObjectContainmentEList<Proof>(Proof.class, this, ZEvesProofProcessPackage.PROJECT__PROOFS);
+			proofs = new EObjectContainmentEList<Proof>(Proof.class, this, ProjectProofProcessPackage.PROJECT__PROOFS);
 		}
 		return proofs;
 	}
@@ -197,7 +155,7 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 */
 	public EList<Activity> getActivities() {
 		if (activities == null) {
-			activities = new EObjectContainmentEList<Activity>(Activity.class, this, ZEvesProofProcessPackage.PROJECT__ACTIVITIES);
+			activities = new EObjectContainmentEList<Activity>(Activity.class, this, ProjectProofProcessPackage.PROJECT__ACTIVITIES);
 		}
 		return activities;
 	}
@@ -209,7 +167,7 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 */
 	public EList<Intent> getIntents() {
 		if (intents == null) {
-			intents = new EObjectContainmentEList<Intent>(Intent.class, this, ZEvesProofProcessPackage.PROJECT__INTENTS);
+			intents = new EObjectContainmentEList<Intent>(Intent.class, this, ProjectProofProcessPackage.PROJECT__INTENTS);
 		}
 		return intents;
 	}
@@ -222,11 +180,11 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROJECT__PROOFS:
+			case ProjectProofProcessPackage.PROJECT__PROOFS:
 				return ((InternalEList<?>)getProofs()).basicRemove(otherEnd, msgs);
-			case ZEvesProofProcessPackage.PROJECT__ACTIVITIES:
+			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
 				return ((InternalEList<?>)getActivities()).basicRemove(otherEnd, msgs);
-			case ZEvesProofProcessPackage.PROJECT__INTENTS:
+			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				return ((InternalEList<?>)getIntents()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -240,15 +198,13 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROJECT__LABEL:
+			case ProjectProofProcessPackage.PROJECT__LABEL:
 				return getLabel();
-			case ZEvesProofProcessPackage.PROJECT__ZEVES_VERSION:
-				return getZEvesVersion();
-			case ZEvesProofProcessPackage.PROJECT__PROOFS:
+			case ProjectProofProcessPackage.PROJECT__PROOFS:
 				return getProofs();
-			case ZEvesProofProcessPackage.PROJECT__ACTIVITIES:
+			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
 				return getActivities();
-			case ZEvesProofProcessPackage.PROJECT__INTENTS:
+			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				return getIntents();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -263,21 +219,18 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROJECT__LABEL:
+			case ProjectProofProcessPackage.PROJECT__LABEL:
 				setLabel((String)newValue);
 				return;
-			case ZEvesProofProcessPackage.PROJECT__ZEVES_VERSION:
-				setZEvesVersion((String)newValue);
-				return;
-			case ZEvesProofProcessPackage.PROJECT__PROOFS:
+			case ProjectProofProcessPackage.PROJECT__PROOFS:
 				getProofs().clear();
 				getProofs().addAll((Collection<? extends Proof>)newValue);
 				return;
-			case ZEvesProofProcessPackage.PROJECT__ACTIVITIES:
+			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
 				getActivities().clear();
 				getActivities().addAll((Collection<? extends Activity>)newValue);
 				return;
-			case ZEvesProofProcessPackage.PROJECT__INTENTS:
+			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				getIntents().clear();
 				getIntents().addAll((Collection<? extends Intent>)newValue);
 				return;
@@ -293,19 +246,16 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROJECT__LABEL:
+			case ProjectProofProcessPackage.PROJECT__LABEL:
 				setLabel(LABEL_EDEFAULT);
 				return;
-			case ZEvesProofProcessPackage.PROJECT__ZEVES_VERSION:
-				setZEvesVersion(ZEVES_VERSION_EDEFAULT);
-				return;
-			case ZEvesProofProcessPackage.PROJECT__PROOFS:
+			case ProjectProofProcessPackage.PROJECT__PROOFS:
 				getProofs().clear();
 				return;
-			case ZEvesProofProcessPackage.PROJECT__ACTIVITIES:
+			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
 				getActivities().clear();
 				return;
-			case ZEvesProofProcessPackage.PROJECT__INTENTS:
+			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				getIntents().clear();
 				return;
 		}
@@ -320,15 +270,13 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROJECT__LABEL:
+			case ProjectProofProcessPackage.PROJECT__LABEL:
 				return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
-			case ZEvesProofProcessPackage.PROJECT__ZEVES_VERSION:
-				return ZEVES_VERSION_EDEFAULT == null ? zEvesVersion != null : !ZEVES_VERSION_EDEFAULT.equals(zEvesVersion);
-			case ZEvesProofProcessPackage.PROJECT__PROOFS:
+			case ProjectProofProcessPackage.PROJECT__PROOFS:
 				return proofs != null && !proofs.isEmpty();
-			case ZEvesProofProcessPackage.PROJECT__ACTIVITIES:
+			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
 				return activities != null && !activities.isEmpty();
-			case ZEvesProofProcessPackage.PROJECT__INTENTS:
+			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				return intents != null && !intents.isEmpty();
 		}
 		return super.eIsSet(featureID);
@@ -346,8 +294,6 @@ public class ProjectImpl extends EObjectImpl implements Project {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (label: ");
 		result.append(label);
-		result.append(", zEvesVersion: ");
-		result.append(zEvesVersion);
 		result.append(')');
 		return result.toString();
 	}

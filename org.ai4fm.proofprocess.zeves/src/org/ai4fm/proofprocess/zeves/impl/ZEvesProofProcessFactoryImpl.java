@@ -31,7 +31,7 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 */
 	public static ZEvesProofProcessFactory init() {
 		try {
-			ZEvesProofProcessFactory theZEvesProofProcessFactory = (ZEvesProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/zeves/v0"); 
+			ZEvesProofProcessFactory theZEvesProofProcessFactory = (ZEvesProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/zeves/v1.0.0"); 
 			if (theZEvesProofProcessFactory != null) {
 				return theZEvesProofProcessFactory;
 			}
@@ -60,12 +60,7 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ZEvesProofProcessPackage.PROJECT: return createProject();
-			case ZEvesProofProcessPackage.ACTIVITY: return createActivity();
-			case ZEvesProofProcessPackage.PROOF_ACTIVITY: return createProofActivity();
 			case ZEvesProofProcessPackage.ZEVES_TRACE: return createZEvesTrace();
-			case ZEvesProofProcessPackage.POSITION: return createPosition();
-			case ZEvesProofProcessPackage.TEXT_LOC: return createTextLoc();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -76,59 +71,9 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Project createProject() {
-		ProjectImpl project = new ProjectImpl();
-		return project;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Activity createActivity() {
-		ActivityImpl activity = new ActivityImpl();
-		return activity;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ProofActivity createProofActivity() {
-		ProofActivityImpl proofActivity = new ProofActivityImpl();
-		return proofActivity;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public ZEvesTrace createZEvesTrace() {
 		ZEvesTraceImpl zEvesTrace = new ZEvesTraceImpl();
 		return zEvesTrace;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Position createPosition() {
-		PositionImpl position = new PositionImpl();
-		return position;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public TextLoc createTextLoc() {
-		TextLocImpl textLoc = new TextLocImpl();
-		return textLoc;
 	}
 
 	/**

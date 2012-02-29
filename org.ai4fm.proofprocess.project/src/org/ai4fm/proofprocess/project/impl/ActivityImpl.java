@@ -4,12 +4,12 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves.impl;
+package org.ai4fm.proofprocess.project.impl;
 
 import java.util.Date;
 
-import org.ai4fm.proofprocess.zeves.Activity;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.project.Activity;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -25,8 +25,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ActivityImpl#getDescription <em>Description</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ActivityImpl#getTimestamp <em>Timestamp</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.ActivityImpl#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.ActivityImpl#getTimestamp <em>Timestamp</em>}</li>
  * </ul>
  * </p>
  *
@@ -89,7 +89,7 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ZEvesProofProcessPackage.Literals.ACTIVITY;
+		return ProjectProofProcessPackage.Literals.ACTIVITY;
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.ACTIVITY__DESCRIPTION, oldDescription, description));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.ACTIVITY__DESCRIPTION, oldDescription, description));
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 		Date oldTimestamp = timestamp;
 		timestamp = newTimestamp;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.ACTIVITY__TIMESTAMP, oldTimestamp, timestamp));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.ACTIVITY__TIMESTAMP, oldTimestamp, timestamp));
 	}
 
 	/**
@@ -142,9 +142,9 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.ACTIVITY__DESCRIPTION:
+			case ProjectProofProcessPackage.ACTIVITY__DESCRIPTION:
 				return getDescription();
-			case ZEvesProofProcessPackage.ACTIVITY__TIMESTAMP:
+			case ProjectProofProcessPackage.ACTIVITY__TIMESTAMP:
 				return getTimestamp();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -158,10 +158,10 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.ACTIVITY__DESCRIPTION:
+			case ProjectProofProcessPackage.ACTIVITY__DESCRIPTION:
 				setDescription((String)newValue);
 				return;
-			case ZEvesProofProcessPackage.ACTIVITY__TIMESTAMP:
+			case ProjectProofProcessPackage.ACTIVITY__TIMESTAMP:
 				setTimestamp((Date)newValue);
 				return;
 		}
@@ -176,10 +176,10 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.ACTIVITY__DESCRIPTION:
+			case ProjectProofProcessPackage.ACTIVITY__DESCRIPTION:
 				setDescription(DESCRIPTION_EDEFAULT);
 				return;
-			case ZEvesProofProcessPackage.ACTIVITY__TIMESTAMP:
+			case ProjectProofProcessPackage.ACTIVITY__TIMESTAMP:
 				setTimestamp(TIMESTAMP_EDEFAULT);
 				return;
 		}
@@ -194,9 +194,9 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.ACTIVITY__DESCRIPTION:
+			case ProjectProofProcessPackage.ACTIVITY__DESCRIPTION:
 				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-			case ZEvesProofProcessPackage.ACTIVITY__TIMESTAMP:
+			case ProjectProofProcessPackage.ACTIVITY__TIMESTAMP:
 				return TIMESTAMP_EDEFAULT == null ? timestamp != null : !TIMESTAMP_EDEFAULT.equals(timestamp);
 		}
 		return super.eIsSet(featureID);

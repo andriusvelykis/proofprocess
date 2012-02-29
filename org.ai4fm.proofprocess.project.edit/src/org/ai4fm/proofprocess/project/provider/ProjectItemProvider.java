@@ -4,15 +4,17 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves.provider;
+package org.ai4fm.proofprocess.project.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.zeves.TextLoc;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.ProofProcessFactory;
+
+import org.ai4fm.proofprocess.project.Project;
+import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -33,12 +35,12 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.zeves.TextLoc} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.project.Project} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class TextLocItemProvider
+public class ProjectItemProvider
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -52,7 +54,7 @@ public class TextLocItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TextLocItemProvider(AdapterFactory adapterFactory) {
+	public ProjectItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -67,25 +69,25 @@ public class TextLocItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addFilePathPropertyDescriptor(object);
+			addLabelPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the File Path feature.
+	 * This adds a property descriptor for the Label feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addFilePathPropertyDescriptor(Object object) {
+	protected void addLabelPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_TextLoc_filePath_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_TextLoc_filePath_feature", "_UI_TextLoc_type"),
-				 ZEvesProofProcessPackage.Literals.TEXT_LOC__FILE_PATH,
+				 getString("_UI_Project_label_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Project_label_feature", "_UI_Project_type"),
+				 ProjectProofProcessPackage.Literals.PROJECT__LABEL,
 				 true,
 				 false,
 				 false,
@@ -106,7 +108,9 @@ public class TextLocItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ZEvesProofProcessPackage.Literals.TEXT_LOC__POSITION);
+			childrenFeatures.add(ProjectProofProcessPackage.Literals.PROJECT__PROOFS);
+			childrenFeatures.add(ProjectProofProcessPackage.Literals.PROJECT__ACTIVITIES);
+			childrenFeatures.add(ProjectProofProcessPackage.Literals.PROJECT__INTENTS);
 		}
 		return childrenFeatures;
 	}
@@ -125,14 +129,14 @@ public class TextLocItemProvider
 	}
 
 	/**
-	 * This returns TextLoc.gif.
+	 * This returns Project.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/TextLoc"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/Project"));
 	}
 
 	/**
@@ -143,10 +147,10 @@ public class TextLocItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((TextLoc)object).getFilePath();
+		String label = ((Project)object).getLabel();
 		return label == null || label.length() == 0 ?
-			getString("_UI_TextLoc_type") :
-			getString("_UI_TextLoc_type") + " " + label;
+			getString("_UI_Project_type") :
+			getString("_UI_Project_type") + " " + label;
 	}
 
 	/**
@@ -160,11 +164,13 @@ public class TextLocItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(TextLoc.class)) {
-			case ZEvesProofProcessPackage.TEXT_LOC__FILE_PATH:
+		switch (notification.getFeatureID(Project.class)) {
+			case ProjectProofProcessPackage.PROJECT__LABEL:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
-			case ZEvesProofProcessPackage.TEXT_LOC__POSITION:
+			case ProjectProofProcessPackage.PROJECT__PROOFS:
+			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
+			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -184,8 +190,23 @@ public class TextLocItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(ZEvesProofProcessPackage.Literals.TEXT_LOC__POSITION,
-				 ZEvesProofProcessFactory.eINSTANCE.createPosition()));
+				(ProjectProofProcessPackage.Literals.PROJECT__PROOFS,
+				 ProofProcessFactory.eINSTANCE.createProof()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProjectProofProcessPackage.Literals.PROJECT__ACTIVITIES,
+				 ProjectProofProcessFactory.eINSTANCE.createActivity()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProjectProofProcessPackage.Literals.PROJECT__ACTIVITIES,
+				 ProjectProofProcessFactory.eINSTANCE.createProofActivity()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProjectProofProcessPackage.Literals.PROJECT__INTENTS,
+				 ProofProcessFactory.eINSTANCE.createIntent()));
 	}
 
 	/**
@@ -196,7 +217,7 @@ public class TextLocItemProvider
 	 */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ZEvesProofProcessEditPlugin.INSTANCE;
+		return ProjectProofProcessEditPlugin.INSTANCE;
 	}
 
 }

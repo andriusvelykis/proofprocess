@@ -26,33 +26,6 @@ public interface ZEvesProofProcessFactory extends EFactory {
 	ZEvesProofProcessFactory eINSTANCE = org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Project</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Project</em>'.
-	 * @generated
-	 */
-	Project createProject();
-
-	/**
-	 * Returns a new object of class '<em>Activity</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Activity</em>'.
-	 * @generated
-	 */
-	Activity createActivity();
-
-	/**
-	 * Returns a new object of class '<em>Proof Activity</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Proof Activity</em>'.
-	 * @generated
-	 */
-	ProofActivity createProofActivity();
-
-	/**
 	 * Returns a new object of class '<em>ZEves Trace</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -60,24 +33,6 @@ public interface ZEvesProofProcessFactory extends EFactory {
 	 * @generated
 	 */
 	ZEvesTrace createZEvesTrace();
-
-	/**
-	 * Returns a new object of class '<em>Position</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Position</em>'.
-	 * @generated
-	 */
-	Position createPosition();
-
-	/**
-	 * Returns a new object of class '<em>Text Loc</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Text Loc</em>'.
-	 * @generated
-	 */
-	TextLoc createTextLoc();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves;
+package org.ai4fm.proofprocess.project;
 
 import java.util.Date;
 
@@ -18,12 +18,12 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.Activity#getDescription <em>Description</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.Activity#getTimestamp <em>Timestamp</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.Activity#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.Activity#getTimestamp <em>Timestamp</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getActivity()
+ * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage#getActivity()
  * @model
  * @generated
  */
@@ -38,14 +38,14 @@ public interface Activity extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getActivity_Description()
+	 * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage#getActivity_Description()
 	 * @model
 	 * @generated
 	 */
 	String getDescription();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.zeves.Activity#getDescription <em>Description</em>}' attribute.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.project.Activity#getDescription <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Description</em>' attribute.
@@ -64,14 +64,14 @@ public interface Activity extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Timestamp</em>' attribute.
 	 * @see #setTimestamp(Date)
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getActivity_Timestamp()
+	 * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage#getActivity_Timestamp()
 	 * @model
 	 * @generated
 	 */
 	Date getTimestamp();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.zeves.Activity#getTimestamp <em>Timestamp</em>}' attribute.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.project.Activity#getTimestamp <em>Timestamp</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Timestamp</em>' attribute.

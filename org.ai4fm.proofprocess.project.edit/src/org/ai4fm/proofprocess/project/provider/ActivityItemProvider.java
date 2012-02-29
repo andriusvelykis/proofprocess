@@ -4,17 +4,19 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves.provider;
+package org.ai4fm.proofprocess.project.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.zeves.ProofActivity;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.project.Activity;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -23,15 +25,18 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
+import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.zeves.ProofActivity} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.project.Activity} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ProofActivityItemProvider
-	extends ActivityItemProvider
+public class ActivityItemProvider
+	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
 		IStructuredItemContentProvider,
@@ -44,7 +49,7 @@ public class ProofActivityItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProofActivityItemProvider(AdapterFactory adapterFactory) {
+	public ActivityItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -59,42 +64,65 @@ public class ProofActivityItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addProofRefPropertyDescriptor(object);
+			addDescriptionPropertyDescriptor(object);
+			addTimestampPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Proof Ref feature.
+	 * This adds a property descriptor for the Description feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addProofRefPropertyDescriptor(Object object) {
+	protected void addDescriptionPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_ProofActivity_proofRef_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ProofActivity_proofRef_feature", "_UI_ProofActivity_type"),
-				 ZEvesProofProcessPackage.Literals.PROOF_ACTIVITY__PROOF_REF,
+				 getString("_UI_Activity_description_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Activity_description_feature", "_UI_Activity_type"),
+				 ProjectProofProcessPackage.Literals.ACTIVITY__DESCRIPTION,
 				 true,
 				 false,
-				 true,
-				 null,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				 null,
 				 null));
 	}
 
 	/**
-	 * This returns ProofActivity.gif.
+	 * This adds a property descriptor for the Timestamp feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addTimestampPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Activity_timestamp_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Activity_timestamp_feature", "_UI_Activity_type"),
+				 ProjectProofProcessPackage.Literals.ACTIVITY__TIMESTAMP,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This returns Activity.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofActivity"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/Activity"));
 	}
 
 	/**
@@ -105,10 +133,10 @@ public class ProofActivityItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((ProofActivity)object).getDescription();
+		String label = ((Activity)object).getDescription();
 		return label == null || label.length() == 0 ?
-			getString("_UI_ProofActivity_type") :
-			getString("_UI_ProofActivity_type") + " " + label;
+			getString("_UI_Activity_type") :
+			getString("_UI_Activity_type") + " " + label;
 	}
 
 	/**
@@ -121,6 +149,13 @@ public class ProofActivityItemProvider
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
+
+		switch (notification.getFeatureID(Activity.class)) {
+			case ProjectProofProcessPackage.ACTIVITY__DESCRIPTION:
+			case ProjectProofProcessPackage.ACTIVITY__TIMESTAMP:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
+		}
 		super.notifyChanged(notification);
 	}
 
@@ -134,6 +169,17 @@ public class ProofActivityItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ResourceLocator getResourceLocator() {
+		return ProjectProofProcessEditPlugin.INSTANCE;
 	}
 
 }

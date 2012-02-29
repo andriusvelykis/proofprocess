@@ -4,17 +4,15 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves.provider;
+package org.ai4fm.proofprocess.project.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.ProofProcessFactory;
-
-import org.ai4fm.proofprocess.zeves.Project;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
+import org.ai4fm.proofprocess.project.TextLoc;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -35,12 +33,12 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.zeves.Project} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.project.TextLoc} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ProjectItemProvider
+public class TextLocItemProvider
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -54,7 +52,7 @@ public class ProjectItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProjectItemProvider(AdapterFactory adapterFactory) {
+	public TextLocItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -69,48 +67,25 @@ public class ProjectItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLabelPropertyDescriptor(object);
-			addZEvesVersionPropertyDescriptor(object);
+			addFilePathPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Label feature.
+	 * This adds a property descriptor for the File Path feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addLabelPropertyDescriptor(Object object) {
+	protected void addFilePathPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_Project_label_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Project_label_feature", "_UI_Project_type"),
-				 ZEvesProofProcessPackage.Literals.PROJECT__LABEL,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the ZEves Version feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addZEvesVersionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Project_zEvesVersion_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Project_zEvesVersion_feature", "_UI_Project_type"),
-				 ZEvesProofProcessPackage.Literals.PROJECT__ZEVES_VERSION,
+				 getString("_UI_TextLoc_filePath_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_TextLoc_filePath_feature", "_UI_TextLoc_type"),
+				 ProjectProofProcessPackage.Literals.TEXT_LOC__FILE_PATH,
 				 true,
 				 false,
 				 false,
@@ -131,9 +106,7 @@ public class ProjectItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ZEvesProofProcessPackage.Literals.PROJECT__PROOFS);
-			childrenFeatures.add(ZEvesProofProcessPackage.Literals.PROJECT__ACTIVITIES);
-			childrenFeatures.add(ZEvesProofProcessPackage.Literals.PROJECT__INTENTS);
+			childrenFeatures.add(ProjectProofProcessPackage.Literals.TEXT_LOC__POSITION);
 		}
 		return childrenFeatures;
 	}
@@ -152,14 +125,14 @@ public class ProjectItemProvider
 	}
 
 	/**
-	 * This returns Project.gif.
+	 * This returns TextLoc.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Project"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/TextLoc"));
 	}
 
 	/**
@@ -170,10 +143,10 @@ public class ProjectItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((Project)object).getLabel();
+		String label = ((TextLoc)object).getFilePath();
 		return label == null || label.length() == 0 ?
-			getString("_UI_Project_type") :
-			getString("_UI_Project_type") + " " + label;
+			getString("_UI_TextLoc_type") :
+			getString("_UI_TextLoc_type") + " " + label;
 	}
 
 	/**
@@ -187,14 +160,11 @@ public class ProjectItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(Project.class)) {
-			case ZEvesProofProcessPackage.PROJECT__LABEL:
-			case ZEvesProofProcessPackage.PROJECT__ZEVES_VERSION:
+		switch (notification.getFeatureID(TextLoc.class)) {
+			case ProjectProofProcessPackage.TEXT_LOC__FILE_PATH:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
-			case ZEvesProofProcessPackage.PROJECT__PROOFS:
-			case ZEvesProofProcessPackage.PROJECT__ACTIVITIES:
-			case ZEvesProofProcessPackage.PROJECT__INTENTS:
+			case ProjectProofProcessPackage.TEXT_LOC__POSITION:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -214,23 +184,8 @@ public class ProjectItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(ZEvesProofProcessPackage.Literals.PROJECT__PROOFS,
-				 ProofProcessFactory.eINSTANCE.createProof()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ZEvesProofProcessPackage.Literals.PROJECT__ACTIVITIES,
-				 ZEvesProofProcessFactory.eINSTANCE.createActivity()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ZEvesProofProcessPackage.Literals.PROJECT__ACTIVITIES,
-				 ZEvesProofProcessFactory.eINSTANCE.createProofActivity()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ZEvesProofProcessPackage.Literals.PROJECT__INTENTS,
-				 ProofProcessFactory.eINSTANCE.createIntent()));
+				(ProjectProofProcessPackage.Literals.TEXT_LOC__POSITION,
+				 ProjectProofProcessFactory.eINSTANCE.createPosition()));
 	}
 
 	/**
@@ -241,7 +196,7 @@ public class ProjectItemProvider
 	 */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ZEvesProofProcessEditPlugin.INSTANCE;
+		return ProjectProofProcessEditPlugin.INSTANCE;
 	}
 
 }

@@ -4,14 +4,14 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves.provider;
+package org.ai4fm.proofprocess.project.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.zeves.Position;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.project.Position;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -30,7 +30,7 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.zeves.Position} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.project.Position} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
@@ -83,7 +83,7 @@ public class PositionItemProvider
 				 getResourceLocator(),
 				 getString("_UI_Position_offset_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_Position_offset_feature", "_UI_Position_type"),
-				 ZEvesProofProcessPackage.Literals.POSITION__OFFSET,
+				 ProjectProofProcessPackage.Literals.POSITION__OFFSET,
 				 true,
 				 false,
 				 false,
@@ -105,7 +105,7 @@ public class PositionItemProvider
 				 getResourceLocator(),
 				 getString("_UI_Position_length_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_Position_length_feature", "_UI_Position_type"),
-				 ZEvesProofProcessPackage.Literals.POSITION__LENGTH,
+				 ProjectProofProcessPackage.Literals.POSITION__LENGTH,
 				 true,
 				 false,
 				 false,
@@ -149,8 +149,8 @@ public class PositionItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(Position.class)) {
-			case ZEvesProofProcessPackage.POSITION__OFFSET:
-			case ZEvesProofProcessPackage.POSITION__LENGTH:
+			case ProjectProofProcessPackage.POSITION__OFFSET:
+			case ProjectProofProcessPackage.POSITION__LENGTH:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}
@@ -177,7 +177,7 @@ public class PositionItemProvider
 	 */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ZEvesProofProcessEditPlugin.INSTANCE;
+		return ProjectProofProcessEditPlugin.INSTANCE;
 	}
 
 }

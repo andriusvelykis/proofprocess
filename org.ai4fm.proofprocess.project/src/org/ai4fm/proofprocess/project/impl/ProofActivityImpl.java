@@ -4,12 +4,12 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves.impl;
+package org.ai4fm.proofprocess.project.impl;
 
 import org.ai4fm.proofprocess.ProofEntry;
 
-import org.ai4fm.proofprocess.zeves.ProofActivity;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
+import org.ai4fm.proofprocess.project.ProofActivity;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ProofActivityImpl#getProofRef <em>Proof Ref</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.project.impl.ProofActivityImpl#getProofRef <em>Proof Ref</em>}</li>
  * </ul>
  * </p>
  *
@@ -58,7 +58,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ZEvesProofProcessPackage.Literals.PROOF_ACTIVITY;
+		return ProjectProofProcessPackage.Literals.PROOF_ACTIVITY;
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 			proofRef = (ProofEntry)eResolveProxy(oldProofRef);
 			if (proofRef != oldProofRef) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF, oldProofRef, proofRef));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProjectProofProcessPackage.PROOF_ACTIVITY__PROOF_REF, oldProofRef, proofRef));
 			}
 		}
 		return proofRef;
@@ -96,7 +96,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 		ProofEntry oldProofRef = proofRef;
 		proofRef = newProofRef;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF, oldProofRef, proofRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.PROOF_ACTIVITY__PROOF_REF, oldProofRef, proofRef));
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
+			case ProjectProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
 				if (resolve) return getProofRef();
 				return basicGetProofRef();
 		}
@@ -122,7 +122,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
+			case ProjectProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
 				setProofRef((ProofEntry)newValue);
 				return;
 		}
@@ -137,7 +137,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
+			case ProjectProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
 				setProofRef((ProofEntry)null);
 				return;
 		}
@@ -152,7 +152,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
+			case ProjectProofProcessPackage.PROOF_ACTIVITY__PROOF_REF:
 				return proofRef != null;
 		}
 		return super.eIsSet(featureID);

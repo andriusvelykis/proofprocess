@@ -4,12 +4,12 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.zeves.provider;
+package org.ai4fm.proofprocess.project.provider;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.ai4fm.proofprocess.zeves.util.ZEvesProofProcessAdapterFactory;
+import org.ai4fm.proofprocess.project.util.ProjectProofProcessAdapterFactory;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -36,7 +36,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProcessAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
+public class ProjectProofProcessItemProviderAdapterFactory extends ProjectProofProcessAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 	/**
 	 * This keeps track of the root adapter factory that delegates to this adapter factory.
 	 * <!-- begin-user-doc -->
@@ -67,7 +67,7 @@ public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProce
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ZEvesProofProcessItemProviderAdapterFactory() {
+	public ProjectProofProcessItemProviderAdapterFactory() {
 		supportedTypes.add(IEditingDomainItemProvider.class);
 		supportedTypes.add(IStructuredItemContentProvider.class);
 		supportedTypes.add(ITreeItemContentProvider.class);
@@ -76,26 +76,118 @@ public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProce
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.zeves.ZEvesTrace} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.project.Project} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ZEvesTraceItemProvider zEvesTraceItemProvider;
+	protected ProjectItemProvider projectItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.zeves.ZEvesTrace}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.project.Project}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createZEvesTraceAdapter() {
-		if (zEvesTraceItemProvider == null) {
-			zEvesTraceItemProvider = new ZEvesTraceItemProvider(this);
+	public Adapter createProjectAdapter() {
+		if (projectItemProvider == null) {
+			projectItemProvider = new ProjectItemProvider(this);
 		}
 
-		return zEvesTraceItemProvider;
+		return projectItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.project.Activity} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ActivityItemProvider activityItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.project.Activity}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createActivityAdapter() {
+		if (activityItemProvider == null) {
+			activityItemProvider = new ActivityItemProvider(this);
+		}
+
+		return activityItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.project.ProofActivity} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ProofActivityItemProvider proofActivityItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.project.ProofActivity}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createProofActivityAdapter() {
+		if (proofActivityItemProvider == null) {
+			proofActivityItemProvider = new ProofActivityItemProvider(this);
+		}
+
+		return proofActivityItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.project.Position} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected PositionItemProvider positionItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.project.Position}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createPositionAdapter() {
+		if (positionItemProvider == null) {
+			positionItemProvider = new PositionItemProvider(this);
+		}
+
+		return positionItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.project.TextLoc} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected TextLocItemProvider textLocItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.project.TextLoc}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createTextLocAdapter() {
+		if (textLocItemProvider == null) {
+			textLocItemProvider = new TextLocItemProvider(this);
+		}
+
+		return textLocItemProvider;
 	}
 
 	/**
@@ -197,7 +289,11 @@ public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProce
 	 * @generated
 	 */
 	public void dispose() {
-		if (zEvesTraceItemProvider != null) zEvesTraceItemProvider.dispose();
+		if (projectItemProvider != null) projectItemProvider.dispose();
+		if (activityItemProvider != null) activityItemProvider.dispose();
+		if (proofActivityItemProvider != null) proofActivityItemProvider.dispose();
+		if (positionItemProvider != null) positionItemProvider.dispose();
+		if (textLocItemProvider != null) textLocItemProvider.dispose();
 	}
 
 }
