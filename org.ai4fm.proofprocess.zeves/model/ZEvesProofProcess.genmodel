@@ -7,29 +7,12 @@
   <foreignModel>ZEvesProofProcess.ecore</foreignModel>
   <genPackages prefix="ZEvesProofProcess" basePackage="org.ai4fm.proofprocess" disposableProviderFactory="true"
       ecorePackage="ZEvesProofProcess.ecore#/">
-    <genClasses ecoreClass="ZEvesProofProcess.ecore#//Project">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//Project/label"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//Project/zEvesVersion"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ZEvesProofProcess.ecore#//Project/proofs"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ZEvesProofProcess.ecore#//Project/activities"/>
-    </genClasses>
-    <genClasses ecoreClass="ZEvesProofProcess.ecore#//Activity">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//Activity/description"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//Activity/timestamp"/>
-    </genClasses>
-    <genClasses ecoreClass="ZEvesProofProcess.ecore#//ProofActivity">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ZEvesProofProcess.ecore#//ProofActivity/attempt"/>
-    </genClasses>
-    <genClasses ecoreClass="ZEvesProofProcess.ecore#//ZEvesProofReference">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesProofReference/filePath"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ZEvesProofProcess.ecore#//ZEvesProofReference/position"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesProofReference/markup"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesProofReference/goal"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesProofReference/usedLemmas"/>
-    </genClasses>
-    <genClasses ecoreClass="ZEvesProofProcess.ecore#//Position">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//Position/offset"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//Position/length"/>
+    <genClasses ecoreClass="ZEvesProofProcess.ecore#//ZEvesTrace">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/markup"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/goal"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/usedLemmas"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/text"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/case"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
