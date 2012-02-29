@@ -16,10 +16,10 @@ import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.provider.ProofProcessEditPlugin;
-import org.ai4fm.proofprocess.zeves.Activity;
-import org.ai4fm.proofprocess.zeves.Project;
-import org.ai4fm.proofprocess.zeves.ProofActivity;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.project.Activity;
+import org.ai4fm.proofprocess.project.Project;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
+import org.ai4fm.proofprocess.project.ProofActivity;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 import org.ai4fm.proofprocess.zeves.ui.ProofManager;
 import org.ai4fm.proofprocess.zeves.ui.SnapshotTracker;
@@ -156,7 +156,7 @@ public class ProofProcessPage extends Page {
 			treeViewer.setInput(proofProject);
 			
 			IEMFListProperty projectActivitiesProp = EMFProperties.list(
-					ZEvesProofProcessPackage.eINSTANCE.getProject_Activities());
+					ProjectProofProcessPackage.eINSTANCE.getProject_Activities());
 			activitiesObservableList = projectActivitiesProp.observe(proofProject);
 			activitiesObservableList.addChangeListener(activitiesListListener = new IChangeListener() {
 				

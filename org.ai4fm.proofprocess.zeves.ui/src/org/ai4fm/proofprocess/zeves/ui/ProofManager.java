@@ -2,8 +2,8 @@ package org.ai4fm.proofprocess.zeves.ui;
 
 import java.io.IOException;
 
-import org.ai4fm.proofprocess.zeves.Project;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
+import org.ai4fm.proofprocess.project.Project;
+import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -93,7 +93,7 @@ public class ProofManager {
 		
 		if (proofProject == null) {
 			// unable to load - init a new model file
-			proofProject = ZEvesProofProcessFactory.eINSTANCE.createProject();
+			proofProject = ProjectProofProcessFactory.eINSTANCE.createProject();
 			emfResource.getContents().add(proofProject);
 		}
 		

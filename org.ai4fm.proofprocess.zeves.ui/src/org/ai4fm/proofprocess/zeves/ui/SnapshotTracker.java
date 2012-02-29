@@ -50,11 +50,13 @@ import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
 import org.ai4fm.proofprocess.Trace;
-import org.ai4fm.proofprocess.zeves.Activity;
-import org.ai4fm.proofprocess.zeves.Position;
-import org.ai4fm.proofprocess.zeves.Project;
-import org.ai4fm.proofprocess.zeves.ProofActivity;
-import org.ai4fm.proofprocess.zeves.TextLoc;
+import org.ai4fm.proofprocess.project.Activity;
+import org.ai4fm.proofprocess.project.Position;
+import org.ai4fm.proofprocess.project.Project;
+import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
+import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
+import org.ai4fm.proofprocess.project.ProofActivity;
+import org.ai4fm.proofprocess.project.TextLoc;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
@@ -252,13 +254,13 @@ public class SnapshotTracker {
 			
 			ProofEntry attempt = analyseProofEntry(proofProject, nonErrorProof, fileVersion);
 			
-			ProofActivity proofActivity = ZEvesProofProcessFactory.eINSTANCE.createProofActivity();
+			ProofActivity proofActivity = ProjectProofProcessFactory.eINSTANCE.createProofActivity();
 			proofActivity.setProofRef(attempt);
 			
 			activity = proofActivity;
 			
 		} else if (entry.getData().getTerm() != null) {
-			activity = ZEvesProofProcessFactory.eINSTANCE.createActivity();
+			activity = ProjectProofProcessFactory.eINSTANCE.createActivity();
 		} else {
 			// no term - ignore for now
 			return;
@@ -268,7 +270,7 @@ public class SnapshotTracker {
 		Term source = entry.getData().getTerm();
 		activity.setDescription("Added: " + (source != null ? source.getClass().getSimpleName() : "<goal?>"));
 		
-		EmfUtil.addValue(proofProject, ZEvesProofProcessPackage.PROJECT__ACTIVITIES, activity);
+		EmfUtil.addValue(proofProject, ProjectProofProcessPackage.PROJECT__ACTIVITIES, activity);
 		
 		// FIXME
 		try {
@@ -734,7 +736,7 @@ public class SnapshotTracker {
 		ref.setText(commandText);
 		ref.setCase(proofCaseStr(entryResult.getProofCase()));
 		
-		TextLoc loc = ZEvesProofProcessFactory.eINSTANCE.createTextLoc();
+		TextLoc loc = ProjectProofProcessFactory.eINSTANCE.createTextLoc();
 		loc.setFilePath(fileVersion.getPath());
 		loc.setPosition(convertPos(proofEntry.getPosition()));
 		
@@ -846,7 +848,7 @@ public class SnapshotTracker {
 	}
 	
 	private Position convertPos(org.eclipse.jface.text.Position pos) {
-		Position position = ZEvesProofProcessFactory.eINSTANCE.createPosition();
+		Position position = ProjectProofProcessFactory.eINSTANCE.createPosition();
 		position.setOffset(pos.getOffset());
 		position.setLength(pos.getLength());
 		return position;
