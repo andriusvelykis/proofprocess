@@ -517,10 +517,12 @@ public class SnapshotTracker {
 		if (group instanceof ProofSeq) {
 			((ProofSeq) group).getEntries().add(proofElem);
 //			group.getContained().add(proofElem);
+			return;
 		}
 		
 		if (group instanceof ProofParallel) {
 			((ProofParallel) group).getEntries().add(proofElem);
+			return;
 		}
 		
 		if (group instanceof ProofDecor) {
@@ -530,6 +532,7 @@ public class SnapshotTracker {
 			}
 			
 			decor.setEntry(proofElem);
+			return;
 		}
 		
 		throw new IllegalArgumentException("Cannot add to " + group.getClass().getSimpleName());
