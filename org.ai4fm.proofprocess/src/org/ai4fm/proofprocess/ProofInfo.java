@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getWhy <em>Why</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getIntent <em>Intent</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getNarrative <em>Narrative</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getInProps <em>In Props</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getOutProps <em>Out Props</em>}</li>
@@ -31,30 +31,30 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ProofInfo extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Why</b></em>' reference.
+	 * Returns the value of the '<em><b>Intent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Why</em>' reference isn't clear,
+	 * If the meaning of the '<em>Intent</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Why</em>' reference.
-	 * @see #setWhy(Intent)
-	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofInfo_Why()
+	 * @return the value of the '<em>Intent</em>' reference.
+	 * @see #setIntent(Intent)
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofInfo_Intent()
 	 * @model
 	 * @generated
 	 */
-	Intent getWhy();
+	Intent getIntent();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.ProofInfo#getWhy <em>Why</em>}' reference.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.ProofInfo#getIntent <em>Intent</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Why</em>' reference.
-	 * @see #getWhy()
+	 * @param value the new value of the '<em>Intent</em>' reference.
+	 * @see #getIntent()
 	 * @generated
 	 */
-	void setWhy(Intent value);
+	void setIntent(Intent value);
 
 	/**
 	 * Returns the value of the '<em><b>Narrative</b></em>' attribute.

@@ -220,13 +220,13 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_INFO = 5;
 
 	/**
-	 * The feature id for the '<em><b>Why</b></em>' reference.
+	 * The feature id for the '<em><b>Intent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROOF_INFO__WHY = 0;
+	int PROOF_INFO__INTENT = 0;
 
 	/**
 	 * The feature id for the '<em><b>Narrative</b></em>' attribute.
@@ -735,15 +735,15 @@ public interface ProofProcessPackage extends EPackage {
 	EClass getProofInfo();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.ai4fm.proofprocess.ProofInfo#getWhy <em>Why</em>}'.
+	 * Returns the meta object for the reference '{@link org.ai4fm.proofprocess.ProofInfo#getIntent <em>Intent</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Why</em>'.
-	 * @see org.ai4fm.proofprocess.ProofInfo#getWhy()
+	 * @return the meta object for the reference '<em>Intent</em>'.
+	 * @see org.ai4fm.proofprocess.ProofInfo#getIntent()
 	 * @see #getProofInfo()
 	 * @generated
 	 */
-	EReference getProofInfo_Why();
+	EReference getProofInfo_Intent();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.ProofInfo#getNarrative <em>Narrative</em>}'.
@@ -1163,12 +1163,12 @@ public interface ProofProcessPackage extends EPackage {
 		EClass PROOF_INFO = eINSTANCE.getProofInfo();
 
 		/**
-		 * The meta object literal for the '<em><b>Why</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Intent</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROOF_INFO__WHY = eINSTANCE.getProofInfo_Why();
+		EReference PROOF_INFO__INTENT = eINSTANCE.getProofInfo_Intent();
 
 		/**
 		 * The meta object literal for the '<em><b>Narrative</b></em>' attribute feature.

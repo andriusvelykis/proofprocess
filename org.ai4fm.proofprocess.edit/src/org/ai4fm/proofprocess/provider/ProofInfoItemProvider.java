@@ -67,26 +67,26 @@ public class ProofInfoItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addWhyPropertyDescriptor(object);
+			addIntentPropertyDescriptor(object);
 			addNarrativePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Why feature.
+	 * This adds a property descriptor for the Intent feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addWhyPropertyDescriptor(Object object) {
+	protected void addIntentPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_ProofInfo_why_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ProofInfo_why_feature", "_UI_ProofInfo_type"),
-				 ProofProcessPackage.Literals.PROOF_INFO__WHY,
+				 getString("_UI_ProofInfo_intent_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ProofInfo_intent_feature", "_UI_ProofInfo_type"),
+				 ProofProcessPackage.Literals.PROOF_INFO__INTENT,
 				 true,
 				 false,
 				 true,

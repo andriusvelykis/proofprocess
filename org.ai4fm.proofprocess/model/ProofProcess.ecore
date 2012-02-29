@@ -23,7 +23,7 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProofInfo">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="why" eType="#//Intent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intent" eType="#//Intent"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="narrative" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="&quot;&quot;"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="inProps" upperBound="-1"

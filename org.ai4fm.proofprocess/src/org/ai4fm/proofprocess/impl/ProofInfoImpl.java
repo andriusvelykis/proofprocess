@@ -34,7 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getWhy <em>Why</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getIntent <em>Intent</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getNarrative <em>Narrative</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getInProps <em>In Props</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getOutProps <em>Out Props</em>}</li>
@@ -45,14 +45,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	/**
-	 * The cached value of the '{@link #getWhy() <em>Why</em>}' reference.
+	 * The cached value of the '{@link #getIntent() <em>Intent</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getWhy()
+	 * @see #getIntent()
 	 * @generated
 	 * @ordered
 	 */
-	protected Intent why;
+	protected Intent intent;
 
 	/**
 	 * The default value of the '{@link #getNarrative() <em>Narrative</em>}' attribute.
@@ -118,16 +118,16 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Intent getWhy() {
-		if (why != null && why.eIsProxy()) {
-			InternalEObject oldWhy = (InternalEObject)why;
-			why = (Intent)eResolveProxy(oldWhy);
-			if (why != oldWhy) {
+	public Intent getIntent() {
+		if (intent != null && intent.eIsProxy()) {
+			InternalEObject oldIntent = (InternalEObject)intent;
+			intent = (Intent)eResolveProxy(oldIntent);
+			if (intent != oldIntent) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProofProcessPackage.PROOF_INFO__WHY, oldWhy, why));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProofProcessPackage.PROOF_INFO__INTENT, oldIntent, intent));
 			}
 		}
-		return why;
+		return intent;
 	}
 
 	/**
@@ -135,8 +135,8 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Intent basicGetWhy() {
-		return why;
+	public Intent basicGetIntent() {
+		return intent;
 	}
 
 	/**
@@ -144,11 +144,11 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setWhy(Intent newWhy) {
-		Intent oldWhy = why;
-		why = newWhy;
+	public void setIntent(Intent newIntent) {
+		Intent oldIntent = intent;
+		intent = newIntent;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_INFO__WHY, oldWhy, why));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_INFO__INTENT, oldIntent, intent));
 	}
 
 	/**
@@ -220,9 +220,9 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ProofProcessPackage.PROOF_INFO__WHY:
-				if (resolve) return getWhy();
-				return basicGetWhy();
+			case ProofProcessPackage.PROOF_INFO__INTENT:
+				if (resolve) return getIntent();
+				return basicGetIntent();
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
 				return getNarrative();
 			case ProofProcessPackage.PROOF_INFO__IN_PROPS:
@@ -242,8 +242,8 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ProofProcessPackage.PROOF_INFO__WHY:
-				setWhy((Intent)newValue);
+			case ProofProcessPackage.PROOF_INFO__INTENT:
+				setIntent((Intent)newValue);
 				return;
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
 				setNarrative((String)newValue);
@@ -268,8 +268,8 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ProofProcessPackage.PROOF_INFO__WHY:
-				setWhy((Intent)null);
+			case ProofProcessPackage.PROOF_INFO__INTENT:
+				setIntent((Intent)null);
 				return;
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
 				setNarrative(NARRATIVE_EDEFAULT);
@@ -292,8 +292,8 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ProofProcessPackage.PROOF_INFO__WHY:
-				return why != null;
+			case ProofProcessPackage.PROOF_INFO__INTENT:
+				return intent != null;
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
 				return NARRATIVE_EDEFAULT == null ? narrative != null : !NARRATIVE_EDEFAULT.equals(narrative);
 			case ProofProcessPackage.PROOF_INFO__IN_PROPS:

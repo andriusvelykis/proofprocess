@@ -326,7 +326,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProofInfo_Why() {
+	public EReference getProofInfo_Intent() {
 		return (EReference)proofInfoEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -618,7 +618,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		createEReference(proofStepEClass, PROOF_STEP__TRACE);
 
 		proofInfoEClass = createEClass(PROOF_INFO);
-		createEReference(proofInfoEClass, PROOF_INFO__WHY);
+		createEReference(proofInfoEClass, PROOF_INFO__INTENT);
 		createEAttribute(proofInfoEClass, PROOF_INFO__NARRATIVE);
 		createEReference(proofInfoEClass, PROOF_INFO__IN_PROPS);
 		createEReference(proofInfoEClass, PROOF_INFO__OUT_PROPS);
@@ -710,7 +710,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		initEReference(getProofStep_Trace(), this.getTrace(), null, "trace", null, 1, 1, ProofStep.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(proofInfoEClass, ProofInfo.class, "ProofInfo", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getProofInfo_Why(), this.getIntent(), null, "why", null, 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProofInfo_Intent(), this.getIntent(), null, "intent", null, 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProofInfo_Narrative(), ecorePackage.getEString(), "narrative", "\"\"", 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProofInfo_InProps(), this.getProperty(), null, "inProps", null, 0, -1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProofInfo_OutProps(), this.getProperty(), null, "outProps", null, 0, -1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
