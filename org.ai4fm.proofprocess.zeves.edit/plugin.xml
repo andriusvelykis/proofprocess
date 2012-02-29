@@ -12,7 +12,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://org/ai4fm/proofprocess/zeves/v0"
+            uri="http://org/ai4fm/proofprocess/zeves/v1.0.0"
             class="org.ai4fm.proofprocess.zeves.provider.ZEvesProofProcessItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider

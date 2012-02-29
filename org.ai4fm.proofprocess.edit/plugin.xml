@@ -12,7 +12,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://org/ai4fm/proofprocess/v0"
+            uri="http://org/ai4fm/proofprocess/v1.0.0"
             class="org.ai4fm.proofprocess.provider.ProofProcessItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
