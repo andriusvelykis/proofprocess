@@ -304,7 +304,7 @@ public class ProofProcessPage extends Page {
 			super("Group Attempts");
 			setToolTipText("Group Selected Attempts Sequentially");
 			
-			Object image = ProofProcessEditPlugin.INSTANCE.getImage("full/obj16/AttemptSequential");
+			Object image = ProofProcessEditPlugin.INSTANCE.getImage("full/obj16/ProofSeq");
 			setImageDescriptor(ExtendedImageRegistry.getInstance().getImageDescriptor(image));
 		}
 		
