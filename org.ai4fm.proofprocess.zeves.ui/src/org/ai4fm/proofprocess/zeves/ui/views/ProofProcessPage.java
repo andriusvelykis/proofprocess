@@ -15,11 +15,11 @@ import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
+import org.ai4fm.proofprocess.log.ProofActivity;
+import org.ai4fm.proofprocess.log.ProofLog;
+import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 import org.ai4fm.proofprocess.provider.ProofProcessEditPlugin;
-import org.ai4fm.proofprocess.project.Activity;
 import org.ai4fm.proofprocess.project.Project;
-import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
-import org.ai4fm.proofprocess.project.ProofActivity;
 import org.ai4fm.proofprocess.project.core.ProofManager;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 import org.ai4fm.proofprocess.zeves.ui.SnapshotTracker;
@@ -155,9 +155,12 @@ public class ProofProcessPage extends Page {
 			proofProject = ProofManager.getProofProject(projectResource, null);
 			treeViewer.setInput(proofProject);
 			
+			// log is only used to update the last activity, not displayed in the view at the moment
+			ProofLog proofLog = ProofManager.getProofLog(projectResource, null);
+			
 			IEMFListProperty projectActivitiesProp = EMFProperties.list(
-					ProjectProofProcessPackage.eINSTANCE.getProject_Activities());
-			activitiesObservableList = projectActivitiesProp.observe(proofProject);
+					ProofProcessLogPackage.eINSTANCE.getProofLog_Activities());
+			activitiesObservableList = projectActivitiesProp.observe(proofLog);
 			activitiesObservableList.addChangeListener(activitiesListListener = new IChangeListener() {
 				
 				@Override
