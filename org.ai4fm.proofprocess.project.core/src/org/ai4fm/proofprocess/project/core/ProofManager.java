@@ -2,6 +2,8 @@ package org.ai4fm.proofprocess.project.core;
 
 import java.io.IOException;
 
+import org.ai4fm.proofprocess.log.ProofLog;
+import org.ai4fm.proofprocess.log.ProofProcessLogFactory;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
 import org.eclipse.core.resources.IFile;
@@ -14,6 +16,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -24,6 +27,7 @@ public class ProofManager {
 	
 	public static final String PROOF_FOLDER = ".proofprocess/";
 	private static final String PROOF_PROJECT_PATH = PROOF_FOLDER + "project.proof";
+	private static final String PROOF_LOG_PATH = PROOF_FOLDER + "project.prooflog";
 	
 	/**
 	 * Key for the loaded project reference on resource.
@@ -31,43 +35,70 @@ public class ProofManager {
 	public final static QualifiedName PROP_PROOF_PROJECT = 
 			new QualifiedName(ProjectProofProcessPlugin.PLUGIN_ID, "proofProject"); //$NON-NLS-1$
 	
+	/**
+	 * Key for the loaded proof log reference on resource.
+	 */
+	public final static QualifiedName PROP_PROOF_LOG = 
+			new QualifiedName(ProjectProofProcessPlugin.PLUGIN_ID, "proofLog"); //$NON-NLS-1$
+	
 	public static Project getProofProject(IProject projectResource, IProgressMonitor monitor)
 			throws CoreException {
 		
-		Project proofProject = (Project) projectResource.getSessionProperty(PROP_PROOF_PROJECT);
+		return getProofModel(projectResource, PROP_PROOF_PROJECT, monitor);
+	}
+	
+	public static ProofLog getProofLog(IProject projectResource, IProgressMonitor monitor)
+			throws CoreException {
+		
+		return getProofModel(projectResource, PROP_PROOF_LOG, monitor);
+	}
+	
+	private static <T extends EObject> T getProofModel(IProject projectResource,
+			QualifiedName prop, IProgressMonitor monitor) throws CoreException {
+		
+		@SuppressWarnings("unchecked")
+		T proofProject = (T) projectResource.getSessionProperty(prop);
 		if (proofProject == null) {
-			
-			// load project
-			
-			if (monitor == null) {
-				monitor = new NullProgressMonitor();
-			} else {
-				monitor = new SubProgressMonitor(monitor, 10);
-			}
-			
-			try {
-				
-				Job.getJobManager().beginRule(projectResource, monitor);
-				
-				monitor.beginTask("Loading proof progress", IProgressMonitor.UNKNOWN);
-				
-				// check maybe it has already been loaded (double-checked locking)
-				proofProject = (Project) projectResource.getSessionProperty(PROP_PROOF_PROJECT);
-				if (proofProject == null) {
-					proofProject = loadProject(getProofProjectFile(projectResource));
-					projectResource.setSessionProperty(PROP_PROOF_PROJECT, proofProject);
-				}
-				
-			} finally {
-				Job.getJobManager().endRule(projectResource);
-				monitor.done();
-			}
+			loadProofModelsJob(projectResource, monitor);
 		}
 		
 		return proofProject;
 	}
 	
-	private static Project loadProject(IFile file) {
+	public static void loadProofModelsJob(IProject projectResource, IProgressMonitor monitor)
+			throws CoreException {
+		
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
+		} else {
+			monitor = new SubProgressMonitor(monitor, 10);
+		}
+		
+		try {
+			
+			Job.getJobManager().beginRule(projectResource, monitor);
+			
+			monitor.beginTask("Loading proof progress", IProgressMonitor.UNKNOWN);
+			
+			loadProofModels(projectResource);
+			
+		} finally {
+			Job.getJobManager().endRule(projectResource);
+			monitor.done();
+		}
+	}
+	
+	private static void loadProofModels(IProject projectRes) 
+			throws CoreException {
+		
+		// check maybe they has already been loaded (double-checked locking)
+		Project proj = (Project) projectRes.getSessionProperty(PROP_PROOF_PROJECT);
+		ProofLog log = (ProofLog) projectRes.getSessionProperty(PROP_PROOF_LOG);
+		
+		if (proj != null && log != null) {
+			// loaded
+			return;
+		}
 		
 		initResourceFactories();
 		
@@ -77,10 +108,22 @@ public class ProofManager {
 		AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(
 				adapterFactory, new BasicCommandStack());
 		
+		Project proofProject = loadProofFile(editingDomain, getProofProjectFile(projectRes), 
+				ProjectProofProcessFactory.eINSTANCE.createProject());
+		
+		ProofLog proofLog = loadProofFile(editingDomain, getProofLogFile(projectRes), 
+				ProofProcessLogFactory.eINSTANCE.createProofLog());
+		
+		projectRes.setSessionProperty(PROP_PROOF_PROJECT, proofProject);
+		projectRes.setSessionProperty(PROP_PROOF_LOG, proofLog);
+	}
+	
+	private static <T extends EObject> T loadProofFile(AdapterFactoryEditingDomain editingDomain, IFile file, T empty) {
+		
 		String path = file.getFullPath().toOSString();
 		Resource emfResource = editingDomain.createResource(path);
 		
-		Project proofProject = null;
+		T root = null;
 		
 		if (file.exists()) {
 			try {
@@ -88,28 +131,35 @@ public class ProofManager {
 			} catch (IOException e) {
 				ProjectProofProcessPlugin.log(e);
 			}
-			proofProject = (Project) emfResource.getContents().get(0);
+			
+			@SuppressWarnings("unchecked")
+			T elem = (T) emfResource.getContents().get(0); 
+			root = elem;
 		}
 		
-		if (proofProject == null) {
+		if (root == null) {
 			// unable to load - init a new model file
-			proofProject = ProjectProofProcessFactory.eINSTANCE.createProject();
-			emfResource.getContents().add(proofProject);
+			root = empty;
+			emfResource.getContents().add(root);
 		}
 		
-		return proofProject;
+		return root;
 	}
-	
 	
 	private static IFile getProofProjectFile(IProject projectResource) {
 		return projectResource.getFile(PROOF_PROJECT_PATH);
 	}
 	
+	private static IFile getProofLogFile(IProject projectResource) {
+		return projectResource.getFile(PROOF_LOG_PATH);
+	}
+	
 	private static void initResourceFactories() {
 		
-		// Register the XMI resource factory for the .proof extension
+		// Register the XMI resource factory for the .proof and .prooflog extensions
 		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		reg.getExtensionToFactoryMap().put("proof", new XMIResourceFactoryImpl());
+		reg.getExtensionToFactoryMap().put("prooflog", new XMIResourceFactoryImpl());
 	}
 
 }
