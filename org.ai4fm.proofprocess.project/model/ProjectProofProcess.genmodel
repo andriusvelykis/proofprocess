@@ -11,15 +11,7 @@
     <genClasses ecoreClass="ProjectProofProcess.ecore#//Project">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProjectProofProcess.ecore#//Project/label"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProjectProofProcess.ecore#//Project/proofs"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProjectProofProcess.ecore#//Project/activities"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProjectProofProcess.ecore#//Project/intents"/>
-    </genClasses>
-    <genClasses ecoreClass="ProjectProofProcess.ecore#//Activity">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProjectProofProcess.ecore#//Activity/description"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProjectProofProcess.ecore#//Activity/timestamp"/>
-    </genClasses>
-    <genClasses ecoreClass="ProjectProofProcess.ecore#//ProofActivity">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ProjectProofProcess.ecore#//ProofActivity/proofRef"/>
     </genClasses>
     <genClasses ecoreClass="ProjectProofProcess.ecore#//Position">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProjectProofProcess.ecore#//Position/offset"/>
