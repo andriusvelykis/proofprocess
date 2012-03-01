@@ -56,13 +56,15 @@ public class ProofManager {
 	private static <T extends EObject> T getProofModel(IProject projectResource,
 			QualifiedName prop, IProgressMonitor monitor) throws CoreException {
 		
-		@SuppressWarnings("unchecked")
-		T proofProject = (T) projectResource.getSessionProperty(prop);
-		if (proofProject == null) {
+		Object modelObj = projectResource.getSessionProperty(prop);
+		if (modelObj == null) {
 			loadProofModelsJob(projectResource, monitor);
+			modelObj = projectResource.getSessionProperty(prop);
 		}
 		
-		return proofProject;
+		@SuppressWarnings("unchecked")
+		T model = (T) modelObj;
+		return model;
 	}
 	
 	public static void loadProofModelsJob(IProject projectResource, IProgressMonitor monitor)
