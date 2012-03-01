@@ -11,7 +11,6 @@ import java.util.Collection;
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Proof;
 
-import org.ai4fm.proofprocess.project.Activity;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 
@@ -38,7 +37,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link org.ai4fm.proofprocess.project.impl.ProjectImpl#getLabel <em>Label</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.project.impl.ProjectImpl#getProofs <em>Proofs</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.project.impl.ProjectImpl#getActivities <em>Activities</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.project.impl.ProjectImpl#getIntents <em>Intents</em>}</li>
  * </ul>
  * </p>
@@ -75,16 +73,6 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 * @ordered
 	 */
 	protected EList<Proof> proofs;
-
-	/**
-	 * The cached value of the '{@link #getActivities() <em>Activities</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getActivities()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Activity> activities;
 
 	/**
 	 * The cached value of the '{@link #getIntents() <em>Intents</em>}' containment reference list.
@@ -153,18 +141,6 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Activity> getActivities() {
-		if (activities == null) {
-			activities = new EObjectContainmentEList<Activity>(Activity.class, this, ProjectProofProcessPackage.PROJECT__ACTIVITIES);
-		}
-		return activities;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<Intent> getIntents() {
 		if (intents == null) {
 			intents = new EObjectContainmentEList<Intent>(Intent.class, this, ProjectProofProcessPackage.PROJECT__INTENTS);
@@ -182,8 +158,6 @@ public class ProjectImpl extends EObjectImpl implements Project {
 		switch (featureID) {
 			case ProjectProofProcessPackage.PROJECT__PROOFS:
 				return ((InternalEList<?>)getProofs()).basicRemove(otherEnd, msgs);
-			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
-				return ((InternalEList<?>)getActivities()).basicRemove(otherEnd, msgs);
 			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				return ((InternalEList<?>)getIntents()).basicRemove(otherEnd, msgs);
 		}
@@ -202,8 +176,6 @@ public class ProjectImpl extends EObjectImpl implements Project {
 				return getLabel();
 			case ProjectProofProcessPackage.PROJECT__PROOFS:
 				return getProofs();
-			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
-				return getActivities();
 			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				return getIntents();
 		}
@@ -225,10 +197,6 @@ public class ProjectImpl extends EObjectImpl implements Project {
 			case ProjectProofProcessPackage.PROJECT__PROOFS:
 				getProofs().clear();
 				getProofs().addAll((Collection<? extends Proof>)newValue);
-				return;
-			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
-				getActivities().clear();
-				getActivities().addAll((Collection<? extends Activity>)newValue);
 				return;
 			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				getIntents().clear();
@@ -252,9 +220,6 @@ public class ProjectImpl extends EObjectImpl implements Project {
 			case ProjectProofProcessPackage.PROJECT__PROOFS:
 				getProofs().clear();
 				return;
-			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
-				getActivities().clear();
-				return;
 			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				getIntents().clear();
 				return;
@@ -274,8 +239,6 @@ public class ProjectImpl extends EObjectImpl implements Project {
 				return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
 			case ProjectProofProcessPackage.PROJECT__PROOFS:
 				return proofs != null && !proofs.isEmpty();
-			case ProjectProofProcessPackage.PROJECT__ACTIVITIES:
-				return activities != null && !activities.isEmpty();
 			case ProjectProofProcessPackage.PROJECT__INTENTS:
 				return intents != null && !intents.isEmpty();
 		}

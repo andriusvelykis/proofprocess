@@ -4,11 +4,9 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.project.util;
+package org.ai4fm.proofprocess.log.util;
 
-import org.ai4fm.proofprocess.Loc;
-
-import org.ai4fm.proofprocess.project.*;
+import org.ai4fm.proofprocess.log.*;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -22,17 +20,17 @@ import org.eclipse.emf.ecore.EObject;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage
+ * @see org.ai4fm.proofprocess.log.ProofProcessLogPackage
  * @generated
  */
-public class ProjectProofProcessAdapterFactory extends AdapterFactoryImpl {
+public class ProofProcessLogAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected static ProjectProofProcessPackage modelPackage;
+	protected static ProofProcessLogPackage modelPackage;
 
 	/**
 	 * Creates an instance of the adapter factory.
@@ -40,9 +38,9 @@ public class ProjectProofProcessAdapterFactory extends AdapterFactoryImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProjectProofProcessAdapterFactory() {
+	public ProofProcessLogAdapterFactory() {
 		if (modelPackage == null) {
-			modelPackage = ProjectProofProcessPackage.eINSTANCE;
+			modelPackage = ProofProcessLogPackage.eINSTANCE;
 		}
 	}
 
@@ -71,23 +69,19 @@ public class ProjectProofProcessAdapterFactory extends AdapterFactoryImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ProjectProofProcessSwitch<Adapter> modelSwitch =
-		new ProjectProofProcessSwitch<Adapter>() {
+	protected ProofProcessLogSwitch<Adapter> modelSwitch =
+		new ProofProcessLogSwitch<Adapter>() {
 			@Override
-			public Adapter caseProject(Project object) {
-				return createProjectAdapter();
+			public Adapter caseProofLog(ProofLog object) {
+				return createProofLogAdapter();
 			}
 			@Override
-			public Adapter casePosition(Position object) {
-				return createPositionAdapter();
+			public Adapter caseActivity(Activity object) {
+				return createActivityAdapter();
 			}
 			@Override
-			public Adapter caseTextLoc(TextLoc object) {
-				return createTextLocAdapter();
-			}
-			@Override
-			public Adapter caseLoc(Loc object) {
-				return createLocAdapter();
+			public Adapter caseProofActivity(ProofActivity object) {
+				return createProofActivityAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -110,58 +104,44 @@ public class ProjectProofProcessAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.project.Project <em>Project</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.log.ProofLog <em>Proof Log</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.project.Project
+	 * @see org.ai4fm.proofprocess.log.ProofLog
 	 * @generated
 	 */
-	public Adapter createProjectAdapter() {
+	public Adapter createProofLogAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.project.Position <em>Position</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.log.Activity <em>Activity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.project.Position
+	 * @see org.ai4fm.proofprocess.log.Activity
 	 * @generated
 	 */
-	public Adapter createPositionAdapter() {
+	public Adapter createActivityAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.project.TextLoc <em>Text Loc</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.log.ProofActivity <em>Proof Activity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.project.TextLoc
+	 * @see org.ai4fm.proofprocess.log.ProofActivity
 	 * @generated
 	 */
-	public Adapter createTextLocAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Loc <em>Loc</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.Loc
-	 * @generated
-	 */
-	public Adapter createLocAdapter() {
+	public Adapter createProofActivityAdapter() {
 		return null;
 	}
 
@@ -177,4 +157,4 @@ public class ProjectProofProcessAdapterFactory extends AdapterFactoryImpl {
 		return null;
 	}
 
-} //ProjectProofProcessAdapterFactory
+} //ProofProcessLogAdapterFactory

@@ -4,23 +4,19 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.project.provider;
+package org.ai4fm.proofprocess.log.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.ProofProcessFactory;
-
-import org.ai4fm.proofprocess.project.Project;
-import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
+import org.ai4fm.proofprocess.log.Activity;
+import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
-
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -34,12 +30,12 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.project.Project} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.log.Activity} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ProjectItemProvider
+public class ActivityItemProvider
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -53,7 +49,7 @@ public class ProjectItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProjectItemProvider(AdapterFactory adapterFactory) {
+	public ActivityItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -68,25 +64,26 @@ public class ProjectItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLabelPropertyDescriptor(object);
+			addDescriptionPropertyDescriptor(object);
+			addTimestampPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Label feature.
+	 * This adds a property descriptor for the Description feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addLabelPropertyDescriptor(Object object) {
+	protected void addDescriptionPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_Project_label_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Project_label_feature", "_UI_Project_type"),
-				 ProjectProofProcessPackage.Literals.PROJECT__LABEL,
+				 getString("_UI_Activity_description_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Activity_description_feature", "_UI_Activity_type"),
+				 ProofProcessLogPackage.Literals.ACTIVITY__DESCRIPTION,
 				 true,
 				 false,
 				 false,
@@ -96,45 +93,36 @@ public class ProjectItemProvider
 	}
 
 	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
-	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * This adds a property descriptor for the Timestamp feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
-		if (childrenFeatures == null) {
-			super.getChildrenFeatures(object);
-			childrenFeatures.add(ProjectProofProcessPackage.Literals.PROJECT__PROOFS);
-			childrenFeatures.add(ProjectProofProcessPackage.Literals.PROJECT__INTENTS);
-		}
-		return childrenFeatures;
+	protected void addTimestampPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Activity_timestamp_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Activity_timestamp_feature", "_UI_Activity_type"),
+				 ProofProcessLogPackage.Literals.ACTIVITY__TIMESTAMP,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EStructuralFeature getChildFeature(Object object, Object child) {
-		// Check the type of the specified child object and return the proper feature to use for
-		// adding (see {@link AddCommand}) it as a child.
-
-		return super.getChildFeature(object, child);
-	}
-
-	/**
-	 * This returns Project.gif.
+	 * This returns Activity.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Project"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/Activity"));
 	}
 
 	/**
@@ -145,10 +133,10 @@ public class ProjectItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((Project)object).getLabel();
+		String label = ((Activity)object).getDescription();
 		return label == null || label.length() == 0 ?
-			getString("_UI_Project_type") :
-			getString("_UI_Project_type") + " " + label;
+			getString("_UI_Activity_type") :
+			getString("_UI_Activity_type") + " " + label;
 	}
 
 	/**
@@ -162,13 +150,10 @@ public class ProjectItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(Project.class)) {
-			case ProjectProofProcessPackage.PROJECT__LABEL:
+		switch (notification.getFeatureID(Activity.class)) {
+			case ProofProcessLogPackage.ACTIVITY__DESCRIPTION:
+			case ProofProcessLogPackage.ACTIVITY__TIMESTAMP:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-			case ProjectProofProcessPackage.PROJECT__PROOFS:
-			case ProjectProofProcessPackage.PROJECT__INTENTS:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -184,16 +169,6 @@ public class ProjectItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProjectProofProcessPackage.Literals.PROJECT__PROOFS,
-				 ProofProcessFactory.eINSTANCE.createProof()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProjectProofProcessPackage.Literals.PROJECT__INTENTS,
-				 ProofProcessFactory.eINSTANCE.createIntent()));
 	}
 
 	/**
@@ -204,7 +179,7 @@ public class ProjectItemProvider
 	 */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ProjectProofProcessEditPlugin.INSTANCE;
+		return ProofProcessLogEditPlugin.INSTANCE;
 	}
 
 }

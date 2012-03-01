@@ -4,12 +4,12 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.project.provider;
+package org.ai4fm.proofprocess.log.provider;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.ai4fm.proofprocess.project.util.ProjectProofProcessAdapterFactory;
+import org.ai4fm.proofprocess.log.util.ProofProcessLogAdapterFactory;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -36,7 +36,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-public class ProjectProofProcessItemProviderAdapterFactory extends ProjectProofProcessAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
+public class ProofProcessLogItemProviderAdapterFactory extends ProofProcessLogAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 	/**
 	 * This keeps track of the root adapter factory that delegates to this adapter factory.
 	 * <!-- begin-user-doc -->
@@ -67,7 +67,7 @@ public class ProjectProofProcessItemProviderAdapterFactory extends ProjectProofP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProjectProofProcessItemProviderAdapterFactory() {
+	public ProofProcessLogItemProviderAdapterFactory() {
 		supportedTypes.add(IEditingDomainItemProvider.class);
 		supportedTypes.add(IStructuredItemContentProvider.class);
 		supportedTypes.add(ITreeItemContentProvider.class);
@@ -76,72 +76,72 @@ public class ProjectProofProcessItemProviderAdapterFactory extends ProjectProofP
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.project.Project} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.log.ProofLog} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ProjectItemProvider projectItemProvider;
+	protected ProofLogItemProvider proofLogItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.project.Project}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.log.ProofLog}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createProjectAdapter() {
-		if (projectItemProvider == null) {
-			projectItemProvider = new ProjectItemProvider(this);
+	public Adapter createProofLogAdapter() {
+		if (proofLogItemProvider == null) {
+			proofLogItemProvider = new ProofLogItemProvider(this);
 		}
 
-		return projectItemProvider;
+		return proofLogItemProvider;
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.project.Position} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.log.Activity} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected PositionItemProvider positionItemProvider;
+	protected ActivityItemProvider activityItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.project.Position}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.log.Activity}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createPositionAdapter() {
-		if (positionItemProvider == null) {
-			positionItemProvider = new PositionItemProvider(this);
+	public Adapter createActivityAdapter() {
+		if (activityItemProvider == null) {
+			activityItemProvider = new ActivityItemProvider(this);
 		}
 
-		return positionItemProvider;
+		return activityItemProvider;
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.project.TextLoc} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.log.ProofActivity} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TextLocItemProvider textLocItemProvider;
+	protected ProofActivityItemProvider proofActivityItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.project.TextLoc}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.log.ProofActivity}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createTextLocAdapter() {
-		if (textLocItemProvider == null) {
-			textLocItemProvider = new TextLocItemProvider(this);
+	public Adapter createProofActivityAdapter() {
+		if (proofActivityItemProvider == null) {
+			proofActivityItemProvider = new ProofActivityItemProvider(this);
 		}
 
-		return textLocItemProvider;
+		return proofActivityItemProvider;
 	}
 
 	/**
@@ -243,9 +243,9 @@ public class ProjectProofProcessItemProviderAdapterFactory extends ProjectProofP
 	 * @generated
 	 */
 	public void dispose() {
-		if (projectItemProvider != null) projectItemProvider.dispose();
-		if (positionItemProvider != null) positionItemProvider.dispose();
-		if (textLocItemProvider != null) textLocItemProvider.dispose();
+		if (proofLogItemProvider != null) proofLogItemProvider.dispose();
+		if (activityItemProvider != null) activityItemProvider.dispose();
+		if (proofActivityItemProvider != null) proofActivityItemProvider.dispose();
 	}
 
 }

@@ -4,11 +4,9 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.project.util;
+package org.ai4fm.proofprocess.log.util;
 
-import org.ai4fm.proofprocess.Loc;
-
-import org.ai4fm.proofprocess.project.*;
+import org.ai4fm.proofprocess.log.*;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -25,17 +23,17 @@ import org.eclipse.emf.ecore.util.Switch;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage
+ * @see org.ai4fm.proofprocess.log.ProofProcessLogPackage
  * @generated
  */
-public class ProjectProofProcessSwitch<T> extends Switch<T> {
+public class ProofProcessLogSwitch<T> extends Switch<T> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected static ProjectProofProcessPackage modelPackage;
+	protected static ProofProcessLogPackage modelPackage;
 
 	/**
 	 * Creates an instance of the switch.
@@ -43,9 +41,9 @@ public class ProjectProofProcessSwitch<T> extends Switch<T> {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProjectProofProcessSwitch() {
+	public ProofProcessLogSwitch() {
 		if (modelPackage == null) {
-			modelPackage = ProjectProofProcessPackage.eINSTANCE;
+			modelPackage = ProofProcessLogPackage.eINSTANCE;
 		}
 	}
 
@@ -72,22 +70,22 @@ public class ProjectProofProcessSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case ProjectProofProcessPackage.PROJECT: {
-				Project project = (Project)theEObject;
-				T result = caseProject(project);
+			case ProofProcessLogPackage.PROOF_LOG: {
+				ProofLog proofLog = (ProofLog)theEObject;
+				T result = caseProofLog(proofLog);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProjectProofProcessPackage.POSITION: {
-				Position position = (Position)theEObject;
-				T result = casePosition(position);
+			case ProofProcessLogPackage.ACTIVITY: {
+				Activity activity = (Activity)theEObject;
+				T result = caseActivity(activity);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProjectProofProcessPackage.TEXT_LOC: {
-				TextLoc textLoc = (TextLoc)theEObject;
-				T result = caseTextLoc(textLoc);
-				if (result == null) result = caseLoc(textLoc);
+			case ProofProcessLogPackage.PROOF_ACTIVITY: {
+				ProofActivity proofActivity = (ProofActivity)theEObject;
+				T result = caseProofActivity(proofActivity);
+				if (result == null) result = caseActivity(proofActivity);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -96,62 +94,47 @@ public class ProjectProofProcessSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Project</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Log</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Project</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Log</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseProject(Project object) {
+	public T caseProofLog(ProofLog object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Position</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Activity</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Position</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Activity</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePosition(Position object) {
+	public T caseActivity(Activity object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Text Loc</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Activity</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Text Loc</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Activity</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseTextLoc(TextLoc object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Loc</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Loc</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseLoc(Loc object) {
+	public T caseProofActivity(ProofActivity object) {
 		return null;
 	}
 
@@ -171,4 +154,4 @@ public class ProjectProofProcessSwitch<T> extends Switch<T> {
 		return null;
 	}
 
-} //ProjectProofProcessSwitch
+} //ProofProcessLogSwitch

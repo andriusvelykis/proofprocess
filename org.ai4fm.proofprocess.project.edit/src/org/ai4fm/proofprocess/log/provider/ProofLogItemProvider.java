@@ -4,38 +4,39 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.project.provider;
+package org.ai4fm.proofprocess.log.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.project.Activity;
-import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
+import org.ai4fm.proofprocess.log.ProofLog;
+import org.ai4fm.proofprocess.log.ProofProcessLogFactory;
+import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.project.Activity} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.log.ProofLog} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ActivityItemProvider
+public class ProofLogItemProvider
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -49,7 +50,7 @@ public class ActivityItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ActivityItemProvider(AdapterFactory adapterFactory) {
+	public ProofLogItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -64,65 +65,49 @@ public class ActivityItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addDescriptionPropertyDescriptor(object);
-			addTimestampPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Description feature.
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addDescriptionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Activity_description_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Activity_description_feature", "_UI_Activity_type"),
-				 ProjectProofProcessPackage.Literals.ACTIVITY__DESCRIPTION,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(ProofProcessLogPackage.Literals.PROOF_LOG__ACTIVITIES);
+		}
+		return childrenFeatures;
 	}
 
 	/**
-	 * This adds a property descriptor for the Timestamp feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addTimestampPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Activity_timestamp_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Activity_timestamp_feature", "_UI_Activity_type"),
-				 ProjectProofProcessPackage.Literals.ACTIVITY__TIMESTAMP,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
 	}
 
 	/**
-	 * This returns Activity.gif.
+	 * This returns ProofLog.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Activity"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofLog"));
 	}
 
 	/**
@@ -133,10 +118,7 @@ public class ActivityItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((Activity)object).getDescription();
-		return label == null || label.length() == 0 ?
-			getString("_UI_Activity_type") :
-			getString("_UI_Activity_type") + " " + label;
+		return getString("_UI_ProofLog_type");
 	}
 
 	/**
@@ -150,10 +132,9 @@ public class ActivityItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(Activity.class)) {
-			case ProjectProofProcessPackage.ACTIVITY__DESCRIPTION:
-			case ProjectProofProcessPackage.ACTIVITY__TIMESTAMP:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+		switch (notification.getFeatureID(ProofLog.class)) {
+			case ProofProcessLogPackage.PROOF_LOG__ACTIVITIES:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -169,6 +150,16 @@ public class ActivityItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProofProcessLogPackage.Literals.PROOF_LOG__ACTIVITIES,
+				 ProofProcessLogFactory.eINSTANCE.createActivity()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProofProcessLogPackage.Literals.PROOF_LOG__ACTIVITIES,
+				 ProofProcessLogFactory.eINSTANCE.createProofActivity()));
 	}
 
 	/**
@@ -179,7 +170,7 @@ public class ActivityItemProvider
 	 */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ProjectProofProcessEditPlugin.INSTANCE;
+		return ProofProcessLogEditPlugin.INSTANCE;
 	}
 
 }

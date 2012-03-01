@@ -8,12 +8,10 @@ package org.ai4fm.proofprocess.project.impl;
 
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
-import org.ai4fm.proofprocess.project.Activity;
 import org.ai4fm.proofprocess.project.Position;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
 import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
-import org.ai4fm.proofprocess.project.ProofActivity;
 import org.ai4fm.proofprocess.project.TextLoc;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -36,20 +34,6 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * @generated
 	 */
 	private EClass projectEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass activityEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass proofActivityEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -161,62 +145,8 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProject_Activities() {
-		return (EReference)projectEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getProject_Intents() {
-		return (EReference)projectEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getActivity() {
-		return activityEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getActivity_Description() {
-		return (EAttribute)activityEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getActivity_Timestamp() {
-		return (EAttribute)activityEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getProofActivity() {
-		return proofActivityEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProofActivity_ProofRef() {
-		return (EReference)proofActivityEClass.getEStructuralFeatures().get(0);
+		return (EReference)projectEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -304,15 +234,7 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 		projectEClass = createEClass(PROJECT);
 		createEAttribute(projectEClass, PROJECT__LABEL);
 		createEReference(projectEClass, PROJECT__PROOFS);
-		createEReference(projectEClass, PROJECT__ACTIVITIES);
 		createEReference(projectEClass, PROJECT__INTENTS);
-
-		activityEClass = createEClass(ACTIVITY);
-		createEAttribute(activityEClass, ACTIVITY__DESCRIPTION);
-		createEAttribute(activityEClass, ACTIVITY__TIMESTAMP);
-
-		proofActivityEClass = createEClass(PROOF_ACTIVITY);
-		createEReference(proofActivityEClass, PROOF_ACTIVITY__PROOF_REF);
 
 		positionEClass = createEClass(POSITION);
 		createEAttribute(positionEClass, POSITION__OFFSET);
@@ -354,22 +276,13 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		proofActivityEClass.getESuperTypes().add(this.getActivity());
 		textLocEClass.getESuperTypes().add(theProofProcessPackage.getLoc());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(projectEClass, Project.class, "Project", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getProject_Label(), ecorePackage.getEString(), "label", null, 0, 1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProject_Proofs(), theProofProcessPackage.getProof(), null, "proofs", null, 0, -1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProject_Activities(), this.getActivity(), null, "activities", null, 0, -1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProject_Intents(), theProofProcessPackage.getIntent(), null, "intents", null, 0, -1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(activityEClass, Activity.class, "Activity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getActivity_Description(), ecorePackage.getEString(), "description", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getActivity_Timestamp(), ecorePackage.getEDate(), "timestamp", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(proofActivityEClass, ProofActivity.class, "ProofActivity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getProofActivity_ProofRef(), theProofProcessPackage.getProofEntry(), null, "proofRef", null, 0, 1, ProofActivity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(positionEClass, Position.class, "Position", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPosition_Offset(), ecorePackage.getEInt(), "offset", null, 1, 1, Position.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

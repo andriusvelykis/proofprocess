@@ -90,22 +90,13 @@ public interface ProjectProofProcessPackage extends EPackage {
 	int PROJECT__PROOFS = 1;
 
 	/**
-	 * The feature id for the '<em><b>Activities</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT__ACTIVITIES = 2;
-
-	/**
 	 * The feature id for the '<em><b>Intents</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT__INTENTS = 3;
+	int PROJECT__INTENTS = 2;
 
 	/**
 	 * The number of structural features of the '<em>Project</em>' class.
@@ -114,90 +105,7 @@ public interface ProjectProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_FEATURE_COUNT = 4;
-
-	/**
-	 * The meta object id for the '{@link org.ai4fm.proofprocess.project.impl.ActivityImpl <em>Activity</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.ai4fm.proofprocess.project.impl.ActivityImpl
-	 * @see org.ai4fm.proofprocess.project.impl.ProjectProofProcessPackageImpl#getActivity()
-	 * @generated
-	 */
-	int ACTIVITY = 1;
-
-	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__DESCRIPTION = 0;
-
-	/**
-	 * The feature id for the '<em><b>Timestamp</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY__TIMESTAMP = 1;
-
-	/**
-	 * The number of structural features of the '<em>Activity</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTIVITY_FEATURE_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link org.ai4fm.proofprocess.project.impl.ProofActivityImpl <em>Proof Activity</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.ai4fm.proofprocess.project.impl.ProofActivityImpl
-	 * @see org.ai4fm.proofprocess.project.impl.ProjectProofProcessPackageImpl#getProofActivity()
-	 * @generated
-	 */
-	int PROOF_ACTIVITY = 2;
-
-	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROOF_ACTIVITY__DESCRIPTION = ACTIVITY__DESCRIPTION;
-
-	/**
-	 * The feature id for the '<em><b>Timestamp</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROOF_ACTIVITY__TIMESTAMP = ACTIVITY__TIMESTAMP;
-
-	/**
-	 * The feature id for the '<em><b>Proof Ref</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROOF_ACTIVITY__PROOF_REF = ACTIVITY_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Proof Activity</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROOF_ACTIVITY_FEATURE_COUNT = ACTIVITY_FEATURE_COUNT + 1;
+	int PROJECT_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.project.impl.PositionImpl <em>Position</em>}' class.
@@ -207,7 +115,7 @@ public interface ProjectProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.project.impl.ProjectProofProcessPackageImpl#getPosition()
 	 * @generated
 	 */
-	int POSITION = 3;
+	int POSITION = 1;
 
 	/**
 	 * The feature id for the '<em><b>Offset</b></em>' attribute.
@@ -244,7 +152,7 @@ public interface ProjectProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.project.impl.ProjectProofProcessPackageImpl#getTextLoc()
 	 * @generated
 	 */
-	int TEXT_LOC = 4;
+	int TEXT_LOC = 2;
 
 	/**
 	 * The feature id for the '<em><b>File Path</b></em>' attribute.
@@ -307,17 +215,6 @@ public interface ProjectProofProcessPackage extends EPackage {
 	EReference getProject_Proofs();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.project.Project#getActivities <em>Activities</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Activities</em>'.
-	 * @see org.ai4fm.proofprocess.project.Project#getActivities()
-	 * @see #getProject()
-	 * @generated
-	 */
-	EReference getProject_Activities();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.project.Project#getIntents <em>Intents</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -327,59 +224,6 @@ public interface ProjectProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getProject_Intents();
-
-	/**
-	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.project.Activity <em>Activity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Activity</em>'.
-	 * @see org.ai4fm.proofprocess.project.Activity
-	 * @generated
-	 */
-	EClass getActivity();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.project.Activity#getDescription <em>Description</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Description</em>'.
-	 * @see org.ai4fm.proofprocess.project.Activity#getDescription()
-	 * @see #getActivity()
-	 * @generated
-	 */
-	EAttribute getActivity_Description();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.project.Activity#getTimestamp <em>Timestamp</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Timestamp</em>'.
-	 * @see org.ai4fm.proofprocess.project.Activity#getTimestamp()
-	 * @see #getActivity()
-	 * @generated
-	 */
-	EAttribute getActivity_Timestamp();
-
-	/**
-	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.project.ProofActivity <em>Proof Activity</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Proof Activity</em>'.
-	 * @see org.ai4fm.proofprocess.project.ProofActivity
-	 * @generated
-	 */
-	EClass getProofActivity();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.ai4fm.proofprocess.project.ProofActivity#getProofRef <em>Proof Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Proof Ref</em>'.
-	 * @see org.ai4fm.proofprocess.project.ProofActivity#getProofRef()
-	 * @see #getProofActivity()
-	 * @generated
-	 */
-	EReference getProofActivity_ProofRef();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.project.Position <em>Position</em>}'.
@@ -494,64 +338,12 @@ public interface ProjectProofProcessPackage extends EPackage {
 		EReference PROJECT__PROOFS = eINSTANCE.getProject_Proofs();
 
 		/**
-		 * The meta object literal for the '<em><b>Activities</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROJECT__ACTIVITIES = eINSTANCE.getProject_Activities();
-
-		/**
 		 * The meta object literal for the '<em><b>Intents</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference PROJECT__INTENTS = eINSTANCE.getProject_Intents();
-
-		/**
-		 * The meta object literal for the '{@link org.ai4fm.proofprocess.project.impl.ActivityImpl <em>Activity</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.ai4fm.proofprocess.project.impl.ActivityImpl
-		 * @see org.ai4fm.proofprocess.project.impl.ProjectProofProcessPackageImpl#getActivity()
-		 * @generated
-		 */
-		EClass ACTIVITY = eINSTANCE.getActivity();
-
-		/**
-		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ACTIVITY__DESCRIPTION = eINSTANCE.getActivity_Description();
-
-		/**
-		 * The meta object literal for the '<em><b>Timestamp</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ACTIVITY__TIMESTAMP = eINSTANCE.getActivity_Timestamp();
-
-		/**
-		 * The meta object literal for the '{@link org.ai4fm.proofprocess.project.impl.ProofActivityImpl <em>Proof Activity</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.ai4fm.proofprocess.project.impl.ProofActivityImpl
-		 * @see org.ai4fm.proofprocess.project.impl.ProjectProofProcessPackageImpl#getProofActivity()
-		 * @generated
-		 */
-		EClass PROOF_ACTIVITY = eINSTANCE.getProofActivity();
-
-		/**
-		 * The meta object literal for the '<em><b>Proof Ref</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROOF_ACTIVITY__PROOF_REF = eINSTANCE.getProofActivity_ProofRef();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.project.impl.PositionImpl <em>Position</em>}' class.

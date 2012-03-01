@@ -15,6 +15,10 @@
             uri="http://org/ai4fm/proofprocess/project/v1.0.0"
             class="org.ai4fm.proofprocess.project.ProjectProofProcessPackage"
             genModel="model/ProjectProofProcess.genmodel"/>
+      <package
+            uri="http://org/ai4fm/proofprocess/log/v1.0.0"
+            class="org.ai4fm.proofprocess.log.ProofProcessLogPackage"
+            genModel="model/ProofProcessLog.genmodel"/>
    </extension>
 
 </plugin>

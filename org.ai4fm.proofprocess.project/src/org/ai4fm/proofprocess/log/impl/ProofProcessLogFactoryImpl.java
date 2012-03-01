@@ -4,9 +4,9 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.project.impl;
+package org.ai4fm.proofprocess.log.impl;
 
-import org.ai4fm.proofprocess.project.*;
+import org.ai4fm.proofprocess.log.*;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -22,24 +22,24 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements ProjectProofProcessFactory {
+public class ProofProcessLogFactoryImpl extends EFactoryImpl implements ProofProcessLogFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static ProjectProofProcessFactory init() {
+	public static ProofProcessLogFactory init() {
 		try {
-			ProjectProofProcessFactory theProjectProofProcessFactory = (ProjectProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/project/v1.0.0"); 
-			if (theProjectProofProcessFactory != null) {
-				return theProjectProofProcessFactory;
+			ProofProcessLogFactory theProofProcessLogFactory = (ProofProcessLogFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/log/v1.0.0"); 
+			if (theProofProcessLogFactory != null) {
+				return theProofProcessLogFactory;
 			}
 		}
 		catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
-		return new ProjectProofProcessFactoryImpl();
+		return new ProofProcessLogFactoryImpl();
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProjectProofProcessFactoryImpl() {
+	public ProofProcessLogFactoryImpl() {
 		super();
 	}
 
@@ -60,9 +60,9 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ProjectProofProcessPackage.PROJECT: return createProject();
-			case ProjectProofProcessPackage.POSITION: return createPosition();
-			case ProjectProofProcessPackage.TEXT_LOC: return createTextLoc();
+			case ProofProcessLogPackage.PROOF_LOG: return createProofLog();
+			case ProofProcessLogPackage.ACTIVITY: return createActivity();
+			case ProofProcessLogPackage.PROOF_ACTIVITY: return createProofActivity();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -73,9 +73,9 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Project createProject() {
-		ProjectImpl project = new ProjectImpl();
-		return project;
+	public ProofLog createProofLog() {
+		ProofLogImpl proofLog = new ProofLogImpl();
+		return proofLog;
 	}
 
 	/**
@@ -83,9 +83,9 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Position createPosition() {
-		PositionImpl position = new PositionImpl();
-		return position;
+	public Activity createActivity() {
+		ActivityImpl activity = new ActivityImpl();
+		return activity;
 	}
 
 	/**
@@ -93,9 +93,9 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TextLoc createTextLoc() {
-		TextLocImpl textLoc = new TextLocImpl();
-		return textLoc;
+	public ProofActivity createProofActivity() {
+		ProofActivityImpl proofActivity = new ProofActivityImpl();
+		return proofActivity;
 	}
 
 	/**
@@ -103,8 +103,8 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProjectProofProcessPackage getProjectProofProcessPackage() {
-		return (ProjectProofProcessPackage)getEPackage();
+	public ProofProcessLogPackage getProofProcessLogPackage() {
+		return (ProofProcessLogPackage)getEPackage();
 	}
 
 	/**
@@ -114,8 +114,8 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * @generated
 	 */
 	@Deprecated
-	public static ProjectProofProcessPackage getPackage() {
-		return ProjectProofProcessPackage.eINSTANCE;
+	public static ProofProcessLogPackage getPackage() {
+		return ProofProcessLogPackage.eINSTANCE;
 	}
 
-} //ProjectProofProcessFactoryImpl
+} //ProofProcessLogFactoryImpl

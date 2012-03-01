@@ -4,14 +4,14 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.project.provider;
+package org.ai4fm.proofprocess.log.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
-import org.ai4fm.proofprocess.project.ProofActivity;
+import org.ai4fm.proofprocess.log.ProofActivity;
+import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -25,7 +25,7 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.project.ProofActivity} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.log.ProofActivity} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
@@ -77,7 +77,7 @@ public class ProofActivityItemProvider
 				 getResourceLocator(),
 				 getString("_UI_ProofActivity_proofRef_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_ProofActivity_proofRef_feature", "_UI_ProofActivity_type"),
-				 ProjectProofProcessPackage.Literals.PROOF_ACTIVITY__PROOF_REF,
+				 ProofProcessLogPackage.Literals.PROOF_ACTIVITY__PROOF_REF,
 				 true,
 				 false,
 				 true,

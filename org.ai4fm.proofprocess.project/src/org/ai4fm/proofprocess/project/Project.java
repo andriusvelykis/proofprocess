@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.ai4fm.proofprocess.project.Project#getLabel <em>Label</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.project.Project#getProofs <em>Proofs</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.project.Project#getActivities <em>Activities</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.project.Project#getIntents <em>Intents</em>}</li>
  * </ul>
  * </p>
@@ -74,22 +73,6 @@ public interface Project extends EObject {
 	 * @generated
 	 */
 	EList<Proof> getProofs();
-
-	/**
-	 * Returns the value of the '<em><b>Activities</b></em>' containment reference list.
-	 * The list contents are of type {@link org.ai4fm.proofprocess.project.Activity}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Activities</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Activities</em>' containment reference list.
-	 * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage#getProject_Activities()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<Activity> getActivities();
 
 	/**
 	 * Returns the value of the '<em><b>Intents</b></em>' containment reference list.
