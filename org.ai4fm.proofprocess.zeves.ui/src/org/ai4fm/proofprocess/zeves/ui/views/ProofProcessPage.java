@@ -245,25 +245,6 @@ public class ProofProcessPage extends Page {
 			
 			return children.toArray();
 		}
-		
-		@Override
-		public Object[] getElements(Object object) {
-			
-			if (object instanceof Project) {
-				// FIXME investigate, make better
-				// remove all activities here for now
-				List<Object> filtered = new ArrayList<Object>();
-				for (Object child : super.getElements(object)) {
-					if (!(child instanceof Activity)) {
-						filtered.add(child);
-					}
-				}
-				
-				return filtered.toArray();
-			}
-			
-			return super.getElements(object);
-		}
 
 		private List<?> getChildrenCustomized(Object parent) {
 			if (parent instanceof ZEvesTrace) {
