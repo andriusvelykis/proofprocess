@@ -50,12 +50,14 @@ import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
 import org.ai4fm.proofprocess.Trace;
-import org.ai4fm.proofprocess.project.Activity;
+import org.ai4fm.proofprocess.log.Activity;
+import org.ai4fm.proofprocess.log.ProofActivity;
+import org.ai4fm.proofprocess.log.ProofLog;
+import org.ai4fm.proofprocess.log.ProofProcessLogFactory;
+import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 import org.ai4fm.proofprocess.project.Position;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
-import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
-import org.ai4fm.proofprocess.project.ProofActivity;
 import org.ai4fm.proofprocess.project.TextLoc;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
 import org.ai4fm.proofprocess.project.core.ProofManager;
@@ -170,8 +172,9 @@ public class SnapshotTracker {
 			}
 			
 			Project proofProject = ProofManager.getProofProject(project, monitor);
+			ProofLog proofLog = ProofManager.getProofLog(project, monitor);
 			FileVersion fileVersion = syncFileVersion(project, event.entry, event.sectInfo, monitor);
-			analyseEntry(proofProject, event.entry, event.entryProof, fileVersion);
+			analyseEntry(proofProject, proofLog, event.entry, event.entryProof, fileVersion);
 		}
 		
 		System.out.println("Analysing event: " + event.event.getType() + " -- " + (System.currentTimeMillis() - start));
@@ -234,8 +237,8 @@ public class SnapshotTracker {
 		return null;
 	}
 	
-	private void analyseEntry(Project proofProject, ISnapshotEntry entry, List<ISnapshotEntry> entryProof, 
-			FileVersion fileVersion) {
+	private void analyseEntry(Project proofProject, ProofLog proofLog, ISnapshotEntry entry,
+			List<ISnapshotEntry> entryProof, FileVersion fileVersion) {
 		
 		Activity activity;
 		// TODO is the proof check enough here?
@@ -256,13 +259,13 @@ public class SnapshotTracker {
 			
 			ProofEntry attempt = analyseProofEntry(proofProject, nonErrorProof, fileVersion);
 			
-			ProofActivity proofActivity = ProjectProofProcessFactory.eINSTANCE.createProofActivity();
+			ProofActivity proofActivity = ProofProcessLogFactory.eINSTANCE.createProofActivity();
 			proofActivity.setProofRef(attempt);
 			
 			activity = proofActivity;
 			
 		} else if (entry.getData().getTerm() != null) {
-			activity = ProjectProofProcessFactory.eINSTANCE.createActivity();
+			activity = ProofProcessLogFactory.eINSTANCE.createActivity();
 		} else {
 			// no term - ignore for now
 			return;
@@ -272,11 +275,12 @@ public class SnapshotTracker {
 		Term source = entry.getData().getTerm();
 		activity.setDescription("Added: " + (source != null ? source.getClass().getSimpleName() : "<goal?>"));
 		
-		EmfUtil.addValue(proofProject, ProjectProofProcessPackage.PROJECT__ACTIVITIES, activity);
+		EmfUtil.addValue(proofLog, ProofProcessLogPackage.PROOF_LOG__ACTIVITIES, activity);
 		
 		// FIXME
 		try {
 			proofProject.eResource().save(null);
+			proofLog.eResource().save(null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
