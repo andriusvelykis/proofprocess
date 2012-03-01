@@ -1,4 +1,4 @@
-package org.ai4fm.proofprocess.zeves.ui;
+package org.ai4fm.proofprocess.project.core;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ public class ProofManager {
 	 * Key for the loaded project reference on resource.
 	 */
 	public final static QualifiedName PROP_PROOF_PROJECT = 
-			new QualifiedName(ZEvesProofUIPlugin.PLUGIN_ID, "proofProject"); //$NON-NLS-1$
+			new QualifiedName(ProjectProofProcessPlugin.PLUGIN_ID, "proofProject"); //$NON-NLS-1$
 	
 	public static Project getProofProject(IProject projectResource, IProgressMonitor monitor)
 			throws CoreException {
@@ -86,7 +86,7 @@ public class ProofManager {
 			try {
 				emfResource.load(null);
 			} catch (IOException e) {
-				ZEvesProofUIPlugin.log(e);
+				ProjectProofProcessPlugin.log(e);
 			}
 			proofProject = (Project) emfResource.getContents().get(0);
 		}

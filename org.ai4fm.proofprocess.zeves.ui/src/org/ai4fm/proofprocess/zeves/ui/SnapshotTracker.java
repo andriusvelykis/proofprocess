@@ -57,6 +57,8 @@ import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
 import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 import org.ai4fm.proofprocess.project.ProofActivity;
 import org.ai4fm.proofprocess.project.TextLoc;
+import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
+import org.ai4fm.proofprocess.project.core.ProofManager;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;

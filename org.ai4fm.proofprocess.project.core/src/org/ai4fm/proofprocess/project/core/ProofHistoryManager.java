@@ -1,4 +1,4 @@
-package org.ai4fm.proofprocess.zeves.ui;
+package org.ai4fm.proofprocess.project.core;
 
 import java.io.IOException;
 
@@ -24,7 +24,7 @@ public class ProofHistoryManager {
 	 * Key for the loaded project reference on resource.
 	 */
 	public final static QualifiedName PROP_FILE_HISTORY = 
-			new QualifiedName(ZEvesProofUIPlugin.PLUGIN_ID, "fileHistory"); //$NON-NLS-1$
+			new QualifiedName(ProjectProofProcessPlugin.PLUGIN_ID, "fileHistory"); //$NON-NLS-1$
 	
 	public static FileVersion syncFileVersion(IProject projectResource, String path, String text, 
 			int syncPoint, IProgressMonitor monitor) throws CoreException {
