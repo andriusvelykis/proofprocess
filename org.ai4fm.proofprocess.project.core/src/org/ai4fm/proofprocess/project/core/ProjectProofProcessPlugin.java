@@ -43,31 +43,51 @@ public class ProjectProofProcessPlugin extends Plugin {
 	/**
 	 * Writes the message to the plug-in's log
 	 * 
-	 * @param message the text to write to the log
+	 * @param message
+	 *            the text to write to the log
+	 * @param exception
+	 *            exception to capture in the log
 	 */
 	public static void log(String message, Throwable exception) {
 		IStatus status = error(message, exception);
 		getDefault().getLog().log(status);
 	}
 	
+	/**
+	 * Logs the exception to the plug-in's log. Exception's message is used as
+	 * the log message.
+	 * 
+	 * @param exception
+	 *            exception to capture in the log
+	 */
 	public static void log(Throwable exception) {
 		log(exception.getMessage(), exception);
 	}
 	
 	/**
-	 * Returns a new <code>IStatus</code> for this plug-in
+	 * Returns a new error {@code IStatus} for this plug-in.
+	 * 
+	 * @param exception
+	 *            exception to wrap in the error {@code IStatus}
+	 * @return the error {@code IStatus} wrapping the exception
 	 */
 	public static IStatus error(Throwable exception) {
 		return error(exception.getMessage(), exception);
 	}
 	
 	/**
-	 * Returns a new <code>IStatus</code> for this plug-in
+	 * Returns a new error {@code IStatus} for this plug-in.
+	 * 
+	 * @param message
+	 *            text to have as status message
+	 * @param exception
+	 *            exception to wrap in the error {@code IStatus}
+	 * @return the error {@code IStatus} wrapping the exception
 	 */
 	public static IStatus error(String message, Throwable exception) {
 		if (message == null) {
 			message = ""; 
-		}		
+		}
 		return new Status(IStatus.ERROR, PLUGIN_ID, 0, message, exception);
 	}
 
