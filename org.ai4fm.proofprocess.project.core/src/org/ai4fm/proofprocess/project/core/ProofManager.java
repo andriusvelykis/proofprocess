@@ -23,7 +23,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 public class ProofManager {
 	
 	public static final String PROOF_FOLDER = ".proofprocess/";
-	private static final String PROOF_PROJECT_PATH = PROOF_FOLDER + "project.zevesproof";
+	private static final String PROOF_PROJECT_PATH = PROOF_FOLDER + "project.proof";
 	
 	/**
 	 * Key for the loaded project reference on resource.
@@ -107,9 +107,9 @@ public class ProofManager {
 	
 	private static void initResourceFactories() {
 		
-		// Register the XMI resource factory for the .zevesproof extension
+		// Register the XMI resource factory for the .proof extension
 		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-		reg.getExtensionToFactoryMap().put("zevesproof", new XMIResourceFactoryImpl());
+		reg.getExtensionToFactoryMap().put("proof", new XMIResourceFactoryImpl());
 	}
 
 }
