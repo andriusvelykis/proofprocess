@@ -49,7 +49,7 @@ public interface ProofProcessLogPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "plog";
+	String eNS_PREFIX = "prooflog";
 
 	/**
 	 * The singleton instance of the package.
