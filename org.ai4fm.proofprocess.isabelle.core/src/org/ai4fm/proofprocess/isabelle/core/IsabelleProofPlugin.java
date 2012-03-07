@@ -12,6 +12,8 @@ public class IsabelleProofPlugin extends Plugin {
 	
 	// The shared instance
 	private static IsabelleProofPlugin plugin;
+	
+	private SessionTracker sessionTracker;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
@@ -20,6 +22,8 @@ public class IsabelleProofPlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		this.sessionTracker = new SessionTracker();
 	}
 
 	/* (non-Javadoc)
@@ -27,6 +31,12 @@ public class IsabelleProofPlugin extends Plugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		
+		if (sessionTracker != null) {
+			sessionTracker.dispose();
+			sessionTracker = null;
+		}
+		
 		plugin = null;
 		super.stop(context);
 	}
