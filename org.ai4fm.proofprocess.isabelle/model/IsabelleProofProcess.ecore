@@ -6,4 +6,13 @@
   <eClassifiers xsi:type="ecore:EClass" name="DisplayTerm" abstract="true" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TermKind">
+    <eLiterals name="CONST"/>
+    <eLiterals name="BOUND" value="1" literal=""/>
+    <eLiterals name="VAR" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IsaTerm" eSuperTypes="#//DisplayTerm">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" lowerBound="1" eType="#//TermKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
 </ecore:EPackage>
