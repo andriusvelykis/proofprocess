@@ -20,4 +20,10 @@
         eType="ecore:EClass ../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IsabelleTrace" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Trace">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="command" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="simpLemmas" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
 </ecore:EPackage>
