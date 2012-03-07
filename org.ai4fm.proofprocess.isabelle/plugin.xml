@@ -10,5 +10,11 @@
 
 <plugin>
 
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://org/ai4fm/proofprocess/isabelle/v1.0.0"
+            class="org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage"
+            genModel="model/IsabelleProofProcess.genmodel"/>
+   </extension>
 
 </plugin>
