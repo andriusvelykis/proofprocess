@@ -135,7 +135,7 @@ public class SessionTracker {
 	
 	private IStatus analyse(CommandAnalysisEvent event, IProgressMonitor monitor) throws CoreException {
 		// TODO implement analysis
-		return null;
+		return Status.OK_STATUS;
 	}
 	
 	
