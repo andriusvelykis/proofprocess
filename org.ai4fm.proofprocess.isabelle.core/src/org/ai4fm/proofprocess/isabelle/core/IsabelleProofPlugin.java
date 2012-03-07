@@ -1,5 +1,6 @@
 package org.ai4fm.proofprocess.isabelle.core;
 
+import org.ai4fm.proofprocess.isabelle.core.parse.SessionTracker;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;

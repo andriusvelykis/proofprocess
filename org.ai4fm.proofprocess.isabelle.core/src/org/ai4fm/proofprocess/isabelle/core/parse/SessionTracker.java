@@ -1,4 +1,4 @@
-package org.ai4fm.proofprocess.isabelle.core;
+package org.ai4fm.proofprocess.isabelle.core.parse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +10,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
