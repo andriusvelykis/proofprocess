@@ -26,6 +26,18 @@ public class ProofHistoryManager {
 	public final static QualifiedName PROP_FILE_HISTORY = 
 			new QualifiedName(ProjectProofProcessPlugin.PLUGIN_ID, "fileHistory"); //$NON-NLS-1$
 	
+	public static FileVersion syncFileVersion(IProject project, IPath filePath, String text,
+			int syncPoint, IProgressMonitor monitor) throws CoreException {
+		
+		if (filePath.isAbsolute()) {
+			// absolute to workspace - make relative to project
+			filePath = filePath.makeRelativeTo(project.getLocation());
+		}
+		
+		String filePathStr = filePath.toPortableString();
+		return syncFileVersion(project, filePathStr, text, syncPoint, monitor);
+	}
+	
 	public static FileVersion syncFileVersion(IProject projectResource, String path, String text, 
 			int syncPoint, IProgressMonitor monitor) throws CoreException {
 		
