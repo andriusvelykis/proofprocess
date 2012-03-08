@@ -39,6 +39,7 @@ public class SnapshotReader {
 	private final Set<Command> changedCommands;
 	
 	private final Map<DocumentRef, Snapshot> snapshots = new HashMap<DocumentRef, Snapshot>();
+	private final Map<DocumentRef, String> docTexts = new HashMap<DocumentRef, String>();
 	private final Map<Command, List<State>> commandProofs = new HashMap<Command, List<State>>();
 	
 	public SnapshotReader(Set<Command> changedCommands) {
@@ -120,7 +121,30 @@ public class SnapshotReader {
 		for (DocumentRef doc : changedDocs) {
 			Snapshot snapshot = session.snapshot(doc.getRef(), ScalaCollections.<Text.Edit>emptyList());
 			snapshots.put(doc, snapshot);
+			
+			String docText = toTextDocument(snapshot.node().commands());
+			docTexts.put(doc, docText);
 		}
+	}
+	
+	/**
+	 * Prints the commands into a text document. Each command carries the
+	 * original source from the text document, so concatenating them back
+	 * together produces the original document.
+	 * 
+	 * @param commands
+	 * @return
+	 */
+	private String toTextDocument(Linear_Set<Command> commands) {
+		
+		StringBuilder out = new StringBuilder();
+		
+		for (Iterator<Command> cIt = commands.iterator(); cIt.hasNext(); ) {
+			Command cmd = cIt.next();
+			out.append(cmd.source());
+		}
+		
+		return out.toString();
 	}
 	
 	private Set<DocumentRef> getDocs(Set<Command> commands) {
