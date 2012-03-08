@@ -75,8 +75,8 @@ public class SessionTracker {
 	
 	private void addPendingAnalysis(Set<Command> changedCommands) {
 		
-		SnapshotReader reader = new SnapshotReader();
-		List<List<State>> proofStates = reader.getProofStates(changedCommands);
+		SnapshotReader reader = new SnapshotReader(changedCommands);
+		List<List<State>> proofStates = reader.readProofStates();
 		if (proofStates.isEmpty()) {
 			// nothing found to analyse
 			return;

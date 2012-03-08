@@ -3,10 +3,17 @@ package org.ai4fm.proofprocess.isabelle.core.parse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
 import org.eclipse.core.runtime.Assert;
 
 import scala.collection.Iterator;
@@ -18,10 +25,28 @@ import isabelle.Text;
 import isabelle.Command.State;
 import isabelle.Document.Snapshot;
 import isabelle.eclipse.core.IsabelleCorePlugin;
+import isabelle.scala.DocumentRef;
 import isabelle.scala.ScalaCollections;
 
+/**
+ * Reads the proof states from the current snapshot. Given a set of changed
+ * commands, calculates the proof step chains that involve all changed commands.
+ * These represent the "changed proofs".
+ * 
+ * @author Andrius Velykis
+ */
 public class SnapshotReader {
 	
+	private final Set<Command> changedCommands;
+	
+	private final Map<DocumentRef, Snapshot> snapshots = new HashMap<DocumentRef, Snapshot>();
+	private final Map<Command, List<State>> commandProofs = new HashMap<Command, List<State>>();
+	
+	public SnapshotReader(Set<Command> changedCommands) {
+		super();
+		this.changedCommands = new LinkedHashSet<Command>(changedCommands);
+	}
+
 	/**
 	 * List of commands which can start the proof, so everything after such a
 	 * command would be a new proof.
@@ -30,54 +55,131 @@ public class SnapshotReader {
 			new HashSet<String>(Arrays.asList(
 			"lemma", "function", "primrec", "definition")));
 	
-	
-	public List<List<State>> getProofStates(Set<Command> changedCommands) {
+	/**
+	 * Retrieves current snapshots for the given commands, and reads the proof
+	 * states.
+	 * <p>
+	 * For the set of commands, a list of "proofs" is retrieved, i.e. from the
+	 * beginning of the proof, to the last changed command. So if several
+	 * commands have changed in the proof, it will retrieve the longest proof
+	 * chain.
+	 * </p>
+	 * 
+	 * @return list of proofs, represented by a list of proof command states.
+	 */
+	public List<List<State>> readProofStates() {
+		
+		// filter the proof process commands, and 
+		Set<Command> proofCmds = getProofProcessCommands(changedCommands);
+		if (proofCmds.isEmpty()) {
+			return Collections.emptyList();
+		}
+		
+		// load the snapshots into the #snapshots map, so that we do not load
+		// multiple snapshots for the commands arising from the same document
+		collectSnapshots(proofCmds);
+		
+		// collect proof entries for each command
+		// first collect the proof entries, and only then query, because
+		// multiple commands may be represented by the same proof
+		for (Command command : proofCmds) {
+			collectProofs(command);
+		}
+
+		// get all collected proofs
+		// try to preserve original specification order, so reverse the proofCmds
+		List<Command> orderedCmds = new ArrayList<Command>(proofCmds);
+		Collections.reverse(orderedCmds);
 		
 		List<List<State>> proofStates = new ArrayList<List<State>>();
-		
-		// get proof entries for each command
-		for (Command command : changedCommands) {
-			List<State> proofState = getProofState(command);
-			if (!proofState.isEmpty()) {
+		for (Command command : orderedCmds) {
+			List<State> proofState = commandProofs.get(command);
+			Assert.isTrue(!proofState.isEmpty());
+			if (!proofStates.contains(proofState)) {
+				// only add unique ones
 				proofStates.add(proofState);
 			}
 		}
 		
 		return proofStates;
 	}
-	
-	private List<State> getProofState(Command changedCommand) {
-		
-		if (!isProofProcessCommand(changedCommand)) {
-			return Collections.emptyList();
-		}
-		
-		Session session = IsabelleCorePlugin.getIsabelle().getSession();
-		Snapshot snapshot = session.snapshot(changedCommand.node_name(), ScalaCollections.<Text.Edit>emptyList());
 
-		Linear_Set<Command> nodeCommands = snapshot.node().commands();
+	private void collectSnapshots(Set<Command> proofCmds) {
+		Set<DocumentRef> changedDocs = getDocs(proofCmds);
+		Session session = IsabelleCorePlugin.getIsabelle().getSession();
 		
-		List<State> proofState = getProof(snapshot, changedCommand, nodeCommands);
-		Assert.isTrue(!proofState.isEmpty());
-		return proofState;
+		for (DocumentRef doc : changedDocs) {
+			Snapshot snapshot = session.snapshot(doc.getRef(), ScalaCollections.<Text.Edit>emptyList());
+			snapshots.put(doc, snapshot);
+		}
 	}
 	
-	private List<State> getProof(Snapshot snapshot, Command lastCommand,
-			Linear_Set<Command> nodeCommands) {
-
-		List<State> proofState = new ArrayList<State>();
+	private Set<DocumentRef> getDocs(Set<Command> commands) {
 		
-		System.out.println(">> " + lastCommand);
+		Set<DocumentRef> changedDocs = new HashSet<DocumentRef>();
+		
+		for (Command cmd : commands) {
+			changedDocs.add(new DocumentRef(cmd.node_name()));
+		}
+		
+		return changedDocs;
+	}
+	
+	private Set<Command> getProofProcessCommands(Set<Command> commands) {
+		
+		// create an ordered set, which will order commands according to their index
+		// since the IDs are decreasing, we will get back-to-front ordering
+		// which is good for collecting proofs
+		Set<Command> filtered = new TreeSet<Command>(new Comparator<Command>(){
+			@Override
+			public int compare(Command o1, Command o2) {
+				// IDs are decreasing and we want a reverse order
+				long diff = o1.id() - o2.id();
+				return diff == 0 ? 0 : (diff > 0 ? 1 : -1);
+			}
+		});
+		
+		for (Command cmd : commands) {
+			if (isProofProcessCommand(cmd)) {
+				filtered.add(cmd);
+			}
+		}
+		
+		return filtered;
+	}
+	
+	private void collectProofs(Command lastCommand) {
+		
+		if (commandProofs.containsKey(lastCommand)) {
+			// already collected
+			return;
+		}
+		
+		Snapshot snapshot = snapshots.get(new DocumentRef(lastCommand.node_name()));
+		Linear_Set<Command> nodeCommands = snapshot.node().commands();
+		
+		if (!nodeCommands.contains(lastCommand)) {
+			IsabelleProofPlugin.log("Command not available in the node: " + lastCommand.toString()
+					+ ", " + String.valueOf(lastCommand.source()) + ":" + String.valueOf(lastCommand.range()), null);
+			return;
+		}
+
+		List<State> proofState = new LinkedList<State>();
 		
 		for (Iterator<Command> cIt = nodeCommands.reverse_iterator(lastCommand); cIt.hasNext();) {
 			Command cmd = cIt.next();
 
 			if (isProofProcessCommand(cmd)) {
+				
 				// check the command
 				State commandState = snapshot.command_state(cmd);
-				proofState.add(commandState);
+				// add the command state to the beginning of proof state (we are going backwards) 
+				proofState.add(0, commandState);
 				
-				System.out.println("^ " + cmd);
+				// mark the command for subsequent queries
+				// note that the same proof state will be used for this command and all its
+				// predecessors. This is ok, since we want to analyse the longest proof chain
+				commandProofs.put(cmd, proofState);
 				
 				if (isStartOfProof(cmd, commandState)) {
 					// start of proof reached - enough for this proof
@@ -85,10 +187,6 @@ public class SnapshotReader {
 				}
 			}
 		}
-
-		// reverse so that start of proof is at the beginning, and the lastCommand is at the end
-		Collections.reverse(proofState);
-		return proofState;
 	}
 	
 
