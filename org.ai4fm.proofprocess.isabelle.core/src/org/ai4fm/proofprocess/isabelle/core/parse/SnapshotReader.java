@@ -113,6 +113,16 @@ public class SnapshotReader {
 		
 		return proofStates;
 	}
+	
+	public String getDocumentText(List<State> proofState) {
+		if (proofState.isEmpty()) {
+			return null;
+		}
+		
+		// take the document ref from the first command
+		DocumentRef doc = new DocumentRef(proofState.get(0).command().node_name());
+		return docTexts.get(doc);
+	}
 
 	private void collectSnapshots(Set<Command> proofCmds) {
 		Set<DocumentRef> changedDocs = getDocs(proofCmds);

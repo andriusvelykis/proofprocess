@@ -83,7 +83,8 @@ public class SessionTracker {
 		}
 		
 		for (List<State> proofState : proofStates) {
-			pendingEvents.add(new CommandAnalysisEvent(proofState));
+			String documentText = reader.getDocumentText(proofState);
+			pendingEvents.add(new CommandAnalysisEvent(proofState, documentText));
 		}
 		
 		// wake up the analysis job
@@ -93,10 +94,12 @@ public class SessionTracker {
 	private static class CommandAnalysisEvent {
 		
 		private final List<State> proofState;
+		private final String documentText;
 		
-		public CommandAnalysisEvent(List<State> proofState) {
+		public CommandAnalysisEvent(List<State> proofState, String documentText) {
 			super();
 			this.proofState = proofState;
+			this.documentText = documentText;
 		}
 	}
 	
