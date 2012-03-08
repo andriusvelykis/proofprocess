@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
 import org.eclipse.core.runtime.Assert;
@@ -79,16 +78,26 @@ public class SnapshotReader {
 		// multiple snapshots for the commands arising from the same document
 		collectSnapshots(proofCmds);
 		
-		// collect proof entries for each command
-		// first collect the proof entries, and only then query, because
-		// multiple commands may be represented by the same proof
+		/*
+		 * Collect proof entries for each command.
+		 * 
+		 * First collect the proof entries, and only then query, because
+		 * multiple commands may be represented by the same proof.
+		 * 
+		 * Note that we reverse the command order, so to avoid too much
+		 * re-calculations of the same proof, if multiple commands have changed
+		 * in a proof.
+		 */
+		List<Command> revCmds = new ArrayList<Command>(proofCmds);
+		Collections.sort(revCmds, new CommandIdComparator(false));
+		
 		for (Command command : proofCmds) {
 			collectProofs(command);
 		}
 
 		// get all collected proofs
-		// try to preserve original specification order, so reverse the proofCmds
-		List<Command> orderedCmds = new ArrayList<Command>(proofCmds);
+		// try to preserve original specification order, so reverse the revCmds
+		List<Command> orderedCmds = new ArrayList<Command>(revCmds);
 		Collections.reverse(orderedCmds);
 		
 		List<List<State>> proofStates = new ArrayList<List<State>>();
@@ -130,14 +139,7 @@ public class SnapshotReader {
 		// create an ordered set, which will order commands according to their index
 		// since the IDs are decreasing, we will get back-to-front ordering
 		// which is good for collecting proofs
-		Set<Command> filtered = new TreeSet<Command>(new Comparator<Command>(){
-			@Override
-			public int compare(Command o1, Command o2) {
-				// IDs are decreasing and we want a reverse order
-				long diff = o1.id() - o2.id();
-				return diff == 0 ? 0 : (diff > 0 ? 1 : -1);
-			}
-		});
+		Set<Command> filtered = new HashSet<Command>();
 		
 		for (Command cmd : commands) {
 			if (isProofProcessCommand(cmd)) {
@@ -199,6 +201,34 @@ public class SnapshotReader {
 		// TODO add checks for "Step 0" in results as well, 
 		// e.g. for proofs of "fun" definitions, etc.
 		return PROOF_START_CMDS.contains(command.name());
+	}
+	
+	private static class CommandIdComparator implements Comparator<Command> {
+		
+		private boolean oldToNew;
+		
+		/**
+		 * @param oldToNew
+		 *            whether the commands are to be sorted from older to newer,
+		 *            {@code false} will sort new to old
+		 */
+		public CommandIdComparator(boolean oldToNew) {
+			super();
+			this.oldToNew = oldToNew;
+		}
+
+		@Override
+		public int compare(Command o1, Command o2) {
+			// sort by IDs
+			long diff = o1.id() - o2.id();
+			int result = diff == 0 ? 0 : (diff > 0 ? 1 : -1);
+			
+			// IDs are decreasing for newer commands, e.g. -1, -2, ...
+			// So for #oldToNew = true we want to inverse the difference,
+			// and keep it for #oldToNew = false
+			return oldToNew ? -1 * result : result;
+		}
+		
 	}
 	
 }
