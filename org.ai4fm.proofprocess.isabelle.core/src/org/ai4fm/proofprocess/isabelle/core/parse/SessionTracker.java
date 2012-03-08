@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.parse;
 
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -84,21 +85,38 @@ public class SessionTracker {
 		
 		for (List<State> proofState : proofStates) {
 			String documentText = reader.getDocumentText(proofState);
-			pendingEvents.add(new CommandAnalysisEvent(proofState, documentText));
+			Set<Command> proofCommands = filterProofCommands(proofState, changedCommands);
+			pendingEvents.add(new CommandAnalysisEvent(proofState, proofCommands, documentText));
 		}
 		
 		// wake up the analysis job
 		analyseJob.schedule();
 	}
 	
+	private Set<Command> filterProofCommands(List<State> proofState, Set<Command> filter) {
+		
+		Set<Command> proofCmds = new HashSet<Command>();
+		for (State cmdState : proofState) {
+			proofCmds.add(cmdState.command());
+		}
+		
+		// keep just the commands in the filter
+		proofCmds.retainAll(filter);
+		
+		return proofCmds;
+	}
+	
 	private static class CommandAnalysisEvent {
-		
+
 		private final List<State> proofState;
+		private final Set<Command> changedCommands;
 		private final String documentText;
-		
-		public CommandAnalysisEvent(List<State> proofState, String documentText) {
+
+		public CommandAnalysisEvent(List<State> proofState, Set<Command> changedCommands,
+				String documentText) {
 			super();
 			this.proofState = proofState;
+			this.changedCommands = changedCommands;
 			this.documentText = documentText;
 		}
 	}
