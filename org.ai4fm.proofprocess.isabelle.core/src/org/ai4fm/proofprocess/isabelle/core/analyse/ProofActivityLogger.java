@@ -12,9 +12,9 @@ import java.util.Set;
 import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
 import org.ai4fm.proofprocess.log.ProofActivity;
+import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.log.ProofProcessLogFactory;
 import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
-import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.util.EmfUtil;
 
 /**
@@ -31,9 +31,9 @@ import org.ai4fm.proofprocess.project.core.util.EmfUtil;
  */
 public class ProofActivityLogger {
 
-	private final Project proofLog;
+	private final ProofLog proofLog;
 	
-	public ProofActivityLogger(Project proofLog) {
+	public ProofActivityLogger(ProofLog proofLog) {
 		super();
 		this.proofLog = proofLog;
 	}
