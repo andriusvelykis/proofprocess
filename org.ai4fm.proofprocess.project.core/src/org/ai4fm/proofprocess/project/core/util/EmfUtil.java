@@ -1,4 +1,4 @@
-package org.ai4fm.proofprocess.zeves.ui;
+package org.ai4fm.proofprocess.project.core.util;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.Command;
