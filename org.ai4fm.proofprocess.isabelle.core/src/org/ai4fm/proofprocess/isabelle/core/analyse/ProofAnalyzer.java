@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.Status;
  */
 public class ProofAnalyzer {
 
-	public IStatus analyse(List<State> proofState, Set<Command> changedCommands,
+	public IStatus analyze(List<State> proofState, Set<Command> changedCommands,
 			String documentText, IProgressMonitor monitor) throws CoreException {
 
 		Assert.isLegal(!proofState.isEmpty());

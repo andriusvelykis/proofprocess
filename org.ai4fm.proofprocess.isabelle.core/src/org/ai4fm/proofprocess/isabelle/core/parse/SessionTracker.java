@@ -143,7 +143,7 @@ public class SessionTracker {
 			}
 			
 			try {
-				return analyse(nextEvent, monitor);
+				return analyze(nextEvent, monitor);
 			} catch (CoreException e) {
 				return IsabelleProofPlugin.error(
 						"Proof process analysis failed: " + e.getMessage(), e);
@@ -151,10 +151,10 @@ public class SessionTracker {
 		}
 	}
 	
-	private IStatus analyse(CommandAnalysisEvent event, IProgressMonitor monitor) throws CoreException {
+	private IStatus analyze(CommandAnalysisEvent event, IProgressMonitor monitor) throws CoreException {
 		// delegate to the proof analyzer
 		ProofAnalyzer proofAnalyzer = new ProofAnalyzer();
-		return proofAnalyzer.analyse(event.proofState, event.changedCommands, event.documentText, monitor);
+		return proofAnalyzer.analyze(event.proofState, event.changedCommands, event.documentText, monitor);
 	}
 	
 	
