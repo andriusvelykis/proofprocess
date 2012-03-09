@@ -10,7 +10,9 @@ Require-Bundle: org.eclipse.core.runtime,
  isabelle.pure;bundle-version="2011.1.1",
  isabelle.scala;bundle-version="1.1.0",
  isabelle.eclipse.core;bundle-version="1.1.0",
- isabelle.eclipse;bundle-version="1.0.1"
+ isabelle.eclipse;bundle-version="1.0.1",
+ org.ai4fm.proofprocess.project.core;bundle-version="1.0.0",
+ org.ai4fm.proofprocess;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/tracker.xml
