@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
+import org.ai4fm.proofprocess.isabelle.core.analyse.ProofAnalyzer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -151,8 +152,9 @@ public class SessionTracker {
 	}
 	
 	private IStatus analyse(CommandAnalysisEvent event, IProgressMonitor monitor) throws CoreException {
-		// TODO implement analysis
-		return Status.OK_STATUS;
+		// delegate to the proof analyzer
+		ProofAnalyzer proofAnalyzer = new ProofAnalyzer();
+		return proofAnalyzer.analyse(event.proofState, event.changedCommands, event.documentText, monitor);
 	}
 	
 	
