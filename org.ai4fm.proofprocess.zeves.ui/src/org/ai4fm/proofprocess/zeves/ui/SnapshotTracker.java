@@ -90,7 +90,7 @@ public class SnapshotTracker {
 	private final ZEvesSnapshot snapshot;
 	private final ISnapshotChangedListener snapshotListener;
 	
-	private final Job analyseJob;
+	private final Job analysisJob;
 	
 	/**
 	 * A concurrent queue is used for pending events, because the queue is
@@ -111,14 +111,14 @@ public class SnapshotTracker {
 			}
 		};
 		
-		analyseJob = new AnalyseJob();
+		analysisJob = new AnalysisJob();
 		// add a listener that reschedules the job after completion if there are pending events
-		analyseJob.addJobChangeListener(new JobChangeAdapter() {
+		analysisJob.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
 				if (!pendingEvents.isEmpty()) {
 					// there are pending events, reschedule the job to consume them
-					analyseJob.schedule();
+					analysisJob.schedule();
 				}
 			}
 		});
@@ -155,7 +155,7 @@ public class SnapshotTracker {
 		}
 		
 		// wake up the analysis job
-		analyseJob.schedule();
+		analysisJob.schedule();
 	}
 	
 	private IStatus analyse(SnapshotAnalysisEvent event, IProgressMonitor monitor) throws CoreException {
@@ -910,9 +910,9 @@ public class SnapshotTracker {
 		return proofEntries;
 	}
 	
-	private class AnalyseJob extends Job {
+	private class AnalysisJob extends Job {
 
-		public AnalyseJob() {
+		public AnalysisJob() {
 			super("Analysing proof process");
 		}
 

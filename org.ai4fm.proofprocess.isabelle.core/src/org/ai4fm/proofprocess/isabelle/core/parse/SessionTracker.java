@@ -31,7 +31,7 @@ public class SessionTracker {
 
 	private final SessionEventSupport sessionEvents;
 	
-	private final Job analyseJob;
+	private final Job analysisJob;
 	
 	/**
 	 * A concurrent queue is used for pending events, because the queue is
@@ -42,14 +42,14 @@ public class SessionTracker {
 	
 	public SessionTracker() {
 		
-		this.analyseJob = new AnalyseJob();
+		this.analysisJob = new AnalysisJob();
 		// add a listener that reschedules the job after completion if there are pending events
-		analyseJob.addJobChangeListener(new JobChangeAdapter() {
+		analysisJob.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
 				if (!pendingEvents.isEmpty()) {
 					// there are pending events, reschedule the job to consume them
-					analyseJob.schedule();
+					analysisJob.schedule();
 				}
 			}
 		});
@@ -90,7 +90,7 @@ public class SessionTracker {
 		}
 		
 		// wake up the analysis job
-		analyseJob.schedule();
+		analysisJob.schedule();
 	}
 	
 	private Set<Command> filterProofCommands(List<State> proofState, Set<Command> filter) {
@@ -121,9 +121,9 @@ public class SessionTracker {
 		}
 	}
 	
-	private class AnalyseJob extends Job {
+	private class AnalysisJob extends Job {
 
-		public AnalyseJob() {
+		public AnalysisJob() {
 			super("Analysing proof process");
 		}
 
