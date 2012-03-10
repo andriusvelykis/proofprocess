@@ -5,6 +5,7 @@ import isabelle.Command.State;
 import isabelle.Text.Range;
 import isabelle.scala.DocumentRef;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +84,27 @@ public class ProofAnalyzer {
 	private void analyseEntry(Project proofProject, List<State> proofState, FileVersion fileVersion) {
 		// TODO
 		
+		// Convert to Proof Process steps - they will be matched to the existing
+		// proof process records afterwards
+		List<ProofEntry> ppState = createProofSteps(proofProject, proofState, fileVersion);
+		
 		// TODO save the proofProject
+	}
+	
+	private List<ProofEntry> createProofSteps(Project proofProject, List<State> proofState,
+			FileVersion fileVersion) {
+		
+		List<ProofEntry> entries = new ArrayList<ProofEntry>();
+		
+		ProofEntry previousEntry = null;
+		for (State cmdState : proofState) {
+			ProofEntry entry = createProofStep(proofProject, fileVersion, previousEntry, cmdState);
+			entries.add(entry);
+			
+			previousEntry = entry;
+		}
+		
+		return entries;
 	}
 	
 	private ProofEntry createProofStep(Project project, FileVersion fileVersion, 
