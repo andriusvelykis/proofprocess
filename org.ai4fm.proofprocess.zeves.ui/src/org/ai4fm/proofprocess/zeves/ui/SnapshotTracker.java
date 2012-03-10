@@ -62,6 +62,7 @@ import org.ai4fm.proofprocess.project.TextLoc;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
 import org.ai4fm.proofprocess.project.core.ProofManager;
 import org.ai4fm.proofprocess.project.core.util.EmfUtil;
+import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
@@ -324,7 +325,7 @@ public class SnapshotTracker {
 		
 		setNextRootDescription(attemptSet, info);
 		
-		Intent intent = findCreateIntent(proofProject, "Proof root");
+		Intent intent = ProofProcessUtil.findCreateIntent(proofProject, "Proof root");
 		info.setIntent(intent);
 		
 		Attempt attempt = ProofProcessFactory.eINSTANCE.createAttempt();
@@ -503,7 +504,7 @@ public class SnapshotTracker {
 		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
 		branch.setInfo(info);
 		info.setNarrative("Case #" + caseStr);
-		info.setIntent(findCreateIntent(proofProject, "Parallel Branch"));
+		info.setIntent(ProofProcessUtil.findCreateIntent(proofProject, "Parallel Branch"));
 		
 		addToGroup(parentParallel, branch);
 		return branch;
@@ -516,7 +517,7 @@ public class SnapshotTracker {
 		parallel.setInfo(info);
 		
 		info.setNarrative("Parallel attempts");
-		info.setIntent(findCreateIntent(proofProject, "Parallel"));
+		info.setIntent(ProofProcessUtil.findCreateIntent(proofProject, "Parallel"));
 		
 		addToGroup(parent, parallel);
 		return parallel;
@@ -734,7 +735,7 @@ public class SnapshotTracker {
 		
 		info.setNarrative("Tactic: " + commandText);
 		
-		Intent intent = findCreateIntent(project, "Tactic Application");
+		Intent intent = ProofProcessUtil.findCreateIntent(project, "Tactic Application");
 		info.setIntent(intent);
 		
 		ZEvesTrace ref = ZEvesProofProcessFactory.eINSTANCE.createZEvesTrace();
@@ -836,22 +837,6 @@ public class SnapshotTracker {
 
 	private boolean isTargetProof(String goalName, Proof attemptSet) {
 		return goalName.equals(attemptSet.getLabel());
-	}
-	
-	public static Intent findCreateIntent(Project project, String intentName) {
-	
-		for (Intent intent : project.getIntents()) {
-			if (intentName.equals(intent.getName())) {
-				return intent;
-			}
-		}
-		
-		// create new
-		Intent intent = ProofProcessFactory.eINSTANCE.createIntent();
-		intent.setName(intentName);
-		project.getIntents().add(intent);
-		
-		return intent;
 	}
 	
 	private Position convertPos(org.eclipse.jface.text.Position pos) {

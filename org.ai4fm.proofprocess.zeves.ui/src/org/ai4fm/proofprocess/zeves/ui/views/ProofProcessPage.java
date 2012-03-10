@@ -21,6 +21,7 @@ import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 import org.ai4fm.proofprocess.provider.ProofProcessEditPlugin;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.ProofManager;
+import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 import org.ai4fm.proofprocess.zeves.ui.SnapshotTracker;
 import org.eclipse.core.databinding.observable.ChangeEvent;
@@ -378,7 +379,7 @@ public class ProofProcessPage extends Page {
 			ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
 			group.setInfo(info);
 			info.setNarrative(description);
-			info.setIntent(SnapshotTracker.findCreateIntent(proofProject, intentText));
+			info.setIntent(ProofProcessUtil.findCreateIntent(proofProject, intentText));
 			
 			// TODO grouping Decor?
 			siblings.add(sublistIndex, group);
