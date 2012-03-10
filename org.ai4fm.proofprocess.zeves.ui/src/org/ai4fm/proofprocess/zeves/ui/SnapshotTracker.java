@@ -55,10 +55,7 @@ import org.ai4fm.proofprocess.log.ProofActivity;
 import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.log.ProofProcessLogFactory;
 import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
-import org.ai4fm.proofprocess.project.Position;
 import org.ai4fm.proofprocess.project.Project;
-import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
-import org.ai4fm.proofprocess.project.TextLoc;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
 import org.ai4fm.proofprocess.project.core.ProofManager;
 import org.ai4fm.proofprocess.project.core.util.EmfUtil;
@@ -85,6 +82,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper;
+import org.eclipse.jface.text.Position;
 
 public class SnapshotTracker {
 
@@ -744,10 +742,6 @@ public class SnapshotTracker {
 		ref.setText(commandText);
 		ref.setCase(proofCaseStr(entryResult.getProofCase()));
 		
-		TextLoc loc = ProjectProofProcessFactory.eINSTANCE.createTextLoc();
-		loc.setFilePath(fileVersion.getPath());
-		loc.setPosition(convertPos(proofEntry.getPosition()));
-		
 		Set<String> usedLemmas = new LinkedHashSet<String>();
 		
 		for (ZEvesOutput result : proofEntry.getData().getTrace()) {
@@ -759,7 +753,9 @@ public class SnapshotTracker {
 		
 		ProofStep step = ProofProcessFactory.eINSTANCE.createProofStep();
 		step.setTrace(ref);
-		step.setSource(loc);
+		
+		Position pos = proofEntry.getPosition();
+		step.setSource(ProofProcessUtil.createTextLoc(fileVersion, pos.getOffset(), pos.getLength()));
 		entry.setProofStep(step);
 		return entry;
 	}
@@ -837,13 +833,6 @@ public class SnapshotTracker {
 
 	private boolean isTargetProof(String goalName, Proof attemptSet) {
 		return goalName.equals(attemptSet.getLabel());
-	}
-	
-	private Position convertPos(org.eclipse.jface.text.Position pos) {
-		Position position = ProjectProofProcessFactory.eINSTANCE.createPosition();
-		position.setOffset(pos.getOffset());
-		position.setLength(pos.getLength());
-		return position;
 	}
 	
 	private List<ISnapshotEntry> getProofEntries(ISnapshotEntry endingWithEntry) {
