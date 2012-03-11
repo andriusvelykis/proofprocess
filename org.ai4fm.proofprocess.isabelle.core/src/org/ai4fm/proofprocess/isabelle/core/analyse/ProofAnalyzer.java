@@ -15,6 +15,7 @@ import java.util.Set;
 import org.ai4fm.filehistory.FileVersion;
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Loc;
+import org.ai4fm.proofprocess.Proof;
 import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
@@ -30,6 +31,7 @@ import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
 import org.ai4fm.proofprocess.project.core.ProofManager;
+import org.ai4fm.proofprocess.project.core.ProofMatcher;
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
 import org.ai4fm.proofprocess.project.core.util.ResourceUtil;
 import org.eclipse.core.resources.IProject;
@@ -74,7 +76,7 @@ public class ProofAnalyzer {
 		FileVersion fileVersion = ProofHistoryManager.syncFileVersion(
 				project, filePath, documentText, commandEnd, monitor);
 		
-		analyseEntry(proofProject, proofState, fileVersion);
+		analyzeEntry(proofProject, proofState, fileVersion);
 		
 		// FIXME retrieve proof entries from the analysis
 		Map<State, ProofEntry> proofEntries = new HashMap<State, ProofEntry>();
@@ -83,12 +85,27 @@ public class ProofAnalyzer {
 		return Status.OK_STATUS;
 	}
 	
-	private void analyseEntry(Project proofProject, List<State> proofState, FileVersion fileVersion) {
+	private void analyzeEntry(Project proofProject, List<State> proofState, FileVersion fileVersion) {
 		// TODO
 		
 		// Convert to Proof Process steps - they will be matched to the existing
 		// proof process records afterwards
 		List<ProofEntry> ppState = createProofSteps(proofProject, proofState, fileVersion);
+		
+		// Assume that the first step in any proof is the "declaration" command, e.g. "lemma ..."
+		ProofEntry declStep = ppState.get(0);
+		List<Term> declGoals = declStep.getProofStep().getOutGoals();
+		
+		if (declGoals.isEmpty()) {
+			// no declaration goals - no proof
+			return;
+		}
+		
+		// find the proof for this
+		ProofMatcher proofMatcher = new ProofMatcher();
+		// TODO extract proof label
+		Proof proof = proofMatcher.findCreateProof(proofProject, null, declGoals);
+		System.out.println("Proof found: " + proof);
 		
 		// TODO save the proofProject
 	}
