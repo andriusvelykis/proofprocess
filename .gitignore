@@ -10,4 +10,6 @@ org.ai4fm.proofprocess.zeves.edit/bin
 org.ai4fm.proofprocess.zeves.ui/bin
 org.ai4fm.proofprocess.isabelle/bin
 org.ai4fm.proofprocess.isabelle.core/bin
+org.ai4fm.proofprocess.isabelle.scala/bin
 model/.project
+.cache
