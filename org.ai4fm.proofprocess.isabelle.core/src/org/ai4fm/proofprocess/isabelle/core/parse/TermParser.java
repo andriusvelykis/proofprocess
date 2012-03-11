@@ -142,7 +142,7 @@ public class TermParser {
 					Elem elem = (Elem) e;
 					Markup markup = elem.markup();
 					
-					if (Markup.BLOCK().equals(markup.name()) && getElemCount(elem.body()) == 1) {
+					if (Markup.BLOCK().equals(markup.name()) && getElemCount(elem.body()) <= 1) {
 			            // single element inside a block - continue on the inner element,
 			            // skipping the outer BLOCK. 
 						// Note that we ignore the inner Texts in this check.
