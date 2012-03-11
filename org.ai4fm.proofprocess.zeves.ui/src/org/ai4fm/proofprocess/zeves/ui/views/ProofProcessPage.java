@@ -21,9 +21,9 @@ import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 import org.ai4fm.proofprocess.provider.ProofProcessEditPlugin;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.ProofManager;
+import org.ai4fm.proofprocess.project.core.ProofMatcher;
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
-import org.ai4fm.proofprocess.zeves.ui.SnapshotTracker;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.Observables;
@@ -326,7 +326,7 @@ public class ProofProcessPage extends Page {
 			}
 			
 			ProofElem parentGroup = (ProofElem) parentContainer;
-			List<ProofElem> siblings = SnapshotTracker.getProofChildren(parentGroup);
+			List<ProofElem> siblings = ProofMatcher.getProofChildren(parentGroup);
 			
 			int sublistIndex = Collections.indexOfSubList(siblings, attempts);
 			if (sublistIndex < 0) {
@@ -389,7 +389,7 @@ public class ProofProcessPage extends Page {
 //			siblings.move(sublistIndex, group);
 			
 			for (ProofElem attempt : attempts) {
-				SnapshotTracker.addToGroup(group, attempt);
+				ProofMatcher.addToGroup(group, attempt);
 				siblings.remove(attempt);
 			}
 			

@@ -12,7 +12,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -38,10 +37,8 @@ import net.sourceforge.czt.zeves.response.ZEvesProofTrace.TraceType;
 import net.sourceforge.czt.zeves.response.form.ZEvesName;
 
 import org.ai4fm.filehistory.FileVersion;
-import org.ai4fm.proofprocess.Attempt;
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Proof;
-import org.ai4fm.proofprocess.ProofDecor;
 import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofInfo;
@@ -59,6 +56,7 @@ import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
 import org.ai4fm.proofprocess.project.core.ProofManager;
 import org.ai4fm.proofprocess.project.core.ProofMatcher;
+import org.ai4fm.proofprocess.project.core.ProofMatcher.ProofElemMatch;
 import org.ai4fm.proofprocess.project.core.util.EmfUtil;
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
@@ -80,8 +78,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper;
 import org.eclipse.jface.text.Position;
 
@@ -311,404 +307,116 @@ public class SnapshotTracker {
 			attempts.add(attempt);
 		}
 		
-		ProofElemMatch match = findCreateProofTree(proofProject, proof, attempts);
-		return match.attempt;
+		ProofMatcher proofMatcher = new ZEvesProofMatcher();
+		ProofElemMatch match = proofMatcher.findCreateProofTree(proofProject, proof, attempts);
+		return match.getEntry();
 	}
 	
-	private static final String ROOT_ATTEMPT_LABEL = "Root attempt #";
-
-	private ProofElemMatch createProofTree(Project proofProject, Proof attemptSet, ProofEntry entry) {
-		ProofSeq rootEntry = ProofProcessFactory.eINSTANCE.createProofSeq();
-		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
-		rootEntry.setInfo(info);
+	private static class ZEvesProofMatcher extends ProofMatcher {
 		
-		setNextRootDescription(attemptSet, info);
-		
-		Intent intent = ProofProcessUtil.findCreateIntent(proofProject, "Proof root");
-		info.setIntent(intent);
-		
-		Attempt attempt = ProofProcessFactory.eINSTANCE.createAttempt();
-		attempt.setProof(rootEntry);
-		
-		attemptSet.getAttempts().add(attempt);
-		
-		addToGroup(rootEntry, entry);
-		return new ProofElemMatch(attempt, Arrays.asList(entry), entry);
-	}
-
-	private void setNextRootDescription(Proof attemptSet, ProofInfo rootInfo) {
-		int nextNo = maxRoot(attemptSet) + 1;
-		
-		rootInfo.setNarrative(ROOT_ATTEMPT_LABEL + nextNo);
-	}
-	
-	private int maxRoot(Proof attemptSet) {
-		
-		int max = 0;
-		
-		for (Attempt att : attemptSet.getAttempts()) {
-			ProofInfo rootInfo = att.getProof().getInfo();
-			String desc = rootInfo.getNarrative();
-			if (desc.startsWith(ROOT_ATTEMPT_LABEL)) {
-				String noStr = desc.substring(ROOT_ATTEMPT_LABEL.length());
-				
-				try {
-					int no = Integer.parseInt(noStr);
-					if (no > max) {
-						max = no;
-					}
-				} catch (NumberFormatException ex) {
-					// ignore
-				}
-			}
-		}
-		
-		return max;
-	}
-	
-	private ProofElemMatch findCreateProofTree(Project proofProject, Proof attemptSet, 
-			List<ProofEntry> attempts) {
-
-		ProofElemMatch matched = findMatchingProofTree(attemptSet, attempts);
-		if (matched != null) {
-			// found an attempt tree fully matching the given proof, use it
-			return matched;
-		}
-		
-		if (attempts.size() == 1) {
-			return createProofTree(proofProject, attemptSet, attempts.get(0));
-		}
-		
-		/*
-		 * Continue recursively on the shorter attempts list (without the last
-		 * element), then add the removed element to the end.
-		 */
-		List<ProofEntry> shorter = attempts.subList(0, attempts.size() - 1);
-		ProofEntry attempt = attempts.get(attempts.size() - 1);
-		
-		ProofElemMatch targetMatch;
-		
-		// match shorter
-		ProofElemMatch sMatch = findCreateProofTree(proofProject, attemptSet, shorter);
-		
-		/*
-		 * Check whether the last element has been matched (e.g. shorter matches
-		 * a previous proof fully). In that case, the new attempt needs to be
-		 * added to the end.
-		 */
-		int sMatchIndex = sMatch.allEntries.indexOf(sMatch.attempt);
-		Assert.isTrue(sMatchIndex >= 0);
-		
-		if (sMatchIndex == sMatch.allEntries.size() - 1) {
-			// the last one - add to the end
-			int sGroupIndex = attemptSet.getAttempts().indexOf(sMatch.rootGroup);
-			Assert.isTrue(sGroupIndex >= 0, "Last attempt entry must be in the last attempt set");
-
-			// FIXME
-//			Assert.isTrue(sMatch.group is in the attempt tree)
+		@Override
+		protected boolean matchTrace(Trace trace1, Trace trace2) {
 			
-			if (sGroupIndex != attemptSet.getAttempts().size() - 1) {
-				// this is an older attempt tree that has matched - copy everything into a new one
-				// and use the copied to add the new attempt
-				targetMatch = copyAttemptTree(attemptSet, sMatch.rootGroup, sMatch.allEntries);
+			if (trace1 instanceof ZEvesTrace && trace2 instanceof ZEvesTrace) {
+
+				EqualityHelper equalityHelper = new FeatureEqualityHelper(Arrays.asList(
+						ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Goal(),
+						ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Text(),
+						ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_UsedLemmas(),
+						ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Case()));
+				
+				return equalityHelper.equals(trace1, trace2);
+			}
+			
+			return super.matchTrace(trace1, trace2);
+		}
+
+		@Override
+		protected ProofElem getGroupToAdd(Project proofProject, ProofEntry previous,
+				ProofEntry entry) {
+			
+			// TODO check cast
+			ZEvesTrace refP = (ZEvesTrace) previous.getProofStep().getTrace();
+			ZEvesTrace ref = (ZEvesTrace) entry.getProofStep().getTrace();
+			
+			List<Integer> proofCaseP = getProofCase(refP.getCase());
+			String caseStr = ref.getCase();
+			List<Integer> proofCase = getProofCase(caseStr);
+			
+			if (proofCaseP.equals(proofCase)) {
+				// the same - add the entry to the same group
+				return getParentProofElem(previous);
 			} else {
-				// this is the latest attempt - append the entry to it
-				targetMatch = sMatch;
-			}
-		} else {
-			// partially matched other tree - copy the match and add to there
-			targetMatch = copyAttemptTree(attemptSet, sMatch.rootGroup, 
-					sMatch.allEntries.subList(0, sMatchIndex + 1));
-		}
-		
-		// use the same group as the last entry has
-		// FIXME what about case splits?
-		ProofElem groupToAdd = getGroupToAdd(proofProject, targetMatch.attempt, attempt);
-		addToGroup(groupToAdd, attempt);
-		
-		List<ProofEntry> entriesPlus = new ArrayList<ProofEntry>(targetMatch.allEntries);
-		entriesPlus.add(attempt);
-		
-		return new ProofElemMatch(targetMatch.rootGroup, entriesPlus, attempt);
-	}
-	
-	private ProofElem getGroupToAdd(Project proofProject, ProofEntry previous, ProofEntry attempt) {
-		
-		// TODO check cast
-		ZEvesTrace refP = (ZEvesTrace) previous.getProofStep().getTrace();
-		ZEvesTrace ref = (ZEvesTrace) attempt.getProofStep().getTrace();
-		
-		List<Integer> proofCaseP = getProofCase(refP.getCase());
-		String caseStr = ref.getCase();
-		List<Integer> proofCase = getProofCase(caseStr);
-		
-		if (proofCaseP.equals(proofCase)) {
-			// the same - add the attempt to the same group
-			return getParentProofElem(previous);
-		} else {
-			int sizeP = proofCaseP.size();
-			int size = proofCase.size();
-			
-			if (sizeP == size) {
-				// same size - a sibling of the previous case (add a split?) 
-				return addParallelBranch(proofProject, getParentParallel(previous), caseStr);
-			} else if (sizeP > size) {
-				// shorter size, the previous case has ended - exit split
-				// this means take the group of parent parallel - will be added
-				// to the same level as parallel
-				// FIXME this does not work if the jump is via multiple steps
-				return getGroupToAdd(proofProject, getPreviousEntry(getParentParallel(previous)), attempt);
-			} else {
-				// longer size, going deeper into the case
-				return addParallelBranch(proofProject, createParallel(proofProject, getParentProofElem(previous)), caseStr);
-			}
-		}
-	}
-	
-	private ProofElem getParentProofElem(ProofElem entry) {
-		// TODO check cast
-		return (ProofElem) entry.eContainer();
-	}
-	
-	private ProofParallel getParentParallel(ProofElem entry) {
-		EObject parent = entry.eContainer();
-		
-		if (parent instanceof ProofParallel) {
-			return (ProofParallel) parent;
-		}
-		
-		if (parent instanceof ProofElem) {
-			return getParentParallel((ProofElem) parent);
-		}
-		
-		return null;
-	}
-	
-	private ProofEntry getPreviousEntry(ProofElem attempt) {
-		List<ProofElem> siblings = getProofChildren(getParentProofElem(attempt));
-		for (int i = siblings.indexOf(attempt) - 1; i >= 0; i--) {
-			ProofElem previous = siblings.get(i);
-			if (previous instanceof ProofEntry) {
-				return (ProofEntry) previous;
-			}
-		}
-		
-		return null;
-		//193
-	}
-	
-	private ProofSeq addParallelBranch(Project proofProject, ProofParallel parentParallel, String caseStr) {
-		
-		ProofSeq branch = ProofProcessFactory.eINSTANCE.createProofSeq();
-		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
-		branch.setInfo(info);
-		info.setNarrative("Case #" + caseStr);
-		info.setIntent(ProofProcessUtil.findCreateIntent(proofProject, "Parallel Branch"));
-		
-		addToGroup(parentParallel, branch);
-		return branch;
-	}
-	
-	private ProofParallel createParallel(Project proofProject, ProofElem parent) {
-		
-		ProofParallel parallel = ProofProcessFactory.eINSTANCE.createProofParallel();
-		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
-		parallel.setInfo(info);
-		
-		info.setNarrative("Parallel attempts");
-		info.setIntent(ProofProcessUtil.findCreateIntent(proofProject, "Parallel"));
-		
-		addToGroup(parent, parallel);
-		return parallel;
-	}
-	
-	public static void addToGroup(ProofElem group, ProofElem proofElem) {
-		if (group instanceof ProofSeq) {
-			((ProofSeq) group).getEntries().add(proofElem);
-//			group.getContained().add(proofElem);
-			return;
-		}
-		
-		if (group instanceof ProofParallel) {
-			((ProofParallel) group).getEntries().add(proofElem);
-			return;
-		}
-		
-		if (group instanceof ProofDecor) {
-			ProofDecor decor = (ProofDecor) group;
-			if (decor.getEntry() != null) {
-				throw new IllegalArgumentException("Cannot add to non-empty ProofDecor!");
-			}
-			
-			decor.setEntry(proofElem);
-			return;
-		}
-		
-		throw new IllegalArgumentException("Cannot add to " + group.getClass().getSimpleName());
-	}
-	
-	private List<ProofEntry> getProofEntriesDepthFirst(ProofElem proofElem) {
-		return getProofEntriesDepthFirst(proofElem, true);
-	}
-	
-	private List<ProofEntry> getProofEntriesDepthFirst(ProofElem proofElem, boolean includeParallel) {
-		
-		List<ProofEntry> entries = new ArrayList<ProofEntry>();
-		
-		for (ProofElem child : getProofChildren(proofElem)) {
-			
-			if (!includeParallel && child instanceof ProofParallel) {
-				continue;
-			}
-			
-			entries.addAll(getProofEntriesDepthFirst(child));
-			
-			if (child instanceof ProofEntry) {
-				entries.add((ProofEntry) child);
-			}
-		}
-		
-		return entries;
-	}
-	
-	public static List<ProofElem> getProofChildren(ProofElem proofElem) {
-		if (proofElem instanceof ProofSeq) {
-			return ((ProofSeq) proofElem).getEntries();
-		}
-		
-		if (proofElem instanceof ProofParallel) {
-			return ((ProofParallel) proofElem).getEntries();
-		}
-		
-		if (proofElem instanceof ProofDecor) {
-			return Collections.singletonList(((ProofDecor) proofElem).getEntry());
-		}
-		
-		return Collections.emptyList();
-	}
-	
-	private boolean matchAttempt(ProofEntry a1, ProofEntry a2) {
-		
-		Trace ref1 = a1.getProofStep().getTrace();
-		Trace ref2 = a2.getProofStep().getTrace();
-		
-		if (ref1 instanceof ZEvesTrace && ref2 instanceof ZEvesTrace) {
-
-			EqualityHelper equalityHelper = new FeatureEqualityHelper(Arrays.asList(
-					ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Goal(),
-					ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Text(),
-					ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_UsedLemmas(),
-					ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Case()));
-			
-			return equalityHelper.equals(ref1, ref2);
-		}
-		
-		return EcoreUtil.equals(a1, a2);
-	}
-	
-	private ProofElemMatch findMatchingProofTree(Proof attemptSet, List<ProofEntry> entries) {
-		
-		List<Attempt> attempts = attemptSet.getAttempts();
-		for (int rIndex = attempts.size() - 1; rIndex >= 0; rIndex--) {
-			Attempt root = attempts.get(rIndex);
-			List<ProofEntry> rootEntries = getProofEntriesDepthFirst(root.getProof());
-			if (rootEntries.size() < entries.size()) {
-				continue;
-			}
-			
-			boolean matching = true;
-			ProofEntry lastMatch = null;
-			for (int index = 0; index < entries.size(); index++) {
-				ProofEntry entry = rootEntries.get(index);
-				if (!matchAttempt(entry, entries.get(index))) {
-					matching = false;
-					break;
+				int sizeP = proofCaseP.size();
+				int size = proofCase.size();
+				
+				if (sizeP == size) {
+					// same size - a sibling of the previous case (add a split?) 
+					return addParallelBranch(proofProject, getParentParallel(previous), caseStr);
+				} else if (sizeP > size) {
+					// shorter size, the previous case has ended - exit split
+					// this means take the group of parent parallel - will be added
+					// to the same level as parallel
+					// FIXME this does not work if the jump is via multiple steps
+					return getGroupToAdd(proofProject, getPreviousEntry(getParentParallel(previous)), entry);
+				} else {
+					// longer size, going deeper into the case
+					return addParallelBranch(proofProject, createParallel(proofProject, getParentProofElem(previous)), caseStr);
 				}
-				
-				lastMatch = entry;
+			}
+		}
+		
+		private ProofParallel getParentParallel(ProofElem entry) {
+			EObject parent = entry.eContainer();
+			
+			if (parent instanceof ProofParallel) {
+				return (ProofParallel) parent;
 			}
 			
-			if (matching) {
-				return new ProofElemMatch(root, rootEntries, lastMatch);
+			if (parent instanceof ProofElem) {
+				return getParentParallel((ProofElem) parent);
 			}
+			
+			return null;
 		}
 		
-		return null;
-	}
-	
-	private ProofElemMatch copyAttemptTree(Proof attemptSet, Attempt sourceAttempt, 
-			List<ProofEntry> entriesToCopy) {
-		
-		Assert.isLegal(!entriesToCopy.isEmpty(), "Cannot copy an attempt tree with no entries");
-		
-		final Set<ProofElem> parentEntries = new HashSet<ProofElem>();
-		for (ProofEntry entry : entriesToCopy) {
-			collectParents(entry, parentEntries);
-		}
-		
-		Copier copier = new Copier() {
-			@Override
-			public <T> Collection<T> copyAll(Collection<? extends T> eObjects) {
-				
-				List<T> filtered = new ArrayList<T>();
-				for (T obj : eObjects) {
-					if (obj instanceof ProofElem && !parentEntries.contains(obj)) {
-						// do not include this into the copy
-						continue;
-					}
-					
-					filtered.add(obj);
+		private ProofEntry getPreviousEntry(ProofElem attempt) {
+			List<ProofElem> siblings = ProofMatcher.getProofChildren(getParentProofElem(attempt));
+			for (int i = siblings.indexOf(attempt) - 1; i >= 0; i--) {
+				ProofElem previous = siblings.get(i);
+				if (previous instanceof ProofEntry) {
+					return (ProofEntry) previous;
 				}
-				
-				return super.copyAll(filtered);
 			}
-		};
-		
-		Attempt result = (Attempt) copier.copy(sourceAttempt);
-	    copier.copyReferences();
-		
-		// parent references still get copied within copyReferences(), but
-		// the following removes them
-	    Set<EObject> copiedParents = new HashSet<EObject>();
-	    for (EObject parent : parentEntries) {
-	    	EObject parentCopy = copier.get(parent);
-	    	if (parentCopy != null) {
-	    		copiedParents.add(parentCopy);
-	    	}
-	    }
-	    
-	    // TODO maybe below is unnecessary if we have containments only?
-		for (Entry<EObject, EObject> copyEntry : copier.entrySet()) {
-			if (copyEntry.getValue() instanceof ProofSeq) {
-				ProofSeq group = (ProofSeq) copyEntry.getValue();
-				group.getEntries().retainAll(copiedParents);
-			} else if (copyEntry.getValue() instanceof ProofParallel) {
-				ProofParallel group = (ProofParallel) copyEntry.getValue();
-				group.getEntries().retainAll(copiedParents);
-			} else if (copyEntry.getValue() instanceof ProofDecor) {
-				// TODO what do we do about decor here?
-//				ProofDecor group = (ProofDecor) copyEntry.getValue();
-//				group.getEntries().retainAll(copiedParents);
-			}
+			
+			return null;
+			//193
 		}
 		
-		setNextRootDescription(attemptSet, result.getProof().getInfo());
-	    
-		attemptSet.getAttempts().add(result);
-	    
-		List<ProofEntry> copiedEntries = getProofEntriesDepthFirst(result.getProof());
+		private ProofSeq addParallelBranch(Project proofProject, ProofParallel parentParallel, String caseStr) {
+			
+			ProofSeq branch = ProofProcessFactory.eINSTANCE.createProofSeq();
+			ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
+			branch.setInfo(info);
+			info.setNarrative("Case #" + caseStr);
+			info.setIntent(ProofProcessUtil.findCreateIntent(proofProject, "Parallel Branch"));
+			
+			addToGroup(parentParallel, branch);
+			return branch;
+		}
 		
-		return new ProofElemMatch(result, copiedEntries, copiedEntries.get(copiedEntries.size() - 1));
-	}
-	
-	private void collectParents(ProofElem attempt, Set<ProofElem> attempts) {
-		// TODO how about when the attempt is referenced twice?
-		// Then one is not-containment reference
-		attempts.add(attempt);
-		
-		EObject parent = attempt.eContainer();
-		if (parent != null && parent instanceof ProofElem) {
-			collectParents((ProofElem) parent, attempts);
+		private ProofParallel createParallel(Project proofProject, ProofElem parent) {
+			
+			ProofParallel parallel = ProofProcessFactory.eINSTANCE.createProofParallel();
+			ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
+			parallel.setInfo(info);
+			
+			info.setNarrative("Parallel attempts");
+			info.setIntent(ProofProcessUtil.findCreateIntent(proofProject, "Parallel"));
+			
+			// FIXME add to root?
+			addToGroup(parent, parallel);
+			return parallel;
 		}
 	}
 	
@@ -911,22 +619,6 @@ public class SnapshotTracker {
 			this.sectInfo = sectInfo;
 			this.entry = entry;
 			this.entryProof = entryProof;
-		}
-		
-	}
-	
-	private static class ProofElemMatch {
-		
-		private final Attempt rootGroup;
-		private final List<ProofEntry> allEntries;
-		private final ProofEntry attempt;
-		
-		public ProofElemMatch(Attempt rootGroup, List<ProofEntry> allEntries,
-				ProofEntry matchedAttempt) {
-			super();
-			this.rootGroup = rootGroup;
-			this.allEntries = allEntries;
-			this.attempt = matchedAttempt;
 		}
 		
 	}
