@@ -128,10 +128,14 @@ public class TermParser {
 						if (isaTerm.getName() == null) {
 							isaTerm.setName(content);
 						} else {
-							System.out.println("Term name already set. Text: " + content + ";\nTerm: " + isaTerm);
+							// usually happens for CONST entities, they have a fully-qualified name
+							// and a "display" text inside
+//							System.out.println("Term name already set. Text: " + content + ";\nTerm: " + isaTerm);
 						}
 					} else {
-						System.out.println("Text element inside a non-term. Text: " + content + ";\nTerm: " + top);
+						// usually happens for CompositeTerms, when parentheses are used, 
+						// e.g. composite would have ["(", IsaTerm, ")"]. 
+//						System.out.println("Text element inside a non-term. Text: " + content + ";\nTerm: " + top);
 					}
 					
 				} else if (e instanceof Elem) {
