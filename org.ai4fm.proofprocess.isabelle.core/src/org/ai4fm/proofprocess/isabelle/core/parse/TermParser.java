@@ -160,16 +160,6 @@ public class TermParser {
 			            termStack.push(term);
 			            parse(elem.body());
 						termStack.pop();
-
-						// sometimes the name is not specified, and the text
-						// contents are used as the name
-						if (term instanceof IsaTerm) {
-							IsaTerm isaTerm = (IsaTerm) term;
-							if (isaTerm.getName() == null) {
-								// copy the display to the name
-								isaTerm.setName(isaTerm.getDisplay());
-							}
-						}
 					}
 					
 				} else {
