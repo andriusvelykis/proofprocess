@@ -6,6 +6,7 @@ import isabelle.Text.Range;
 import isabelle.scala.DocumentRef;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -72,7 +73,7 @@ public class ProofAnalyzer {
 		analyseEntry(proofProject, proofState, fileVersion);
 		
 		// FIXME retrieve proof entries from the analysis
-		Map<State, ProofEntry> proofEntries = null;
+		Map<State, ProofEntry> proofEntries = new HashMap<State, ProofEntry>();
 		logActivity(project, proofState, changedCommands, proofEntries, monitor);
 
 		return Status.OK_STATUS;
