@@ -13,12 +13,15 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ai4fm.filehistory.FileVersion;
+import org.ai4fm.proofprocess.Attempt;
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Loc;
 import org.ai4fm.proofprocess.Proof;
+import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
+import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
 import org.ai4fm.proofprocess.Property;
 import org.ai4fm.proofprocess.Term;
@@ -106,6 +109,11 @@ public class ProofAnalyzer {
 		// TODO extract proof label
 		Proof proof = proofMatcher.findCreateProof(proofProject, null, declGoals);
 		
+		// wrap all
+		
+		Attempt attempt = createAttempt(ppState);
+		proof.getAttempts().add(attempt);
+		
 		// TODO save the proofProject
 	}
 	
@@ -189,6 +197,31 @@ public class ProofAnalyzer {
 		Range cmdRange = commandState.command().range();
 		int length = cmdRange.stop() - cmdRange.start();
 		return ProofProcessUtil.createTextLoc(fileVersion, cmdRange.start(), length);
+	}
+	
+	private Attempt createAttempt(List<? extends ProofElem> proofState) {
+		Attempt attempt = ProofProcessFactory.eINSTANCE.createAttempt();
+		
+		if (!proofState.isEmpty()) {
+			
+			ProofElem rootElem;
+			if (proofState.size() > 1) {
+				// wrap the proof state into a sequential group
+				ProofSeq seq = ProofProcessFactory.eINSTANCE.createProofSeq();
+				seq.getEntries().addAll(proofState);
+				
+				ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
+				seq.setInfo(info);
+				
+				rootElem = seq;
+			} else {
+				rootElem = proofState.get(0);
+			}
+			
+			attempt.setProof(rootElem);
+		}
+		
+		return attempt;
 	}
 	
 	
