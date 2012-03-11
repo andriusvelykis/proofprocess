@@ -12,6 +12,7 @@
     <eLiterals name="VAR" value="2"/>
     <eLiterals name="FIXED" value="3"/>
     <eLiterals name="FREE" value="4"/>
+    <eLiterals name="NUMERAL" value="5"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IsaTerm" eSuperTypes="#//DisplayTerm">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" lowerBound="1" eType="#//TermKind"/>

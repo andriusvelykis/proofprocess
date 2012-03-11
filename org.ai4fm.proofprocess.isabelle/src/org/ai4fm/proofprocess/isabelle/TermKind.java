@@ -66,7 +66,15 @@ public enum TermKind implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	FREE(4, "FREE", "FREE");
+	FREE(4, "FREE", "FREE"), /**
+	 * The '<em><b>NUMERAL</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #NUMERAL_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	NUMERAL(5, "NUMERAL", "NUMERAL");
 
 	/**
 	 * The '<em><b>CONST</b></em>' literal value.
@@ -144,6 +152,21 @@ public enum TermKind implements Enumerator {
 	public static final int FREE_VALUE = 4;
 
 	/**
+	 * The '<em><b>NUMERAL</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>NUMERAL</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #NUMERAL
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int NUMERAL_VALUE = 5;
+
+	/**
 	 * An array of all the '<em><b>Term Kind</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -156,6 +179,7 @@ public enum TermKind implements Enumerator {
 			VAR,
 			FIXED,
 			FREE,
+			NUMERAL,
 		};
 
 	/**
@@ -211,6 +235,7 @@ public enum TermKind implements Enumerator {
 			case VAR_VALUE: return VAR;
 			case FIXED_VALUE: return FIXED;
 			case FREE_VALUE: return FREE;
+			case NUMERAL_VALUE: return NUMERAL;
 		}
 		return null;
 	}
