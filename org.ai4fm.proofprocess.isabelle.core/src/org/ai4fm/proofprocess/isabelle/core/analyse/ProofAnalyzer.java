@@ -105,7 +105,6 @@ public class ProofAnalyzer {
 		ProofMatcher proofMatcher = new ProofMatcher();
 		// TODO extract proof label
 		Proof proof = proofMatcher.findCreateProof(proofProject, null, declGoals);
-		System.out.println("Proof found: " + proof);
 		
 		// TODO save the proofProject
 	}
@@ -163,7 +162,6 @@ public class ProofAnalyzer {
 		
 		for (Tree result : JavaConversions.asJavaIterable(commandState.results().values())) {
 			List<Term> parsed = TermParser.parseGoals(result);
-			System.out.println("Parsed: " + parsed);
 			parsedTerms.addAll(parsed);
 		}
 		
