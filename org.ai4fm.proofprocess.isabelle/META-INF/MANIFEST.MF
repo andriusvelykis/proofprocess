@@ -11,5 +11,5 @@ Export-Package: org.ai4fm.proofprocess.isabelle,
  org.ai4fm.proofprocess.isabelle.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.ai4fm.proofprocess;bundle-version="1.0.0"
+ org.ai4fm.proofprocess;bundle-version="1.0.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy
