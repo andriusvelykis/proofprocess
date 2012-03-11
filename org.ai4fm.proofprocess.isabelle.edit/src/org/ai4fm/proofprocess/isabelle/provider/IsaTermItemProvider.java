@@ -126,14 +126,23 @@ public class IsaTermItemProvider
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((IsaTerm)object).getName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_IsaTerm_type") :
-			getString("_UI_IsaTerm_type") + " " + label;
+		
+		IsaTerm term = (IsaTerm) object;
+		
+		String display = term.getDisplay();
+		String name = term.getName();
+		
+		String nameStr = "";
+		if (name != null && !name.equals(display)) {
+			// display name if it is different from display
+			nameStr = " (" + name + ")";
+		}
+		
+		return String.valueOf(term.getKind()) + ": " + term.getDisplay() + nameStr;
 	}
 
 	/**
