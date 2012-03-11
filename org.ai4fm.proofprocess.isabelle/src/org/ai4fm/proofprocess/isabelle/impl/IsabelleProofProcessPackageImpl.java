@@ -331,6 +331,8 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		addEEnumLiteral(termKindEEnum, TermKind.CONST);
 		addEEnumLiteral(termKindEEnum, TermKind.BOUND);
 		addEEnumLiteral(termKindEEnum, TermKind.VAR);
+		addEEnumLiteral(termKindEEnum, TermKind.FIXED);
+		addEEnumLiteral(termKindEEnum, TermKind.FREE);
 
 		// Create resource
 		createResource(eNS_URI);

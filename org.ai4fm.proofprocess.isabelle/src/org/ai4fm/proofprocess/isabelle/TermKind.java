@@ -40,7 +40,7 @@ public enum TermKind implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	BOUND(1, "BOUND", ""),
+	BOUND(1, "BOUND", "BOUND"),
 
 	/**
 	 * The '<em><b>VAR</b></em>' literal object.
@@ -50,7 +50,23 @@ public enum TermKind implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	VAR(2, "VAR", "VAR");
+	VAR(2, "VAR", "VAR"), /**
+	 * The '<em><b>FIXED</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #FIXED_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	FIXED(3, "FIXED", "FIXED"), /**
+	 * The '<em><b>FREE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #FREE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	FREE(4, "FREE", "FREE");
 
 	/**
 	 * The '<em><b>CONST</b></em>' literal value.
@@ -76,7 +92,7 @@ public enum TermKind implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #BOUND
-	 * @model literal=""
+	 * @model
 	 * @generated
 	 * @ordered
 	 */
@@ -98,6 +114,36 @@ public enum TermKind implements Enumerator {
 	public static final int VAR_VALUE = 2;
 
 	/**
+	 * The '<em><b>FIXED</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>FIXED</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #FIXED
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FIXED_VALUE = 3;
+
+	/**
+	 * The '<em><b>FREE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>FREE</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #FREE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FREE_VALUE = 4;
+
+	/**
 	 * An array of all the '<em><b>Term Kind</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -108,6 +154,8 @@ public enum TermKind implements Enumerator {
 			CONST,
 			BOUND,
 			VAR,
+			FIXED,
+			FREE,
 		};
 
 	/**
@@ -161,6 +209,8 @@ public enum TermKind implements Enumerator {
 			case CONST_VALUE: return CONST;
 			case BOUND_VALUE: return BOUND;
 			case VAR_VALUE: return VAR;
+			case FIXED_VALUE: return FIXED;
+			case FREE_VALUE: return FREE;
 		}
 		return null;
 	}
