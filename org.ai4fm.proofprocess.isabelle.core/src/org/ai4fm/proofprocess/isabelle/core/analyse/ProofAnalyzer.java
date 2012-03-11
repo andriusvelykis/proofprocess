@@ -6,7 +6,6 @@ import isabelle.Text.Range;
 import isabelle.scala.DocumentRef;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,8 +25,6 @@ import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
 import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.project.Project;
-import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
-import org.ai4fm.proofprocess.project.TextLoc;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
 import org.ai4fm.proofprocess.project.core.ProofManager;
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
