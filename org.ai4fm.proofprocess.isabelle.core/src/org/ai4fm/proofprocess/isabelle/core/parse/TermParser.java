@@ -257,6 +257,10 @@ public class TermParser {
 				return TermKind.FREE;
 			}
 			
+			if ("numeral".equals(markup)) {
+				return TermKind.NUMERAL;
+			}
+			
 			return null;
 		}
 		
