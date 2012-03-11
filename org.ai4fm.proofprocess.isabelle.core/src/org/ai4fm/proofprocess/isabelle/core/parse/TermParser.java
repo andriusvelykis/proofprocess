@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.parse;
 
 import isabelle.Markup;
+import isabelle.Pretty;
 import isabelle.XML.Elem;
 import isabelle.XML.Text;
 import isabelle.XML.Tree;
@@ -137,6 +138,9 @@ public class TermParser {
 						
 						DisplayTerm term = parseElem(markup);
 						
+						// render the element for display
+						term.setDisplay(renderDisplay(elem));
+						
 						addToParent(term, source);
 						
 			            // push the term onto stack, and continue in its body
@@ -247,6 +251,10 @@ public class TermParser {
 			}
 
 			return propsMap;
+		}
+		
+		private String renderDisplay(Elem elem) {
+			return Pretty.str_of(ScalaCollections.<Tree>singletonList(elem));
 		}
 	}
 }
