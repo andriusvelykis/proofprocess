@@ -142,9 +142,10 @@ public class TermParser {
 					Elem elem = (Elem) e;
 					Markup markup = elem.markup();
 					
-					if (Markup.BLOCK().equals(markup.name()) && elem.body().size() == 1) {
+					if (Markup.BLOCK().equals(markup.name()) && getElemCount(elem.body()) == 1) {
 			            // single element inside a block - continue on the inner element,
-			            // skipping the outer BLOCK
+			            // skipping the outer BLOCK. 
+						// Note that we ignore the inner Texts in this check.
 						parse(elem.body());
 					} else if (ignoreElem(markup.name())){
 						// Some elements are in result XML for pretty-printing
@@ -170,6 +171,18 @@ public class TermParser {
 					throw new IllegalStateException("Unsupported XML element: " + e);
 				}
 			}
+		}
+		
+		private int getElemCount(scala.collection.immutable.List<Tree> body) {
+			int count = 0;
+			
+			for (Iterator<Tree> it = body.iterator(); it.hasNext();) {
+				if (it.next() instanceof Elem) {
+					count++;
+				}
+			}
+			
+			return count;
 		}
 		
 		private boolean ignoreElem(String markup) {
