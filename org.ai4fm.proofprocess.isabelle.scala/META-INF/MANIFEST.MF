@@ -9,5 +9,6 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: org.scala-ide.scala.library;bundle-version="2.9.1",
  isabelle.pure;bundle-version="2011.1.1",
  org.ai4fm.proofprocess.isabelle;bundle-version="1.0.0"
-Bundle-ClassPath: .
+Bundle-ClassPath: pp.isabelle.scala.jar,
+ .
 Export-Package: org.ai4fm.proofhistory.isabelle.scala

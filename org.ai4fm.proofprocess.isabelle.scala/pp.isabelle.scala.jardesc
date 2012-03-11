@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="org.ai4fm.proofprocess.isabelle.scala/pp.isabelle.scala.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/org.ai4fm.proofprocess.isabelle.scala/pp.isabelle.scala.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" manifestLocation="/org.ai4fm.proofprocess.isabelle.scala/META-INF/MANIFEST.MF" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="false" exportJavaFiles="false" exportOutputFolder="true">
+        <folder path="/org.ai4fm.proofprocess.isabelle.scala/META-INF"/>
+        <javaElement handleIdentifier="=org.ai4fm.proofprocess.isabelle.scala/src"/>
+    </selectedElements>
+</jardesc>
