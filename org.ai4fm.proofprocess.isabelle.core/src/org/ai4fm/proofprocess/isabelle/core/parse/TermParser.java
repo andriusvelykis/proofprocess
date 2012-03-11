@@ -119,8 +119,21 @@ public class TermParser {
 				Tree e = it.next();
 				
 				if (e instanceof Text) {
-					termStack.peek().setDisplay(((Text) e).content());
-					continue;
+					
+					String content = ((Text) e).content();
+					
+					DisplayTerm top = termStack.peek();
+					if (top instanceof IsaTerm) {
+						IsaTerm isaTerm = (IsaTerm) top;
+						if (isaTerm.getName() == null) {
+							isaTerm.setName(content);
+						} else {
+							System.out.println("Term name already set. Text: " + content + ";\nTerm: " + isaTerm);
+						}
+					} else {
+						System.out.println("Text element inside a non-term. Text: " + content + ";\nTerm: " + top);
+					}
+					
 				} else if (e instanceof Elem) {
 					Elem elem = (Elem) e;
 					Markup markup = elem.markup();
