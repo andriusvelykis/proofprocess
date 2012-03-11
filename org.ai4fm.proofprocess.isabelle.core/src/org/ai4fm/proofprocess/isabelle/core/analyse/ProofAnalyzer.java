@@ -3,6 +3,7 @@ package org.ai4fm.proofprocess.isabelle.core.analyse;
 import isabelle.Command;
 import isabelle.Command.State;
 import isabelle.Text.Range;
+import isabelle.XML.Tree;
 import isabelle.scala.DocumentRef;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ai4fm.filehistory.FileVersion;
+import org.ai4fm.proofhistory.isabelle.scala.TermParser;
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Loc;
 import org.ai4fm.proofprocess.ProofEntry;
@@ -38,6 +40,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+
+import scala.collection.JavaConversions;
 
 /**
  * 
@@ -122,9 +126,11 @@ public class ProofAnalyzer {
 		step.setTrace(createProofStepTrace(commandState));
 		step.setSource(createProofStepLoc(fileVersion, commandState));
 		
-		// TODO set in/out goals
+		// TODO copy in goals from the previous
 		List<Term> inGoals = step.getInGoals();
+		
 		List<Term> outGoals = step.getOutGoals();
+		outGoals.addAll(parseGoals(commandState));
 		
 		// create tactic application attempt
 		ProofEntry entry = ProofProcessFactory.eINSTANCE.createProofEntry();
@@ -132,6 +138,19 @@ public class ProofAnalyzer {
 		entry.setProofStep(step);
 		
 		return entry;
+	}
+	
+	private List<Term> parseGoals(State commandState) {
+		
+		List<Term> parsedTerms = new ArrayList<Term>();
+		
+		for (Tree result : JavaConversions.asJavaIterable(commandState.results().values())) {
+			Term parsed = TermParser.parse(result);
+			System.out.println("Parsed: " + parsed);
+			parsedTerms.add(parsed);
+		}
+		
+		return parsedTerms;
 	}
 	
 	private Trace createProofStepTrace(State commandState) {

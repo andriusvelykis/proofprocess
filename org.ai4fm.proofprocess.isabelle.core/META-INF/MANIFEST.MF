@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ai4fm.filehistory.core;bundle-version="1.0.0",
  org.ai4fm.proofprocess.project.core;bundle-version="1.0.0",
  org.ai4fm.proofprocess;bundle-version="1.0.0",
- org.ai4fm.proofprocess.isabelle;bundle-version="1.0.0"
+ org.ai4fm.proofprocess.isabelle;bundle-version="1.0.0",
+ org.ai4fm.proofhistory.isabelle.scala;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/tracker.xml
