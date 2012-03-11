@@ -145,9 +145,9 @@ public class ProofAnalyzer {
 		List<Term> parsedTerms = new ArrayList<Term>();
 		
 		for (Tree result : JavaConversions.asJavaIterable(commandState.results().values())) {
-			Term parsed = TermParser.parse(result);
+			List<Term> parsed = TermParser.parseGoals(result);
 			System.out.println("Parsed: " + parsed);
-			parsedTerms.add(parsed);
+			parsedTerms.addAll(parsed);
 		}
 		
 		return parsedTerms;
