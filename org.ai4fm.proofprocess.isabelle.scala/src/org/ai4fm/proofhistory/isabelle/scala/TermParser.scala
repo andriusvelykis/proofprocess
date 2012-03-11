@@ -63,10 +63,7 @@ object TermParser {
           case XML.Text(s) => {
             termStack.top.setDisplay(s)
           }
-          case XML.Elem(Markup(Markup.BLOCK, _), body) if (body match {
-            case e :: Nil => true
-            case _ => false
-          }) => {
+          case XML.Elem(Markup(Markup.BLOCK, _), body) if (body.size == 1) => {
             // single element inside a block - continue on the inner element,
             // skipping the outer BLOCK
             parse(body)
