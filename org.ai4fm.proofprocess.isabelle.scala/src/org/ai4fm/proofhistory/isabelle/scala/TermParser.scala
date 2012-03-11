@@ -68,7 +68,9 @@ object TermParser {
             // skipping the outer BLOCK
             parse(body)
           }
-          case XML.Elem(Markup(markup, _), _) if (IGNORE_MARKUPS.contains(markup)) => // ignore
+          // Some elements are in result XML for pretty-printing only, and should 
+          // be ignored in parsing altogether, e.g. <break>
+          case XML.Elem(Markup(markup, _), _) if ignoreElem(markup) => // ignore
           case XML.Elem(markup, body) => {
             val term = parseElem(markup)
 
@@ -91,6 +93,10 @@ object TermParser {
             }
           }
         })
+      }
+      
+      def ignoreElem(markup: String) = {
+        IGNORE_MARKUPS.contains(markup)
       }
 
       def addToParent(term: DisplayTerm) = {
