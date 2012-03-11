@@ -58,6 +58,7 @@ import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
 import org.ai4fm.proofprocess.project.core.ProofManager;
+import org.ai4fm.proofprocess.project.core.ProofMatcher;
 import org.ai4fm.proofprocess.project.core.util.EmfUtil;
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
@@ -812,27 +813,10 @@ public class SnapshotTracker {
 		
 		String goalName = proofEntry.getData().getGoalName();
 		
-		List<Proof> proofs = project.getProofs();
-		// go backwards and use the last one
-		for (int index = proofs.size() - 1; index >= 0; index--) {
-			Proof proof = proofs.get(index);
-			if (isTargetProof(goalName, proof)) {
-				// FIXME also check the goal - may be the same name, different goal
-				// found proof
-				return proof;
-			}
-		}
-		
-		// create new
-		Proof targetProof = ProofProcessFactory.eINSTANCE.createProof();
-		targetProof.setLabel(goalName);
-		proofs.add(targetProof);
-		
-		return targetProof;
-	}
-
-	private boolean isTargetProof(String goalName, Proof attemptSet) {
-		return goalName.equals(attemptSet.getLabel());
+		ProofMatcher proofMatcher = new ProofMatcher();
+		// TODO add goal matching
+		return proofMatcher.findCreateProof(project, goalName,
+				Collections.<org.ai4fm.proofprocess.Term> emptyList());
 	}
 	
 	private List<ISnapshotEntry> getProofEntries(ISnapshotEntry endingWithEntry) {
