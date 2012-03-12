@@ -23,6 +23,7 @@ import isabelle.Command;
 import isabelle.Command.State;
 import isabelle.Session;
 import isabelle.Session.Commands_Changed;
+import isabelle.eclipse.core.util.SafeSessionActor;
 import isabelle.eclipse.util.SessionEventSupport;
 import isabelle.scala.ISessionCommandsListener;
 import isabelle.scala.SessionActor;
@@ -59,7 +60,7 @@ public class SessionTracker {
 			
 			@Override
 			protected SessionActor createSessionActor(Session session) {
-				return new SessionActor().commandsChanged(new ISessionCommandsListener() {
+				return new SafeSessionActor().commandsChanged(new ISessionCommandsListener() {
 					@Override
 					public void commandsChanged(Commands_Changed changed) {
 						addPendingAnalysis(JavaConversions.setAsJavaSet(changed.commands()));
