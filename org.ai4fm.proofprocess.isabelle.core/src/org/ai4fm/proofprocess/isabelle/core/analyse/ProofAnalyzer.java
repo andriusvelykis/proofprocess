@@ -108,11 +108,9 @@ public class ProofAnalyzer {
 		ProofMatcher proofMatcher = new ProofMatcher();
 		// TODO extract proof label
 		Proof proof = proofMatcher.findCreateProof(proofProject, null, declGoals);
-		
-		// wrap all
-		
-		Attempt attempt = createAttempt(ppState);
-		proof.getAttempts().add(attempt);
+
+		// TODO export State-Entry matchings for Activities
+		proofMatcher.findCreateProofTree(proofProject, proof, ppState);
 		
 		// TODO save the proofProject
 	}
