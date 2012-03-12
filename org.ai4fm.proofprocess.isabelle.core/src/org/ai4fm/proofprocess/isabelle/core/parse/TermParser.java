@@ -281,8 +281,27 @@ public class TermParser {
 			return propsMap;
 		}
 		
-		private String renderDisplay(Elem elem) {
-			return Pretty.str_of(ScalaCollections.<Tree>singletonList(elem));
+	}
+	
+	private static String renderDisplay(Tree elem) {
+		return Pretty.str_of(ScalaCollections.singletonList(elem));
+	}
+	
+	public static boolean isError(Tree elem) {
+		return (elem instanceof Elem) && Markup.ERROR().equals(((Elem) elem).markup().name());
+	}
+	
+	public static boolean isNoSubgoals(Tree elem) {
+		if (isError(elem)) {
+			return false;
 		}
+		
+		// TODO fix a quick workaround
+		String text = renderDisplay(elem);
+		return text.contains("No subgoals!");
+	}
+	
+	public static int getGoalCount(Tree source) {
+		return getElems(ScalaCollections.singletonList(source), Markup.SUBGOAL()).size();
 	}
 }
