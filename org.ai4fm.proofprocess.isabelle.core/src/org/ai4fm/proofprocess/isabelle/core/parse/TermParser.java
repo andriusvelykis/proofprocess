@@ -261,6 +261,10 @@ public class TermParser {
 				return TermKind.NUMERAL;
 			}
 			
+			if (Markup.SKOLEM().equals(markup)) {
+				return TermKind.SKOLEM;
+			}
+			
 			return null;
 		}
 		

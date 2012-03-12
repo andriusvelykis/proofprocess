@@ -74,7 +74,15 @@ public enum TermKind implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	NUMERAL(5, "NUMERAL", "NUMERAL");
+	NUMERAL(5, "NUMERAL", "NUMERAL"), /**
+	 * The '<em><b>SKOLEM</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #SKOLEM_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	SKOLEM(6, "SKOLEM", "SKOLEM");
 
 	/**
 	 * The '<em><b>CONST</b></em>' literal value.
@@ -167,6 +175,21 @@ public enum TermKind implements Enumerator {
 	public static final int NUMERAL_VALUE = 5;
 
 	/**
+	 * The '<em><b>SKOLEM</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>SKOLEM</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #SKOLEM
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int SKOLEM_VALUE = 6;
+
+	/**
 	 * An array of all the '<em><b>Term Kind</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -180,6 +203,7 @@ public enum TermKind implements Enumerator {
 			FIXED,
 			FREE,
 			NUMERAL,
+			SKOLEM,
 		};
 
 	/**
@@ -236,6 +260,7 @@ public enum TermKind implements Enumerator {
 			case FIXED_VALUE: return FIXED;
 			case FREE_VALUE: return FREE;
 			case NUMERAL_VALUE: return NUMERAL;
+			case SKOLEM_VALUE: return SKOLEM;
 		}
 		return null;
 	}
