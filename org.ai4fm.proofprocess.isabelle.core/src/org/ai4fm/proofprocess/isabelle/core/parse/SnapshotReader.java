@@ -53,7 +53,7 @@ public class SnapshotReader {
 	 */
 	private static Set<String> PROOF_START_CMDS = Collections.unmodifiableSet(
 			new HashSet<String>(Arrays.asList(
-			"lemma", "function", "primrec", "definition")));
+			"lemma", "theorem", "function", "primrec", "definition")));
 	
 	/**
 	 * Retrieves current snapshots for the given commands, and reads the proof
