@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
 import org.eclipse.core.runtime.Assert;
 
 import scala.collection.Iterator;
@@ -92,13 +91,18 @@ public class SnapshotReader {
 		List<Command> revCmds = new ArrayList<Command>(proofCmds);
 		Collections.sort(revCmds, new CommandIdComparator(false));
 		
-		for (Command command : proofCmds) {
-			collectProofs(command);
+		List<Command> orderedCmds = new ArrayList<Command>();
+		
+		for (Command command : revCmds) {
+			boolean collected = collectProofs(command);
+			if (collected) {
+				// if the command is no longer in the snapshot, just ignore it altogether
+				orderedCmds.add(command);
+			}
 		}
 
 		// get all collected proofs
-		// try to preserve original specification order, so reverse the revCmds
-		List<Command> orderedCmds = new ArrayList<Command>(revCmds);
+		// try to preserve original specification order, so reverse the collected commands
 		Collections.reverse(orderedCmds);
 		
 		List<List<State>> proofStates = new ArrayList<List<State>>();
@@ -184,20 +188,26 @@ public class SnapshotReader {
 		return filtered;
 	}
 	
-	private void collectProofs(Command lastCommand) {
+	private boolean collectProofs(Command lastCommand) {
 		
 		if (commandProofs.containsKey(lastCommand)) {
 			// already collected
-			return;
+			return false;
 		}
 		
 		Snapshot snapshot = snapshots.get(new DocumentRef(lastCommand.node_name()));
 		Linear_Set<Command> nodeCommands = snapshot.node().commands();
 		
 		if (!nodeCommands.contains(lastCommand)) {
-			IsabelleProofPlugin.log("Command not available in the node: " + lastCommand.toString()
-					+ ", " + String.valueOf(lastCommand.source()) + ":" + String.valueOf(lastCommand.range()), null);
-			return;
+			/*
+			 * Happens fairly often if the text is being edited live.
+			 * 
+			 * This basically means that the snapshot has changed even more since the changed
+			 * command - the command belongs to an old version. Return false to ignore it.
+			 */
+//			IsabelleProofPlugin.log("Command not available in the node: " + lastCommand.toString()
+//					+ ", " + String.valueOf(lastCommand.source()) + ":" + String.valueOf(lastCommand.range()), null);
+			return false;
 		}
 
 		List<State> proofState = new LinkedList<State>();
@@ -223,6 +233,8 @@ public class SnapshotReader {
 				}
 			}
 		}
+		
+		return true;
 	}
 	
 
