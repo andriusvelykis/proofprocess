@@ -580,6 +580,8 @@ public class SnapshotTracker {
 
 		public AnalysisJob() {
 			super("Analysing proof process");
+			// lowest priority
+			setPriority(DECORATE);
 		}
 
 		@Override
