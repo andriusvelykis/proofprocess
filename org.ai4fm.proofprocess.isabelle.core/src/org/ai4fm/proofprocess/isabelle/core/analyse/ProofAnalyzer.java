@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.analyse;
 
 import isabelle.Command;
+import isabelle.Document;
 import isabelle.Command.State;
 import isabelle.Text.Range;
 import isabelle.XML.Tree;
@@ -8,6 +9,7 @@ import isabelle.scala.DocumentRef;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +31,7 @@ import org.ai4fm.proofprocess.Trace;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
+import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader;
 import org.ai4fm.proofprocess.isabelle.core.parse.TermParser;
 import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.project.Project;
@@ -54,7 +57,41 @@ import scala.collection.JavaConversions;
  */
 public class ProofAnalyzer {
 
-	public IStatus analyze(List<State> proofState, Set<Command> changedCommands,
+	public IStatus analyze(Set<Command> changedCommands, Document.State docState, 
+			IProgressMonitor monitor) throws CoreException {
+	
+		SnapshotReader reader = new SnapshotReader(changedCommands, docState);
+		List<List<State>> proofStates = reader.readProofStates();
+		if (proofStates.isEmpty()) {
+			// nothing found to analyse
+			return Status.OK_STATUS;
+		}
+		
+		for (List<State> proofState : proofStates) {
+			String documentText = reader.getDocumentText(proofState);
+			Set<Command> proofCommands = filterProofCommands(proofState, changedCommands);
+			
+			// TODO what if analyzer returns CANCEL_STATUS?
+			analyze(proofState, proofCommands, documentText, monitor);
+		}
+		
+		return Status.OK_STATUS;
+	}
+	
+	private Set<Command> filterProofCommands(List<State> proofState, Set<Command> filter) {
+		
+		Set<Command> proofCmds = new HashSet<Command>();
+		for (State cmdState : proofState) {
+			proofCmds.add(cmdState.command());
+		}
+		
+		// keep just the commands in the filter
+		proofCmds.retainAll(filter);
+		
+		return proofCmds;
+	}
+	
+	private IStatus analyze(List<State> proofState, Set<Command> changedCommands,
 			String documentText, IProgressMonitor monitor) throws CoreException {
 
 		Assert.isLegal(!proofState.isEmpty());

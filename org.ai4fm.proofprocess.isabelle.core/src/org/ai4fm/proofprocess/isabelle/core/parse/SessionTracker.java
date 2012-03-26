@@ -1,8 +1,6 @@
 package org.ai4fm.proofprocess.isabelle.core.parse;
 
 import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -20,7 +18,6 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import scala.collection.JavaConversions;
 
 import isabelle.Command;
-import isabelle.Command.State;
 import isabelle.Document;
 import isabelle.Session;
 import isabelle.Session.Commands_Changed;
@@ -91,19 +88,6 @@ public class SessionTracker {
 		analysisJob.schedule();
 	}
 	
-	private Set<Command> filterProofCommands(List<State> proofState, Set<Command> filter) {
-		
-		Set<Command> proofCmds = new HashSet<Command>();
-		for (State cmdState : proofState) {
-			proofCmds.add(cmdState.command());
-		}
-		
-		// keep just the commands in the filter
-		proofCmds.retainAll(filter);
-		
-		return proofCmds;
-	}
-	
 	private static class CommandAnalysisEvent {
 
 		private final Set<Command> changedCommands;
@@ -149,25 +133,9 @@ public class SessionTracker {
 	
 	private IStatus analyze(CommandAnalysisEvent event, IProgressMonitor monitor) throws CoreException {
 		
-		SnapshotReader reader = new SnapshotReader(event.changedCommands, event.docState);
-		List<List<State>> proofStates = reader.readProofStates();
-		if (proofStates.isEmpty()) {
-			// nothing found to analyse
-			return Status.OK_STATUS;
-		}
-		
-		for (List<State> proofState : proofStates) {
-			String documentText = reader.getDocumentText(proofState);
-			Set<Command> proofCommands = filterProofCommands(proofState, event.changedCommands);
-			
-			// delegate to the proof analyzer
-			ProofAnalyzer proofAnalyzer = new ProofAnalyzer();
-			// TODO what if analyzer returns CANCEL_STATUS?
-			proofAnalyzer.analyze(proofState, proofCommands, documentText, monitor);
-		}
-		
-		return Status.OK_STATUS;
+		// delegate to the proof analyzer
+		ProofAnalyzer proofAnalyzer = new ProofAnalyzer();
+		return proofAnalyzer.analyze(event.changedCommands, event.docState, monitor);
 	}
-	
 	
 }
