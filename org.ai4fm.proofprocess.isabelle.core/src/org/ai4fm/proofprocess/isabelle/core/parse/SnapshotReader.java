@@ -17,12 +17,11 @@ import org.eclipse.core.runtime.Assert;
 import scala.collection.Iterator;
 
 import isabelle.Command;
+import isabelle.Document;
 import isabelle.Linear_Set;
-import isabelle.Session;
 import isabelle.Text;
 import isabelle.Command.State;
 import isabelle.Document.Snapshot;
-import isabelle.eclipse.core.IsabelleCorePlugin;
 import isabelle.scala.DocumentRef;
 import isabelle.scala.ScalaCollections;
 
@@ -36,14 +35,16 @@ import isabelle.scala.ScalaCollections;
 public class SnapshotReader {
 	
 	private final Set<Command> changedCommands;
+	private final Document.State docState;
 	
 	private final Map<DocumentRef, Snapshot> snapshots = new HashMap<DocumentRef, Snapshot>();
 	private final Map<DocumentRef, String> docTexts = new HashMap<DocumentRef, String>();
 	private final Map<Command, List<State>> commandProofs = new HashMap<Command, List<State>>();
 	
-	public SnapshotReader(Set<Command> changedCommands) {
+	public SnapshotReader(Set<Command> changedCommands, Document.State docState) {
 		super();
 		this.changedCommands = new LinkedHashSet<Command>(changedCommands);
+		this.docState = docState;
 	}
 
 	/**
@@ -130,10 +131,9 @@ public class SnapshotReader {
 
 	private void collectSnapshots(Set<Command> proofCmds) {
 		Set<DocumentRef> changedDocs = getDocs(proofCmds);
-		Session session = IsabelleCorePlugin.getIsabelle().getSession();
 		
 		for (DocumentRef doc : changedDocs) {
-			Snapshot snapshot = session.snapshot(doc.getRef(), ScalaCollections.<Text.Edit>emptyList());
+			Snapshot snapshot = docState.snapshot(doc.getRef(), ScalaCollections.<Text.Edit>emptyList());
 			snapshots.put(doc, snapshot);
 			
 			String docText = toTextDocument(snapshot.node().commands());

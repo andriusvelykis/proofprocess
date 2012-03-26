@@ -21,8 +21,10 @@ import scala.collection.JavaConversions;
 
 import isabelle.Command;
 import isabelle.Command.State;
+import isabelle.Document;
 import isabelle.Session;
 import isabelle.Session.Commands_Changed;
+import isabelle.eclipse.core.IsabelleCorePlugin;
 import isabelle.eclipse.core.util.SafeSessionActor;
 import isabelle.eclipse.util.SessionEventSupport;
 import isabelle.scala.ISessionCommandsListener;
@@ -63,7 +65,7 @@ public class SessionTracker {
 				return new SafeSessionActor().commandsChanged(new ISessionCommandsListener() {
 					@Override
 					public void commandsChanged(Commands_Changed changed) {
-						addPendingAnalysis(JavaConversions.setAsJavaSet(changed.commands()));
+						addPendingAnalysis(changed);
 					}
 				});
 			}
@@ -76,20 +78,14 @@ public class SessionTracker {
 		this.sessionEvents.dispose();
 	}
 	
-	private void addPendingAnalysis(Set<Command> changedCommands) {
+	private void addPendingAnalysis(Commands_Changed changed) {
 		
-		SnapshotReader reader = new SnapshotReader(changedCommands);
-		List<List<State>> proofStates = reader.readProofStates();
-		if (proofStates.isEmpty()) {
-			// nothing found to analyse
-			return;
-		}
-		
-		for (List<State> proofState : proofStates) {
-			String documentText = reader.getDocumentText(proofState);
-			Set<Command> proofCommands = filterProofCommands(proofState, changedCommands);
-			pendingEvents.add(new CommandAnalysisEvent(proofState, proofCommands, documentText));
-		}
+		Session session = IsabelleCorePlugin.getIsabelle().getSession();
+		// Isabelle State is immutable, so just take the whole state for processing 
+		// we can analyse what is needed in a low-priority analysis thread
+		pendingEvents.add(new CommandAnalysisEvent(
+				JavaConversions.setAsJavaSet(changed.commands()),
+				session.current_state()));
 		
 		// wake up the analysis job
 		analysisJob.schedule();
@@ -110,16 +106,13 @@ public class SessionTracker {
 	
 	private static class CommandAnalysisEvent {
 
-		private final List<State> proofState;
 		private final Set<Command> changedCommands;
-		private final String documentText;
+		private final Document.State docState;
 
-		public CommandAnalysisEvent(List<State> proofState, Set<Command> changedCommands,
-				String documentText) {
+		public CommandAnalysisEvent(Set<Command> changedCommands, Document.State docState) {
 			super();
-			this.proofState = proofState;
 			this.changedCommands = changedCommands;
-			this.documentText = documentText;
+			this.docState = docState;
 		}
 	}
 	
@@ -155,9 +148,25 @@ public class SessionTracker {
 	}
 	
 	private IStatus analyze(CommandAnalysisEvent event, IProgressMonitor monitor) throws CoreException {
-		// delegate to the proof analyzer
-		ProofAnalyzer proofAnalyzer = new ProofAnalyzer();
-		return proofAnalyzer.analyze(event.proofState, event.changedCommands, event.documentText, monitor);
+		
+		SnapshotReader reader = new SnapshotReader(event.changedCommands, event.docState);
+		List<List<State>> proofStates = reader.readProofStates();
+		if (proofStates.isEmpty()) {
+			// nothing found to analyse
+			return Status.OK_STATUS;
+		}
+		
+		for (List<State> proofState : proofStates) {
+			String documentText = reader.getDocumentText(proofState);
+			Set<Command> proofCommands = filterProofCommands(proofState, event.changedCommands);
+			
+			// delegate to the proof analyzer
+			ProofAnalyzer proofAnalyzer = new ProofAnalyzer();
+			// TODO what if analyzer returns CANCEL_STATUS?
+			proofAnalyzer.analyze(proofState, proofCommands, documentText, monitor);
+		}
+		
+		return Status.OK_STATUS;
 	}
 	
 	
