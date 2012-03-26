@@ -369,19 +369,19 @@ we use a function \z{zeves\_trace}. It maps abstract \z{TRACE} references to \te
 specific data. The existence of such a function is taken as given.
 %
 \begin{axdef}
-	zeves\_trace: TRACE \pinj ZEvesTrace \\
-	zeves\_trace: TRACE \psurj ZEvesTrace
+	zeves\_trace: ZEvesTrace \inj TRACE
 \end{axdef}
 %
-Note that the function is both injective and surjective, but partial. This means that all
+% TODO update the text
+Note that the function is injective from \z{ZEvesTrace}. This means that all
 specific \z{ZEvesTrace} have only one abstract \z{TRACE} reference mapping to them. However,
 there are \z{TRACE}s, which do not map to \z{ZEvesTrace}---they would map to other theorem
-prover data instead.
+prover data instead. When using this map to query for \z{ZEvesTrace}, we invert the function.
 
 \anote{\textit{Leo's, review:} To make the $ProofStep$ above ZEves specific, ex:
 %
 \[
-	ProofStep \implies zeves\_trace~(trace)
+	ProofStep \implies zeves\_trace\inv~(trace)
 \]
 %
 we get the \textit{Z/Eves'} specific proof trace. Similarly approach would be taken for 
