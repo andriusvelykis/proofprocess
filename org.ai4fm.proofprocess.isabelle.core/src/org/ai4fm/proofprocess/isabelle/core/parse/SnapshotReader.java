@@ -19,6 +19,9 @@ import scala.collection.Iterator;
 
 import isabelle.Command;
 import isabelle.Document;
+import isabelle.Isar_Document$;
+import isabelle.Isar_Document$Finished$;
+import isabelle.Isar_Document.Status;
 import isabelle.Linear_Set;
 import isabelle.Text;
 import isabelle.Command.State;
@@ -36,7 +39,9 @@ import isabelle.scala.ScalaCollections;
  */
 public class SnapshotReader {
 	
-	private static Document$Node$ DOCUMENT_NODE = Document$Node$.MODULE$;
+	private static final Document$Node$ DOCUMENT_NODE = Document$Node$.MODULE$;
+	private static final Isar_Document$ ISAR_DOCUMENT = Isar_Document$.MODULE$;
+	private static final Isar_Document$Finished$ FINISHED = Isar_Document$Finished$.MODULE$;
 	
 	private final Set<Command> changedCommands;
 	private final Document.State docState;
@@ -74,8 +79,8 @@ public class SnapshotReader {
 	 */
 	public List<List<State>> readProofStates() {
 		
-		// filter the proof process commands, and 
-		Set<Command> proofCmds = getProofProcessCommands(changedCommands);
+		// filter the proof process commands to valid one 
+		Set<Command> proofCmds = filterValidProofCommands(changedCommands);
 		if (proofCmds.isEmpty()) {
 			return Collections.emptyList();
 		}
@@ -114,7 +119,12 @@ public class SnapshotReader {
 		List<List<State>> proofStates = new ArrayList<List<State>>();
 		for (Command command : orderedCmds) {
 			List<State> proofState = commandProofs.get(command);
-			Assert.isTrue(!proofState.isEmpty());
+			if (proofState == null || proofState.isEmpty()) {
+				// invalid command - no proof state captured for it
+				// this can be because the proof command is ignored, or it is outdated
+				continue;
+			}
+			
 			if (!proofStates.contains(proofState)) {
 				// only add unique ones
 				proofStates.add(proofState);
@@ -191,15 +201,12 @@ public class SnapshotReader {
 		return changedDocs;
 	}
 	
-	private Set<Command> getProofProcessCommands(Set<Command> commands) {
+	private Set<Command> filterValidProofCommands(Set<Command> commands) {
 		
-		// create an ordered set, which will order commands according to their index
-		// since the IDs are decreasing, we will get back-to-front ordering
-		// which is good for collecting proofs
 		Set<Command> filtered = new HashSet<Command>();
 		
 		for (Command cmd : commands) {
-			if (isProofProcessCommand(cmd)) {
+			if (isValidProofCommand(cmd)) {
 				filtered.add(cmd);
 			}
 		}
@@ -229,36 +236,104 @@ public class SnapshotReader {
 			return false;
 		}
 
-		List<State> proofState = new LinkedList<State>();
+		List<State> proofState = getProofState(snapshot, nodeCommands, lastCommand);
 		
-		for (Iterator<Command> cIt = nodeCommands.reverse_iterator(lastCommand); cIt.hasNext();) {
-			Command cmd = cIt.next();
-
-			if (isProofProcessCommand(cmd)) {
-				
-				// check the command
-				State commandState = snapshot.command_state(cmd);
-				// add the command state to the beginning of proof state (we are going backwards) 
-				proofState.add(0, commandState);
-				
-				// mark the command for subsequent queries
-				// note that the same proof state will be used for this command and all its
-				// predecessors. This is ok, since we want to analyse the longest proof chain
-				commandProofs.put(cmd, proofState);
-				
-				if (isStartOfProof(cmd, commandState)) {
-					// start of proof reached - enough for this proof
-					break;
-				}
-			}
+		// filter out invalid proof state elements
+		List<State> filteredProofState = filterProofState(proofState);
+		
+		// mark each command to point to this filtered proof state
+		for (State cmdState : proofState) {
+			// mark the command for subsequent queries
+			// note that the same proof state will be used for this command and all its
+			// predecessors. This is ok, since we want to analyse the longest proof chain
+			commandProofs.put(cmdState.command(), filteredProofState);
 		}
 		
 		return true;
 	}
-	
 
-	private boolean isProofProcessCommand(Command command) {
+	/**
+	 * Retrieves the proof state of the target command. The encompassing proof
+	 * state can span both before and after the target command. We capture
+	 * everything between two adjacent "proof starts", e.g. between start of the
+	 * lemma, and start of the next lemma.
+	 * 
+	 * @param snapshot
+	 * @param nodeCommands
+	 * @param targetCommand
+	 * @return
+	 */
+	private List<State> getProofState(Snapshot snapshot, Linear_Set<Command> nodeCommands, Command targetCommand) {
+		
+		// first of all go backwards and collect everything before the target command
+		List<State> proofState = new LinkedList<State>();
+		
+		for (Iterator<Command> cIt = nodeCommands.reverse_iterator(targetCommand); cIt.hasNext();) {
+			Command cmd = cIt.next();
+			
+			// check the command
+			State commandState = snapshot.command_state(cmd);
+			// add the command state to the beginning of proof state (we are going backwards) 
+			proofState.add(0, commandState);
+			
+			if (isStartOfProof(cmd, commandState)) {
+				// start of proof reached - enough for this proof
+				break;
+			}
+		}
+		
+		// then go forwards from the target command until the start of the next proof is reached
+		for (Iterator<Command> cIt = nodeCommands.iterator(targetCommand); cIt.hasNext();) {
+			Command cmd = cIt.next();
+			
+			if (cmd == targetCommand) {
+				// exclude
+				continue;
+			}
+			
+			// check the command
+			State commandState = snapshot.command_state(cmd);
+			
+			if (isStartOfProof(cmd, commandState)) {
+				// start of the next proof reached - enough for this proof
+				break;
+			}
+			
+			// add the command state to the end of proof state (we are going forwards) 
+			proofState.add(commandState);
+		}
+		
+		return proofState;
+	}
+	
+	private List<State> filterProofState(List<State> proofState) {
+		List<State> filtered = new ArrayList<State>();
+		
+		for (State cmdState : proofState) {
+			
+			if (!isValidProofCommandState(cmdState)) {
+				// ignore invalid commands (e.g. unfinished)
+				continue;
+			}
+			
+			filtered.add(cmdState);
+		}
+		
+		return filtered;
+	}
+
+	private boolean isValidProofCommandState(State commandState) {
 		// TODO exclude others, e.g. definitions, "thm ...", etc?
+		// take non-ignored and non-malformed commands, which computation has finished.
+		Command command = commandState.command();
+		
+		return isValidProofCommand(command)
+				&& (ISAR_DOCUMENT.command_status(commandState.status()) == FINISHED);
+	}
+	
+	private boolean isValidProofCommand(Command command) {
+		// TODO exclude others, e.g. definitions, "thm ...", etc?
+		// take non-ignored and non-malformed commands
 		return !command.is_ignored() && !command.is_malformed();
 	}
 	
