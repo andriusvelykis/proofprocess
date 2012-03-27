@@ -12,10 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.ai4fm.filehistory.FileVersion;
-import org.ai4fm.proofprocess.project.Project;
-import org.eclipse.core.runtime.Assert;
-
 import scala.Tuple2;
 import scala.collection.Iterator;
 import scala.collection.JavaConversions;
@@ -24,7 +20,6 @@ import isabelle.Command;
 import isabelle.Document;
 import isabelle.Isar_Document$;
 import isabelle.Isar_Document$Finished$;
-import isabelle.Isar_Document.Status;
 import isabelle.XML.Tree;
 import isabelle.Linear_Set;
 import isabelle.Text;
