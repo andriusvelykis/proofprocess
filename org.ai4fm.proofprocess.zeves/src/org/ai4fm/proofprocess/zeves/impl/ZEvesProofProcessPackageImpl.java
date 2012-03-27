@@ -8,6 +8,8 @@ package org.ai4fm.proofprocess.zeves.impl;
 
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
+import org.ai4fm.proofprocess.zeves.DisplayTerm;
+import org.ai4fm.proofprocess.zeves.UnparsedTerm;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
@@ -25,6 +27,18 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * @generated
  */
 public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesProofProcessPackage {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass displayTermEClass = null;
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass unparsedTermEClass = null;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -94,6 +108,33 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ZEvesProofProcessPackage.eNS_URI, theZEvesProofProcessPackage);
 		return theZEvesProofProcessPackage;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDisplayTerm() {
+		return displayTermEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDisplayTerm_Display() {
+		return (EAttribute)displayTermEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUnparsedTerm() {
+		return unparsedTermEClass;
 	}
 
 	/**
@@ -178,6 +219,11 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 		isCreated = true;
 
 		// Create classes and their features
+		displayTermEClass = createEClass(DISPLAY_TERM);
+		createEAttribute(displayTermEClass, DISPLAY_TERM__DISPLAY);
+
+		unparsedTermEClass = createEClass(UNPARSED_TERM);
+
 		zEvesTraceEClass = createEClass(ZEVES_TRACE);
 		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__MARKUP);
 		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__GOAL);
@@ -217,9 +263,16 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		displayTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
+		unparsedTermEClass.getESuperTypes().add(this.getDisplayTerm());
 		zEvesTraceEClass.getESuperTypes().add(theProofProcessPackage.getTrace());
 
 		// Initialize classes and features; add operations and parameters
+		initEClass(displayTermEClass, DisplayTerm.class, "DisplayTerm", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDisplayTerm_Display(), ecorePackage.getEString(), "display", null, 0, 1, DisplayTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(unparsedTermEClass, UnparsedTerm.class, "UnparsedTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		initEClass(zEvesTraceEClass, ZEvesTrace.class, "ZEvesTrace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getZEvesTrace_Markup(), ecorePackage.getEString(), "markup", null, 0, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getZEvesTrace_Goal(), ecorePackage.getEString(), "goal", null, 0, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

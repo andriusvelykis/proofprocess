@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess.zeves.util;
 
+import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 
 import org.ai4fm.proofprocess.zeves.*;
@@ -74,8 +75,20 @@ public class ZEvesProofProcessAdapterFactory extends AdapterFactoryImpl {
 	protected ZEvesProofProcessSwitch<Adapter> modelSwitch =
 		new ZEvesProofProcessSwitch<Adapter>() {
 			@Override
+			public Adapter caseDisplayTerm(DisplayTerm object) {
+				return createDisplayTermAdapter();
+			}
+			@Override
+			public Adapter caseUnparsedTerm(UnparsedTerm object) {
+				return createUnparsedTermAdapter();
+			}
+			@Override
 			public Adapter caseZEvesTrace(ZEvesTrace object) {
 				return createZEvesTraceAdapter();
+			}
+			@Override
+			public Adapter caseTerm(Term object) {
+				return createTermAdapter();
 			}
 			@Override
 			public Adapter caseTrace(Trace object) {
@@ -102,6 +115,34 @@ public class ZEvesProofProcessAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.zeves.DisplayTerm <em>Display Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.zeves.DisplayTerm
+	 * @generated
+	 */
+	public Adapter createDisplayTermAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.zeves.UnparsedTerm <em>Unparsed Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.zeves.UnparsedTerm
+	 * @generated
+	 */
+	public Adapter createUnparsedTermAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace <em>ZEves Trace</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -112,6 +153,20 @@ public class ZEvesProofProcessAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createZEvesTraceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Term <em>Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.Term
+	 * @generated
+	 */
+	public Adapter createTermAdapter() {
 		return null;
 	}
 

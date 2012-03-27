@@ -76,6 +76,29 @@ public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProce
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.zeves.UnparsedTerm} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UnparsedTermItemProvider unparsedTermItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.zeves.UnparsedTerm}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUnparsedTermAdapter() {
+		if (unparsedTermItemProvider == null) {
+			unparsedTermItemProvider = new UnparsedTermItemProvider(this);
+		}
+
+		return unparsedTermItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.zeves.ZEvesTrace} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -197,6 +220,7 @@ public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProce
 	 * @generated
 	 */
 	public void dispose() {
+		if (unparsedTermItemProvider != null) unparsedTermItemProvider.dispose();
 		if (zEvesTraceItemProvider != null) zEvesTraceItemProvider.dispose();
 	}
 

@@ -60,10 +60,21 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
+			case ZEvesProofProcessPackage.UNPARSED_TERM: return createUnparsedTerm();
 			case ZEvesProofProcessPackage.ZEVES_TRACE: return createZEvesTrace();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UnparsedTerm createUnparsedTerm() {
+		UnparsedTermImpl unparsedTerm = new UnparsedTermImpl();
+		return unparsedTerm;
 	}
 
 	/**

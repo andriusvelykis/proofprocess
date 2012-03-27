@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess.zeves.util;
 
+import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 
 import org.ai4fm.proofprocess.zeves.*;
@@ -72,6 +73,21 @@ public class ZEvesProofProcessSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
+			case ZEvesProofProcessPackage.DISPLAY_TERM: {
+				DisplayTerm displayTerm = (DisplayTerm)theEObject;
+				T result = caseDisplayTerm(displayTerm);
+				if (result == null) result = caseTerm(displayTerm);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ZEvesProofProcessPackage.UNPARSED_TERM: {
+				UnparsedTerm unparsedTerm = (UnparsedTerm)theEObject;
+				T result = caseUnparsedTerm(unparsedTerm);
+				if (result == null) result = caseDisplayTerm(unparsedTerm);
+				if (result == null) result = caseTerm(unparsedTerm);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ZEvesProofProcessPackage.ZEVES_TRACE: {
 				ZEvesTrace zEvesTrace = (ZEvesTrace)theEObject;
 				T result = caseZEvesTrace(zEvesTrace);
@@ -81,6 +97,36 @@ public class ZEvesProofProcessSwitch<T> extends Switch<T> {
 			}
 			default: return defaultCase(theEObject);
 		}
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Display Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Display Term</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDisplayTerm(DisplayTerm object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Unparsed Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Unparsed Term</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUnparsedTerm(UnparsedTerm object) {
+		return null;
 	}
 
 	/**
@@ -95,6 +141,21 @@ public class ZEvesProofProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseZEvesTrace(ZEvesTrace object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Term</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTerm(Term object) {
 		return null;
 	}
 

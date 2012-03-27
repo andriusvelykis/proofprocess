@@ -26,6 +26,15 @@ public interface ZEvesProofProcessFactory extends EFactory {
 	ZEvesProofProcessFactory eINSTANCE = org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessFactoryImpl.init();
 
 	/**
+	 * Returns a new object of class '<em>Unparsed Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Unparsed Term</em>'.
+	 * @generated
+	 */
+	UnparsedTerm createUnparsedTerm();
+
+	/**
 	 * Returns a new object of class '<em>ZEves Trace</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

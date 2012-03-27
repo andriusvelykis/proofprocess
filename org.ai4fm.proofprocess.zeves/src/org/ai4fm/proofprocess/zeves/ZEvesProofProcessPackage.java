@@ -61,6 +61,62 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	ZEvesProofProcessPackage eINSTANCE = org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl.init();
 
 	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.DisplayTermImpl <em>Display Term</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.zeves.impl.DisplayTermImpl
+	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getDisplayTerm()
+	 * @generated
+	 */
+	int DISPLAY_TERM = 0;
+
+	/**
+	 * The feature id for the '<em><b>Display</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DISPLAY_TERM__DISPLAY = ProofProcessPackage.TERM_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Display Term</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DISPLAY_TERM_FEATURE_COUNT = ProofProcessPackage.TERM_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.UnparsedTermImpl <em>Unparsed Term</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.zeves.impl.UnparsedTermImpl
+	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getUnparsedTerm()
+	 * @generated
+	 */
+	int UNPARSED_TERM = 1;
+
+	/**
+	 * The feature id for the '<em><b>Display</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNPARSED_TERM__DISPLAY = DISPLAY_TERM__DISPLAY;
+
+	/**
+	 * The number of structural features of the '<em>Unparsed Term</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNPARSED_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl <em>ZEves Trace</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -68,7 +124,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getZEvesTrace()
 	 * @generated
 	 */
-	int ZEVES_TRACE = 0;
+	int ZEVES_TRACE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Markup</b></em>' attribute.
@@ -124,6 +180,37 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 */
 	int ZEVES_TRACE_FEATURE_COUNT = ProofProcessPackage.TRACE_FEATURE_COUNT + 5;
 
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.DisplayTerm <em>Display Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Display Term</em>'.
+	 * @see org.ai4fm.proofprocess.zeves.DisplayTerm
+	 * @generated
+	 */
+	EClass getDisplayTerm();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.DisplayTerm#getDisplay <em>Display</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Display</em>'.
+	 * @see org.ai4fm.proofprocess.zeves.DisplayTerm#getDisplay()
+	 * @see #getDisplayTerm()
+	 * @generated
+	 */
+	EAttribute getDisplayTerm_Display();
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.UnparsedTerm <em>Unparsed Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Unparsed Term</em>'.
+	 * @see org.ai4fm.proofprocess.zeves.UnparsedTerm
+	 * @generated
+	 */
+	EClass getUnparsedTerm();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace <em>ZEves Trace</em>}'.
@@ -212,6 +299,34 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	interface Literals {
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.DisplayTermImpl <em>Display Term</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.zeves.impl.DisplayTermImpl
+		 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getDisplayTerm()
+		 * @generated
+		 */
+		EClass DISPLAY_TERM = eINSTANCE.getDisplayTerm();
+
+		/**
+		 * The meta object literal for the '<em><b>Display</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DISPLAY_TERM__DISPLAY = eINSTANCE.getDisplayTerm_Display();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.UnparsedTermImpl <em>Unparsed Term</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.zeves.impl.UnparsedTermImpl
+		 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getUnparsedTerm()
+		 * @generated
+		 */
+		EClass UNPARSED_TERM = eINSTANCE.getUnparsedTerm();
+
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl <em>ZEves Trace</em>}' class.
 		 * <!-- begin-user-doc -->
