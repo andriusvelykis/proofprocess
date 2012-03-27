@@ -9,6 +9,8 @@ import net.sourceforge.czt.eclipse.editors.zeditor.ZEditorUtil;
 import net.sourceforge.czt.eclipse.zeves.core.ZEvesResultConverter;
 import net.sourceforge.czt.session.CommandException;
 import net.sourceforge.czt.session.SectionInfo;
+import net.sourceforge.czt.session.SectionManager;
+import net.sourceforge.czt.z.ast.Pred;
 import net.sourceforge.czt.zeves.response.ZEvesOutput;
 
 import org.ai4fm.proofprocess.Term;
@@ -38,11 +40,18 @@ public class TermParser {
 		
 		try {
 			
-			List<Term> goals = new ArrayList<Term>();
-			
-			// TODO parse and convert
-			if (false) {
-				ZEvesResultConverter.parseZEvesPred(null, null, goalStr);
+			if (sectInfo instanceof SectionManager) {
+				// a bit of a hack, will need to review whether a sectInfo could be enough eventually
+				
+				List<Term> goals = new ArrayList<Term>();
+				Pred goalPred = ZEvesResultConverter.parseZEvesPred((SectionManager) sectInfo, sectName, goalStr);
+				
+				// TODO convert the parsed predicate
+				UnparsedTerm term = FACTORY.createUnparsedTerm();
+				term.setDisplay(goalStr);
+				goals.add(term);
+				
+				return goals;
 			}
 			
 		} catch (IOException e) {
