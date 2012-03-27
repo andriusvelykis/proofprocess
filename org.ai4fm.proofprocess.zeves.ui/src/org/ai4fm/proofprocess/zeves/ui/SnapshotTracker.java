@@ -392,9 +392,6 @@ public class SnapshotTracker {
 	private ProofEntry createTacticProofEntry(Project project, FileVersion fileVersion, 
 			ISnapshotEntry proofEntry) {
 		
-		// create tactic application attempt
-		ProofEntry entry = ProofProcessFactory.eINSTANCE.createProofEntry();
-		
 		ZEvesOutput entryResult = (ZEvesOutput) proofEntry.getData().getResult();
 		
 		Term entryTerm = proofEntry.getData().getTerm();
@@ -407,34 +404,37 @@ public class SnapshotTracker {
 		}
 		
 		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
-		entry.setInfo(info);
-		
 		info.setNarrative("Tactic: " + commandText);
 		
 		Intent intent = ProofProcessUtil.findCreateIntent(project, "Tactic Application");
 		info.setIntent(intent);
 		
-		ZEvesTrace ref = ZEvesProofProcessFactory.eINSTANCE.createZEvesTrace();
-		ref.setGoal(entryResult.getFirstResult().toString());
+		ZEvesTrace trace = ZEvesProofProcessFactory.eINSTANCE.createZEvesTrace();
+		trace.setGoal(entryResult.getFirstResult().toString());
 //		ref.setMarkup();
-		ref.setText(commandText);
-		ref.setCase(proofCaseStr(entryResult.getProofCase()));
+		trace.setText(commandText);
+		trace.setCase(proofCaseStr(entryResult.getProofCase()));
 		
 		Set<String> usedLemmas = new LinkedHashSet<String>();
 		
 		for (ZEvesOutput result : proofEntry.getData().getTrace()) {
-			ZEvesProofTrace trace = result.getProofTrace();
-			usedLemmas.addAll(getUsedLemmas(trace));
+			ZEvesProofTrace proofTrace = result.getProofTrace();
+			usedLemmas.addAll(getUsedLemmas(proofTrace));
 		}
 		
-		ref.getUsedLemmas().addAll(usedLemmas);
+		trace.getUsedLemmas().addAll(usedLemmas);
 		
 		ProofStep step = ProofProcessFactory.eINSTANCE.createProofStep();
-		step.setTrace(ref);
+		step.setTrace(trace);
 		
 		Position pos = proofEntry.getPosition();
 		step.setSource(ProofProcessUtil.createTextLoc(fileVersion, pos.getOffset(), pos.getLength()));
+		
+		// create tactic application attempt
+		ProofEntry entry = ProofProcessFactory.eINSTANCE.createProofEntry();
+		entry.setInfo(info);
 		entry.setProofStep(step);
+		
 		return entry;
 	}
 	
