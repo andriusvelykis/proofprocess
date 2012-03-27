@@ -68,11 +68,10 @@ public class ProofAnalyzer {
 		}
 		
 		for (List<State> proofState : proofStates) {
-			String documentText = reader.getDocumentText(proofState);
 			Set<Command> proofCommands = filterProofCommands(proofState, changedCommands);
 			
 			// TODO what if analyzer returns CANCEL_STATUS?
-			analyze(proofState, proofCommands, documentText, monitor);
+			analyze(proofState, proofCommands, reader, monitor);
 		}
 		
 		return Status.OK_STATUS;
@@ -92,13 +91,20 @@ public class ProofAnalyzer {
 	}
 	
 	private IStatus analyze(List<State> proofState, Set<Command> changedCommands,
-			String documentText, IProgressMonitor monitor) throws CoreException {
+			SnapshotReader reader, IProgressMonitor monitor) throws CoreException {
 
 		Assert.isLegal(!proofState.isEmpty());
-		Assert.isNotNull(documentText);
 		
 		State lastProofStep = proofState.get(proofState.size() - 1);
 		Command lastCommand = lastProofStep.command();
+		
+		Integer commandStart = reader.getCommandStart(lastCommand);
+		String documentText = reader.getDocumentText(lastCommand);
+		if (commandStart == null || documentText == null) {
+			// invalid command, no longer in the snapshot, so just ignore the proof
+			return Status.OK_STATUS;
+		}
+		
 		DocumentRef docRef = new DocumentRef(lastCommand.node_name());
 		
 		String filePathStr = docRef.getNode();
@@ -112,7 +118,7 @@ public class ProofAnalyzer {
 		
 		Project proofProject = ProofManager.getProofProject(project, monitor);
 		
-		int commandEnd = lastCommand.range().stop();
+		int commandEnd = commandStart.intValue() + lastCommand.range().stop();
 		FileVersion fileVersion = ProofHistoryManager.syncFileVersion(
 				project, filePath, documentText, commandEnd, monitor);
 		
