@@ -12,6 +12,10 @@
       <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/CONST"/>
       <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/BOUND"/>
       <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/VAR"/>
+      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/FIXED"/>
+      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/FREE"/>
+      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/NUMERAL"/>
+      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/SKOLEM"/>
     </genEnums>
     <genClasses image="false" ecoreClass="IsabelleProofProcess.ecore#//DisplayTerm">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//DisplayTerm/display"/>
