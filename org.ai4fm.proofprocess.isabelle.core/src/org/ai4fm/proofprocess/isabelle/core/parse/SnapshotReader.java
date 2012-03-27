@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 
+import scala.Tuple2;
 import scala.collection.Iterator;
 
 import isabelle.Command;
@@ -21,6 +22,7 @@ import isabelle.Document;
 import isabelle.Linear_Set;
 import isabelle.Text;
 import isabelle.Command.State;
+import isabelle.Document$Node$;
 import isabelle.Document.Snapshot;
 import isabelle.scala.DocumentRef;
 import isabelle.scala.ScalaCollections;
@@ -34,11 +36,14 @@ import isabelle.scala.ScalaCollections;
  */
 public class SnapshotReader {
 	
+	private static Document$Node$ DOCUMENT_NODE = Document$Node$.MODULE$;
+	
 	private final Set<Command> changedCommands;
 	private final Document.State docState;
 	
 	private final Map<DocumentRef, Snapshot> snapshots = new HashMap<DocumentRef, Snapshot>();
 	private final Map<DocumentRef, String> docTexts = new HashMap<DocumentRef, String>();
+	private final Map<Command, Integer> commandStarts = new HashMap<Command, Integer>();
 	private final Map<Command, List<State>> commandProofs = new HashMap<Command, List<State>>();
 	
 	public SnapshotReader(Set<Command> changedCommands, Document.State docState) {
@@ -136,29 +141,34 @@ public class SnapshotReader {
 			Snapshot snapshot = docState.snapshot(doc.getRef(), ScalaCollections.<Text.Edit>emptyList());
 			snapshots.put(doc, snapshot);
 			
-			String docText = toTextDocument(snapshot.node().commands());
-			docTexts.put(doc, docText);
+			
+			/*
+			 * Print the commands into a text document. Each command carries the
+			 * original source from the text document, so concatenating them back
+			 * together produces the original document.
+			 * 
+			 * Also collect command starts during the same iteration
+			 */
+			StringBuilder docText = new StringBuilder();
+			
+			// wrap into command starts iterator
+			Iterator<Tuple2<Command, Object>> cIt = DOCUMENT_NODE.command_starts(
+					snapshot.node().commands().iterator(), 0);
+			
+			while (cIt.hasNext()) {
+				Tuple2<Command, Object> cmdStart = cIt.next();
+				Command cmd = cmdStart._1();
+				Integer start = (Integer) cmdStart._2();
+				
+				// append to the document
+				docText.append(cmd.source());
+				
+				// mark the command start
+				commandStarts.put(cmd, start);
+			}
+			
+			docTexts.put(doc, docText.toString());
 		}
-	}
-	
-	/**
-	 * Prints the commands into a text document. Each command carries the
-	 * original source from the text document, so concatenating them back
-	 * together produces the original document.
-	 * 
-	 * @param commands
-	 * @return
-	 */
-	private String toTextDocument(Linear_Set<Command> commands) {
-		
-		StringBuilder out = new StringBuilder();
-		
-		for (Iterator<Command> cIt = commands.iterator(); cIt.hasNext(); ) {
-			Command cmd = cIt.next();
-			out.append(cmd.source());
-		}
-		
-		return out.toString();
 	}
 	
 	private Set<DocumentRef> getDocs(Set<Command> commands) {
