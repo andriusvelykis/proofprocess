@@ -12,16 +12,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ai4fm.filehistory.FileVersion;
+import org.ai4fm.proofprocess.project.Project;
 import org.eclipse.core.runtime.Assert;
 
 import scala.Tuple2;
 import scala.collection.Iterator;
+import scala.collection.JavaConversions;
 
 import isabelle.Command;
 import isabelle.Document;
 import isabelle.Isar_Document$;
 import isabelle.Isar_Document$Finished$;
 import isabelle.Isar_Document.Status;
+import isabelle.XML.Tree;
 import isabelle.Linear_Set;
 import isabelle.Text;
 import isabelle.Command.State;
@@ -307,12 +311,26 @@ public class SnapshotReader {
 	}
 	
 	private List<State> filterProofState(List<State> proofState) {
+		
+		// TODO decide how to handle error elements in proofs
 		List<State> filtered = new ArrayList<State>();
 		
 		for (State cmdState : proofState) {
 			
 			if (!isValidProofCommandState(cmdState)) {
 				// ignore invalid commands (e.g. unfinished)
+				continue;
+			}
+			
+			if (isError(cmdState)) {
+				// ignore errors
+				// TODO count errors and do not include after certain threshold
+				continue;
+			}
+			
+			if (isEmptyResult(cmdState)) {
+				// ignore empty results (e.g. which have no goals, defs, etc.)
+				// TODO also filter out empty steps, e.g. "then"?
 				continue;
 			}
 			
@@ -341,6 +359,38 @@ public class SnapshotReader {
 		// TODO add checks for "Step 0" in results as well, 
 		// e.g. for proofs of "fun" definitions, etc.
 		return PROOF_START_CMDS.contains(command.name());
+	}
+	
+	private boolean isError(State cmdState) {
+		for (Tree result : JavaConversions.asJavaIterable(cmdState.results().values())) {
+			boolean err = TermParser.isError(result);
+			if (err) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean isEmptyResult(State cmdState) {
+		
+		for (Tree result : JavaConversions.asJavaIterable(cmdState.results().values())) {
+			
+			if (TermParser.getGoalCount(result) > 0) {
+				return false;
+			}
+			
+			if (TermParser.isNoSubgoals(result)) {
+				return false;
+			}
+			
+			if (!TermParser.isError(result) && "by".equals(cmdState.command().name())) {
+				// "by" commands do not have output, but treat it similarly to "no subgoals"
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	private static class CommandIdComparator implements Comparator<Command> {

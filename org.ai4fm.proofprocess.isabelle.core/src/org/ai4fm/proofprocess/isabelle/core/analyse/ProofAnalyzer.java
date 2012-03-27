@@ -122,63 +122,13 @@ public class ProofAnalyzer {
 		FileVersion fileVersion = ProofHistoryManager.syncFileVersion(
 				project, filePath, documentText, commandEnd, monitor);
 		
-		analyzeFilterEntry(proofProject, proofState, fileVersion);
+		analyzeEntry(proofProject, proofState, fileVersion);
 		
 		// FIXME retrieve proof entries from the analysis
 		Map<State, ProofEntry> proofEntries = new HashMap<State, ProofEntry>();
 		logActivity(project, proofState, changedCommands, proofEntries, monitor);
 
 		return Status.OK_STATUS;
-	}
-	
-	private void analyzeFilterEntry(Project proofProject, List<State> proofState, FileVersion fileVersion) {
-		// TODO decide how to handle error elements in proofs
-		List<State> nonErrorProof = new ArrayList<State>();
-		for (State pEntry : proofState) {
-			// TODO also filter out empty steps, e.g. "then"?
-			if (!isError(pEntry) && !isEmptyResult(pEntry)) {
-				nonErrorProof.add(pEntry);
-			}
-		}
-		
-		if (nonErrorProof.isEmpty()) {
-			// whole proof is just errors
-			return;
-		}
-		
-		analyzeEntry(proofProject, nonErrorProof, fileVersion);
-	}
-	
-	private boolean isError(State cmdState) {
-		for (Tree result : JavaConversions.asJavaIterable(cmdState.results().values())) {
-			boolean err = TermParser.isError(result);
-			if (err) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	private boolean isEmptyResult(State cmdState) {
-		
-		for (Tree result : JavaConversions.asJavaIterable(cmdState.results().values())) {
-			
-			if (TermParser.getGoalCount(result) > 0) {
-				return false;
-			}
-			
-			if (TermParser.isNoSubgoals(result)) {
-				return false;
-			}
-			
-			if (!TermParser.isError(result) && "by".equals(cmdState.command().name())) {
-				// "by" commands do not have output, but treat it similarly to "no subgoals"
-				return false;
-			}
-		}
-		
-		return true;
 	}
 	
 	private void analyzeEntry(Project proofProject, List<State> proofState, FileVersion fileVersion) {
