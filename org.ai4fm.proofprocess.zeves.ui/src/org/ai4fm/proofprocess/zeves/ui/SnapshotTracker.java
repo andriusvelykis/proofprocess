@@ -20,7 +20,6 @@ import net.sourceforge.czt.base.ast.Term;
 import net.sourceforge.czt.eclipse.editors.parser.ZCompiler;
 import net.sourceforge.czt.eclipse.outline.TermLabelVisitorFactory;
 import net.sourceforge.czt.eclipse.zeves.core.ISnapshotChangedListener;
-import net.sourceforge.czt.eclipse.zeves.core.ResourceUtil;
 import net.sourceforge.czt.eclipse.zeves.core.SnapshotChangedEvent;
 import net.sourceforge.czt.eclipse.zeves.core.SnapshotChangedEvent.SnapshotChangeType;
 import net.sourceforge.czt.eclipse.zeves.core.ZEvesSnapshot;
@@ -59,16 +58,16 @@ import org.ai4fm.proofprocess.project.core.ProofMatcher;
 import org.ai4fm.proofprocess.project.core.ProofMatcher.ProofElemMatch;
 import org.ai4fm.proofprocess.project.core.util.EmfUtil;
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
+import org.ai4fm.proofprocess.project.core.util.ResourceUtil;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -160,17 +159,17 @@ public class SnapshotTracker {
 		
 		if (event.event.getType() == SnapshotChangeType.ADD) {
 			
-			String filePath = event.entry.getFilePath();
-			IProject project = getEntryProject(filePath);
+			IPath filePath = Path.fromOSString(event.entry.getFilePath());
+			
+			IProject project = ResourceUtil.findProject(filePath);
 			if (project == null) {
 				// cannot locate the project, therefore cannot access proof process model
-//				ZEvesProofUIPlugin.log("Unable to locate project for resource " + filePath, null);
 				return ZEvesProofUIPlugin.error("Unable to locate project for resource " + filePath, null);
 			}
 			
 			Project proofProject = ProofManager.getProofProject(project, monitor);
 			ProofLog proofLog = ProofManager.getProofLog(project, monitor);
-			FileVersion fileVersion = syncFileVersion(project, event.entry, event.sectInfo, monitor);
+			FileVersion fileVersion = syncFileVersion(project, event.entry, event.sectInfo, filePath, monitor);
 			analyseEntry(proofProject, proofLog, event.entry, event.entryProof, fileVersion);
 		}
 		
@@ -180,16 +179,8 @@ public class SnapshotTracker {
 	}
 	
 	private FileVersion syncFileVersion(IProject project, ISnapshotEntry entry,
-			SectionInfo sectInfo, IProgressMonitor monitor) throws CoreException {
+			SectionInfo sectInfo, IPath filePath, IProgressMonitor monitor) throws CoreException {
 		
-		String filePath = entry.getFilePath();
-		if (filePath.startsWith("/")) {
-			// absolute to workspace - make relative to project
-			// FIXME to portable string?
-			filePath = Path.fromOSString(filePath).makeRelativeTo(project.getLocation())
-					.toPortableString();
-		}
-
 		String text = null;
 		// check the source for this section - if it is not cached, use the
 		// DEFAULT name,
@@ -210,28 +201,6 @@ public class SnapshotTracker {
 		int posEnd = entry.getPosition().offset + entry.getPosition().length;
 
 		return ProofHistoryManager.syncFileVersion(project, filePath, text, posEnd, monitor);
-	}
-	
-	private IProject getEntryProject(String filePath) {
-		List<IFile> files = ResourceUtil.findFile(filePath);
-		
-		// take the first one, if available
-		if (!files.isEmpty()) {
-			return files.get(0).getProject();
-		}
-		
-		// check projects - maybe some resource shares path with a project (e.g. if project is closed)
-		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-			String projectPath = ResourceUtil.getPath(project);
-			if (filePath.startsWith(projectPath)) {
-				// use this project
-				return project;
-			}
-		}
-		
-		// any other lookup options?
-		// E.g. use the last-used project or similar?
-		return null;
 	}
 	
 	private void analyseEntry(Project proofProject, ProofLog proofLog, ISnapshotEntry entry,
