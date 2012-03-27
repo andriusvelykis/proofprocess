@@ -2,47 +2,51 @@ package org.ai4fm.proofprocess.zeves.ui.parse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.sourceforge.czt.eclipse.editors.zeditor.ZEditorUtil;
-import net.sourceforge.czt.eclipse.zeves.ZEvesPlugin;
 import net.sourceforge.czt.eclipse.zeves.core.ZEvesResultConverter;
 import net.sourceforge.czt.session.CommandException;
+import net.sourceforge.czt.session.SectionInfo;
 import net.sourceforge.czt.zeves.response.ZEvesOutput;
 
 import org.ai4fm.proofprocess.Term;
+import org.ai4fm.proofprocess.zeves.UnparsedTerm;
+import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
+import org.ai4fm.proofprocess.zeves.ui.ZEvesProofUIPlugin;
 
 /**
  * @author Andrius Velykis
  */
 public class TermParser {
 
-	public static List<Term> parseGoals(ZEvesOutput result) {
-		
-		List<Term> goals = new ArrayList<Term>();
+	private static final ZEvesProofProcessFactory FACTORY = ZEvesProofProcessFactory.eINSTANCE;
+	
+	public static List<Term> parseGoals(SectionInfo sectInfo, String sectName, ZEvesOutput result) {
 		
 		Object goalObj = result.getFirstResult();
 		String goalStr = goalObj.toString().trim();
 		
 		if (ZEvesOutput.UNPRINTABLE_PREDICATE.equals(goalStr)) {
 			// a special case - do not try parsing
-			// TODO
+			
+			UnparsedTerm term = FACTORY.createUnparsedTerm();
+			term.setDisplay(goalStr);
+			return Collections.<Term>singletonList(term);
 		}
 		
 		try {
 			
-			ZEvesResultConverter.parseZEvesPred(sectInfo, sectName, goalStr);
+			List<Term> goals = new ArrayList<Term>();
 			
-			String converted = isPred ? 
-					ZEvesResultConverter.convertPred(sectInfo, sectName, str, markup, textWidth, true) : 
-					ZEvesResultConverter.convertParas(sectInfo, sectName, str, markup, textWidth, true);
-
-			outputZ(output, converted);
-			return output;
+			// TODO parse and convert
+			if (false) {
+				ZEvesResultConverter.parseZEvesPred(null, null, goalStr);
+			}
 			
 		} catch (IOException e) {
-			ZEvesPlugin.getDefault().log(e);
-			return withWarning("I/O problems parsing Z/Eves result: " + e.getMessage().trim(), str);
+			ZEvesProofUIPlugin.log(e);
 		} catch (CommandException e) {
 			Throwable cause = e.getCause();
 			if (cause == null) {
@@ -50,19 +54,13 @@ public class TermParser {
 			}
 			
 			String msg = "Cannot parse Z/Eves result: " + ZEditorUtil.clean(cause.getMessage()).trim();
-			ZEvesPlugin.getDefault().log(msg, cause);
-			return withWarning(msg, str);
+			ZEvesProofUIPlugin.log(msg, e);
 		}
 		
-		// get all XML elements for <subgoal>
-		for (Elem subgoalElem : getElems(ScalaCollections.singletonList(source), Markup.SUBGOAL())) {
-			// expect a single <term> XML element inside
-			Elem termElem = getSingleElem(subgoalElem.body(), Markup.TERM());
-			Term ppTerm = parseTerm(termElem);
-			goals.add(ppTerm);
-		}
-		
-		return goals;
+		// problems parsing - just output unparsed
+		UnparsedTerm term = FACTORY.createUnparsedTerm();
+		term.setDisplay(goalStr);
+		return Collections.<Term>singletonList(term);
 	}
 	
 }

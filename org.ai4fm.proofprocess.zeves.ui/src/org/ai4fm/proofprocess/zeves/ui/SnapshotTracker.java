@@ -16,7 +16,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import net.sourceforge.czt.base.ast.Term;
 import net.sourceforge.czt.eclipse.editors.parser.ZCompiler;
 import net.sourceforge.czt.eclipse.outline.TermLabelVisitorFactory;
 import net.sourceforge.czt.eclipse.zeves.core.ISnapshotChangedListener;
@@ -45,6 +44,8 @@ import org.ai4fm.proofprocess.ProofParallel;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
+import org.ai4fm.proofprocess.Property;
+import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 import org.ai4fm.proofprocess.log.Activity;
 import org.ai4fm.proofprocess.log.ProofActivity;
@@ -62,6 +63,7 @@ import org.ai4fm.proofprocess.project.core.util.ResourceUtil;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
+import org.ai4fm.proofprocess.zeves.ui.parse.TermParser;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
@@ -170,7 +172,7 @@ public class SnapshotTracker {
 			Project proofProject = ProofManager.getProofProject(project, monitor);
 			ProofLog proofLog = ProofManager.getProofLog(project, monitor);
 			FileVersion fileVersion = syncFileVersion(project, event.entry, event.sectInfo, filePath, monitor);
-			analyseEntry(proofProject, proofLog, event.entry, event.entryProof, fileVersion);
+			analyseEntry(proofProject, proofLog, event.entry, event.entryProof, fileVersion, event.sectInfo);
 		}
 		
 		System.out.println("Analysing event: " + event.event.getType() + " -- " + (System.currentTimeMillis() - start));
@@ -204,7 +206,7 @@ public class SnapshotTracker {
 	}
 	
 	private void analyseEntry(Project proofProject, ProofLog proofLog, ISnapshotEntry entry,
-			List<ISnapshotEntry> entryProof, FileVersion fileVersion) {
+			List<ISnapshotEntry> entryProof, FileVersion fileVersion, SectionInfo sectInfo) {
 		
 		Activity activity;
 		// TODO is the proof check enough here?
@@ -223,7 +225,7 @@ public class SnapshotTracker {
 				return;
 			}
 			
-			ProofEntry attempt = analyseProofEntry(proofProject, nonErrorProof, fileVersion);
+			ProofEntry attempt = analyseProofEntry(proofProject, nonErrorProof, fileVersion, sectInfo);
 			
 			ProofActivity proofActivity = ProofProcessLogFactory.eINSTANCE.createProofActivity();
 			proofActivity.setProofRef(attempt);
@@ -238,7 +240,7 @@ public class SnapshotTracker {
 		}
 		
 		activity.setTimestamp(new Date(System.currentTimeMillis()));
-		Term source = entry.getData().getTerm();
+		net.sourceforge.czt.base.ast.Term source = entry.getData().getTerm();
 		activity.setDescription("Added: " + (source != null ? source.getClass().getSimpleName() : "<goal?>"));
 		
 		EmfUtil.addValue(proofLog, ProofProcessLogPackage.PROOF_LOG__ACTIVITIES, activity);
@@ -254,7 +256,7 @@ public class SnapshotTracker {
 	}
 	
 	private ProofEntry analyseProofEntry(Project proofProject, List<ISnapshotEntry> proofSteps, 
-			FileVersion fileVersion) {
+			FileVersion fileVersion, SectionInfo sectInfo) {
 		
 		Assert.isLegal(!proofSteps.isEmpty());
 		
@@ -272,7 +274,7 @@ public class SnapshotTracker {
 		
 		List<ProofEntry> attempts = new ArrayList<ProofEntry>();
 		for (ISnapshotEntry proofEntry : proofSteps) {
-			ProofEntry attempt = createTacticProofEntry(proofProject, fileVersion, proofEntry);
+			ProofEntry attempt = createTacticProofEntry(proofProject, fileVersion, sectInfo, proofEntry);
 			attempts.add(attempt);
 		}
 		
@@ -390,11 +392,11 @@ public class SnapshotTracker {
 	}
 	
 	private ProofEntry createTacticProofEntry(Project project, FileVersion fileVersion, 
-			ISnapshotEntry proofEntry) {
+			SectionInfo sectInfo, ISnapshotEntry proofEntry) {
 		
 		ZEvesOutput entryResult = (ZEvesOutput) proofEntry.getData().getResult();
 		
-		Term entryTerm = proofEntry.getData().getTerm();
+		net.sourceforge.czt.base.ast.Term entryTerm = proofEntry.getData().getTerm();
 		String commandText;
 		if (entryTerm instanceof ProofCommand) {
 			Visitor<String> textVisitor = TermLabelVisitorFactory.getTermLabelVisitor(true);
@@ -408,6 +410,10 @@ public class SnapshotTracker {
 		
 		Intent intent = ProofProcessUtil.findCreateIntent(project, "Tactic Application");
 		info.setIntent(intent);
+		
+		// TODO set properties
+		List<Property> inProps = info.getInProps();
+		List<Property> outProps = info.getInProps();
 		
 		ZEvesTrace trace = ZEvesProofProcessFactory.eINSTANCE.createZEvesTrace();
 		trace.setGoal(entryResult.getFirstResult().toString());
@@ -429,6 +435,12 @@ public class SnapshotTracker {
 		
 		Position pos = proofEntry.getPosition();
 		step.setSource(ProofProcessUtil.createTextLoc(fileVersion, pos.getOffset(), pos.getLength()));
+		
+		// TODO copy in goals from the previous
+		List<Term> inGoals = step.getInGoals();
+		
+		List<Term> outGoals = step.getOutGoals();
+		outGoals.addAll(TermParser.parseGoals(sectInfo, proofEntry.getSectionName(), entryResult));
 		
 		// create tactic application attempt
 		ProofEntry entry = ProofProcessFactory.eINSTANCE.createProofEntry();
