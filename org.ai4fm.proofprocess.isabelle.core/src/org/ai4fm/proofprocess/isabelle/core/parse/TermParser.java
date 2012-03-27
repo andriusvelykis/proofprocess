@@ -32,7 +32,7 @@ import scala.collection.Iterator;
  */
 public class TermParser {
 
-	private static IsabelleProofProcessFactory FACTORY = IsabelleProofProcessFactory.eINSTANCE;
+	private static final IsabelleProofProcessFactory FACTORY = IsabelleProofProcessFactory.eINSTANCE;
 	
 	private static Set<String> IGNORE_MARKUPS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
 			Markup.BREAK())));
