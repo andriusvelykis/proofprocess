@@ -8,6 +8,7 @@ import java.util.List;
 import net.sourceforge.czt.eclipse.editors.zeditor.ZEditorUtil;
 import net.sourceforge.czt.eclipse.zeves.core.ZEvesResultConverter;
 import net.sourceforge.czt.session.CommandException;
+import net.sourceforge.czt.session.Markup;
 import net.sourceforge.czt.session.SectionInfo;
 import net.sourceforge.czt.session.SectionManager;
 import net.sourceforge.czt.z.ast.Pred;
@@ -45,13 +46,19 @@ public class TermParser {
 				// a bit of a hack, will need to review whether a sectInfo could be enough eventually
 				
 				List<Term> goals = new ArrayList<Term>();
-				long start = System.currentTimeMillis();
-				Pred goalPred = ZEvesResultConverter.parseZEvesPred((SectionManager) sectInfo, sectName, goalStr);
-				System.out.println("Parsing term: " + (System.currentTimeMillis() - start));
 				
+				// parse the goal from Z/Eves response
+				Pred goalPred = ZEvesResultConverter.parseZEvesPred((SectionManager) sectInfo, sectName, goalStr);
+				
+				// pretty-print the goal back, so that we get uniform CZT-printing, instead
+				// of using Z/Eves conversion to CZT unicode
+				String goalPrinted = ZEvesResultConverter.printResult((SectionManager) sectInfo,
+						sectName, goalPred, Markup.UNICODE, 0, true);
+
+				// create a term encapsulating the CZT ast.Term.
+				// It will be serialised to XML when saved
 				CztTerm term = FACTORY.createCztTerm();
-				// TODO reprint the parsed term, otherwise it's Z/Eves result?
-				term.setDisplay(goalStr);
+				term.setDisplay(goalPrinted);
 				term.setTerm(goalPred);
 				goals.add(term);
 				
