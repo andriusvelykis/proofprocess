@@ -177,7 +177,6 @@ public class ProofProcessPage extends Page {
 			}
 		};
 		loadJob.setPriority(Job.DECORATE);
-		loadJob.setSystem(true);
 		loadJob.schedule();
 	}
 	
