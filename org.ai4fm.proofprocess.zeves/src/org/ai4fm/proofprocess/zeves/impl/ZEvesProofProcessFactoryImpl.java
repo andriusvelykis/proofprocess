@@ -8,6 +8,7 @@ package org.ai4fm.proofprocess.zeves.impl;
 
 import net.sourceforge.czt.base.ast.Term;
 import org.ai4fm.proofprocess.zeves.*;
+import org.ai4fm.proofprocess.zeves.parse.ZmlTermParser;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -136,7 +137,7 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * @generated NOT
 	 */
 	public Term createZmlTermFromString(EDataType eDataType, String initialValue) {
-		return (Term)super.createFromString(eDataType, initialValue);
+		return ZmlTermParser.parseZml(initialValue);
 	}
 
 	/**
@@ -145,7 +146,7 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * @generated NOT
 	 */
 	public String convertZmlTermToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+		return ZmlTermParser.convertToZml((Term) instanceValue);
 	}
 
 	/**
