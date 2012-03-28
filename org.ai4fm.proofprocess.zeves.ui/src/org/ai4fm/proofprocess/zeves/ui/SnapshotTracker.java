@@ -173,6 +173,17 @@ public class SnapshotTracker {
 			ProofLog proofLog = ProofManager.getProofLog(project, monitor);
 			FileVersion fileVersion = syncFileVersion(project, event.entry, event.sectInfo, filePath, monitor);
 			analyseEntry(proofProject, proofLog, event.entry, event.entryProof, fileVersion, event.sectInfo);
+			
+			if (pendingEvents.isEmpty() || pendingEvents.peek().event.getType() != SnapshotChangeType.ADD) {
+				// no more pending events (or the next one is not ADD), save the file
+				// TODO better saving algorithm, but not one which stops all 
+				try {
+					proofProject.eResource().save(null);
+					proofLog.eResource().save(null);
+				} catch (IOException e) {
+					ZEvesProofUIPlugin.log(e);
+				}
+			}
 		}
 		
 		System.out.println("Analysing event: " + event.event.getType() + " -- " + (System.currentTimeMillis() - start));
@@ -244,15 +255,6 @@ public class SnapshotTracker {
 		activity.setDescription("Added: " + (source != null ? source.getClass().getSimpleName() : "<goal?>"));
 		
 		EmfUtil.addValue(proofLog, ProofProcessLogPackage.PROOF_LOG__ACTIVITIES, activity);
-		
-		// FIXME
-		try {
-			proofProject.eResource().save(null);
-			proofLog.eResource().save(null);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	private ProofEntry analyseProofEntry(Project proofProject, List<ISnapshotEntry> proofSteps, 
