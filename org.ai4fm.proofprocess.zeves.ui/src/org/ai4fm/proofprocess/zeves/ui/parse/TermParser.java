@@ -18,8 +18,10 @@ import net.sourceforge.czt.z.ast.Pred;
 import net.sourceforge.czt.zeves.response.ZEvesOutput;
 
 import org.ai4fm.proofprocess.Term;
+import org.ai4fm.proofprocess.zeves.CztTerm;
 import org.ai4fm.proofprocess.zeves.UnparsedTerm;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
+import org.ai4fm.proofprocess.zeves.ZmlTerm;
 import org.ai4fm.proofprocess.zeves.ui.ZEvesProofUIPlugin;
 
 /**
@@ -55,12 +57,14 @@ public class TermParser {
 				System.out.println("Parsing term: " + (System.currentTimeMillis() - start));
 				
 				start = System.currentTimeMillis();
-				String zmlPred = printZml((SectionManager) sectInfo, goalPred);
+//				String zmlPred = printZml((SectionManager) sectInfo, goalPred);
 				System.out.println("Printing term to ZML: " + (System.currentTimeMillis() - start));
 				
 				// TODO convert the parsed predicate
-				UnparsedTerm term = FACTORY.createUnparsedTerm();
-				term.setDisplay(zmlPred);
+				CztTerm term = FACTORY.createCztTerm();
+				// TODO reprint the parsed term, otherwise it's Z/Eves result?
+				term.setDisplay(goalStr);
+				term.setTerm(goalPred);
 				goals.add(term);
 				
 				return goals;
