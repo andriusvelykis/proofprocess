@@ -293,7 +293,6 @@ public class SnapshotTracker {
 			if (trace1 instanceof ZEvesTrace && trace2 instanceof ZEvesTrace) {
 
 				EqualityHelper equalityHelper = new FeatureEqualityHelper(Arrays.asList(
-						ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Goal(),
 						ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Text(),
 						ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_UsedLemmas(),
 						ZEvesProofProcessPackage.eINSTANCE.getZEvesTrace_Case()));
