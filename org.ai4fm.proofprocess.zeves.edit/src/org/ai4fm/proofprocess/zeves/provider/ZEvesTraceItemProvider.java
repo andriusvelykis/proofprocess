@@ -64,57 +64,11 @@ public class ZEvesTraceItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addMarkupPropertyDescriptor(object);
-			addGoalPropertyDescriptor(object);
 			addUsedLemmasPropertyDescriptor(object);
 			addTextPropertyDescriptor(object);
 			addCasePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Markup feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addMarkupPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ZEvesTrace_markup_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ZEvesTrace_markup_feature", "_UI_ZEvesTrace_type"),
-				 ZEvesProofProcessPackage.Literals.ZEVES_TRACE__MARKUP,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Goal feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addGoalPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ZEvesTrace_goal_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ZEvesTrace_goal_feature", "_UI_ZEvesTrace_type"),
-				 ZEvesProofProcessPackage.Literals.ZEVES_TRACE__GOAL,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
 	}
 
 	/**
@@ -202,7 +156,7 @@ public class ZEvesTraceItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((ZEvesTrace)object).getMarkup();
+		String label = ((ZEvesTrace)object).getText();
 		return label == null || label.length() == 0 ?
 			getString("_UI_ZEvesTrace_type") :
 			getString("_UI_ZEvesTrace_type") + " " + label;
@@ -220,8 +174,6 @@ public class ZEvesTraceItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(ZEvesTrace.class)) {
-			case ZEvesProofProcessPackage.ZEVES_TRACE__MARKUP:
-			case ZEvesProofProcessPackage.ZEVES_TRACE__GOAL:
 			case ZEvesProofProcessPackage.ZEVES_TRACE__USED_LEMMAS:
 			case ZEvesProofProcessPackage.ZEVES_TRACE__TEXT:
 			case ZEvesProofProcessPackage.ZEVES_TRACE__CASE:

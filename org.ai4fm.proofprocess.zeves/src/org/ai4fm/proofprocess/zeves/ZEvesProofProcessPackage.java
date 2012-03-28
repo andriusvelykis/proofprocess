@@ -176,31 +176,13 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	int CZT_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Markup</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ZEVES_TRACE__MARKUP = ProofProcessPackage.TRACE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Goal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ZEVES_TRACE__GOAL = ProofProcessPackage.TRACE_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Used Lemmas</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ZEVES_TRACE__USED_LEMMAS = ProofProcessPackage.TRACE_FEATURE_COUNT + 2;
+	int ZEVES_TRACE__USED_LEMMAS = ProofProcessPackage.TRACE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Text</b></em>' attribute.
@@ -209,7 +191,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ZEVES_TRACE__TEXT = ProofProcessPackage.TRACE_FEATURE_COUNT + 3;
+	int ZEVES_TRACE__TEXT = ProofProcessPackage.TRACE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Case</b></em>' attribute.
@@ -218,7 +200,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ZEVES_TRACE__CASE = ProofProcessPackage.TRACE_FEATURE_COUNT + 4;
+	int ZEVES_TRACE__CASE = ProofProcessPackage.TRACE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>ZEves Trace</em>' class.
@@ -227,7 +209,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ZEVES_TRACE_FEATURE_COUNT = ProofProcessPackage.TRACE_FEATURE_COUNT + 5;
+	int ZEVES_TRACE_FEATURE_COUNT = ProofProcessPackage.TRACE_FEATURE_COUNT + 3;
 
 
 	/**
@@ -281,28 +263,6 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getZEvesTrace();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getMarkup <em>Markup</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Markup</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesTrace#getMarkup()
-	 * @see #getZEvesTrace()
-	 * @generated
-	 */
-	EAttribute getZEvesTrace_Markup();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getGoal <em>Goal</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Goal</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesTrace#getGoal()
-	 * @see #getZEvesTrace()
-	 * @generated
-	 */
-	EAttribute getZEvesTrace_Goal();
 
 	/**
 	 * Returns the meta object for the attribute list '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getUsedLemmas <em>Used Lemmas</em>}'.
@@ -427,22 +387,6 @@ public interface ZEvesProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ZEVES_TRACE = eINSTANCE.getZEvesTrace();
-
-		/**
-		 * The meta object literal for the '<em><b>Markup</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ZEVES_TRACE__MARKUP = eINSTANCE.getZEvesTrace_Markup();
-
-		/**
-		 * The meta object literal for the '<em><b>Goal</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ZEVES_TRACE__GOAL = eINSTANCE.getZEvesTrace_Goal();
 
 		/**
 		 * The meta object literal for the '<em><b>Used Lemmas</b></em>' attribute list feature.

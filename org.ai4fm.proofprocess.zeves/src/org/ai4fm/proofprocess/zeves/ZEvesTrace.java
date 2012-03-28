@@ -18,8 +18,6 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getMarkup <em>Markup</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getGoal <em>Goal</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getUsedLemmas <em>Used Lemmas</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getText <em>Text</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getCase <em>Case</em>}</li>
@@ -31,58 +29,6 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface ZEvesTrace extends Trace {
-	/**
-	 * Returns the value of the '<em><b>Markup</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Markup</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Markup</em>' attribute.
-	 * @see #setMarkup(String)
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getZEvesTrace_Markup()
-	 * @model
-	 * @generated
-	 */
-	String getMarkup();
-
-	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getMarkup <em>Markup</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Markup</em>' attribute.
-	 * @see #getMarkup()
-	 * @generated
-	 */
-	void setMarkup(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Goal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Goal</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Goal</em>' attribute.
-	 * @see #setGoal(String)
-	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getZEvesTrace_Goal()
-	 * @model
-	 * @generated
-	 */
-	String getGoal();
-
-	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace#getGoal <em>Goal</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Goal</em>' attribute.
-	 * @see #getGoal()
-	 * @generated
-	 */
-	void setGoal(String value);
-
 	/**
 	 * Returns the value of the '<em><b>Used Lemmas</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.

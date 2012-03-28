@@ -176,7 +176,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getZEvesTrace_Markup() {
+	public EAttribute getZEvesTrace_UsedLemmas() {
 		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -185,7 +185,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getZEvesTrace_Goal() {
+	public EAttribute getZEvesTrace_Text() {
 		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -194,26 +194,8 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getZEvesTrace_UsedLemmas() {
-		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getZEvesTrace_Text() {
-		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getZEvesTrace_Case() {
-		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -271,8 +253,6 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 		createEAttribute(cztTermEClass, CZT_TERM__TERM);
 
 		zEvesTraceEClass = createEClass(ZEVES_TRACE);
-		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__MARKUP);
-		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__GOAL);
 		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__USED_LEMMAS);
 		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__TEXT);
 		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__CASE);
@@ -327,8 +307,6 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 		initEAttribute(getCztTerm_Term(), this.getZmlTerm(), "term", null, 1, 1, CztTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(zEvesTraceEClass, ZEvesTrace.class, "ZEvesTrace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getZEvesTrace_Markup(), ecorePackage.getEString(), "markup", null, 0, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getZEvesTrace_Goal(), ecorePackage.getEString(), "goal", null, 0, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getZEvesTrace_UsedLemmas(), ecorePackage.getEString(), "usedLemmas", null, 0, -1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getZEvesTrace_Text(), ecorePackage.getEString(), "text", null, 1, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getZEvesTrace_Case(), ecorePackage.getEString(), "case", "\"\"", 1, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -29,8 +29,6 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl#getMarkup <em>Markup</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl#getGoal <em>Goal</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl#getUsedLemmas <em>Used Lemmas</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl#getText <em>Text</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl#getCase <em>Case</em>}</li>
@@ -40,46 +38,6 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * @generated
  */
 public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
-	/**
-	 * The default value of the '{@link #getMarkup() <em>Markup</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMarkup()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String MARKUP_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getMarkup() <em>Markup</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMarkup()
-	 * @generated
-	 * @ordered
-	 */
-	protected String markup = MARKUP_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getGoal() <em>Goal</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getGoal()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String GOAL_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getGoal() <em>Goal</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getGoal()
-	 * @generated
-	 * @ordered
-	 */
-	protected String goal = GOAL_EDEFAULT;
-
 	/**
 	 * The cached value of the '{@link #getUsedLemmas() <em>Used Lemmas</em>}' attribute list.
 	 * <!-- begin-user-doc -->
@@ -154,48 +112,6 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getMarkup() {
-		return markup;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setMarkup(String newMarkup) {
-		String oldMarkup = markup;
-		markup = newMarkup;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.ZEVES_TRACE__MARKUP, oldMarkup, markup));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getGoal() {
-		return goal;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setGoal(String newGoal) {
-		String oldGoal = goal;
-		goal = newGoal;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.ZEVES_TRACE__GOAL, oldGoal, goal));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<String> getUsedLemmas() {
 		if (usedLemmas == null) {
 			usedLemmas = new EDataTypeUniqueEList<String>(String.class, this, ZEvesProofProcessPackage.ZEVES_TRACE__USED_LEMMAS);
@@ -253,10 +169,6 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.ZEVES_TRACE__MARKUP:
-				return getMarkup();
-			case ZEvesProofProcessPackage.ZEVES_TRACE__GOAL:
-				return getGoal();
 			case ZEvesProofProcessPackage.ZEVES_TRACE__USED_LEMMAS:
 				return getUsedLemmas();
 			case ZEvesProofProcessPackage.ZEVES_TRACE__TEXT:
@@ -276,12 +188,6 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.ZEVES_TRACE__MARKUP:
-				setMarkup((String)newValue);
-				return;
-			case ZEvesProofProcessPackage.ZEVES_TRACE__GOAL:
-				setGoal((String)newValue);
-				return;
 			case ZEvesProofProcessPackage.ZEVES_TRACE__USED_LEMMAS:
 				getUsedLemmas().clear();
 				getUsedLemmas().addAll((Collection<? extends String>)newValue);
@@ -304,12 +210,6 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.ZEVES_TRACE__MARKUP:
-				setMarkup(MARKUP_EDEFAULT);
-				return;
-			case ZEvesProofProcessPackage.ZEVES_TRACE__GOAL:
-				setGoal(GOAL_EDEFAULT);
-				return;
 			case ZEvesProofProcessPackage.ZEVES_TRACE__USED_LEMMAS:
 				getUsedLemmas().clear();
 				return;
@@ -331,10 +231,6 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ZEvesProofProcessPackage.ZEVES_TRACE__MARKUP:
-				return MARKUP_EDEFAULT == null ? markup != null : !MARKUP_EDEFAULT.equals(markup);
-			case ZEvesProofProcessPackage.ZEVES_TRACE__GOAL:
-				return GOAL_EDEFAULT == null ? goal != null : !GOAL_EDEFAULT.equals(goal);
 			case ZEvesProofProcessPackage.ZEVES_TRACE__USED_LEMMAS:
 				return usedLemmas != null && !usedLemmas.isEmpty();
 			case ZEvesProofProcessPackage.ZEVES_TRACE__TEXT:
@@ -355,11 +251,7 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (markup: ");
-		result.append(markup);
-		result.append(", goal: ");
-		result.append(goal);
-		result.append(", usedLemmas: ");
+		result.append(" (usedLemmas: ");
 		result.append(usedLemmas);
 		result.append(", text: ");
 		result.append(text);

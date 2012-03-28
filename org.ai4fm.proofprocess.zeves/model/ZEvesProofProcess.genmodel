@@ -16,8 +16,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//CztTerm/term"/>
     </genClasses>
     <genClasses ecoreClass="ZEvesProofProcess.ecore#//ZEvesTrace">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/markup"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/goal"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/usedLemmas"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/text"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/case"/>

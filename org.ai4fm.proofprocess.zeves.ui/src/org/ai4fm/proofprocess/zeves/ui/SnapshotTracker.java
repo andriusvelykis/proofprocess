@@ -418,8 +418,6 @@ public class SnapshotTracker {
 		List<Property> outProps = info.getInProps();
 		
 		ZEvesTrace trace = ZEvesProofProcessFactory.eINSTANCE.createZEvesTrace();
-		trace.setGoal(entryResult.getFirstResult().toString());
-//		ref.setMarkup();
 		trace.setText(commandText);
 		trace.setCase(proofCaseStr(entryResult.getProofCase()));
 		
