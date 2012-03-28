@@ -27,6 +27,7 @@ import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.Observables;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -34,8 +35,10 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.databinding.IEMFListProperty;
@@ -151,17 +154,44 @@ public class ProofProcessPage extends Page {
 			}
 		});
 
+		// Realm is thread-local, so retrieve the realm for the UI thread
+		final Realm observeRealm = Realm.getDefault(); 
+		// load the proof process in a separate job, otherwise it delays the startup
+		Job loadJob = new Job("Loading proof process") {
+			
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				
+				loadProofProject(observeRealm);
+				
+				// set tree input back in the UI thread
+				main.getDisplay().asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						treeViewer.setInput(proofProject);
+					}
+				});
+				
+				return Status.OK_STATUS;
+			}
+		};
+		loadJob.setPriority(Job.DECORATE);
+		loadJob.setSystem(true);
+		loadJob.schedule();
+	}
+	
+	private void loadProofProject(Realm observeRealm) {
 		
 		try {
 			proofProject = ProofManager.getProofProject(projectResource, null);
-			treeViewer.setInput(proofProject);
 			
 			// log is only used to update the last activity, not displayed in the view at the moment
 			ProofLog proofLog = ProofManager.getProofLog(projectResource, null);
 			
 			IEMFListProperty projectActivitiesProp = EMFProperties.list(
 					ProofProcessLogPackage.eINSTANCE.getProofLog_Activities());
-			activitiesObservableList = projectActivitiesProp.observe(proofLog);
+			activitiesObservableList = projectActivitiesProp.observe(observeRealm, proofLog);
 			activitiesObservableList.addChangeListener(activitiesListListener = new IChangeListener() {
 				
 				@Override
