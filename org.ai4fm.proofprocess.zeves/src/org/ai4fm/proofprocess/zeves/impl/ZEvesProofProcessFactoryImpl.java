@@ -6,9 +6,11 @@
  */
 package org.ai4fm.proofprocess.zeves.impl;
 
+import net.sourceforge.czt.base.ast.Term;
 import org.ai4fm.proofprocess.zeves.*;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -61,9 +63,40 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ZEvesProofProcessPackage.UNPARSED_TERM: return createUnparsedTerm();
+			case ZEvesProofProcessPackage.CZT_TERM: return createCztTerm();
 			case ZEvesProofProcessPackage.ZEVES_TRACE: return createZEvesTrace();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object createFromString(EDataType eDataType, String initialValue) {
+		switch (eDataType.getClassifierID()) {
+			case ZEvesProofProcessPackage.ZML_TERM:
+				return createZmlTermFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String convertToString(EDataType eDataType, Object instanceValue) {
+		switch (eDataType.getClassifierID()) {
+			case ZEvesProofProcessPackage.ZML_TERM:
+				return convertZmlTermToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -82,9 +115,37 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public CztTerm createCztTerm() {
+		CztTermImpl cztTerm = new CztTermImpl();
+		return cztTerm;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ZEvesTrace createZEvesTrace() {
 		ZEvesTraceImpl zEvesTrace = new ZEvesTraceImpl();
 		return zEvesTrace;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public Term createZmlTermFromString(EDataType eDataType, String initialValue) {
+		return (Term)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String convertZmlTermToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

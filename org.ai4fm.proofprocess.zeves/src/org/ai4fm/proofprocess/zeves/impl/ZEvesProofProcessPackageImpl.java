@@ -6,16 +6,20 @@
  */
 package org.ai4fm.proofprocess.zeves.impl;
 
+import net.sourceforge.czt.base.ast.Term;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
+import org.ai4fm.proofprocess.zeves.CztTerm;
 import org.ai4fm.proofprocess.zeves.DisplayTerm;
 import org.ai4fm.proofprocess.zeves.UnparsedTerm;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 
+import org.ai4fm.proofprocess.zeves.ZmlTerm;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
@@ -44,8 +48,20 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass cztTermEClass = null;
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass zEvesTraceEClass = null;
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType zmlTermEDataType = null;
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
@@ -142,6 +158,15 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getZmlTerm() {
+		return zmlTermEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getZEvesTrace() {
 		return zEvesTraceEClass;
 	}
@@ -196,6 +221,24 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getCztTerm() {
+		return cztTermEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCztTerm_Term() {
+		return (EAttribute)cztTermEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ZEvesProofProcessFactory getZEvesProofProcessFactory() {
 		return (ZEvesProofProcessFactory)getEFactoryInstance();
 	}
@@ -224,12 +267,18 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 
 		unparsedTermEClass = createEClass(UNPARSED_TERM);
 
+		cztTermEClass = createEClass(CZT_TERM);
+		createEAttribute(cztTermEClass, CZT_TERM__TERM);
+
 		zEvesTraceEClass = createEClass(ZEVES_TRACE);
 		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__MARKUP);
 		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__GOAL);
 		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__USED_LEMMAS);
 		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__TEXT);
 		createEAttribute(zEvesTraceEClass, ZEVES_TRACE__CASE);
+
+		// Create data types
+		zmlTermEDataType = createEDataType(ZML_TERM);
 	}
 
 	/**
@@ -265,6 +314,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 		// Add supertypes to classes
 		displayTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		unparsedTermEClass.getESuperTypes().add(this.getDisplayTerm());
+		cztTermEClass.getESuperTypes().add(this.getDisplayTerm());
 		zEvesTraceEClass.getESuperTypes().add(theProofProcessPackage.getTrace());
 
 		// Initialize classes and features; add operations and parameters
@@ -273,12 +323,18 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 
 		initEClass(unparsedTermEClass, UnparsedTerm.class, "UnparsedTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEClass(cztTermEClass, CztTerm.class, "CztTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCztTerm_Term(), this.getZmlTerm(), "term", null, 1, 1, CztTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(zEvesTraceEClass, ZEvesTrace.class, "ZEvesTrace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getZEvesTrace_Markup(), ecorePackage.getEString(), "markup", null, 0, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getZEvesTrace_Goal(), ecorePackage.getEString(), "goal", null, 0, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getZEvesTrace_UsedLemmas(), ecorePackage.getEString(), "usedLemmas", null, 0, -1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getZEvesTrace_Text(), ecorePackage.getEString(), "text", null, 1, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getZEvesTrace_Case(), ecorePackage.getEString(), "case", "\"\"", 1, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		// Initialize data types
+		initEDataType(zmlTermEDataType, Term.class, "ZmlTerm", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

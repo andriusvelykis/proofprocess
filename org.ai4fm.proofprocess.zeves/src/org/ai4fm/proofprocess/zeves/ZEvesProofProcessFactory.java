@@ -35,6 +35,15 @@ public interface ZEvesProofProcessFactory extends EFactory {
 	UnparsedTerm createUnparsedTerm();
 
 	/**
+	 * Returns a new object of class '<em>Czt Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Czt Term</em>'.
+	 * @generated
+	 */
+	CztTerm createCztTerm();
+
+	/**
 	 * Returns a new object of class '<em>ZEves Trace</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

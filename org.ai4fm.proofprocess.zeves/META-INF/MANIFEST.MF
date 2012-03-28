@@ -11,5 +11,6 @@ Export-Package: org.ai4fm.proofprocess.zeves,
  org.ai4fm.proofprocess.zeves.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.ai4fm.proofprocess;bundle-version="1.0.0"
+ org.ai4fm.proofprocess;bundle-version="1.0.0",
+ net.sourceforge.czt.library;bundle-version="1.6.0"
 Bundle-ActivationPolicy: lazy

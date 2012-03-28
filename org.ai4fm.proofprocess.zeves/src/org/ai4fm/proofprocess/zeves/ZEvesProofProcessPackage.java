@@ -10,6 +10,7 @@ import org.ai4fm.proofprocess.ProofProcessPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 
 /**
@@ -117,6 +118,16 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	int UNPARSED_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '<em>Zml Term</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see net.sourceforge.czt.base.ast.Term
+	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getZmlTerm()
+	 * @generated
+	 */
+	int ZML_TERM = 4;
+
+	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl <em>ZEves Trace</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -124,7 +135,45 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getZEvesTrace()
 	 * @generated
 	 */
-	int ZEVES_TRACE = 2;
+	int ZEVES_TRACE = 3;
+
+	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.CztTermImpl <em>Czt Term</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.zeves.impl.CztTermImpl
+	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getCztTerm()
+	 * @generated
+	 */
+	int CZT_TERM = 2;
+
+
+	/**
+	 * The feature id for the '<em><b>Display</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CZT_TERM__DISPLAY = DISPLAY_TERM__DISPLAY;
+
+	/**
+	 * The feature id for the '<em><b>Term</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CZT_TERM__TERM = DISPLAY_TERM_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Czt Term</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CZT_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Markup</b></em>' attribute.
@@ -213,6 +262,17 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	EClass getUnparsedTerm();
 
 	/**
+	 * Returns the meta object for data type '{@link net.sourceforge.czt.base.ast.Term <em>Zml Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Zml Term</em>'.
+	 * @see net.sourceforge.czt.base.ast.Term
+	 * @model instanceClass="net.sourceforge.czt.base.ast.Term"
+	 * @generated
+	 */
+	EDataType getZmlTerm();
+
+	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.ZEvesTrace <em>ZEves Trace</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -278,6 +338,27 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	EAttribute getZEvesTrace_Case();
 
 	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.CztTerm <em>Czt Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Czt Term</em>'.
+	 * @see org.ai4fm.proofprocess.zeves.CztTerm
+	 * @generated
+	 */
+	EClass getCztTerm();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.CztTerm#getTerm <em>Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Term</em>'.
+	 * @see org.ai4fm.proofprocess.zeves.CztTerm#getTerm()
+	 * @see #getCztTerm()
+	 * @generated
+	 */
+	EAttribute getCztTerm_Term();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -328,6 +409,16 @@ public interface ZEvesProofProcessPackage extends EPackage {
 		EClass UNPARSED_TERM = eINSTANCE.getUnparsedTerm();
 
 		/**
+		 * The meta object literal for the '<em>Zml Term</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see net.sourceforge.czt.base.ast.Term
+		 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getZmlTerm()
+		 * @generated
+		 */
+		EDataType ZML_TERM = eINSTANCE.getZmlTerm();
+
+		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl <em>ZEves Trace</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -376,6 +467,24 @@ public interface ZEvesProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ZEVES_TRACE__CASE = eINSTANCE.getZEvesTrace_Case();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.CztTermImpl <em>Czt Term</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.zeves.impl.CztTermImpl
+		 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getCztTerm()
+		 * @generated
+		 */
+		EClass CZT_TERM = eINSTANCE.getCztTerm();
+
+		/**
+		 * The meta object literal for the '<em><b>Term</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CZT_TERM__TERM = eINSTANCE.getCztTerm_Term();
 
 	}
 

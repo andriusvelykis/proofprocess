@@ -99,6 +99,29 @@ public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProce
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.zeves.CztTerm} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected CztTermItemProvider cztTermItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.zeves.CztTerm}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createCztTermAdapter() {
+		if (cztTermItemProvider == null) {
+			cztTermItemProvider = new CztTermItemProvider(this);
+		}
+
+		return cztTermItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.zeves.ZEvesTrace} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -221,6 +244,7 @@ public class ZEvesProofProcessItemProviderAdapterFactory extends ZEvesProofProce
 	 */
 	public void dispose() {
 		if (unparsedTermItemProvider != null) unparsedTermItemProvider.dispose();
+		if (cztTermItemProvider != null) cztTermItemProvider.dispose();
 		if (zEvesTraceItemProvider != null) zEvesTraceItemProvider.dispose();
 	}
 

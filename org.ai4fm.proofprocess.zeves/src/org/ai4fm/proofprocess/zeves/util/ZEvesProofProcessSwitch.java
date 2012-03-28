@@ -88,6 +88,14 @@ public class ZEvesProofProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ZEvesProofProcessPackage.CZT_TERM: {
+				CztTerm cztTerm = (CztTerm)theEObject;
+				T result = caseCztTerm(cztTerm);
+				if (result == null) result = caseDisplayTerm(cztTerm);
+				if (result == null) result = caseTerm(cztTerm);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ZEvesProofProcessPackage.ZEVES_TRACE: {
 				ZEvesTrace zEvesTrace = (ZEvesTrace)theEObject;
 				T result = caseZEvesTrace(zEvesTrace);
@@ -126,6 +134,21 @@ public class ZEvesProofProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseUnparsedTerm(UnparsedTerm object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Czt Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Czt Term</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCztTerm(CztTerm object) {
 		return null;
 	}
 
