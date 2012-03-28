@@ -7,12 +7,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UnparsedTerm" eSuperTypes="#//DisplayTerm"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ZmlTerm" eSuperTypes="#//DisplayTerm">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="term" lowerBound="1" eType="#//CztTerm"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="zmlVersion" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CztTerm" eSuperTypes="#//DisplayTerm">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="term" lowerBound="1" eType="#//ZmlTerm"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="CztTerm" instanceClassName="net.sourceforge.czt.base.ast.Term"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="ZmlTerm" instanceClassName="net.sourceforge.czt.base.ast.Term"/>
   <eClassifiers xsi:type="ecore:EClass" name="ZEvesTrace" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Trace">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="markup" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="goal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
