@@ -12,8 +12,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="ZmlTerm" instanceClassName="net.sourceforge.czt.base.ast.Term"/>
   <eClassifiers xsi:type="ecore:EClass" name="ZEvesTrace" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Trace">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="markup" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="goal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="usedLemmas" upperBound="-1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
