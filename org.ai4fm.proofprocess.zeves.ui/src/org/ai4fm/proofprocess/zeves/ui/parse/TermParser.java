@@ -12,6 +12,7 @@ import net.sourceforge.czt.session.Markup;
 import net.sourceforge.czt.session.SectionInfo;
 import net.sourceforge.czt.session.SectionManager;
 import net.sourceforge.czt.z.ast.Pred;
+import net.sourceforge.czt.z.ast.TruePred;
 import net.sourceforge.czt.zeves.response.ZEvesOutput;
 
 import org.ai4fm.proofprocess.Term;
@@ -49,6 +50,11 @@ public class TermParser {
 				
 				// parse the goal from Z/Eves response
 				Pred goalPred = ZEvesResultConverter.parseZEvesPred((SectionManager) sectInfo, sectName, goalStr);
+				
+				if (goalPred instanceof TruePred) {
+					// if the goal is TRUE, return no goals
+					return Collections.emptyList();
+				}
 				
 				// pretty-print the goal back, so that we get uniform CZT-printing, instead
 				// of using Z/Eves conversion to CZT unicode
