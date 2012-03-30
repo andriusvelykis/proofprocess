@@ -129,11 +129,9 @@ public class ProofProcessPage extends Page {
 				// FIXME quite a hack here
 				if (object instanceof ProofEntry) {
 					ProofEntry entry = (ProofEntry) object;
-					if (entry.getProofStep().getTrace() instanceof ZEvesTrace) {
-						ZEvesTrace ref = (ZEvesTrace) entry.getProofStep().getTrace();
-						if ("true".equals(ref.getGoal())) {
-							return ZEvesImages.getImage(ZEvesImages.IMG_THEOREM_PROVED);
-						}
+					if (entry.getProofStep().getOutGoals().isEmpty()) {
+						// no outstanding goals - proved
+						return ZEvesImages.getImage(ZEvesImages.IMG_THEOREM_PROVED);
  					}
 				}
 				return super.getImage(object);
