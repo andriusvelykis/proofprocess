@@ -6,24 +6,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="DisplayTerm" abstract="true" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="TermKind">
-    <eLiterals name="CONST"/>
-    <eLiterals name="BOUND" value="1"/>
-    <eLiterals name="VAR" value="2"/>
-    <eLiterals name="FIXED" value="3"/>
-    <eLiterals name="FREE" value="4"/>
-    <eLiterals name="NUMERAL" value="5"/>
-    <eLiterals name="SKOLEM" value="6"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IsaTerm" eSuperTypes="#//DisplayTerm">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" lowerBound="1" eType="#//TermKind"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="term" lowerBound="1" eType="#//YXmlTerm"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CompositeTerm" eSuperTypes="#//DisplayTerm">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="terms" lowerBound="1" upperBound="-1"
-        eType="ecore:EClass ../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term"
-        containment="true"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="YXmlTerm" instanceClassName="isabelle.XML.Tree"/>
   <eClassifiers xsi:type="ecore:EClass" name="IsabelleTrace" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Trace">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="command" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
