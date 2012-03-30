@@ -88,14 +88,6 @@ public class IsabelleProofProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case IsabelleProofProcessPackage.COMPOSITE_TERM: {
-				CompositeTerm compositeTerm = (CompositeTerm)theEObject;
-				T result = caseCompositeTerm(compositeTerm);
-				if (result == null) result = caseDisplayTerm(compositeTerm);
-				if (result == null) result = caseTerm(compositeTerm);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case IsabelleProofProcessPackage.ISABELLE_TRACE: {
 				IsabelleTrace isabelleTrace = (IsabelleTrace)theEObject;
 				T result = caseIsabelleTrace(isabelleTrace);
@@ -134,21 +126,6 @@ public class IsabelleProofProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseIsaTerm(IsaTerm object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Composite Term</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Composite Term</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseCompositeTerm(CompositeTerm object) {
 		return null;
 	}
 

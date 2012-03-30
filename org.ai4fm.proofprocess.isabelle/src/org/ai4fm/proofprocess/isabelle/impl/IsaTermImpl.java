@@ -6,9 +6,10 @@
  */
 package org.ai4fm.proofprocess.isabelle.impl;
 
+import isabelle.XML.Tree;
+
 import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
-import org.ai4fm.proofprocess.isabelle.TermKind;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -23,8 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.isabelle.impl.IsaTermImpl#getKind <em>Kind</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.isabelle.impl.IsaTermImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.isabelle.impl.IsaTermImpl#getTerm <em>Term</em>}</li>
  * </ul>
  * </p>
  *
@@ -32,44 +32,24 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	/**
-	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute.
+	 * The default value of the '{@link #getTerm() <em>Term</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getKind()
+	 * @see #getTerm()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final TermKind KIND_EDEFAULT = TermKind.CONST;
+	protected static final Tree TERM_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute.
+	 * The cached value of the '{@link #getTerm() <em>Term</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getKind()
+	 * @see #getTerm()
 	 * @generated
 	 * @ordered
 	 */
-	protected TermKind kind = KIND_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String NAME_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected String name = NAME_EDEFAULT;
+	protected Tree term = TERM_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -95,8 +75,8 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TermKind getKind() {
-		return kind;
+	public Tree getTerm() {
+		return term;
 	}
 
 	/**
@@ -104,32 +84,11 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setKind(TermKind newKind) {
-		TermKind oldKind = kind;
-		kind = newKind == null ? KIND_EDEFAULT : newKind;
+	public void setTerm(Tree newTerm) {
+		Tree oldTerm = term;
+		term = newTerm;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.ISA_TERM__KIND, oldKind, kind));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.ISA_TERM__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.ISA_TERM__TERM, oldTerm, term));
 	}
 
 	/**
@@ -140,10 +99,8 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case IsabelleProofProcessPackage.ISA_TERM__KIND:
-				return getKind();
-			case IsabelleProofProcessPackage.ISA_TERM__NAME:
-				return getName();
+			case IsabelleProofProcessPackage.ISA_TERM__TERM:
+				return getTerm();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -156,11 +113,8 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case IsabelleProofProcessPackage.ISA_TERM__KIND:
-				setKind((TermKind)newValue);
-				return;
-			case IsabelleProofProcessPackage.ISA_TERM__NAME:
-				setName((String)newValue);
+			case IsabelleProofProcessPackage.ISA_TERM__TERM:
+				setTerm((Tree)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -174,11 +128,8 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case IsabelleProofProcessPackage.ISA_TERM__KIND:
-				setKind(KIND_EDEFAULT);
-				return;
-			case IsabelleProofProcessPackage.ISA_TERM__NAME:
-				setName(NAME_EDEFAULT);
+			case IsabelleProofProcessPackage.ISA_TERM__TERM:
+				setTerm(TERM_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -192,10 +143,8 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case IsabelleProofProcessPackage.ISA_TERM__KIND:
-				return kind != KIND_EDEFAULT;
-			case IsabelleProofProcessPackage.ISA_TERM__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case IsabelleProofProcessPackage.ISA_TERM__TERM:
+				return TERM_EDEFAULT == null ? term != null : !TERM_EDEFAULT.equals(term);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -210,10 +159,8 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (kind: ");
-		result.append(kind);
-		result.append(", name: ");
-		result.append(name);
+		result.append(" (term: ");
+		result.append(term);
 		result.append(')');
 		return result.toString();
 	}

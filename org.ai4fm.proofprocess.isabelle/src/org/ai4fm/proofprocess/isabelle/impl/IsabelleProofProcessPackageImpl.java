@@ -6,21 +6,20 @@
  */
 package org.ai4fm.proofprocess.isabelle.impl;
 
+import isabelle.XML.Tree;
+
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
-import org.ai4fm.proofprocess.isabelle.CompositeTerm;
 import org.ai4fm.proofprocess.isabelle.DisplayTerm;
 import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
-import org.ai4fm.proofprocess.isabelle.TermKind;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
@@ -50,13 +49,6 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass compositeTermEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass isabelleTraceEClass = null;
 
 	/**
@@ -64,7 +56,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EEnum termKindEEnum = null;
+	private EDataType yXmlTermEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -162,35 +154,8 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIsaTerm_Kind() {
+	public EAttribute getIsaTerm_Term() {
 		return (EAttribute)isaTermEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getIsaTerm_Name() {
-		return (EAttribute)isaTermEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getCompositeTerm() {
-		return compositeTermEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getCompositeTerm_Terms() {
-		return (EReference)compositeTermEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -225,8 +190,8 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EEnum getTermKind() {
-		return termKindEEnum;
+	public EDataType getYXmlTerm() {
+		return yXmlTermEDataType;
 	}
 
 	/**
@@ -261,18 +226,14 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		createEAttribute(displayTermEClass, DISPLAY_TERM__DISPLAY);
 
 		isaTermEClass = createEClass(ISA_TERM);
-		createEAttribute(isaTermEClass, ISA_TERM__KIND);
-		createEAttribute(isaTermEClass, ISA_TERM__NAME);
-
-		compositeTermEClass = createEClass(COMPOSITE_TERM);
-		createEReference(compositeTermEClass, COMPOSITE_TERM__TERMS);
+		createEAttribute(isaTermEClass, ISA_TERM__TERM);
 
 		isabelleTraceEClass = createEClass(ISABELLE_TRACE);
 		createEAttribute(isabelleTraceEClass, ISABELLE_TRACE__COMMAND);
 		createEAttribute(isabelleTraceEClass, ISABELLE_TRACE__SIMP_LEMMAS);
 
-		// Create enums
-		termKindEEnum = createEEnum(TERM_KIND);
+		// Create data types
+		yXmlTermEDataType = createEDataType(YXML_TERM);
 	}
 
 	/**
@@ -308,7 +269,6 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		// Add supertypes to classes
 		displayTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		isaTermEClass.getESuperTypes().add(this.getDisplayTerm());
-		compositeTermEClass.getESuperTypes().add(this.getDisplayTerm());
 		isabelleTraceEClass.getESuperTypes().add(theProofProcessPackage.getTrace());
 
 		// Initialize classes and features; add operations and parameters
@@ -316,25 +276,14 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		initEAttribute(getDisplayTerm_Display(), ecorePackage.getEString(), "display", null, 0, 1, DisplayTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(isaTermEClass, IsaTerm.class, "IsaTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIsaTerm_Kind(), this.getTermKind(), "kind", null, 1, 1, IsaTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIsaTerm_Name(), ecorePackage.getEString(), "name", null, 0, 1, IsaTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(compositeTermEClass, CompositeTerm.class, "CompositeTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getCompositeTerm_Terms(), theProofProcessPackage.getTerm(), null, "terms", null, 1, -1, CompositeTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIsaTerm_Term(), this.getYXmlTerm(), "term", null, 1, 1, IsaTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(isabelleTraceEClass, IsabelleTrace.class, "IsabelleTrace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIsabelleTrace_Command(), ecorePackage.getEString(), "command", null, 1, 1, IsabelleTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIsabelleTrace_SimpLemmas(), ecorePackage.getEString(), "simpLemmas", null, 0, -1, IsabelleTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		// Initialize enums and add enum literals
-		initEEnum(termKindEEnum, TermKind.class, "TermKind");
-		addEEnumLiteral(termKindEEnum, TermKind.CONST);
-		addEEnumLiteral(termKindEEnum, TermKind.BOUND);
-		addEEnumLiteral(termKindEEnum, TermKind.VAR);
-		addEEnumLiteral(termKindEEnum, TermKind.FIXED);
-		addEEnumLiteral(termKindEEnum, TermKind.FREE);
-		addEEnumLiteral(termKindEEnum, TermKind.NUMERAL);
-		addEEnumLiteral(termKindEEnum, TermKind.SKOLEM);
+		// Initialize data types
+		initEDataType(yXmlTermEDataType, Tree.class, "YXmlTerm", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

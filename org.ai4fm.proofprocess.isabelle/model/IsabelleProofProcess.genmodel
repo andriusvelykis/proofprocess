@@ -8,24 +8,12 @@
   <foreignModel>IsabelleProofProcess.ecore</foreignModel>
   <genPackages prefix="IsabelleProofProcess" basePackage="org.ai4fm.proofprocess"
       disposableProviderFactory="true" ecorePackage="IsabelleProofProcess.ecore#/">
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="IsabelleProofProcess.ecore#//TermKind">
-      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/CONST"/>
-      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/BOUND"/>
-      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/VAR"/>
-      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/FIXED"/>
-      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/FREE"/>
-      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/NUMERAL"/>
-      <genEnumLiterals ecoreEnumLiteral="IsabelleProofProcess.ecore#//TermKind/SKOLEM"/>
-    </genEnums>
+    <genDataTypes ecoreDataType="IsabelleProofProcess.ecore#//YXmlTerm"/>
     <genClasses image="false" ecoreClass="IsabelleProofProcess.ecore#//DisplayTerm">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//DisplayTerm/display"/>
     </genClasses>
     <genClasses ecoreClass="IsabelleProofProcess.ecore#//IsaTerm">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsaTerm/kind"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsaTerm/name"/>
-    </genClasses>
-    <genClasses ecoreClass="IsabelleProofProcess.ecore#//CompositeTerm">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//CompositeTerm/terms"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsaTerm/term"/>
     </genClasses>
     <genClasses ecoreClass="IsabelleProofProcess.ecore#//IsabelleTrace">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsabelleTrace/command"/>

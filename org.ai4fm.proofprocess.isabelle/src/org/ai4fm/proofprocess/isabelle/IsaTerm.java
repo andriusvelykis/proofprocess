@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess.isabelle;
 
+import isabelle.XML.Tree;
 
 /**
  * <!-- begin-user-doc -->
@@ -15,8 +16,7 @@ package org.ai4fm.proofprocess.isabelle;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.isabelle.IsaTerm#getKind <em>Kind</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.isabelle.IsaTerm#getName <em>Name</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.isabelle.IsaTerm#getTerm <em>Term</em>}</li>
  * </ul>
  * </p>
  *
@@ -26,58 +26,29 @@ package org.ai4fm.proofprocess.isabelle;
  */
 public interface IsaTerm extends DisplayTerm {
 	/**
-	 * Returns the value of the '<em><b>Kind</b></em>' attribute.
-	 * The literals are from the enumeration {@link org.ai4fm.proofprocess.isabelle.TermKind}.
+	 * Returns the value of the '<em><b>Term</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Kind</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Term</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Kind</em>' attribute.
-	 * @see org.ai4fm.proofprocess.isabelle.TermKind
-	 * @see #setKind(TermKind)
-	 * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getIsaTerm_Kind()
-	 * @model required="true"
+	 * @return the value of the '<em>Term</em>' attribute.
+	 * @see #setTerm(Tree)
+	 * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getIsaTerm_Term()
+	 * @model dataType="org.ai4fm.proofprocess.isabelle.YXmlTerm" required="true"
 	 * @generated
 	 */
-	TermKind getKind();
+	Tree getTerm();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.isabelle.IsaTerm#getKind <em>Kind</em>}' attribute.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.isabelle.IsaTerm#getTerm <em>Term</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Kind</em>' attribute.
-	 * @see org.ai4fm.proofprocess.isabelle.TermKind
-	 * @see #getKind()
+	 * @param value the new value of the '<em>Term</em>' attribute.
+	 * @see #getTerm()
 	 * @generated
 	 */
-	void setKind(TermKind value);
-
-	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(String)
-	 * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getIsaTerm_Name()
-	 * @model
-	 * @generated
-	 */
-	String getName();
-
-	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.isabelle.IsaTerm#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
-	 * @see #getName()
-	 * @generated
-	 */
-	void setName(String value);
+	void setTerm(Tree value);
 
 } // IsaTerm

@@ -61,48 +61,25 @@ public class IsaTermItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addKindPropertyDescriptor(object);
-			addNamePropertyDescriptor(object);
+			addTermPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Kind feature.
+	 * This adds a property descriptor for the Term feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addKindPropertyDescriptor(Object object) {
+	protected void addTermPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IsaTerm_kind_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IsaTerm_kind_feature", "_UI_IsaTerm_type"),
-				 IsabelleProofProcessPackage.Literals.ISA_TERM__KIND,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Name feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addNamePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_IsaTerm_name_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IsaTerm_name_feature", "_UI_IsaTerm_type"),
-				 IsabelleProofProcessPackage.Literals.ISA_TERM__NAME,
+				 getString("_UI_IsaTerm_term_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_IsaTerm_term_feature", "_UI_IsaTerm_type"),
+				 IsabelleProofProcessPackage.Literals.ISA_TERM__TERM,
 				 true,
 				 false,
 				 false,
@@ -126,23 +103,14 @@ public class IsaTermItemProvider
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	@Override
 	public String getText(Object object) {
-		
-		IsaTerm term = (IsaTerm) object;
-		
-		String display = term.getDisplay();
-		String name = term.getName();
-		
-		String nameStr = "";
-		if (name != null && !name.equals(display)) {
-			// display name if it is different from display
-			nameStr = " (" + name + ")";
-		}
-		
-		return String.valueOf(term.getKind()) + ": " + term.getDisplay() + nameStr;
+		String label = ((IsaTerm)object).getDisplay();
+		return label == null || label.length() == 0 ?
+			getString("_UI_IsaTerm_type") :
+			getString("_UI_IsaTerm_type") + " " + label;
 	}
 
 	/**
@@ -157,8 +125,7 @@ public class IsaTermItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(IsaTerm.class)) {
-			case IsabelleProofProcessPackage.ISA_TERM__KIND:
-			case IsabelleProofProcessPackage.ISA_TERM__NAME:
+			case IsabelleProofProcessPackage.ISA_TERM__TERM:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

@@ -10,9 +10,8 @@ import org.ai4fm.proofprocess.ProofProcessPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
 
 /**
  * <!-- begin-user-doc -->
@@ -110,22 +109,13 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	int ISA_TERM__DISPLAY = DISPLAY_TERM__DISPLAY;
 
 	/**
-	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * The feature id for the '<em><b>Term</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ISA_TERM__KIND = DISPLAY_TERM_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ISA_TERM__NAME = DISPLAY_TERM_FEATURE_COUNT + 1;
+	int ISA_TERM__TERM = DISPLAY_TERM_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Isa Term</em>' class.
@@ -134,44 +124,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ISA_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 2;
-
-	/**
-	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.CompositeTermImpl <em>Composite Term</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.ai4fm.proofprocess.isabelle.impl.CompositeTermImpl
-	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getCompositeTerm()
-	 * @generated
-	 */
-	int COMPOSITE_TERM = 2;
-
-	/**
-	 * The feature id for the '<em><b>Display</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPOSITE_TERM__DISPLAY = DISPLAY_TERM__DISPLAY;
-
-	/**
-	 * The feature id for the '<em><b>Terms</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPOSITE_TERM__TERMS = DISPLAY_TERM_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Composite Term</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPOSITE_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 1;
+	int ISA_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.IsabelleTraceImpl <em>Isabelle Trace</em>}' class.
@@ -181,7 +134,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleTrace()
 	 * @generated
 	 */
-	int ISABELLE_TRACE = 3;
+	int ISABELLE_TRACE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Command</b></em>' attribute.
@@ -211,14 +164,14 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	int ISABELLE_TRACE_FEATURE_COUNT = ProofProcessPackage.TRACE_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.TermKind <em>Term Kind</em>}' enum.
+	 * The meta object id for the '<em>YXml Term</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.ai4fm.proofprocess.isabelle.TermKind
-	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getTermKind()
+	 * @see isabelle.XML.Tree
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getYXmlTerm()
 	 * @generated
 	 */
-	int TERM_KIND = 4;
+	int YXML_TERM = 3;
 
 
 	/**
@@ -253,47 +206,15 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	EClass getIsaTerm();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.isabelle.IsaTerm#getKind <em>Kind</em>}'.
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.isabelle.IsaTerm#getTerm <em>Term</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Kind</em>'.
-	 * @see org.ai4fm.proofprocess.isabelle.IsaTerm#getKind()
+	 * @return the meta object for the attribute '<em>Term</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.IsaTerm#getTerm()
 	 * @see #getIsaTerm()
 	 * @generated
 	 */
-	EAttribute getIsaTerm_Kind();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.isabelle.IsaTerm#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.ai4fm.proofprocess.isabelle.IsaTerm#getName()
-	 * @see #getIsaTerm()
-	 * @generated
-	 */
-	EAttribute getIsaTerm_Name();
-
-	/**
-	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.CompositeTerm <em>Composite Term</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Composite Term</em>'.
-	 * @see org.ai4fm.proofprocess.isabelle.CompositeTerm
-	 * @generated
-	 */
-	EClass getCompositeTerm();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.isabelle.CompositeTerm#getTerms <em>Terms</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Terms</em>'.
-	 * @see org.ai4fm.proofprocess.isabelle.CompositeTerm#getTerms()
-	 * @see #getCompositeTerm()
-	 * @generated
-	 */
-	EReference getCompositeTerm_Terms();
+	EAttribute getIsaTerm_Term();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.IsabelleTrace <em>Isabelle Trace</em>}'.
@@ -328,14 +249,15 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	EAttribute getIsabelleTrace_SimpLemmas();
 
 	/**
-	 * Returns the meta object for enum '{@link org.ai4fm.proofprocess.isabelle.TermKind <em>Term Kind</em>}'.
+	 * Returns the meta object for data type '{@link isabelle.XML.Tree <em>YXml Term</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Term Kind</em>'.
-	 * @see org.ai4fm.proofprocess.isabelle.TermKind
+	 * @return the meta object for data type '<em>YXml Term</em>'.
+	 * @see isabelle.XML.Tree
+	 * @model instanceClass="isabelle.XML.Tree"
 	 * @generated
 	 */
-	EEnum getTermKind();
+	EDataType getYXmlTerm();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -388,38 +310,12 @@ public interface IsabelleProofProcessPackage extends EPackage {
 		EClass ISA_TERM = eINSTANCE.getIsaTerm();
 
 		/**
-		 * The meta object literal for the '<em><b>Kind</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Term</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ISA_TERM__KIND = eINSTANCE.getIsaTerm_Kind();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ISA_TERM__NAME = eINSTANCE.getIsaTerm_Name();
-
-		/**
-		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.CompositeTermImpl <em>Composite Term</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.ai4fm.proofprocess.isabelle.impl.CompositeTermImpl
-		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getCompositeTerm()
-		 * @generated
-		 */
-		EClass COMPOSITE_TERM = eINSTANCE.getCompositeTerm();
-
-		/**
-		 * The meta object literal for the '<em><b>Terms</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference COMPOSITE_TERM__TERMS = eINSTANCE.getCompositeTerm_Terms();
+		EAttribute ISA_TERM__TERM = eINSTANCE.getIsaTerm_Term();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.IsabelleTraceImpl <em>Isabelle Trace</em>}' class.
@@ -448,14 +344,14 @@ public interface IsabelleProofProcessPackage extends EPackage {
 		EAttribute ISABELLE_TRACE__SIMP_LEMMAS = eINSTANCE.getIsabelleTrace_SimpLemmas();
 
 		/**
-		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.TermKind <em>Term Kind</em>}' enum.
+		 * The meta object literal for the '<em>YXml Term</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.ai4fm.proofprocess.isabelle.TermKind
-		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getTermKind()
+		 * @see isabelle.XML.Tree
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getYXmlTerm()
 		 * @generated
 		 */
-		EEnum TERM_KIND = eINSTANCE.getTermKind();
+		EDataType YXML_TERM = eINSTANCE.getYXmlTerm();
 
 	}
 

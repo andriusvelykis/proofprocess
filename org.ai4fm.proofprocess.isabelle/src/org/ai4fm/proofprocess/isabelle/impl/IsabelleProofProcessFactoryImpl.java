@@ -6,6 +6,8 @@
  */
 package org.ai4fm.proofprocess.isabelle.impl;
 
+import isabelle.XML.Tree;
+
 import org.ai4fm.proofprocess.isabelle.*;
 
 import org.eclipse.emf.ecore.EClass;
@@ -62,7 +64,6 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case IsabelleProofProcessPackage.ISA_TERM: return createIsaTerm();
-			case IsabelleProofProcessPackage.COMPOSITE_TERM: return createCompositeTerm();
 			case IsabelleProofProcessPackage.ISABELLE_TRACE: return createIsabelleTrace();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -77,8 +78,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case IsabelleProofProcessPackage.TERM_KIND:
-				return createTermKindFromString(eDataType, initialValue);
+			case IsabelleProofProcessPackage.YXML_TERM:
+				return createYXmlTermFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -92,8 +93,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-			case IsabelleProofProcessPackage.TERM_KIND:
-				return convertTermKindToString(eDataType, instanceValue);
+			case IsabelleProofProcessPackage.YXML_TERM:
+				return convertYXmlTermToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -114,16 +115,6 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CompositeTerm createCompositeTerm() {
-		CompositeTermImpl compositeTerm = new CompositeTermImpl();
-		return compositeTerm;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public IsabelleTrace createIsabelleTrace() {
 		IsabelleTraceImpl isabelleTrace = new IsabelleTraceImpl();
 		return isabelleTrace;
@@ -134,10 +125,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TermKind createTermKindFromString(EDataType eDataType, String initialValue) {
-		TermKind result = TermKind.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
+	public Tree createYXmlTermFromString(EDataType eDataType, String initialValue) {
+		return (Tree)super.createFromString(eDataType, initialValue);
 	}
 
 	/**
@@ -145,8 +134,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String convertTermKindToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
+	public String convertYXmlTermToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

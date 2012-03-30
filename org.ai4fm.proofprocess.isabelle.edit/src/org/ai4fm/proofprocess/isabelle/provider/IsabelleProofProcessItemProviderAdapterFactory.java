@@ -99,29 +99,6 @@ public class IsabelleProofProcessItemProviderAdapterFactory extends IsabelleProo
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.CompositeTerm} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected CompositeTermItemProvider compositeTermItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.isabelle.CompositeTerm}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createCompositeTermAdapter() {
-		if (compositeTermItemProvider == null) {
-			compositeTermItemProvider = new CompositeTermItemProvider(this);
-		}
-
-		return compositeTermItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.IsabelleTrace} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -244,7 +221,6 @@ public class IsabelleProofProcessItemProviderAdapterFactory extends IsabelleProo
 	 */
 	public void dispose() {
 		if (isaTermItemProvider != null) isaTermItemProvider.dispose();
-		if (compositeTermItemProvider != null) compositeTermItemProvider.dispose();
 		if (isabelleTraceItemProvider != null) isabelleTraceItemProvider.dispose();
 	}
 

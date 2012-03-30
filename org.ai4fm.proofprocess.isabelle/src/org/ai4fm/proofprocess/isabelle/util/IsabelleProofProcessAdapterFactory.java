@@ -83,10 +83,6 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 				return createIsaTermAdapter();
 			}
 			@Override
-			public Adapter caseCompositeTerm(CompositeTerm object) {
-				return createCompositeTermAdapter();
-			}
-			@Override
 			public Adapter caseIsabelleTrace(IsabelleTrace object) {
 				return createIsabelleTraceAdapter();
 			}
@@ -143,20 +139,6 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIsaTermAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.isabelle.CompositeTerm <em>Composite Term</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.isabelle.CompositeTerm
-	 * @generated
-	 */
-	public Adapter createCompositeTermAdapter() {
 		return null;
 	}
 

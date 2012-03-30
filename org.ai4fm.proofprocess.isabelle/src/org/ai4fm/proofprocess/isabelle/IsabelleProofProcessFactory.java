@@ -35,15 +35,6 @@ public interface IsabelleProofProcessFactory extends EFactory {
 	IsaTerm createIsaTerm();
 
 	/**
-	 * Returns a new object of class '<em>Composite Term</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Composite Term</em>'.
-	 * @generated
-	 */
-	CompositeTerm createCompositeTerm();
-
-	/**
 	 * Returns a new object of class '<em>Isabelle Trace</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
