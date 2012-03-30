@@ -1,6 +1,9 @@
 package org.ai4fm.proofprocess.project.core;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.log.ProofProcessLogFactory;
@@ -18,6 +21,7 @@ import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -28,6 +32,16 @@ public class ProofManager {
 	public static final String PROOF_FOLDER = ".proofprocess/";
 	private static final String PROOF_PROJECT_PATH = PROOF_FOLDER + "project.proof";
 	private static final String PROOF_LOG_PATH = PROOF_FOLDER + "project.prooflog";
+	
+	public static final Map<String, Object> SAVE_OPTIONS;
+	static {
+		Map<String, Object> opts = new HashMap<String, Object>();
+		// do not use XML 1.1, because its implementation in Java 1.6 has bugs
+		// regarding large attributes due to old Xerces libraries.
+//		opts.put(XMLResource.OPTION_XML_VERSION, "1.1");
+		opts.put(XMLResource.OPTION_ENCODING, "UTF-8");
+		SAVE_OPTIONS = Collections.unmodifiableMap(opts);
+	}
 	
 	/**
 	 * Key for the loaded project reference on resource.

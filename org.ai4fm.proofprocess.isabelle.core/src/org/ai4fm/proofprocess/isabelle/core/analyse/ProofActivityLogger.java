@@ -15,6 +15,7 @@ import org.ai4fm.proofprocess.log.ProofActivity;
 import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.log.ProofProcessLogFactory;
 import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
+import org.ai4fm.proofprocess.project.core.ProofManager;
 import org.ai4fm.proofprocess.project.core.util.EmfUtil;
 
 /**
@@ -62,7 +63,7 @@ public class ProofActivityLogger {
 		
 		// TODO save selectively, or buffer?
 		try {
-			proofLog.eResource().save(null);
+			proofLog.eResource().save(ProofManager.SAVE_OPTIONS);
 		} catch (IOException e) {
 			IsabelleProofPlugin.log(e);
 		}

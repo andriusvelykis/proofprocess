@@ -178,8 +178,8 @@ public class SnapshotTracker {
 				// no more pending events (or the next one is not ADD), save the file
 				// TODO better saving algorithm, but not one which stops all 
 				try {
-					proofProject.eResource().save(null);
-					proofLog.eResource().save(null);
+					proofProject.eResource().save(ProofManager.SAVE_OPTIONS);
+					proofLog.eResource().save(ProofManager.SAVE_OPTIONS);
 				} catch (IOException e) {
 					ZEvesProofUIPlugin.log(e);
 				}

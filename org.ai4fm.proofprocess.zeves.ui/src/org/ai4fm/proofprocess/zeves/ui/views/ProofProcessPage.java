@@ -422,7 +422,7 @@ public class ProofProcessPage extends Page {
 			
 			// FIXME
 			try {
-				proofProject.eResource().save(null);
+				proofProject.eResource().save(ProofManager.SAVE_OPTIONS);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

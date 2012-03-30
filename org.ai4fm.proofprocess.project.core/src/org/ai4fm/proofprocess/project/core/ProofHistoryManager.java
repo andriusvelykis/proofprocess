@@ -59,7 +59,7 @@ public class ProofHistoryManager {
 			versionFile.refreshLocal(IResource.DEPTH_ZERO, null);
 			
 			try {
-				historyProject.eResource().save(null);
+				historyProject.eResource().save(ProofManager.SAVE_OPTIONS);
 			} catch (IOException e) {
 				throw new CoreException(FileHistoryCorePlugin.error(e));
 			}			
