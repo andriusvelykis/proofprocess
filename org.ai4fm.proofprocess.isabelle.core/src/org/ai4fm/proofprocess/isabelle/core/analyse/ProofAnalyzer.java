@@ -7,6 +7,7 @@ import isabelle.Text.Range;
 import isabelle.XML.Tree;
 import isabelle.scala.DocumentRef;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -127,6 +128,14 @@ public class ProofAnalyzer {
 		// FIXME retrieve proof entries from the analysis
 		Map<State, ProofEntry> proofEntries = new HashMap<State, ProofEntry>();
 		logActivity(project, proofState, changedCommands, proofEntries, monitor);
+		
+		// FIXME
+		try {
+			proofProject.eResource().save(ProofManager.SAVE_OPTIONS);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return Status.OK_STATUS;
 	}
