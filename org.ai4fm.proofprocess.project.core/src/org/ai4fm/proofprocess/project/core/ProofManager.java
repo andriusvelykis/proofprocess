@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -136,8 +137,8 @@ public class ProofManager {
 	
 	private static <T extends EObject> T loadProofFile(AdapterFactoryEditingDomain editingDomain, IFile file, T empty) {
 		
-		String path = file.getFullPath().toOSString();
-		Resource emfResource = editingDomain.createResource(path);
+		URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
+		Resource emfResource = editingDomain.getResourceSet().createResource(uri);
 		
 		T root = null;
 		
