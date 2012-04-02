@@ -239,7 +239,10 @@ public class SnapshotTracker {
 			ProofEntry attempt = analyseProofEntry(proofProject, nonErrorProof, fileVersion, sectInfo);
 			
 			ProofActivity proofActivity = ProofProcessLogFactory.eINSTANCE.createProofActivity();
-			proofActivity.setProofRef(attempt);
+			if (attempt != null) {
+				// TODO no-attempt (e.g. goal step)
+				proofActivity.setProofRef(attempt);
+			}
 			
 			activity = proofActivity;
 			
@@ -257,32 +260,51 @@ public class SnapshotTracker {
 		EmfUtil.addValue(proofLog, ProofProcessLogPackage.PROOF_LOG__ACTIVITIES, activity);
 	}
 	
-	private ProofEntry analyseProofEntry(Project proofProject, List<ISnapshotEntry> proofSteps, 
+	private ProofEntry analyseProofEntry(Project proofProject, List<ISnapshotEntry> proofState, 
 			FileVersion fileVersion, SectionInfo sectInfo) {
 		
-		Assert.isLegal(!proofSteps.isEmpty());
+		Assert.isLegal(!proofState.isEmpty());
 		
-		ISnapshotEntry goalEntry = proofSteps.get(0);
+		ISnapshotEntry goalEntry = proofState.get(0);
 		Assert.isLegal(goalEntry.getData().getProofStepIndex() == ZEvesSnapshot.GOAL_STEP_INDEX, 
 				"The first element in the proof must be the goal.");
 		
-		Proof proof = findCreateProof(proofProject, goalEntry);
-		
-		// TODO add the goal as tactic entry?
-//		if (proofEntry.getSource() == null) {
-//			// a goal - do not add it as a tactic
-//			
-//		}
-		
-		List<ProofEntry> attempts = new ArrayList<ProofEntry>();
-		for (ISnapshotEntry proofEntry : proofSteps) {
-			ProofEntry attempt = createTacticProofEntry(proofProject, fileVersion, sectInfo, proofEntry);
-			attempts.add(attempt);
-		}
+		String goalName = goalEntry.getData().getGoalName();
+		List<Term> initialGoals = parseGoals(sectInfo, goalEntry);
 		
 		ProofMatcher proofMatcher = new ZEvesProofMatcher();
-		ProofElemMatch match = proofMatcher.findCreateProofTree(proofProject, proof, attempts);
+		Proof proof = proofMatcher.findCreateProof(proofProject, goalName, initialGoals);
+
+		// Continue analysing the proof commands.
+		// Note that the first entry is excluded, as it is the "proof declaration command"
+		List<ISnapshotEntry> remainingState = proofState.subList(1, proofState.size());
+		if (remainingState.isEmpty()) {
+			// no proof steps afterwards
+			return null;
+		}
+		
+		List<ProofEntry> proofSteps = createProofSteps(
+				proofMatcher, proofProject, sectInfo, proof, remainingState, fileVersion);
+		
+		ProofElemMatch match = proofMatcher.findCreateProofTree(proofProject, proof, proofSteps);
 		return match.getEntry();
+	}
+	
+	private List<ProofEntry> createProofSteps(ProofMatcher proofMatcher, Project proofProject,
+			SectionInfo sectInfo, Proof proof, List<ISnapshotEntry> proofState, FileVersion fileVersion) {
+		
+		List<ProofEntry> entries = new ArrayList<ProofEntry>();
+		
+		List<Term> stepInGoals = proof.getGoals();
+		for (ISnapshotEntry cmdState : proofState) {
+			ProofEntry entry = createProofStep(
+					proofMatcher, proofProject, fileVersion, sectInfo, stepInGoals, cmdState);
+			entries.add(entry);
+			
+			stepInGoals = entry.getProofStep().getOutGoals();
+		}
+		
+		return entries;
 	}
 	
 	private static class ZEvesProofMatcher extends ProofMatcher {
@@ -392,8 +414,9 @@ public class SnapshotTracker {
 		}
 	}
 	
-	private ProofEntry createTacticProofEntry(Project project, FileVersion fileVersion, 
-			SectionInfo sectInfo, ISnapshotEntry proofEntry) {
+	private ProofEntry createProofStep(ProofMatcher proofMatcher, Project project, 
+			FileVersion fileVersion, SectionInfo sectInfo,
+			List<Term> stepInGoals, ISnapshotEntry proofEntry) {
 		
 		ZEvesOutput entryResult = (ZEvesOutput) proofEntry.getData().getResult();
 		
@@ -435,11 +458,12 @@ public class SnapshotTracker {
 		Position pos = proofEntry.getPosition();
 		step.setSource(ProofProcessUtil.createTextLoc(fileVersion, pos.getOffset(), pos.getLength()));
 		
-		// TODO copy in goals from the previous
 		List<Term> inGoals = step.getInGoals();
+		// copy the goals defensively because inGoals is a containment ref
+		inGoals.addAll(proofMatcher.copyTerms(stepInGoals));
 		
 		List<Term> outGoals = step.getOutGoals();
-		outGoals.addAll(TermParser.parseGoals(sectInfo, proofEntry.getSectionName(), entryResult));
+		outGoals.addAll(parseGoals(sectInfo, proofEntry));
 		
 		// create tactic application attempt
 		ProofEntry entry = ProofProcessFactory.eINSTANCE.createProofEntry();
@@ -447,6 +471,15 @@ public class SnapshotTracker {
 		entry.setProofStep(step);
 		
 		return entry;
+	}
+	
+	private List<Term> parseGoals(SectionInfo sectInfo, ISnapshotEntry proofEntry) {
+		ZEvesOutput result = getZEvesProofResult(proofEntry);
+		return TermParser.parseGoals(sectInfo, proofEntry.getSectionName(), result);
+	}
+	
+	private ZEvesOutput getZEvesProofResult(ISnapshotEntry proofEntry) {
+		return (ZEvesOutput) proofEntry.getData().getResult();
 	}
 	
 	private static String proofCaseStr(List<Integer> proofCase) {
@@ -495,16 +528,6 @@ public class SnapshotTracker {
 		}
 		
 		return usedLemmas;
-	}
-	
-	private Proof findCreateProof(Project project, ISnapshotEntry proofEntry) {
-		
-		String goalName = proofEntry.getData().getGoalName();
-		
-		ProofMatcher proofMatcher = new ProofMatcher();
-		// TODO add goal matching
-		return proofMatcher.findCreateProof(project, goalName,
-				Collections.<org.ai4fm.proofprocess.Term> emptyList());
 	}
 	
 	private List<ISnapshotEntry> getProofEntries(ISnapshotEntry endingWithEntry) {
