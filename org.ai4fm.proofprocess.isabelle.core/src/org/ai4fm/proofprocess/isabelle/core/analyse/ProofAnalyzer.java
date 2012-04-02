@@ -141,50 +141,58 @@ public class ProofAnalyzer {
 	}
 	
 	private void analyzeEntry(Project proofProject, List<State> proofState, FileVersion fileVersion) {
-		// TODO
-		
-		// Convert to Proof Process steps - they will be matched to the existing
-		// proof process records afterwards
-		List<ProofEntry> ppState = createProofSteps(proofProject, proofState, fileVersion);
 		
 		// Assume that the first step in any proof is the "declaration" command, e.g. "lemma ..."
-		ProofEntry declStep = ppState.get(0);
-		List<Term> declGoals = declStep.getProofStep().getOutGoals();
+		State initialGoalState = proofState.get(0);
+		List<Term> initialGoals = parseGoals(initialGoalState);
 		
-		if (declGoals.isEmpty()) {
-			// no declaration goals - no proof
+		if (initialGoals.isEmpty()) {
+			// no initial goals - no proof
 			return;
 		}
 		
 		// find the proof for this
 		ProofMatcher proofMatcher = new ProofMatcher();
 		// TODO extract proof label
-		Proof proof = proofMatcher.findCreateProof(proofProject, null, declGoals);
-
+		Proof proof = proofMatcher.findCreateProof(proofProject, null, initialGoals);
+		
+		List<State> remainingState = proofState.subList(1, proofState.size());
+		if (remainingState.isEmpty()) {
+			// no proof steps afterwards
+			return;
+		}
+		
+		// Convert to Proof Process steps - they will be matched to the existing
+		// proof process records afterwards.
+		// Note that the first State is excluded, as it is the "proof declaration command"
+		List<ProofEntry> ppState = createProofSteps(proofMatcher, proofProject, proof, 
+				remainingState, fileVersion);
+		
 		// TODO export State-Entry matchings for Activities
 		proofMatcher.findCreateProofTree(proofProject, proof, ppState);
 		
 		// TODO save the proofProject
 	}
 	
-	private List<ProofEntry> createProofSteps(Project proofProject, List<State> proofState,
-			FileVersion fileVersion) {
+	private List<ProofEntry> createProofSteps(ProofMatcher proofMatcher, Project proofProject, 
+			Proof proof, List<State> proofState, FileVersion fileVersion) {
 		
 		List<ProofEntry> entries = new ArrayList<ProofEntry>();
 		
-		ProofEntry previousEntry = null;
+		List<Term> stepInGoals = proof.getGoals();
 		for (State cmdState : proofState) {
-			ProofEntry entry = createProofStep(proofProject, fileVersion, previousEntry, cmdState);
+			ProofEntry entry = createProofStep(
+					proofMatcher, proofProject, fileVersion, stepInGoals, cmdState);
 			entries.add(entry);
 			
-			previousEntry = entry;
+			stepInGoals = entry.getProofStep().getOutGoals();
 		}
 		
 		return entries;
 	}
 	
-	private ProofEntry createProofStep(Project project, FileVersion fileVersion, 
-			ProofEntry previousEntry, State commandState) {
+	private ProofEntry createProofStep(ProofMatcher proofMatcher, Project project,
+			FileVersion fileVersion, List<Term> stepInGoals, State commandState) {
 		
 		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
 		info.setNarrative("Tactic: " + commandState.command().name());
@@ -200,8 +208,9 @@ public class ProofAnalyzer {
 		step.setTrace(createProofStepTrace(commandState));
 		step.setSource(createProofStepLoc(fileVersion, commandState));
 		
-		// TODO copy in goals from the previous
 		List<Term> inGoals = step.getInGoals();
+		// copy the goals defensively because inGoals is a containment ref
+		inGoals.addAll(proofMatcher.copyTerms(stepInGoals));
 		
 		List<Term> outGoals = step.getOutGoals();
 		outGoals.addAll(parseGoals(commandState));
