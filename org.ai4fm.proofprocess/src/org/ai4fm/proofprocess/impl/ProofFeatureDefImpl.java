@@ -6,8 +6,8 @@
  */
 package org.ai4fm.proofprocess.impl;
 
+import org.ai4fm.proofprocess.ProofFeatureDef;
 import org.ai4fm.proofprocess.ProofProcessPackage;
-import org.ai4fm.proofprocess.PropertyDef;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -18,19 +18,19 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Property Def</b></em>'.
+ * An implementation of the model object '<em><b>Proof Feature Def</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.impl.PropertyDefImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.impl.PropertyDefImpl#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofFeatureDefImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofFeatureDefImpl#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class PropertyDefImpl extends EObjectImpl implements PropertyDef {
+public class ProofFeatureDefImpl extends EObjectImpl implements ProofFeatureDef {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -76,7 +76,7 @@ public class PropertyDefImpl extends EObjectImpl implements PropertyDef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected PropertyDefImpl() {
+	protected ProofFeatureDefImpl() {
 		super();
 	}
 
@@ -87,7 +87,7 @@ public class PropertyDefImpl extends EObjectImpl implements PropertyDef {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ProofProcessPackage.Literals.PROPERTY_DEF;
+		return ProofProcessPackage.Literals.PROOF_FEATURE_DEF;
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class PropertyDefImpl extends EObjectImpl implements PropertyDef {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROPERTY_DEF__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_FEATURE_DEF__NAME, oldName, name));
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class PropertyDefImpl extends EObjectImpl implements PropertyDef {
 		String oldDescription = description;
 		description = newDescription;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROPERTY_DEF__DESCRIPTION, oldDescription, description));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION, oldDescription, description));
 	}
 
 	/**
@@ -140,9 +140,9 @@ public class PropertyDefImpl extends EObjectImpl implements PropertyDef {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ProofProcessPackage.PROPERTY_DEF__NAME:
+			case ProofProcessPackage.PROOF_FEATURE_DEF__NAME:
 				return getName();
-			case ProofProcessPackage.PROPERTY_DEF__DESCRIPTION:
+			case ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION:
 				return getDescription();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -156,10 +156,10 @@ public class PropertyDefImpl extends EObjectImpl implements PropertyDef {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ProofProcessPackage.PROPERTY_DEF__NAME:
+			case ProofProcessPackage.PROOF_FEATURE_DEF__NAME:
 				setName((String)newValue);
 				return;
-			case ProofProcessPackage.PROPERTY_DEF__DESCRIPTION:
+			case ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION:
 				setDescription((String)newValue);
 				return;
 		}
@@ -174,10 +174,10 @@ public class PropertyDefImpl extends EObjectImpl implements PropertyDef {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ProofProcessPackage.PROPERTY_DEF__NAME:
+			case ProofProcessPackage.PROOF_FEATURE_DEF__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case ProofProcessPackage.PROPERTY_DEF__DESCRIPTION:
+			case ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION:
 				setDescription(DESCRIPTION_EDEFAULT);
 				return;
 		}
@@ -192,9 +192,9 @@ public class PropertyDefImpl extends EObjectImpl implements PropertyDef {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ProofProcessPackage.PROPERTY_DEF__NAME:
+			case ProofProcessPackage.PROOF_FEATURE_DEF__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ProofProcessPackage.PROPERTY_DEF__DESCRIPTION:
+			case ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION:
 				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
 		}
 		return super.eIsSet(featureID);
@@ -218,4 +218,4 @@ public class PropertyDefImpl extends EObjectImpl implements PropertyDef {
 		return result.toString();
 	}
 
-} //PropertyDefImpl
+} //ProofFeatureDefImpl

@@ -8,10 +8,10 @@ package org.ai4fm.proofprocess.impl;
 
 import java.util.Collection;
 
+import org.ai4fm.proofprocess.ProofFeature;
+import org.ai4fm.proofprocess.ProofFeatureDef;
+import org.ai4fm.proofprocess.ProofFeatureType;
 import org.ai4fm.proofprocess.ProofProcessPackage;
-import org.ai4fm.proofprocess.Property;
-import org.ai4fm.proofprocess.PropertyDef;
-import org.ai4fm.proofprocess.PropertyType;
 import org.ai4fm.proofprocess.Term;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -30,20 +30,20 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Property</b></em>'.
+ * An implementation of the model object '<em><b>Proof Feature</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.impl.PropertyImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.impl.PropertyImpl#getType <em>Type</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.impl.PropertyImpl#getParams <em>Params</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofFeatureImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofFeatureImpl#getType <em>Type</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofFeatureImpl#getParams <em>Params</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class PropertyImpl extends EObjectImpl implements Property {
+public class ProofFeatureImpl extends EObjectImpl implements ProofFeature {
 	/**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -52,7 +52,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * @generated
 	 * @ordered
 	 */
-	protected PropertyDef name;
+	protected ProofFeatureDef name;
 
 	/**
 	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
@@ -62,7 +62,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final PropertyType TYPE_EDEFAULT = PropertyType.USER;
+	protected static final ProofFeatureType TYPE_EDEFAULT = ProofFeatureType.USER;
 
 	/**
 	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
@@ -72,7 +72,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * @generated
 	 * @ordered
 	 */
-	protected PropertyType type = TYPE_EDEFAULT;
+	protected ProofFeatureType type = TYPE_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getParams() <em>Params</em>}' containment reference list.
@@ -89,7 +89,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected PropertyImpl() {
+	protected ProofFeatureImpl() {
 		super();
 	}
 
@@ -100,7 +100,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ProofProcessPackage.Literals.PROPERTY;
+		return ProofProcessPackage.Literals.PROOF_FEATURE;
 	}
 
 	/**
@@ -108,13 +108,13 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PropertyDef getName() {
+	public ProofFeatureDef getName() {
 		if (name != null && name.eIsProxy()) {
 			InternalEObject oldName = (InternalEObject)name;
-			name = (PropertyDef)eResolveProxy(oldName);
+			name = (ProofFeatureDef)eResolveProxy(oldName);
 			if (name != oldName) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProofProcessPackage.PROPERTY__NAME, oldName, name));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProofProcessPackage.PROOF_FEATURE__NAME, oldName, name));
 			}
 		}
 		return name;
@@ -125,7 +125,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PropertyDef basicGetName() {
+	public ProofFeatureDef basicGetName() {
 		return name;
 	}
 
@@ -134,11 +134,11 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setName(PropertyDef newName) {
-		PropertyDef oldName = name;
+	public void setName(ProofFeatureDef newName) {
+		ProofFeatureDef oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROPERTY__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_FEATURE__NAME, oldName, name));
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PropertyType getType() {
+	public ProofFeatureType getType() {
 		return type;
 	}
 
@@ -155,11 +155,11 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setType(PropertyType newType) {
-		PropertyType oldType = type;
+	public void setType(ProofFeatureType newType) {
+		ProofFeatureType oldType = type;
 		type = newType == null ? TYPE_EDEFAULT : newType;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROPERTY__TYPE, oldType, type));
+			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_FEATURE__TYPE, oldType, type));
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	 */
 	public EList<Term> getParams() {
 		if (params == null) {
-			params = new EObjectContainmentEList<Term>(Term.class, this, ProofProcessPackage.PROPERTY__PARAMS);
+			params = new EObjectContainmentEList<Term>(Term.class, this, ProofProcessPackage.PROOF_FEATURE__PARAMS);
 		}
 		return params;
 	}
@@ -182,7 +182,7 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ProofProcessPackage.PROPERTY__PARAMS:
+			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
 				return ((InternalEList<?>)getParams()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -196,12 +196,12 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ProofProcessPackage.PROPERTY__NAME:
+			case ProofProcessPackage.PROOF_FEATURE__NAME:
 				if (resolve) return getName();
 				return basicGetName();
-			case ProofProcessPackage.PROPERTY__TYPE:
+			case ProofProcessPackage.PROOF_FEATURE__TYPE:
 				return getType();
-			case ProofProcessPackage.PROPERTY__PARAMS:
+			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
 				return getParams();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -216,13 +216,13 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ProofProcessPackage.PROPERTY__NAME:
-				setName((PropertyDef)newValue);
+			case ProofProcessPackage.PROOF_FEATURE__NAME:
+				setName((ProofFeatureDef)newValue);
 				return;
-			case ProofProcessPackage.PROPERTY__TYPE:
-				setType((PropertyType)newValue);
+			case ProofProcessPackage.PROOF_FEATURE__TYPE:
+				setType((ProofFeatureType)newValue);
 				return;
-			case ProofProcessPackage.PROPERTY__PARAMS:
+			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
 				getParams().clear();
 				getParams().addAll((Collection<? extends Term>)newValue);
 				return;
@@ -238,13 +238,13 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ProofProcessPackage.PROPERTY__NAME:
-				setName((PropertyDef)null);
+			case ProofProcessPackage.PROOF_FEATURE__NAME:
+				setName((ProofFeatureDef)null);
 				return;
-			case ProofProcessPackage.PROPERTY__TYPE:
+			case ProofProcessPackage.PROOF_FEATURE__TYPE:
 				setType(TYPE_EDEFAULT);
 				return;
-			case ProofProcessPackage.PROPERTY__PARAMS:
+			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
 				getParams().clear();
 				return;
 		}
@@ -259,11 +259,11 @@ public class PropertyImpl extends EObjectImpl implements Property {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ProofProcessPackage.PROPERTY__NAME:
+			case ProofProcessPackage.PROOF_FEATURE__NAME:
 				return name != null;
-			case ProofProcessPackage.PROPERTY__TYPE:
+			case ProofProcessPackage.PROOF_FEATURE__TYPE:
 				return type != TYPE_EDEFAULT;
-			case ProofProcessPackage.PROPERTY__PARAMS:
+			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
 				return params != null && !params.isEmpty();
 		}
 		return super.eIsSet(featureID);
@@ -285,4 +285,4 @@ public class PropertyImpl extends EObjectImpl implements Property {
 		return result.toString();
 	}
 
-} //PropertyImpl
+} //ProofFeatureImpl

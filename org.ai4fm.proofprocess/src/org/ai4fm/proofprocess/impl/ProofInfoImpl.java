@@ -9,9 +9,9 @@ package org.ai4fm.proofprocess.impl;
 import java.util.Collection;
 
 import org.ai4fm.proofprocess.Intent;
+import org.ai4fm.proofprocess.ProofFeature;
 import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessPackage;
-import org.ai4fm.proofprocess.Property;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -36,8 +36,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getIntent <em>Intent</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getNarrative <em>Narrative</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getInProps <em>In Props</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getOutProps <em>Out Props</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getInFeatures <em>In Features</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofInfoImpl#getOutFeatures <em>Out Features</em>}</li>
  * </ul>
  * </p>
  *
@@ -75,24 +75,24 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	protected String narrative = NARRATIVE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getInProps() <em>In Props</em>}' containment reference list.
+	 * The cached value of the '{@link #getInFeatures() <em>In Features</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getInProps()
+	 * @see #getInFeatures()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Property> inProps;
+	protected EList<ProofFeature> inFeatures;
 
 	/**
-	 * The cached value of the '{@link #getOutProps() <em>Out Props</em>}' containment reference list.
+	 * The cached value of the '{@link #getOutFeatures() <em>Out Features</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getOutProps()
+	 * @see #getOutFeatures()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Property> outProps;
+	protected EList<ProofFeature> outFeatures;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -177,11 +177,11 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Property> getInProps() {
-		if (inProps == null) {
-			inProps = new EObjectContainmentEList<Property>(Property.class, this, ProofProcessPackage.PROOF_INFO__IN_PROPS);
+	public EList<ProofFeature> getInFeatures() {
+		if (inFeatures == null) {
+			inFeatures = new EObjectContainmentEList<ProofFeature>(ProofFeature.class, this, ProofProcessPackage.PROOF_INFO__IN_FEATURES);
 		}
-		return inProps;
+		return inFeatures;
 	}
 
 	/**
@@ -189,11 +189,11 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Property> getOutProps() {
-		if (outProps == null) {
-			outProps = new EObjectContainmentEList<Property>(Property.class, this, ProofProcessPackage.PROOF_INFO__OUT_PROPS);
+	public EList<ProofFeature> getOutFeatures() {
+		if (outFeatures == null) {
+			outFeatures = new EObjectContainmentEList<ProofFeature>(ProofFeature.class, this, ProofProcessPackage.PROOF_INFO__OUT_FEATURES);
 		}
-		return outProps;
+		return outFeatures;
 	}
 
 	/**
@@ -204,10 +204,10 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ProofProcessPackage.PROOF_INFO__IN_PROPS:
-				return ((InternalEList<?>)getInProps()).basicRemove(otherEnd, msgs);
-			case ProofProcessPackage.PROOF_INFO__OUT_PROPS:
-				return ((InternalEList<?>)getOutProps()).basicRemove(otherEnd, msgs);
+			case ProofProcessPackage.PROOF_INFO__IN_FEATURES:
+				return ((InternalEList<?>)getInFeatures()).basicRemove(otherEnd, msgs);
+			case ProofProcessPackage.PROOF_INFO__OUT_FEATURES:
+				return ((InternalEList<?>)getOutFeatures()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -225,10 +225,10 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 				return basicGetIntent();
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
 				return getNarrative();
-			case ProofProcessPackage.PROOF_INFO__IN_PROPS:
-				return getInProps();
-			case ProofProcessPackage.PROOF_INFO__OUT_PROPS:
-				return getOutProps();
+			case ProofProcessPackage.PROOF_INFO__IN_FEATURES:
+				return getInFeatures();
+			case ProofProcessPackage.PROOF_INFO__OUT_FEATURES:
+				return getOutFeatures();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -248,13 +248,13 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
 				setNarrative((String)newValue);
 				return;
-			case ProofProcessPackage.PROOF_INFO__IN_PROPS:
-				getInProps().clear();
-				getInProps().addAll((Collection<? extends Property>)newValue);
+			case ProofProcessPackage.PROOF_INFO__IN_FEATURES:
+				getInFeatures().clear();
+				getInFeatures().addAll((Collection<? extends ProofFeature>)newValue);
 				return;
-			case ProofProcessPackage.PROOF_INFO__OUT_PROPS:
-				getOutProps().clear();
-				getOutProps().addAll((Collection<? extends Property>)newValue);
+			case ProofProcessPackage.PROOF_INFO__OUT_FEATURES:
+				getOutFeatures().clear();
+				getOutFeatures().addAll((Collection<? extends ProofFeature>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -274,11 +274,11 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
 				setNarrative(NARRATIVE_EDEFAULT);
 				return;
-			case ProofProcessPackage.PROOF_INFO__IN_PROPS:
-				getInProps().clear();
+			case ProofProcessPackage.PROOF_INFO__IN_FEATURES:
+				getInFeatures().clear();
 				return;
-			case ProofProcessPackage.PROOF_INFO__OUT_PROPS:
-				getOutProps().clear();
+			case ProofProcessPackage.PROOF_INFO__OUT_FEATURES:
+				getOutFeatures().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -296,10 +296,10 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 				return intent != null;
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
 				return NARRATIVE_EDEFAULT == null ? narrative != null : !NARRATIVE_EDEFAULT.equals(narrative);
-			case ProofProcessPackage.PROOF_INFO__IN_PROPS:
-				return inProps != null && !inProps.isEmpty();
-			case ProofProcessPackage.PROOF_INFO__OUT_PROPS:
-				return outProps != null && !outProps.isEmpty();
+			case ProofProcessPackage.PROOF_INFO__IN_FEATURES:
+				return inFeatures != null && !inFeatures.isEmpty();
+			case ProofProcessPackage.PROOF_INFO__OUT_FEATURES:
+				return outFeatures != null && !outFeatures.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

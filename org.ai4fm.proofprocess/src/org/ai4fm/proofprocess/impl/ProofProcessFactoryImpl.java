@@ -64,8 +64,8 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 			case ProofProcessPackage.INTENT: return createIntent();
 			case ProofProcessPackage.PROOF_STEP: return createProofStep();
 			case ProofProcessPackage.PROOF_INFO: return createProofInfo();
-			case ProofProcessPackage.PROPERTY_DEF: return createPropertyDef();
-			case ProofProcessPackage.PROPERTY: return createProperty();
+			case ProofProcessPackage.PROOF_FEATURE_DEF: return createProofFeatureDef();
+			case ProofProcessPackage.PROOF_FEATURE: return createProofFeature();
 			case ProofProcessPackage.PROOF_ENTRY: return createProofEntry();
 			case ProofProcessPackage.PROOF_SEQ: return createProofSeq();
 			case ProofProcessPackage.PROOF_PARALLEL: return createProofParallel();
@@ -85,8 +85,8 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case ProofProcessPackage.PROPERTY_TYPE:
-				return createPropertyTypeFromString(eDataType, initialValue);
+			case ProofProcessPackage.PROOF_FEATURE_TYPE:
+				return createProofFeatureTypeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -100,8 +100,8 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-			case ProofProcessPackage.PROPERTY_TYPE:
-				return convertPropertyTypeToString(eDataType, instanceValue);
+			case ProofProcessPackage.PROOF_FEATURE_TYPE:
+				return convertProofFeatureTypeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -142,9 +142,9 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PropertyDef createPropertyDef() {
-		PropertyDefImpl propertyDef = new PropertyDefImpl();
-		return propertyDef;
+	public ProofFeatureDef createProofFeatureDef() {
+		ProofFeatureDefImpl proofFeatureDef = new ProofFeatureDefImpl();
+		return proofFeatureDef;
 	}
 
 	/**
@@ -152,9 +152,9 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Property createProperty() {
-		PropertyImpl property = new PropertyImpl();
-		return property;
+	public ProofFeature createProofFeature() {
+		ProofFeatureImpl proofFeature = new ProofFeatureImpl();
+		return proofFeature;
 	}
 
 	/**
@@ -222,8 +222,8 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PropertyType createPropertyTypeFromString(EDataType eDataType, String initialValue) {
-		PropertyType result = PropertyType.get(initialValue);
+	public ProofFeatureType createProofFeatureTypeFromString(EDataType eDataType, String initialValue) {
+		ProofFeatureType result = ProofFeatureType.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
@@ -233,7 +233,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String convertPropertyTypeToString(EDataType eDataType, Object instanceValue) {
+	public String convertProofFeatureTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

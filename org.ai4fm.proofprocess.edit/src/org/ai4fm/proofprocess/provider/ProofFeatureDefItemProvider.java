@@ -10,8 +10,8 @@ package org.ai4fm.proofprocess.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.ProofFeatureDef;
 import org.ai4fm.proofprocess.ProofProcessPackage;
-import org.ai4fm.proofprocess.PropertyDef;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -30,12 +30,12 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.PropertyDef} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.ProofFeatureDef} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class PropertyDefItemProvider
+public class ProofFeatureDefItemProvider
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -49,7 +49,7 @@ public class PropertyDefItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PropertyDefItemProvider(AdapterFactory adapterFactory) {
+	public ProofFeatureDefItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -81,9 +81,9 @@ public class PropertyDefItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_PropertyDef_name_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_PropertyDef_name_feature", "_UI_PropertyDef_type"),
-				 ProofProcessPackage.Literals.PROPERTY_DEF__NAME,
+				 getString("_UI_ProofFeatureDef_name_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ProofFeatureDef_name_feature", "_UI_ProofFeatureDef_type"),
+				 ProofProcessPackage.Literals.PROOF_FEATURE_DEF__NAME,
 				 true,
 				 false,
 				 false,
@@ -103,9 +103,9 @@ public class PropertyDefItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_PropertyDef_description_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_PropertyDef_description_feature", "_UI_PropertyDef_type"),
-				 ProofProcessPackage.Literals.PROPERTY_DEF__DESCRIPTION,
+				 getString("_UI_ProofFeatureDef_description_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ProofFeatureDef_description_feature", "_UI_ProofFeatureDef_type"),
+				 ProofProcessPackage.Literals.PROOF_FEATURE_DEF__DESCRIPTION,
 				 true,
 				 false,
 				 false,
@@ -115,14 +115,14 @@ public class PropertyDefItemProvider
 	}
 
 	/**
-	 * This returns PropertyDef.gif.
+	 * This returns ProofFeatureDef.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/PropertyDef"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofFeatureDef"));
 	}
 
 	/**
@@ -133,10 +133,10 @@ public class PropertyDefItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((PropertyDef)object).getName();
+		String label = ((ProofFeatureDef)object).getName();
 		return label == null || label.length() == 0 ?
-			getString("_UI_PropertyDef_type") :
-			getString("_UI_PropertyDef_type") + " " + label;
+			getString("_UI_ProofFeatureDef_type") :
+			getString("_UI_ProofFeatureDef_type") + " " + label;
 	}
 
 	/**
@@ -150,9 +150,9 @@ public class PropertyDefItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(PropertyDef.class)) {
-			case ProofProcessPackage.PROPERTY_DEF__NAME:
-			case ProofProcessPackage.PROPERTY_DEF__DESCRIPTION:
+		switch (notification.getFeatureID(ProofFeatureDef.class)) {
+			case ProofProcessPackage.PROOF_FEATURE_DEF__NAME:
+			case ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

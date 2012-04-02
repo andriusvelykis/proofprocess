@@ -106,15 +106,15 @@ public class ProofProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProofProcessPackage.PROPERTY_DEF: {
-				PropertyDef propertyDef = (PropertyDef)theEObject;
-				T result = casePropertyDef(propertyDef);
+			case ProofProcessPackage.PROOF_FEATURE_DEF: {
+				ProofFeatureDef proofFeatureDef = (ProofFeatureDef)theEObject;
+				T result = caseProofFeatureDef(proofFeatureDef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProofProcessPackage.PROPERTY: {
-				Property property = (Property)theEObject;
-				T result = caseProperty(property);
+			case ProofProcessPackage.PROOF_FEATURE: {
+				ProofFeature proofFeature = (ProofFeature)theEObject;
+				T result = caseProofFeature(proofFeature);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -259,32 +259,32 @@ public class ProofProcessSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Property Def</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Feature Def</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Property Def</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Feature Def</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertyDef(PropertyDef object) {
+	public T caseProofFeatureDef(ProofFeatureDef object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Property</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Feature</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Property</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Feature</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseProperty(Property object) {
+	public T caseProofFeature(ProofFeature object) {
 		return null;
 	}
 

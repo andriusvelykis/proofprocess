@@ -53,22 +53,22 @@ public interface ProofProcessFactory extends EFactory {
 	ProofInfo createProofInfo();
 
 	/**
-	 * Returns a new object of class '<em>Property Def</em>'.
+	 * Returns a new object of class '<em>Proof Feature Def</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Property Def</em>'.
+	 * @return a new object of class '<em>Proof Feature Def</em>'.
 	 * @generated
 	 */
-	PropertyDef createPropertyDef();
+	ProofFeatureDef createProofFeatureDef();
 
 	/**
-	 * Returns a new object of class '<em>Property</em>'.
+	 * Returns a new object of class '<em>Proof Feature</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Property</em>'.
+	 * @return a new object of class '<em>Proof Feature</em>'.
 	 * @generated
 	 */
-	Property createProperty();
+	ProofFeature createProofFeature();
 
 	/**
 	 * Returns a new object of class '<em>Proof Entry</em>'.

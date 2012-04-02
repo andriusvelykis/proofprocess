@@ -96,12 +96,12 @@ public class ProofProcessAdapterFactory extends AdapterFactoryImpl {
 				return createProofInfoAdapter();
 			}
 			@Override
-			public Adapter casePropertyDef(PropertyDef object) {
-				return createPropertyDefAdapter();
+			public Adapter caseProofFeatureDef(ProofFeatureDef object) {
+				return createProofFeatureDefAdapter();
 			}
 			@Override
-			public Adapter caseProperty(Property object) {
-				return createPropertyAdapter();
+			public Adapter caseProofFeature(ProofFeature object) {
+				return createProofFeatureAdapter();
 			}
 			@Override
 			public Adapter caseProofElem(ProofElem object) {
@@ -236,30 +236,30 @@ public class ProofProcessAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.PropertyDef <em>Property Def</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofFeatureDef <em>Proof Feature Def</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.PropertyDef
+	 * @see org.ai4fm.proofprocess.ProofFeatureDef
 	 * @generated
 	 */
-	public Adapter createPropertyDefAdapter() {
+	public Adapter createProofFeatureDefAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.Property <em>Property</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofFeature <em>Proof Feature</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.Property
+	 * @see org.ai4fm.proofprocess.ProofFeature
 	 * @generated
 	 */
-	public Adapter createPropertyAdapter() {
+	public Adapter createProofFeatureAdapter() {
 		return null;
 	}
 

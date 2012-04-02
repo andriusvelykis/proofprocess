@@ -20,8 +20,8 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getIntent <em>Intent</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getNarrative <em>Narrative</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getInProps <em>In Props</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getOutProps <em>Out Props</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getInFeatures <em>In Features</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.ProofInfo#getOutFeatures <em>Out Features</em>}</li>
  * </ul>
  * </p>
  *
@@ -84,35 +84,35 @@ public interface ProofInfo extends EObject {
 	void setNarrative(String value);
 
 	/**
-	 * Returns the value of the '<em><b>In Props</b></em>' containment reference list.
-	 * The list contents are of type {@link org.ai4fm.proofprocess.Property}.
+	 * Returns the value of the '<em><b>In Features</b></em>' containment reference list.
+	 * The list contents are of type {@link org.ai4fm.proofprocess.ProofFeature}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>In Props</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>In Features</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>In Props</em>' containment reference list.
-	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofInfo_InProps()
+	 * @return the value of the '<em>In Features</em>' containment reference list.
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofInfo_InFeatures()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<Property> getInProps();
+	EList<ProofFeature> getInFeatures();
 
 	/**
-	 * Returns the value of the '<em><b>Out Props</b></em>' containment reference list.
-	 * The list contents are of type {@link org.ai4fm.proofprocess.Property}.
+	 * Returns the value of the '<em><b>Out Features</b></em>' containment reference list.
+	 * The list contents are of type {@link org.ai4fm.proofprocess.ProofFeature}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Out Props</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Out Features</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Out Props</em>' containment reference list.
-	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofInfo_OutProps()
+	 * @return the value of the '<em>Out Features</em>' containment reference list.
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofInfo_OutFeatures()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<Property> getOutProps();
+	EList<ProofFeature> getOutFeatures();
 
 } // ProofInfo

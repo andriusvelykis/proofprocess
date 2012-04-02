@@ -238,22 +238,22 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_INFO__NARRATIVE = 1;
 
 	/**
-	 * The feature id for the '<em><b>In Props</b></em>' containment reference list.
+	 * The feature id for the '<em><b>In Features</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROOF_INFO__IN_PROPS = 2;
+	int PROOF_INFO__IN_FEATURES = 2;
 
 	/**
-	 * The feature id for the '<em><b>Out Props</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Out Features</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROOF_INFO__OUT_PROPS = 3;
+	int PROOF_INFO__OUT_FEATURES = 3;
 
 	/**
 	 * The number of structural features of the '<em>Proof Info</em>' class.
@@ -265,14 +265,14 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_INFO_FEATURE_COUNT = 4;
 
 	/**
-	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.PropertyDefImpl <em>Property Def</em>}' class.
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.ProofFeatureDefImpl <em>Proof Feature Def</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.ai4fm.proofprocess.impl.PropertyDefImpl
-	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getPropertyDef()
+	 * @see org.ai4fm.proofprocess.impl.ProofFeatureDefImpl
+	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeatureDef()
 	 * @generated
 	 */
-	int PROPERTY_DEF = 6;
+	int PROOF_FEATURE_DEF = 6;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -281,7 +281,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_DEF__NAME = 0;
+	int PROOF_FEATURE_DEF__NAME = 0;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -290,26 +290,26 @@ public interface ProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_DEF__DESCRIPTION = 1;
+	int PROOF_FEATURE_DEF__DESCRIPTION = 1;
 
 	/**
-	 * The number of structural features of the '<em>Property Def</em>' class.
+	 * The number of structural features of the '<em>Proof Feature Def</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_DEF_FEATURE_COUNT = 2;
+	int PROOF_FEATURE_DEF_FEATURE_COUNT = 2;
 
 	/**
-	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.PropertyImpl <em>Property</em>}' class.
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.ProofFeatureImpl <em>Proof Feature</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.ai4fm.proofprocess.impl.PropertyImpl
-	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProperty()
+	 * @see org.ai4fm.proofprocess.impl.ProofFeatureImpl
+	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeature()
 	 * @generated
 	 */
-	int PROPERTY = 7;
+	int PROOF_FEATURE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' reference.
@@ -318,7 +318,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY__NAME = 0;
+	int PROOF_FEATURE__NAME = 0;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' attribute.
@@ -327,7 +327,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY__TYPE = 1;
+	int PROOF_FEATURE__TYPE = 1;
 
 	/**
 	 * The feature id for the '<em><b>Params</b></em>' containment reference list.
@@ -336,16 +336,16 @@ public interface ProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY__PARAMS = 2;
+	int PROOF_FEATURE__PARAMS = 2;
 
 	/**
-	 * The number of structural features of the '<em>Property</em>' class.
+	 * The number of structural features of the '<em>Proof Feature</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_FEATURE_COUNT = 3;
+	int PROOF_FEATURE_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.ProofElemImpl <em>Proof Elem</em>}' class.
@@ -598,15 +598,14 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_FEATURE_COUNT = 3;
 
 	/**
-	 * The meta object id for the '{@link org.ai4fm.proofprocess.PropertyType <em>Property Type</em>}' enum.
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.ProofFeatureType <em>Proof Feature Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.ai4fm.proofprocess.PropertyType
-	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getPropertyType()
+	 * @see org.ai4fm.proofprocess.ProofFeatureType
+	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeatureType()
 	 * @generated
 	 */
-	int PROPERTY_TYPE = 15;
-
+	int PROOF_FEATURE_TYPE = 15;
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.Intent <em>Intent</em>}'.
@@ -757,101 +756,101 @@ public interface ProofProcessPackage extends EPackage {
 	EAttribute getProofInfo_Narrative();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.ProofInfo#getInProps <em>In Props</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.ProofInfo#getInFeatures <em>In Features</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>In Props</em>'.
-	 * @see org.ai4fm.proofprocess.ProofInfo#getInProps()
+	 * @return the meta object for the containment reference list '<em>In Features</em>'.
+	 * @see org.ai4fm.proofprocess.ProofInfo#getInFeatures()
 	 * @see #getProofInfo()
 	 * @generated
 	 */
-	EReference getProofInfo_InProps();
+	EReference getProofInfo_InFeatures();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.ProofInfo#getOutProps <em>Out Props</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.ProofInfo#getOutFeatures <em>Out Features</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Out Props</em>'.
-	 * @see org.ai4fm.proofprocess.ProofInfo#getOutProps()
+	 * @return the meta object for the containment reference list '<em>Out Features</em>'.
+	 * @see org.ai4fm.proofprocess.ProofInfo#getOutFeatures()
 	 * @see #getProofInfo()
 	 * @generated
 	 */
-	EReference getProofInfo_OutProps();
+	EReference getProofInfo_OutFeatures();
 
 	/**
-	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.PropertyDef <em>Property Def</em>}'.
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.ProofFeatureDef <em>Proof Feature Def</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Property Def</em>'.
-	 * @see org.ai4fm.proofprocess.PropertyDef
+	 * @return the meta object for class '<em>Proof Feature Def</em>'.
+	 * @see org.ai4fm.proofprocess.ProofFeatureDef
 	 * @generated
 	 */
-	EClass getPropertyDef();
+	EClass getProofFeatureDef();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.PropertyDef#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.ProofFeatureDef#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.ai4fm.proofprocess.PropertyDef#getName()
-	 * @see #getPropertyDef()
+	 * @see org.ai4fm.proofprocess.ProofFeatureDef#getName()
+	 * @see #getProofFeatureDef()
 	 * @generated
 	 */
-	EAttribute getPropertyDef_Name();
+	EAttribute getProofFeatureDef_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.PropertyDef#getDescription <em>Description</em>}'.
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.ProofFeatureDef#getDescription <em>Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Description</em>'.
-	 * @see org.ai4fm.proofprocess.PropertyDef#getDescription()
-	 * @see #getPropertyDef()
+	 * @see org.ai4fm.proofprocess.ProofFeatureDef#getDescription()
+	 * @see #getProofFeatureDef()
 	 * @generated
 	 */
-	EAttribute getPropertyDef_Description();
+	EAttribute getProofFeatureDef_Description();
 
 	/**
-	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.Property <em>Property</em>}'.
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.ProofFeature <em>Proof Feature</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Property</em>'.
-	 * @see org.ai4fm.proofprocess.Property
+	 * @return the meta object for class '<em>Proof Feature</em>'.
+	 * @see org.ai4fm.proofprocess.ProofFeature
 	 * @generated
 	 */
-	EClass getProperty();
+	EClass getProofFeature();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.ai4fm.proofprocess.Property#getName <em>Name</em>}'.
+	 * Returns the meta object for the reference '{@link org.ai4fm.proofprocess.ProofFeature#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Name</em>'.
-	 * @see org.ai4fm.proofprocess.Property#getName()
-	 * @see #getProperty()
+	 * @see org.ai4fm.proofprocess.ProofFeature#getName()
+	 * @see #getProofFeature()
 	 * @generated
 	 */
-	EReference getProperty_Name();
+	EReference getProofFeature_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.Property#getType <em>Type</em>}'.
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.ProofFeature#getType <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Type</em>'.
-	 * @see org.ai4fm.proofprocess.Property#getType()
-	 * @see #getProperty()
+	 * @see org.ai4fm.proofprocess.ProofFeature#getType()
+	 * @see #getProofFeature()
 	 * @generated
 	 */
-	EAttribute getProperty_Type();
+	EAttribute getProofFeature_Type();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.Property#getParams <em>Params</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.ProofFeature#getParams <em>Params</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Params</em>'.
-	 * @see org.ai4fm.proofprocess.Property#getParams()
-	 * @see #getProperty()
+	 * @see org.ai4fm.proofprocess.ProofFeature#getParams()
+	 * @see #getProofFeature()
 	 * @generated
 	 */
-	EReference getProperty_Params();
+	EReference getProofFeature_Params();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.ProofElem <em>Proof Elem</em>}'.
@@ -1023,14 +1022,14 @@ public interface ProofProcessPackage extends EPackage {
 	EReference getProof_Attempts();
 
 	/**
-	 * Returns the meta object for enum '{@link org.ai4fm.proofprocess.PropertyType <em>Property Type</em>}'.
+	 * Returns the meta object for enum '{@link org.ai4fm.proofprocess.ProofFeatureType <em>Proof Feature Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Property Type</em>'.
-	 * @see org.ai4fm.proofprocess.PropertyType
+	 * @return the meta object for enum '<em>Proof Feature Type</em>'.
+	 * @see org.ai4fm.proofprocess.ProofFeatureType
 	 * @generated
 	 */
-	EEnum getPropertyType();
+	EEnum getProofFeatureType();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -1179,30 +1178,30 @@ public interface ProofProcessPackage extends EPackage {
 		EAttribute PROOF_INFO__NARRATIVE = eINSTANCE.getProofInfo_Narrative();
 
 		/**
-		 * The meta object literal for the '<em><b>In Props</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>In Features</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROOF_INFO__IN_PROPS = eINSTANCE.getProofInfo_InProps();
+		EReference PROOF_INFO__IN_FEATURES = eINSTANCE.getProofInfo_InFeatures();
 
 		/**
-		 * The meta object literal for the '<em><b>Out Props</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Out Features</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROOF_INFO__OUT_PROPS = eINSTANCE.getProofInfo_OutProps();
+		EReference PROOF_INFO__OUT_FEATURES = eINSTANCE.getProofInfo_OutFeatures();
 
 		/**
-		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.PropertyDefImpl <em>Property Def</em>}' class.
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.ProofFeatureDefImpl <em>Proof Feature Def</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.ai4fm.proofprocess.impl.PropertyDefImpl
-		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getPropertyDef()
+		 * @see org.ai4fm.proofprocess.impl.ProofFeatureDefImpl
+		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeatureDef()
 		 * @generated
 		 */
-		EClass PROPERTY_DEF = eINSTANCE.getPropertyDef();
+		EClass PROOF_FEATURE_DEF = eINSTANCE.getProofFeatureDef();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -1210,7 +1209,7 @@ public interface ProofProcessPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROPERTY_DEF__NAME = eINSTANCE.getPropertyDef_Name();
+		EAttribute PROOF_FEATURE_DEF__NAME = eINSTANCE.getProofFeatureDef_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
@@ -1218,17 +1217,17 @@ public interface ProofProcessPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROPERTY_DEF__DESCRIPTION = eINSTANCE.getPropertyDef_Description();
+		EAttribute PROOF_FEATURE_DEF__DESCRIPTION = eINSTANCE.getProofFeatureDef_Description();
 
 		/**
-		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.PropertyImpl <em>Property</em>}' class.
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.ProofFeatureImpl <em>Proof Feature</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.ai4fm.proofprocess.impl.PropertyImpl
-		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProperty()
+		 * @see org.ai4fm.proofprocess.impl.ProofFeatureImpl
+		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeature()
 		 * @generated
 		 */
-		EClass PROPERTY = eINSTANCE.getProperty();
+		EClass PROOF_FEATURE = eINSTANCE.getProofFeature();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' reference feature.
@@ -1236,7 +1235,7 @@ public interface ProofProcessPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROPERTY__NAME = eINSTANCE.getProperty_Name();
+		EReference PROOF_FEATURE__NAME = eINSTANCE.getProofFeature_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
@@ -1244,7 +1243,7 @@ public interface ProofProcessPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PROPERTY__TYPE = eINSTANCE.getProperty_Type();
+		EAttribute PROOF_FEATURE__TYPE = eINSTANCE.getProofFeature_Type();
 
 		/**
 		 * The meta object literal for the '<em><b>Params</b></em>' containment reference list feature.
@@ -1252,7 +1251,7 @@ public interface ProofProcessPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROPERTY__PARAMS = eINSTANCE.getProperty_Params();
+		EReference PROOF_FEATURE__PARAMS = eINSTANCE.getProofFeature_Params();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.ProofElemImpl <em>Proof Elem</em>}' class.
@@ -1397,14 +1396,14 @@ public interface ProofProcessPackage extends EPackage {
 		EReference PROOF__ATTEMPTS = eINSTANCE.getProof_Attempts();
 
 		/**
-		 * The meta object literal for the '{@link org.ai4fm.proofprocess.PropertyType <em>Property Type</em>}' enum.
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.ProofFeatureType <em>Proof Feature Type</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.ai4fm.proofprocess.PropertyType
-		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getPropertyType()
+		 * @see org.ai4fm.proofprocess.ProofFeatureType
+		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeatureType()
 		 * @generated
 		 */
-		EEnum PROPERTY_TYPE = eINSTANCE.getPropertyType();
+		EEnum PROOF_FEATURE_TYPE = eINSTANCE.getProofFeatureType();
 
 	}
 

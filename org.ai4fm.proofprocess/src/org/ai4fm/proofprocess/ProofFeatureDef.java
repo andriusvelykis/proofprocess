@@ -10,22 +10,22 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Property Def</b></em>'.
+ * A representation of the model object '<em><b>Proof Feature Def</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.PropertyDef#getName <em>Name</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.PropertyDef#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.ProofFeatureDef#getName <em>Name</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.ProofFeatureDef#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.ai4fm.proofprocess.ProofProcessPackage#getPropertyDef()
+ * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofFeatureDef()
  * @model
  * @generated
  */
-public interface PropertyDef extends EObject {
+public interface ProofFeatureDef extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * The default value is <code>""</code>.
@@ -37,14 +37,14 @@ public interface PropertyDef extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getPropertyDef_Name()
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofFeatureDef_Name()
 	 * @model default="" required="true"
 	 * @generated
 	 */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.PropertyDef#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.ProofFeatureDef#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
@@ -64,14 +64,14 @@ public interface PropertyDef extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
-	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getPropertyDef_Description()
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofFeatureDef_Description()
 	 * @model default="\"\"" required="true"
 	 * @generated
 	 */
 	String getDescription();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.PropertyDef#getDescription <em>Description</em>}' attribute.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.ProofFeatureDef#getDescription <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Description</em>' attribute.
@@ -80,4 +80,4 @@ public interface PropertyDef extends EObject {
 	 */
 	void setDescription(String value);
 
-} // PropertyDef
+} // ProofFeatureDef

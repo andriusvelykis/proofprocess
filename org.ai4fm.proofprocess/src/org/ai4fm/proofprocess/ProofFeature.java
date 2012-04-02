@@ -12,23 +12,23 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Property</b></em>'.
+ * A representation of the model object '<em><b>Proof Feature</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.Property#getName <em>Name</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.Property#getType <em>Type</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.Property#getParams <em>Params</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.ProofFeature#getName <em>Name</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.ProofFeature#getType <em>Type</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.ProofFeature#getParams <em>Params</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.ai4fm.proofprocess.ProofProcessPackage#getProperty()
+ * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofFeature()
  * @model
  * @generated
  */
-public interface Property extends EObject {
+public interface ProofFeature extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -38,26 +38,26 @@ public interface Property extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' reference.
-	 * @see #setName(PropertyDef)
-	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProperty_Name()
+	 * @see #setName(ProofFeatureDef)
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofFeature_Name()
 	 * @model required="true"
 	 * @generated
 	 */
-	PropertyDef getName();
+	ProofFeatureDef getName();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.Property#getName <em>Name</em>}' reference.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.ProofFeature#getName <em>Name</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' reference.
 	 * @see #getName()
 	 * @generated
 	 */
-	void setName(PropertyDef value);
+	void setName(ProofFeatureDef value);
 
 	/**
 	 * Returns the value of the '<em><b>Type</b></em>' attribute.
-	 * The literals are from the enumeration {@link org.ai4fm.proofprocess.PropertyType}.
+	 * The literals are from the enumeration {@link org.ai4fm.proofprocess.ProofFeatureType}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Type</em>' attribute isn't clear,
@@ -65,24 +65,24 @@ public interface Property extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Type</em>' attribute.
-	 * @see org.ai4fm.proofprocess.PropertyType
-	 * @see #setType(PropertyType)
-	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProperty_Type()
+	 * @see org.ai4fm.proofprocess.ProofFeatureType
+	 * @see #setType(ProofFeatureType)
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofFeature_Type()
 	 * @model
 	 * @generated
 	 */
-	PropertyType getType();
+	ProofFeatureType getType();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.Property#getType <em>Type</em>}' attribute.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.ProofFeature#getType <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Type</em>' attribute.
-	 * @see org.ai4fm.proofprocess.PropertyType
+	 * @see org.ai4fm.proofprocess.ProofFeatureType
 	 * @see #getType()
 	 * @generated
 	 */
-	void setType(PropertyType value);
+	void setType(ProofFeatureType value);
 
 	/**
 	 * Returns the value of the '<em><b>Params</b></em>' containment reference list.
@@ -94,10 +94,10 @@ public interface Property extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Params</em>' containment reference list.
-	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProperty_Params()
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofFeature_Params()
 	 * @model containment="true" required="true"
 	 * @generated
 	 */
 	EList<Term> getParams();
 
-} // Property
+} // ProofFeature

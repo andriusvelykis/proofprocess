@@ -10,9 +10,9 @@ package org.ai4fm.proofprocess.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.ProofFeature;
+import org.ai4fm.proofprocess.ProofFeatureType;
 import org.ai4fm.proofprocess.ProofProcessPackage;
-import org.ai4fm.proofprocess.Property;
-import org.ai4fm.proofprocess.PropertyType;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -33,12 +33,12 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.Property} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.ProofFeature} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class PropertyItemProvider
+public class ProofFeatureItemProvider
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -52,7 +52,7 @@ public class PropertyItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PropertyItemProvider(AdapterFactory adapterFactory) {
+	public ProofFeatureItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -84,9 +84,9 @@ public class PropertyItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_Property_name_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Property_name_feature", "_UI_Property_type"),
-				 ProofProcessPackage.Literals.PROPERTY__NAME,
+				 getString("_UI_ProofFeature_name_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ProofFeature_name_feature", "_UI_ProofFeature_type"),
+				 ProofProcessPackage.Literals.PROOF_FEATURE__NAME,
 				 true,
 				 false,
 				 true,
@@ -106,9 +106,9 @@ public class PropertyItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_Property_type_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Property_type_feature", "_UI_Property_type"),
-				 ProofProcessPackage.Literals.PROPERTY__TYPE,
+				 getString("_UI_ProofFeature_type_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ProofFeature_type_feature", "_UI_ProofFeature_type"),
+				 ProofProcessPackage.Literals.PROOF_FEATURE__TYPE,
 				 true,
 				 false,
 				 false,
@@ -129,7 +129,7 @@ public class PropertyItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ProofProcessPackage.Literals.PROPERTY__PARAMS);
+			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_FEATURE__PARAMS);
 		}
 		return childrenFeatures;
 	}
@@ -148,14 +148,14 @@ public class PropertyItemProvider
 	}
 
 	/**
-	 * This returns Property.gif.
+	 * This returns ProofFeature.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Property"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofFeature"));
 	}
 
 	/**
@@ -166,11 +166,11 @@ public class PropertyItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		PropertyType labelValue = ((Property)object).getType();
+		ProofFeatureType labelValue = ((ProofFeature)object).getType();
 		String label = labelValue == null ? null : labelValue.toString();
 		return label == null || label.length() == 0 ?
-			getString("_UI_Property_type") :
-			getString("_UI_Property_type") + " " + label;
+			getString("_UI_ProofFeature_type") :
+			getString("_UI_ProofFeature_type") + " " + label;
 	}
 
 	/**
@@ -184,11 +184,11 @@ public class PropertyItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(Property.class)) {
-			case ProofProcessPackage.PROPERTY__TYPE:
+		switch (notification.getFeatureID(ProofFeature.class)) {
+			case ProofProcessPackage.PROOF_FEATURE__TYPE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
-			case ProofProcessPackage.PROPERTY__PARAMS:
+			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}

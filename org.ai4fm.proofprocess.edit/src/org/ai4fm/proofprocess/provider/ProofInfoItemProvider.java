@@ -129,8 +129,8 @@ public class ProofInfoItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_INFO__IN_PROPS);
-			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_INFO__OUT_PROPS);
+			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_INFO__IN_FEATURES);
+			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_INFO__OUT_FEATURES);
 		}
 		return childrenFeatures;
 	}
@@ -188,8 +188,8 @@ public class ProofInfoItemProvider
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
-			case ProofProcessPackage.PROOF_INFO__IN_PROPS:
-			case ProofProcessPackage.PROOF_INFO__OUT_PROPS:
+			case ProofProcessPackage.PROOF_INFO__IN_FEATURES:
+			case ProofProcessPackage.PROOF_INFO__OUT_FEATURES:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -209,13 +209,13 @@ public class ProofInfoItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(ProofProcessPackage.Literals.PROOF_INFO__IN_PROPS,
-				 ProofProcessFactory.eINSTANCE.createProperty()));
+				(ProofProcessPackage.Literals.PROOF_INFO__IN_FEATURES,
+				 ProofProcessFactory.eINSTANCE.createProofFeature()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(ProofProcessPackage.Literals.PROOF_INFO__OUT_PROPS,
-				 ProofProcessFactory.eINSTANCE.createProperty()));
+				(ProofProcessPackage.Literals.PROOF_INFO__OUT_FEATURES,
+				 ProofProcessFactory.eINSTANCE.createProofFeature()));
 	}
 
 	/**
@@ -230,8 +230,8 @@ public class ProofInfoItemProvider
 		Object childObject = child;
 
 		boolean qualify =
-			childFeature == ProofProcessPackage.Literals.PROOF_INFO__IN_PROPS ||
-			childFeature == ProofProcessPackage.Literals.PROOF_INFO__OUT_PROPS;
+			childFeature == ProofProcessPackage.Literals.PROOF_INFO__IN_FEATURES ||
+			childFeature == ProofProcessPackage.Literals.PROOF_INFO__OUT_FEATURES;
 
 		if (qualify) {
 			return getString

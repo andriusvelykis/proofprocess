@@ -14,14 +14,14 @@ import org.eclipse.emf.common.util.Enumerator;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Property Type</b></em>',
+ * A representation of the literals of the enumeration '<em><b>Proof Feature Type</b></em>',
  * and utility methods for working with them.
  * <!-- end-user-doc -->
- * @see org.ai4fm.proofprocess.ProofProcessPackage#getPropertyType()
+ * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofFeatureType()
  * @model
  * @generated
  */
-public enum PropertyType implements Enumerator {
+public enum ProofFeatureType implements Enumerator {
 	/**
 	 * The '<em><b>USER</b></em>' literal object.
 	 * <!-- begin-user-doc -->
@@ -73,34 +73,34 @@ public enum PropertyType implements Enumerator {
 	public static final int INFERRED_VALUE = 1;
 
 	/**
-	 * An array of all the '<em><b>Property Type</b></em>' enumerators.
+	 * An array of all the '<em><b>Proof Feature Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private static final PropertyType[] VALUES_ARRAY =
-		new PropertyType[] {
+	private static final ProofFeatureType[] VALUES_ARRAY =
+		new ProofFeatureType[] {
 			USER,
 			INFERRED,
 		};
 
 	/**
-	 * A public read-only list of all the '<em><b>Property Type</b></em>' enumerators.
+	 * A public read-only list of all the '<em><b>Proof Feature Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final List<PropertyType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+	public static final List<ProofFeatureType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Property Type</b></em>' literal with the specified literal value.
+	 * Returns the '<em><b>Proof Feature Type</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static PropertyType get(String literal) {
+	public static ProofFeatureType get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			PropertyType result = VALUES_ARRAY[i];
+			ProofFeatureType result = VALUES_ARRAY[i];
 			if (result.toString().equals(literal)) {
 				return result;
 			}
@@ -109,14 +109,14 @@ public enum PropertyType implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Property Type</b></em>' literal with the specified name.
+	 * Returns the '<em><b>Proof Feature Type</b></em>' literal with the specified name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static PropertyType getByName(String name) {
+	public static ProofFeatureType getByName(String name) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			PropertyType result = VALUES_ARRAY[i];
+			ProofFeatureType result = VALUES_ARRAY[i];
 			if (result.getName().equals(name)) {
 				return result;
 			}
@@ -125,12 +125,12 @@ public enum PropertyType implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Property Type</b></em>' literal with the specified integer value.
+	 * Returns the '<em><b>Proof Feature Type</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static PropertyType get(int value) {
+	public static ProofFeatureType get(int value) {
 		switch (value) {
 			case USER_VALUE: return USER;
 			case INFERRED_VALUE: return INFERRED;
@@ -165,7 +165,7 @@ public enum PropertyType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private PropertyType(int value, String name, String literal) {
+	private ProofFeatureType(int value, String name, String literal) {
 		this.value = value;
 		this.name = name;
 		this.literal = literal;
@@ -209,4 +209,4 @@ public enum PropertyType implements Enumerator {
 		return literal;
 	}
 	
-} //PropertyType
+} //ProofFeatureType

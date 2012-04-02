@@ -145,49 +145,49 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.PropertyDef} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofFeatureDef} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected PropertyDefItemProvider propertyDefItemProvider;
+	protected ProofFeatureDefItemProvider proofFeatureDefItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.PropertyDef}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofFeatureDef}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createPropertyDefAdapter() {
-		if (propertyDefItemProvider == null) {
-			propertyDefItemProvider = new PropertyDefItemProvider(this);
+	public Adapter createProofFeatureDefAdapter() {
+		if (proofFeatureDefItemProvider == null) {
+			proofFeatureDefItemProvider = new ProofFeatureDefItemProvider(this);
 		}
 
-		return propertyDefItemProvider;
+		return proofFeatureDefItemProvider;
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.Property} instances.
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofFeature} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected PropertyItemProvider propertyItemProvider;
+	protected ProofFeatureItemProvider proofFeatureItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.Property}.
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofFeature}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createPropertyAdapter() {
-		if (propertyItemProvider == null) {
-			propertyItemProvider = new PropertyItemProvider(this);
+	public Adapter createProofFeatureAdapter() {
+		if (proofFeatureItemProvider == null) {
+			proofFeatureItemProvider = new ProofFeatureItemProvider(this);
 		}
 
-		return propertyItemProvider;
+		return proofFeatureItemProvider;
 	}
 
 	/**
@@ -430,8 +430,8 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 		if (intentItemProvider != null) intentItemProvider.dispose();
 		if (proofStepItemProvider != null) proofStepItemProvider.dispose();
 		if (proofInfoItemProvider != null) proofInfoItemProvider.dispose();
-		if (propertyDefItemProvider != null) propertyDefItemProvider.dispose();
-		if (propertyItemProvider != null) propertyItemProvider.dispose();
+		if (proofFeatureDefItemProvider != null) proofFeatureDefItemProvider.dispose();
+		if (proofFeatureItemProvider != null) proofFeatureItemProvider.dispose();
 		if (proofEntryItemProvider != null) proofEntryItemProvider.dispose();
 		if (proofSeqItemProvider != null) proofSeqItemProvider.dispose();
 		if (proofParallelItemProvider != null) proofParallelItemProvider.dispose();

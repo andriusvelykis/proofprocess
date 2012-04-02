@@ -39,12 +39,12 @@ import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Proof;
 import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofEntry;
+import org.ai4fm.proofprocess.ProofFeature;
 import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofParallel;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
-import org.ai4fm.proofprocess.Property;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 import org.ai4fm.proofprocess.log.Activity;
@@ -412,9 +412,9 @@ public class SnapshotTracker {
 		Intent intent = ProofProcessUtil.findCreateIntent(project, "Tactic Application");
 		info.setIntent(intent);
 		
-		// TODO set properties
-		List<Property> inProps = info.getInProps();
-		List<Property> outProps = info.getInProps();
+		// TODO set features
+		List<ProofFeature> inFeatures = info.getInFeatures();
+		List<ProofFeature> outFeatures = info.getOutFeatures();
 		
 		ZEvesTrace trace = ZEvesProofProcessFactory.eINSTANCE.createZEvesTrace();
 		trace.setText(commandText);
