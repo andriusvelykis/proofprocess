@@ -72,10 +72,9 @@ public class ProofMatcher {
 		// create new
 		Proof targetProof = ProofProcessFactory.eINSTANCE.createProof();
 		targetProof.setLabel(proofLabel);
-		for (Term goal : proofGoals) {
-			// copy the goals defensively, they may be used somewhere else
-			targetProof.getGoals().add(copyTerm(goal));
-		}
+		
+		// copy the goals defensively, they may be used somewhere else
+		targetProof.getGoals().addAll(copyTerms(proofGoals));
 		
 		// add to the project
 		proofs.add(targetProof);
@@ -125,6 +124,14 @@ public class ProofMatcher {
 	
 	protected Term copyTerm(Term term) {
 		return EcoreUtil.copy(term);
+	}
+	
+	public final List<Term> copyTerms(List<? extends Term> terms) {
+		List<Term> copy = new ArrayList<Term>();
+		for (Term term : terms) {
+			copy.add(copyTerm(term));
+		}
+		return copy;
 	}
 	
 	public ProofElemMatch findCreateProofTree(Project proofProject, Proof proof, 
