@@ -156,6 +156,8 @@ public class ProofAnalyzer {
 		// TODO extract proof label
 		Proof proof = proofMatcher.findCreateProof(proofProject, null, initialGoals);
 		
+		// Continue analysing the proof commands.
+		// Note that the first State is excluded, as it is the "proof declaration command"
 		List<State> remainingState = proofState.subList(1, proofState.size());
 		if (remainingState.isEmpty()) {
 			// no proof steps afterwards
@@ -164,7 +166,6 @@ public class ProofAnalyzer {
 		
 		// Convert to Proof Process steps - they will be matched to the existing
 		// proof process records afterwards.
-		// Note that the first State is excluded, as it is the "proof declaration command"
 		List<ProofEntry> ppState = createProofSteps(proofMatcher, proofProject, proof, 
 				remainingState, fileVersion);
 		
