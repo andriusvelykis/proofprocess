@@ -26,24 +26,24 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="intent" eType="#//Intent"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="narrative" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="&quot;&quot;"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inProps" upperBound="-1"
-        eType="#//Property" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="outProps" upperBound="-1"
-        eType="#//Property" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inFeatures" upperBound="-1"
+        eType="#//ProofFeature" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outFeatures" upperBound="-1"
+        eType="#//ProofFeature" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PropertyDef">
+  <eClassifiers xsi:type="ecore:EClass" name="ProofFeatureDef">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="&quot;&quot;"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="PropertyType">
+  <eClassifiers xsi:type="ecore:EEnum" name="ProofFeatureType">
     <eLiterals name="USER" literal="USER"/>
     <eLiterals name="INFERRED" value="1"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Property">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="name" lowerBound="1" eType="#//PropertyDef"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//PropertyType"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ProofFeature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="name" lowerBound="1" eType="#//ProofFeatureDef"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//ProofFeatureType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="params" lowerBound="1"
         upperBound="-1" eType="#//Term" containment="true"/>
   </eClassifiers>
