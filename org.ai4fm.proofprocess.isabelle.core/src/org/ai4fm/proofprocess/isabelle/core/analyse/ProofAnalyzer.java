@@ -29,6 +29,7 @@ import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
+import org.ai4fm.proofprocess.core.store.IProofStore;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
@@ -39,6 +40,7 @@ import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
 import org.ai4fm.proofprocess.project.core.ProofManager;
 import org.ai4fm.proofprocess.project.core.ProofMatcher;
+import org.ai4fm.proofprocess.project.core.store.ProjectProofStore;
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
 import org.ai4fm.proofprocess.project.core.util.ResourceUtil;
 import org.eclipse.core.resources.IProject;
@@ -123,7 +125,7 @@ public class ProofAnalyzer {
 		FileVersion fileVersion = ProofHistoryManager.syncFileVersion(
 				project, filePath, documentText, commandEnd, monitor);
 		
-		analyzeEntry(proofProject, proofState, fileVersion);
+		analyzeEntry(new ProjectProofStore(proofProject), proofState, fileVersion);
 		
 		// FIXME retrieve proof entries from the analysis
 		Map<State, ProofEntry> proofEntries = new HashMap<State, ProofEntry>();
@@ -140,7 +142,7 @@ public class ProofAnalyzer {
 		return Status.OK_STATUS;
 	}
 	
-	private void analyzeEntry(Project proofProject, List<State> proofState, FileVersion fileVersion) {
+	private void analyzeEntry(IProofStore proofStore, List<State> proofState, FileVersion fileVersion) {
 		
 		// Assume that the first step in any proof is the "declaration" command, e.g. "lemma ..."
 		State initialGoalState = proofState.get(0);
@@ -154,7 +156,7 @@ public class ProofAnalyzer {
 		// find the proof for this
 		ProofMatcher proofMatcher = new ProofMatcher();
 		// TODO extract proof label
-		Proof proof = proofMatcher.findCreateProof(proofProject, null, initialGoals);
+		Proof proof = proofMatcher.findCreateProof(proofStore, null, initialGoals);
 		
 		// Continue analysing the proof commands.
 		// Note that the first State is excluded, as it is the "proof declaration command"
@@ -166,16 +168,16 @@ public class ProofAnalyzer {
 		
 		// Convert to Proof Process steps - they will be matched to the existing
 		// proof process records afterwards.
-		List<ProofEntry> ppState = createProofSteps(proofMatcher, proofProject, proof, 
+		List<ProofEntry> ppState = createProofSteps(proofMatcher, proofStore, proof, 
 				remainingState, fileVersion);
 		
 		// TODO export State-Entry matchings for Activities
-		proofMatcher.findCreateProofTree(proofProject, proof, ppState);
+		proofMatcher.findCreateProofTree(proofStore, proof, ppState);
 		
 		// TODO save the proofProject
 	}
 	
-	private List<ProofEntry> createProofSteps(ProofMatcher proofMatcher, Project proofProject, 
+	private List<ProofEntry> createProofSteps(ProofMatcher proofMatcher, IProofStore proofStore, 
 			Proof proof, List<State> proofState, FileVersion fileVersion) {
 		
 		List<ProofEntry> entries = new ArrayList<ProofEntry>();
@@ -183,7 +185,7 @@ public class ProofAnalyzer {
 		List<Term> stepInGoals = proof.getGoals();
 		for (State cmdState : proofState) {
 			ProofEntry entry = createProofStep(
-					proofMatcher, proofProject, fileVersion, stepInGoals, cmdState);
+					proofMatcher, proofStore, fileVersion, stepInGoals, cmdState);
 			entries.add(entry);
 			
 			stepInGoals = entry.getProofStep().getOutGoals();
@@ -192,13 +194,13 @@ public class ProofAnalyzer {
 		return entries;
 	}
 	
-	private ProofEntry createProofStep(ProofMatcher proofMatcher, Project project,
+	private ProofEntry createProofStep(ProofMatcher proofMatcher, IProofStore proofStore,
 			FileVersion fileVersion, List<Term> stepInGoals, State commandState) {
 		
 		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
 		info.setNarrative("Tactic: " + commandState.command().name());
 		
-		Intent intent = ProofProcessUtil.findCreateIntent(project, "Tactic Application");
+		Intent intent = proofStore.getIntent("Tactic Application");
 		info.setIntent(intent);
 		
 		// TODO set features

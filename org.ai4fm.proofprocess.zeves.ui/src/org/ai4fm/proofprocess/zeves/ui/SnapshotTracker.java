@@ -47,6 +47,7 @@ import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
+import org.ai4fm.proofprocess.core.store.IProofStore;
 import org.ai4fm.proofprocess.log.Activity;
 import org.ai4fm.proofprocess.log.ProofActivity;
 import org.ai4fm.proofprocess.log.ProofLog;
@@ -57,6 +58,7 @@ import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
 import org.ai4fm.proofprocess.project.core.ProofManager;
 import org.ai4fm.proofprocess.project.core.ProofMatcher;
 import org.ai4fm.proofprocess.project.core.ProofMatcher.ProofElemMatch;
+import org.ai4fm.proofprocess.project.core.store.ProjectProofStore;
 import org.ai4fm.proofprocess.project.core.util.EmfUtil;
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
 import org.ai4fm.proofprocess.project.core.util.ResourceUtil;
@@ -172,7 +174,7 @@ public class SnapshotTracker {
 			Project proofProject = ProofManager.getProofProject(project, monitor);
 			ProofLog proofLog = ProofManager.getProofLog(project, monitor);
 			FileVersion fileVersion = syncFileVersion(project, event.entry, event.sectInfo, filePath, monitor);
-			analyseEntry(proofProject, proofLog, event.entry, event.entryProof, fileVersion, event.sectInfo);
+			analyseEntry(new ProjectProofStore(proofProject), proofLog, event.entry, event.entryProof, fileVersion, event.sectInfo);
 			
 			if (pendingEvents.isEmpty() || pendingEvents.peek().event.getType() != SnapshotChangeType.ADD) {
 				// no more pending events (or the next one is not ADD), save the file
@@ -216,7 +218,7 @@ public class SnapshotTracker {
 		return ProofHistoryManager.syncFileVersion(project, filePath, text, posEnd, monitor);
 	}
 	
-	private void analyseEntry(Project proofProject, ProofLog proofLog, ISnapshotEntry entry,
+	private void analyseEntry(IProofStore proofStore, ProofLog proofLog, ISnapshotEntry entry,
 			List<ISnapshotEntry> entryProof, FileVersion fileVersion, SectionInfo sectInfo) {
 		
 		Activity activity;
@@ -236,7 +238,7 @@ public class SnapshotTracker {
 				return;
 			}
 			
-			ProofEntry attempt = analyseProofEntry(proofProject, nonErrorProof, fileVersion, sectInfo);
+			ProofEntry attempt = analyseProofEntry(proofStore, nonErrorProof, fileVersion, sectInfo);
 			
 			ProofActivity proofActivity = ProofProcessLogFactory.eINSTANCE.createProofActivity();
 			if (attempt != null) {
@@ -260,7 +262,7 @@ public class SnapshotTracker {
 		EmfUtil.addValue(proofLog, ProofProcessLogPackage.PROOF_LOG__ACTIVITIES, activity);
 	}
 	
-	private ProofEntry analyseProofEntry(Project proofProject, List<ISnapshotEntry> proofState, 
+	private ProofEntry analyseProofEntry(IProofStore proofStore, List<ISnapshotEntry> proofState, 
 			FileVersion fileVersion, SectionInfo sectInfo) {
 		
 		Assert.isLegal(!proofState.isEmpty());
@@ -273,7 +275,7 @@ public class SnapshotTracker {
 		List<Term> initialGoals = parseGoals(sectInfo, goalEntry);
 		
 		ProofMatcher proofMatcher = new ZEvesProofMatcher();
-		Proof proof = proofMatcher.findCreateProof(proofProject, goalName, initialGoals);
+		Proof proof = proofMatcher.findCreateProof(proofStore, goalName, initialGoals);
 
 		// Continue analysing the proof commands.
 		// Note that the first entry is excluded, as it is the "proof declaration command"
@@ -284,13 +286,13 @@ public class SnapshotTracker {
 		}
 		
 		List<ProofEntry> proofSteps = createProofSteps(
-				proofMatcher, proofProject, sectInfo, proof, remainingState, fileVersion);
+				proofMatcher, proofStore, sectInfo, proof, remainingState, fileVersion);
 		
-		ProofElemMatch match = proofMatcher.findCreateProofTree(proofProject, proof, proofSteps);
+		ProofElemMatch match = proofMatcher.findCreateProofTree(proofStore, proof, proofSteps);
 		return match.getEntry();
 	}
 	
-	private List<ProofEntry> createProofSteps(ProofMatcher proofMatcher, Project proofProject,
+	private List<ProofEntry> createProofSteps(ProofMatcher proofMatcher, IProofStore proofStore,
 			SectionInfo sectInfo, Proof proof, List<ISnapshotEntry> proofState, FileVersion fileVersion) {
 		
 		List<ProofEntry> entries = new ArrayList<ProofEntry>();
@@ -298,7 +300,7 @@ public class SnapshotTracker {
 		List<Term> stepInGoals = proof.getGoals();
 		for (ISnapshotEntry cmdState : proofState) {
 			ProofEntry entry = createProofStep(
-					proofMatcher, proofProject, fileVersion, sectInfo, stepInGoals, cmdState);
+					proofMatcher, proofStore, fileVersion, sectInfo, stepInGoals, cmdState);
 			entries.add(entry);
 			
 			stepInGoals = entry.getProofStep().getOutGoals();
@@ -326,7 +328,7 @@ public class SnapshotTracker {
 		}
 
 		@Override
-		protected ProofElem getGroupToAdd(Project proofProject, ProofEntry previous,
+		protected ProofElem getGroupToAdd(IProofStore proofStore, ProofEntry previous,
 				ProofEntry entry) {
 			
 			// TODO check cast
@@ -346,16 +348,16 @@ public class SnapshotTracker {
 				
 				if (sizeP == size) {
 					// same size - a sibling of the previous case (add a split?) 
-					return addParallelBranch(proofProject, getParentParallel(previous), caseStr);
+					return addParallelBranch(proofStore, getParentParallel(previous), caseStr);
 				} else if (sizeP > size) {
 					// shorter size, the previous case has ended - exit split
 					// this means take the group of parent parallel - will be added
 					// to the same level as parallel
 					// FIXME this does not work if the jump is via multiple steps
-					return getGroupToAdd(proofProject, getPreviousEntry(getParentParallel(previous)), entry);
+					return getGroupToAdd(proofStore, getPreviousEntry(getParentParallel(previous)), entry);
 				} else {
 					// longer size, going deeper into the case
-					return addParallelBranch(proofProject, createParallel(proofProject, getParentProofElem(previous)), caseStr);
+					return addParallelBranch(proofStore, createParallel(proofStore, getParentProofElem(previous)), caseStr);
 				}
 			}
 		}
@@ -387,26 +389,26 @@ public class SnapshotTracker {
 			//193
 		}
 		
-		private ProofSeq addParallelBranch(Project proofProject, ProofParallel parentParallel, String caseStr) {
+		private ProofSeq addParallelBranch(IProofStore proofStore, ProofParallel parentParallel, String caseStr) {
 			
 			ProofSeq branch = ProofProcessFactory.eINSTANCE.createProofSeq();
 			ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
 			branch.setInfo(info);
 			info.setNarrative("Case #" + caseStr);
-			info.setIntent(ProofProcessUtil.findCreateIntent(proofProject, "Parallel Branch"));
+			info.setIntent(proofStore.getIntent("Parallel Branch"));
 			
 			addToGroup(parentParallel, branch);
 			return branch;
 		}
 		
-		private ProofParallel createParallel(Project proofProject, ProofElem parent) {
+		private ProofParallel createParallel(IProofStore proofStore, ProofElem parent) {
 			
 			ProofParallel parallel = ProofProcessFactory.eINSTANCE.createProofParallel();
 			ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
 			parallel.setInfo(info);
 			
 			info.setNarrative("Parallel attempts");
-			info.setIntent(ProofProcessUtil.findCreateIntent(proofProject, "Parallel"));
+			info.setIntent(proofStore.getIntent("Parallel"));
 			
 			// FIXME add to root?
 			addToGroup(parent, parallel);
@@ -414,7 +416,7 @@ public class SnapshotTracker {
 		}
 	}
 	
-	private ProofEntry createProofStep(ProofMatcher proofMatcher, Project project, 
+	private ProofEntry createProofStep(ProofMatcher proofMatcher, IProofStore proofStore, 
 			FileVersion fileVersion, SectionInfo sectInfo,
 			List<Term> stepInGoals, ISnapshotEntry proofEntry) {
 		
@@ -432,7 +434,7 @@ public class SnapshotTracker {
 		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
 		info.setNarrative("Tactic: " + commandText);
 		
-		Intent intent = ProofProcessUtil.findCreateIntent(project, "Tactic Application");
+		Intent intent = proofStore.getIntent("Tactic Application");
 		info.setIntent(intent);
 		
 		// TODO set features

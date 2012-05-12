@@ -21,7 +21,7 @@ import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
-import org.ai4fm.proofprocess.project.Project;
+import org.ai4fm.proofprocess.core.store.IProofStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -41,16 +41,16 @@ public class ProofMatcher {
 	 * proof is returned. If none is found, a new proof is created and added to
 	 * the project. TODO multiple proofs?
 	 * 
-	 * @param project
+	 * @param proofStore
 	 * @param proofLabel
 	 *            proof label to match, or {@code null} if label should be ignored
 	 * @param proofGoals
 	 * @return The last matching proof
 	 * 
 	 */
-	public Proof findCreateProof(Project project, String proofLabel, List<Term> proofGoals) {
+	public Proof findCreateProof(IProofStore proofStore, String proofLabel, List<Term> proofGoals) {
 		
-		List<Proof> proofs = project.getProofs();
+		List<Proof> proofs = proofStore.getProofs();
 		// go backwards and use the last one
 		for (int index = proofs.size() - 1; index >= 0; index--) {
 			Proof proof = proofs.get(index);
@@ -134,7 +134,7 @@ public class ProofMatcher {
 		return copy;
 	}
 	
-	public ProofElemMatch findCreateProofTree(Project proofProject, Proof proof, 
+	public ProofElemMatch findCreateProofTree(IProofStore proofStore, Proof proof, 
 			List<ProofEntry> proofState) {
 
 		ProofElemMatch matched = findMatchingProofTree(proof, proofState);
@@ -144,7 +144,7 @@ public class ProofMatcher {
 		}
 		
 		if (proofState.size() == 1) {
-			return createProofTree(proofProject, proof, proofState.get(0));
+			return createProofTree(proofStore, proof, proofState.get(0));
 		}
 		
 		/*
@@ -157,7 +157,7 @@ public class ProofMatcher {
 		ProofElemMatch targetMatch;
 		
 		// match shorter
-		ProofElemMatch sMatch = findCreateProofTree(proofProject, proof, shorter);
+		ProofElemMatch sMatch = findCreateProofTree(proofStore, proof, shorter);
 		
 		/*
 		 * Check whether the last element has been matched (e.g. shorter matches
@@ -191,7 +191,7 @@ public class ProofMatcher {
 		
 		// use the same group as the last entry has
 		// FIXME what about case splits?
-		ProofElem groupToAdd = getGroupToAdd(proofProject, targetMatch.entry, proofStep);
+		ProofElem groupToAdd = getGroupToAdd(proofStore, targetMatch.entry, proofStep);
 		addToGroup(targetMatch.attempt, groupToAdd, proofStep);
 		
 		List<ProofEntry> entriesPlus = new ArrayList<ProofEntry>(targetMatch.allEntries);
@@ -346,12 +346,12 @@ public class ProofMatcher {
 	
 	/**
 	 * 
-	 * @param proofProject
+	 * @param proofStore
 	 * @param previous
 	 * @param entry
 	 * @return ProofElem where to add the entry, {@code null} if add to the root
 	 */
-	protected ProofElem getGroupToAdd(Project proofProject, ProofEntry previous, ProofEntry entry) {
+	protected ProofElem getGroupToAdd(IProofStore proofStore, ProofEntry previous, ProofEntry entry) {
 		// add the attempt to the same group
 		return getParentProofElem(previous);
 	}
@@ -410,7 +410,7 @@ public class ProofMatcher {
 		throw new IllegalArgumentException("Cannot add to " + group.getClass().getSimpleName());
 	}
 	
-	private ProofElemMatch createProofTree(Project proofProject, Proof attemptSet, ProofEntry entry) {
+	private ProofElemMatch createProofTree(IProofStore proofStore, Proof attemptSet, ProofEntry entry) {
 		
 		Attempt attempt = ProofProcessFactory.eINSTANCE.createAttempt();
 		attempt.setProof(entry);
