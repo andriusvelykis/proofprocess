@@ -13,3 +13,4 @@ org.ai4fm.proofprocess.isabelle/bin
 org.ai4fm.proofprocess.isabelle.core/bin
 org.ai4fm.proofprocess.isabelle.edit/bin
 model/.project
+.cache
