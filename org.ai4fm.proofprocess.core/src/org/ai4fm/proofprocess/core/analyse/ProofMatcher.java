@@ -77,7 +77,7 @@ public class ProofMatcher {
 		targetProof.getGoals().addAll(copyTerms(proofGoals));
 		
 		// add to the project
-		proofs.add(targetProof);
+		proofStore.addProof(targetProof);
 		
 		return targetProof;
 	}
