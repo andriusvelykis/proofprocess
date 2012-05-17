@@ -30,7 +30,7 @@ The Isabelle/ProofProcess plug-ins are named `org.ai4fm.proofprocess.zeves.*`.
 [emf]: http://www.eclipse.org/modeling/emf/
 [scala-ide]: http://scala-ide.org/
 [isabelle]: http://www.cl.cam.ac.uk/research/hvg/isabelle/
-[isabelle-eclipse]: https://github.com/andriusvelykis/isabelle-eclipse
+[isabelle-eclipse]: http://github.com/andriusvelykis/isabelle-eclipse
 [zeves]: http://oracanada.com/z-eves/welcome.html
 [czt]: http://czt.sourceforge.net/
 [czt-repo]: http://sourceforge.net/projects/czt/develop
