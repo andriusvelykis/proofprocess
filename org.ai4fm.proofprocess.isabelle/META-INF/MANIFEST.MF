@@ -13,6 +13,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.ai4fm.proofprocess;bundle-version="1.0.0",
  org.scala-ide.scala.library;bundle-version="2.9.1",
- isabelle.pure;bundle-version="2011.1.0",
- isabelle.scala;bundle-version="1.1.0"
+ isabelle.pure;bundle-version="2011.1.0"
 Bundle-ActivationPolicy: lazy

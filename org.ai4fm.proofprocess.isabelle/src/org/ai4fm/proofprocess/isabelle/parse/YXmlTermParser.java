@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
 import scala.Tuple2;
+import scala.collection.JavaConversions.JListWrapper;
 
 import isabelle.Markup;
 import isabelle.XML;
@@ -24,7 +25,6 @@ import isabelle.XML$Text$;
 import isabelle.XML.Elem;
 import isabelle.XML.Text;
 import isabelle.XML.Tree;
-import isabelle.scala.ScalaCollections;
 
 /**
  * @author Andrius Velykis
@@ -82,7 +82,7 @@ public class YXmlTermParser {
 				isaAttrs.add(new Tuple2<String, String>(name, value));
 			}
 			
-			Markup isaMarkup = new Markup(qName, ScalaCollections.toScalaList(isaAttrs));
+			Markup isaMarkup = new Markup(qName, toScalaList(isaAttrs));
 			elemStack.add(new IsaElemData(isaMarkup));
 		}
 
@@ -90,7 +90,7 @@ public class YXmlTermParser {
 		public void endElement(String uri, String localName, String qName) throws SAXException {
 			
 			IsaElemData elemData = elemStack.pop();
-			Elem elem = XML$Elem$.MODULE$.apply(elemData.markup, ScalaCollections.toScalaList(elemData.children));
+			Elem elem = XML$Elem$.MODULE$.apply(elemData.markup, toScalaList(elemData.children));
 			
 			// add to the parent
 			if (elemStack.isEmpty()) {
@@ -98,6 +98,10 @@ public class YXmlTermParser {
 			} else {
 				elemStack.peek().children.add(elem);
 			}
+		}
+		
+		private static <E> scala.collection.immutable.List<E> toScalaList(List<E> list) {
+			return new JListWrapper<E>(list).toList();
 		}
 
 		@Override
