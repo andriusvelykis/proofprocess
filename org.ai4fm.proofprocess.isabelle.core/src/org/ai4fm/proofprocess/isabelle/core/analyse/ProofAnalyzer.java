@@ -31,9 +31,11 @@ import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 import org.ai4fm.proofprocess.core.analyse.ProofMatcher;
 import org.ai4fm.proofprocess.core.store.IProofStore;
+import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
+import org.ai4fm.proofprocess.isabelle.core.parse.CommandParser;
 import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader;
 import org.ai4fm.proofprocess.isabelle.core.parse.TermParser;
 import org.ai4fm.proofprocess.log.ProofLog;
@@ -242,11 +244,9 @@ public class ProofAnalyzer {
 		
 		IsabelleTrace trace = IsabelleProofProcessFactory.eINSTANCE.createIsabelleTrace();
 		
-		// TODO proper rendering of the command (maybe with Terms)
-		// currently this is a quick hack
-		String commandStr = commandState.command().source().trim();
-		
-		trace.setCommand(commandStr);
+		// parse the command
+		IsabelleCommand cmd = CommandParser.parse(commandState);
+		trace.setCommand(cmd);
 		
 		// TODO add simplifier lemmas
 		List<String> simpLemmas = trace.getSimpLemmas();
