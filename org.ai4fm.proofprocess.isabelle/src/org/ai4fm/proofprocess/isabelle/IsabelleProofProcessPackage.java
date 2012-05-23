@@ -128,6 +128,34 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	int ISA_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.NameTermImpl <em>Name Term</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.isabelle.impl.NameTermImpl
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getNameTerm()
+	 * @generated
+	 */
+	int NAME_TERM = 2;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAME_TERM__NAME = ProofProcessPackage.TERM_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Name Term</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAME_TERM_FEATURE_COUNT = ProofProcessPackage.TERM_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.IsabelleTraceImpl <em>Isabelle Trace</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -135,7 +163,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleTrace()
 	 * @generated
 	 */
-	int ISABELLE_TRACE = 2;
+	int ISABELLE_TRACE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Command</b></em>' containment reference.
@@ -172,7 +200,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getNamedTermTree()
 	 * @generated
 	 */
-	int NAMED_TERM_TREE = 3;
+	int NAMED_TERM_TREE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -218,7 +246,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleCommand()
 	 * @generated
 	 */
-	int ISABELLE_COMMAND = 4;
+	int ISABELLE_COMMAND = 5;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -273,7 +301,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getYXmlTerm()
 	 * @generated
 	 */
-	int YXML_TERM = 5;
+	int YXML_TERM = 6;
 
 
 	/**
@@ -317,6 +345,27 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIsaTerm_Term();
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.NameTerm <em>Name Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Name Term</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.NameTerm
+	 * @generated
+	 */
+	EClass getNameTerm();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.isabelle.NameTerm#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.NameTerm#getName()
+	 * @see #getNameTerm()
+	 * @generated
+	 */
+	EAttribute getNameTerm_Name();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.IsabelleTrace <em>Isabelle Trace</em>}'.
@@ -482,6 +531,24 @@ public interface IsabelleProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ISA_TERM__TERM = eINSTANCE.getIsaTerm_Term();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.NameTermImpl <em>Name Term</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.isabelle.impl.NameTermImpl
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getNameTerm()
+		 * @generated
+		 */
+		EClass NAME_TERM = eINSTANCE.getNameTerm();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NAME_TERM__NAME = eINSTANCE.getNameTerm_Name();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.IsabelleTraceImpl <em>Isabelle Trace</em>}' class.

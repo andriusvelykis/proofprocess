@@ -65,6 +65,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case IsabelleProofProcessPackage.ISA_TERM: return createIsaTerm();
+			case IsabelleProofProcessPackage.NAME_TERM: return createNameTerm();
 			case IsabelleProofProcessPackage.ISABELLE_TRACE: return createIsabelleTrace();
 			case IsabelleProofProcessPackage.NAMED_TERM_TREE: return createNamedTermTree();
 			case IsabelleProofProcessPackage.ISABELLE_COMMAND: return createIsabelleCommand();
@@ -111,6 +112,16 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	public IsaTerm createIsaTerm() {
 		IsaTermImpl isaTerm = new IsaTermImpl();
 		return isaTerm;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NameTerm createNameTerm() {
+		NameTermImpl nameTerm = new NameTermImpl();
+		return nameTerm;
 	}
 
 	/**
