@@ -1,6 +1,5 @@
 package org.ai4fm.proofprocess.zeves.ui.views;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,13 +15,13 @@ import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.core.analyse.ProofMatcher;
+import org.ai4fm.proofprocess.core.store.IProofStore;
+import org.ai4fm.proofprocess.core.store.IProofStoreProvider;
 import org.ai4fm.proofprocess.log.ProofActivity;
 import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 import org.ai4fm.proofprocess.provider.ProofProcessEditPlugin;
-import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.ProofManager;
-import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
@@ -70,16 +69,18 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.part.Page;
 
+
 public class ProofProcessPage extends Page {
 
 	private Composite main;
 	
+	private IProofStoreProvider storeProvider;
 	private IProject projectResource;
 	
 	private TreeViewer treeViewer;
 	private final ComposedAdapterFactory adapterFactory;
 	
-	private Project proofProject;
+	private IProofStore proofStore;
 	
 	private Action groupAttemptsAction;
 	
@@ -90,8 +91,9 @@ public class ProofProcessPage extends Page {
 	private IObservableValue lastAttemptDelayed = Observables.observeDelayedValue(500, lastAttemptObservable);
 	private IValueChangeListener lastAttemptListener;
 	
-	public ProofProcessPage(IProject projectResource) {
+	public ProofProcessPage(IProofStoreProvider storeProvider, IProject projectResource) {
 		super();
+		this.storeProvider = storeProvider;
 		this.projectResource = projectResource;
 		
 		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -167,7 +169,7 @@ public class ProofProcessPage extends Page {
 					
 					@Override
 					public void run() {
-						treeViewer.setInput(proofProject);
+						treeViewer.setInput(proofStore);
 					}
 				});
 				
@@ -181,7 +183,7 @@ public class ProofProcessPage extends Page {
 	private void loadProofProject(Realm observeRealm) {
 		
 		try {
-			proofProject = ProofManager.getProofProject(projectResource, null);
+			proofStore = storeProvider.store();
 			
 			// log is only used to update the last activity, not displayed in the view at the moment
 			ProofLog proofLog = ProofManager.getProofLog(projectResource, null);
@@ -260,6 +262,22 @@ public class ProofProcessPage extends Page {
 			super(adapterFactory);
 		}
 
+		@Override
+		public Object[] getElements(Object root) {
+			
+			if (root instanceof IProofStore) {
+				IProofStore store = (IProofStore) root;
+				List<Object> rootElems = new ArrayList<Object>();
+				
+				rootElems.addAll(store.getProofs());
+				rootElems.addAll(store.getIntents());
+				
+				return rootElems.toArray();
+			}
+			
+			return super.getElements(root);
+		}
+
 		/* (non-Javadoc)
 		 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getChildren(java.lang.Object)
 		 */
@@ -278,6 +296,7 @@ public class ProofProcessPage extends Page {
 		}
 
 		private List<?> getChildrenCustomized(Object parent) {
+			
 			if (parent instanceof ZEvesTrace) {
 				ZEvesTrace ref = (ZEvesTrace) parent;
 				List<String> lemmas = new ArrayList<String>(ref.getUsedLemmas());
@@ -374,7 +393,7 @@ public class ProofProcessPage extends Page {
 			intentDialog.setTitle("Select Intent");
 			intentDialog.setMessage("Enter or select the intent for this attempt group.");
 			intentDialog.setMultipleSelection(false);
-			intentDialog.setElements(proofProject.getIntents().toArray());
+			intentDialog.setElements(proofStore.getIntents().toArray());
 			
 			if (intentDialog.open() != Window.OK) {
 				return;
@@ -406,7 +425,7 @@ public class ProofProcessPage extends Page {
 			ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
 			group.setInfo(info);
 			info.setNarrative(description);
-			info.setIntent(ProofProcessUtil.findCreateIntent(proofProject, intentText));
+			info.setIntent(proofStore.getIntent(intentText));
 			
 			// TODO grouping Decor?
 			siblings.add(sublistIndex, group);
@@ -421,12 +440,12 @@ public class ProofProcessPage extends Page {
 			}
 			
 			// FIXME
-			try {
-				proofProject.eResource().save(ProofManager.SAVE_OPTIONS);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				proofProject.eResource().save(ProofManager.SAVE_OPTIONS);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			
 			treeViewer.setSelection(new StructuredSelection(group), true);
 		}

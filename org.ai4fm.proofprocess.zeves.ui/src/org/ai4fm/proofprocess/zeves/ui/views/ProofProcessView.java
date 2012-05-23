@@ -1,6 +1,9 @@
 package org.ai4fm.proofprocess.zeves.ui.views;
 
+import org.ai4fm.proofprocess.core.store.IProofStoreProvider;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -25,10 +28,35 @@ public class ProofProcessView extends PageBookView {
 	@Override
 	protected PageRec doCreatePage(IWorkbenchPart part) {
 		
-		ProofProcessPage proofProcessPage = new ProofProcessPage(getResource(part).getProject());
+		IResource res = getResource(part);
+
+		// TODO message if unavailable
+		IProofStoreProvider storeProvider = (IProofStoreProvider) getAdapter(res, IProofStoreProvider.class);
+		
+		ProofProcessPage proofProcessPage = new ProofProcessPage(storeProvider, res.getProject());
 		initPage(proofProcessPage);
 		proofProcessPage.createControl(getPageBook());
 		return new PageRec(part, proofProcessPage);
+	}
+	
+	/**
+	 * A special adapter lookup that loads plugins for more adapters if it cannot resolve the type.
+	 * 
+	 * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=82973 for the bug that adapter factories
+	 * are not queried if the plug-in is not loaded.
+	 * 
+	 * @param element
+	 * @param adapterType
+	 * @return
+	 */
+	public static Object getAdapter(IAdaptable element, Class<?> adapterType) {
+		Object o = element.getAdapter(adapterType);
+		if (o != null) {
+			return o;
+		}
+		
+		// force load plugins and lookup again
+		return Platform.getAdapterManager().loadAdapter(element, adapterType.getName());
 	}
 
 	@Override
