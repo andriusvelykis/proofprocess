@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
-import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
+import org.ai4fm.proofprocess.isabelle.NamedTermTree;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -31,12 +31,12 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.IsabelleTrace} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.NamedTermTree} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class IsabelleTraceItemProvider
+public class NamedTermTreeItemProvider
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -50,7 +50,7 @@ public class IsabelleTraceItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public IsabelleTraceItemProvider(AdapterFactory adapterFactory) {
+	public NamedTermTreeItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -65,52 +65,75 @@ public class IsabelleTraceItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addCommandPropertyDescriptor(object);
-			addSimpLemmasPropertyDescriptor(object);
+			addNamePropertyDescriptor(object);
+			addTermsPropertyDescriptor(object);
+			addBranchesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Command feature.
+	 * This adds a property descriptor for the Name feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addCommandPropertyDescriptor(Object object) {
+	protected void addNamePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IsabelleTrace_command_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IsabelleTrace_command_feature", "_UI_IsabelleTrace_type"),
-				 IsabelleProofProcessPackage.Literals.ISABELLE_TRACE__COMMAND,
+				 getString("_UI_NamedTermTree_name_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_NamedTermTree_name_feature", "_UI_NamedTermTree_type"),
+				 IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__NAME,
 				 true,
 				 false,
 				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Terms feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addTermsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_NamedTermTree_terms_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_NamedTermTree_terms_feature", "_UI_NamedTermTree_type"),
+				 IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__TERMS,
+				 true,
+				 false,
+				 true,
 				 null,
 				 null,
 				 null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Simp Lemmas feature.
+	 * This adds a property descriptor for the Branches feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addSimpLemmasPropertyDescriptor(Object object) {
+	protected void addBranchesPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IsabelleTrace_simpLemmas_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IsabelleTrace_simpLemmas_feature", "_UI_IsabelleTrace_type"),
-				 IsabelleProofProcessPackage.Literals.ISABELLE_TRACE__SIMP_LEMMAS,
+				 getString("_UI_NamedTermTree_branches_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_NamedTermTree_branches_feature", "_UI_NamedTermTree_type"),
+				 IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__BRANCHES,
 				 true,
 				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 true,
+				 null,
 				 null,
 				 null));
 	}
@@ -127,7 +150,8 @@ public class IsabelleTraceItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(IsabelleProofProcessPackage.Literals.ISABELLE_TRACE__COMMAND);
+			childrenFeatures.add(IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__TERMS);
+			childrenFeatures.add(IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__BRANCHES);
 		}
 		return childrenFeatures;
 	}
@@ -146,14 +170,14 @@ public class IsabelleTraceItemProvider
 	}
 
 	/**
-	 * This returns IsabelleTrace.gif.
+	 * This returns NamedTermTree.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/IsabelleTrace"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/NamedTermTree"));
 	}
 
 	/**
@@ -164,7 +188,10 @@ public class IsabelleTraceItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_IsabelleTrace_type");
+		String label = ((NamedTermTree)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_NamedTermTree_type") :
+			getString("_UI_NamedTermTree_type") + " " + label;
 	}
 
 	/**
@@ -178,12 +205,9 @@ public class IsabelleTraceItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(IsabelleTrace.class)) {
-			case IsabelleProofProcessPackage.ISABELLE_TRACE__SIMP_LEMMAS:
+		switch (notification.getFeatureID(NamedTermTree.class)) {
+			case IsabelleProofProcessPackage.NAMED_TERM_TREE__NAME:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-			case IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);

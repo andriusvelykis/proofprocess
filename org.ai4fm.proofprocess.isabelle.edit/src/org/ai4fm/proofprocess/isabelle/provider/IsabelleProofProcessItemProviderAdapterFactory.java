@@ -122,6 +122,52 @@ public class IsabelleProofProcessItemProviderAdapterFactory extends IsabelleProo
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.NamedTermTree} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected NamedTermTreeItemProvider namedTermTreeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.isabelle.NamedTermTree}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createNamedTermTreeAdapter() {
+		if (namedTermTreeItemProvider == null) {
+			namedTermTreeItemProvider = new NamedTermTreeItemProvider(this);
+		}
+
+		return namedTermTreeItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.IsabelleCommand} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected IsabelleCommandItemProvider isabelleCommandItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.isabelle.IsabelleCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createIsabelleCommandAdapter() {
+		if (isabelleCommandItemProvider == null) {
+			isabelleCommandItemProvider = new IsabelleCommandItemProvider(this);
+		}
+
+		return isabelleCommandItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -222,6 +268,8 @@ public class IsabelleProofProcessItemProviderAdapterFactory extends IsabelleProo
 	public void dispose() {
 		if (isaTermItemProvider != null) isaTermItemProvider.dispose();
 		if (isabelleTraceItemProvider != null) isabelleTraceItemProvider.dispose();
+		if (namedTermTreeItemProvider != null) namedTermTreeItemProvider.dispose();
+		if (isabelleCommandItemProvider != null) isabelleCommandItemProvider.dispose();
 	}
 
 }

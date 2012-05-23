@@ -10,13 +10,11 @@ package org.ai4fm.proofprocess.isabelle.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
-import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -27,17 +25,16 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.IsabelleTrace} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.IsabelleCommand} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class IsabelleTraceItemProvider
-	extends ItemProviderAdapter
+public class IsabelleCommandItemProvider
+	extends NamedTermTreeItemProvider
 	implements
 		IEditingDomainItemProvider,
 		IStructuredItemContentProvider,
@@ -50,7 +47,7 @@ public class IsabelleTraceItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public IsabelleTraceItemProvider(AdapterFactory adapterFactory) {
+	public IsabelleCommandItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -65,48 +62,25 @@ public class IsabelleTraceItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addCommandPropertyDescriptor(object);
-			addSimpLemmasPropertyDescriptor(object);
+			addSourcePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Command feature.
+	 * This adds a property descriptor for the Source feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addCommandPropertyDescriptor(Object object) {
+	protected void addSourcePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IsabelleTrace_command_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IsabelleTrace_command_feature", "_UI_IsabelleTrace_type"),
-				 IsabelleProofProcessPackage.Literals.ISABELLE_TRACE__COMMAND,
-				 true,
-				 false,
-				 false,
-				 null,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Simp Lemmas feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addSimpLemmasPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_IsabelleTrace_simpLemmas_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IsabelleTrace_simpLemmas_feature", "_UI_IsabelleTrace_type"),
-				 IsabelleProofProcessPackage.Literals.ISABELLE_TRACE__SIMP_LEMMAS,
+				 getString("_UI_IsabelleCommand_source_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_IsabelleCommand_source_feature", "_UI_IsabelleCommand_type"),
+				 IsabelleProofProcessPackage.Literals.ISABELLE_COMMAND__SOURCE,
 				 true,
 				 false,
 				 false,
@@ -127,7 +101,7 @@ public class IsabelleTraceItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(IsabelleProofProcessPackage.Literals.ISABELLE_TRACE__COMMAND);
+			childrenFeatures.add(IsabelleProofProcessPackage.Literals.ISABELLE_COMMAND__SOURCE);
 		}
 		return childrenFeatures;
 	}
@@ -146,14 +120,14 @@ public class IsabelleTraceItemProvider
 	}
 
 	/**
-	 * This returns IsabelleTrace.gif.
+	 * This returns IsabelleCommand.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/IsabelleTrace"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/IsabelleCommand"));
 	}
 
 	/**
@@ -164,7 +138,10 @@ public class IsabelleTraceItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_IsabelleTrace_type");
+		String label = ((IsabelleCommand)object).getName();
+		return label == null || label.length() == 0 ?
+			getString("_UI_IsabelleCommand_type") :
+			getString("_UI_IsabelleCommand_type") + " " + label;
 	}
 
 	/**
@@ -178,11 +155,8 @@ public class IsabelleTraceItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(IsabelleTrace.class)) {
-			case IsabelleProofProcessPackage.ISABELLE_TRACE__SIMP_LEMMAS:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-			case IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND:
+		switch (notification.getFeatureID(IsabelleCommand.class)) {
+			case IsabelleProofProcessPackage.ISABELLE_COMMAND__SOURCE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -199,17 +173,6 @@ public class IsabelleTraceItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return IsabelleProofProcessEditPlugin.INSTANCE;
 	}
 
 }
