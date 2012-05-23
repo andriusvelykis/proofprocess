@@ -41,8 +41,7 @@ object CommandParser {
     tokenInfos.headOption match {
       case Some((Token(Token.Kind.COMMAND, source), markup)) => {
         
-        // TODO resolve name from markup?
-        command.setName(source)
+        command.setName(commandName(markup) getOrElse source)
         
         // parse command contents
         parseTokens(Nil, Nil, command, command, command, tokenInfos.tail)
@@ -128,6 +127,14 @@ object CommandParser {
         continueBranch
       }
     }
+  }
+  
+  private def commandName(markups: Stream[Markup]): Option[String] = {
+    val markupName = markups.collectFirst({ 
+      case Markup(Markup.COMMAND, props) => props.collectFirst({ 
+        case (Markup.NAME, value) => value }) })
+    
+    markupName getOrElse None
   }
   
   private def getTerm(info: TermInfo): Term = {
