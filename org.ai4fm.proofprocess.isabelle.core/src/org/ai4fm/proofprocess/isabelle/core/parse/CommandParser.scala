@@ -138,9 +138,8 @@ object CommandParser {
   }
   
   private def getFactTerm(fact: String): Term = {
-    // FIXME new terms for fact-refs?
-    val term = factory.createIsaTerm(); 
-    term.setDisplay(fact);
+    val term = factory.createNameTerm(); 
+    term.setName(fact);
     term
   }
   
