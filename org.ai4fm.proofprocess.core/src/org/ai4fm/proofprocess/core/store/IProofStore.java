@@ -24,4 +24,6 @@ public interface IProofStore {
 	
 	public Intent getIntent(String intentName);
 	
+	public List<Intent> getIntents();
+	
 }

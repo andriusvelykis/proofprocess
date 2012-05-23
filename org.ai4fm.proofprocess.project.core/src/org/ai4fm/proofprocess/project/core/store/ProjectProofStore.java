@@ -33,4 +33,9 @@ public class ProjectProofStore implements IProofStore {
 		return ProofProcessUtil.findCreateIntent(project, intentName);
 	}
 
+	@Override
+	public List<Intent> getIntents() {
+		return Collections.unmodifiableList(project.getIntents());
+	}
+
 }
