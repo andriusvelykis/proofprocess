@@ -16,8 +16,18 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsaTerm/term"/>
     </genClasses>
     <genClasses ecoreClass="IsabelleProofProcess.ecore#//IsabelleTrace">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsabelleTrace/command"/>
+      <genFeatures children="true" createChild="false" propertyCategory="" ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//IsabelleTrace/command"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsabelleTrace/simpLemmas"/>
+    </genClasses>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//NamedTermTree">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//NamedTermTree/name"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//NamedTermTree/terms"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//NamedTermTree/branches"/>
+    </genClasses>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//IsabelleCommand">
+      <genFeatures children="true" createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsabelleCommand/source"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

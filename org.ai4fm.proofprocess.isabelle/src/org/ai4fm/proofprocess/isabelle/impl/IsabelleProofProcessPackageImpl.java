@@ -12,15 +12,18 @@ import org.ai4fm.proofprocess.ProofProcessPackage;
 
 import org.ai4fm.proofprocess.isabelle.DisplayTerm;
 import org.ai4fm.proofprocess.isabelle.IsaTerm;
+import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 
+import org.ai4fm.proofprocess.isabelle.NamedTermTree;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -50,6 +53,20 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * @generated
 	 */
 	private EClass isabelleTraceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass namedTermTreeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass isabelleCommandEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -172,8 +189,8 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIsabelleTrace_Command() {
-		return (EAttribute)isabelleTraceEClass.getEStructuralFeatures().get(0);
+	public EReference getIsabelleTrace_Command() {
+		return (EReference)isabelleTraceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -183,6 +200,60 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 */
 	public EAttribute getIsabelleTrace_SimpLemmas() {
 		return (EAttribute)isabelleTraceEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getNamedTermTree() {
+		return namedTermTreeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getNamedTermTree_Name() {
+		return (EAttribute)namedTermTreeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getNamedTermTree_Terms() {
+		return (EReference)namedTermTreeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getNamedTermTree_Branches() {
+		return (EReference)namedTermTreeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIsabelleCommand() {
+		return isabelleCommandEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIsabelleCommand_Source() {
+		return (EAttribute)isabelleCommandEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -229,8 +300,16 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		createEAttribute(isaTermEClass, ISA_TERM__TERM);
 
 		isabelleTraceEClass = createEClass(ISABELLE_TRACE);
-		createEAttribute(isabelleTraceEClass, ISABELLE_TRACE__COMMAND);
+		createEReference(isabelleTraceEClass, ISABELLE_TRACE__COMMAND);
 		createEAttribute(isabelleTraceEClass, ISABELLE_TRACE__SIMP_LEMMAS);
+
+		namedTermTreeEClass = createEClass(NAMED_TERM_TREE);
+		createEAttribute(namedTermTreeEClass, NAMED_TERM_TREE__NAME);
+		createEReference(namedTermTreeEClass, NAMED_TERM_TREE__TERMS);
+		createEReference(namedTermTreeEClass, NAMED_TERM_TREE__BRANCHES);
+
+		isabelleCommandEClass = createEClass(ISABELLE_COMMAND);
+		createEAttribute(isabelleCommandEClass, ISABELLE_COMMAND__SOURCE);
 
 		// Create data types
 		yXmlTermEDataType = createEDataType(YXML_TERM);
@@ -270,6 +349,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		displayTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		isaTermEClass.getESuperTypes().add(this.getDisplayTerm());
 		isabelleTraceEClass.getESuperTypes().add(theProofProcessPackage.getTrace());
+		isabelleCommandEClass.getESuperTypes().add(this.getNamedTermTree());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(displayTermEClass, DisplayTerm.class, "DisplayTerm", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -279,8 +359,16 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		initEAttribute(getIsaTerm_Term(), this.getYXmlTerm(), "term", null, 1, 1, IsaTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(isabelleTraceEClass, IsabelleTrace.class, "IsabelleTrace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIsabelleTrace_Command(), ecorePackage.getEString(), "command", null, 1, 1, IsabelleTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIsabelleTrace_Command(), this.getIsabelleCommand(), null, "command", null, 1, 1, IsabelleTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIsabelleTrace_SimpLemmas(), ecorePackage.getEString(), "simpLemmas", null, 0, -1, IsabelleTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(namedTermTreeEClass, NamedTermTree.class, "NamedTermTree", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getNamedTermTree_Name(), ecorePackage.getEString(), "name", null, 1, 1, NamedTermTree.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNamedTermTree_Terms(), theProofProcessPackage.getTerm(), null, "terms", null, 0, -1, NamedTermTree.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNamedTermTree_Branches(), this.getNamedTermTree(), null, "branches", null, 0, -1, NamedTermTree.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(isabelleCommandEClass, IsabelleCommand.class, "IsabelleCommand", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIsabelleCommand_Source(), ecorePackage.getEString(), "source", null, 1, 1, IsabelleCommand.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(yXmlTermEDataType, Tree.class, "YXmlTerm", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

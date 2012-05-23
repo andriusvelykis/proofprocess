@@ -95,6 +95,19 @@ public class IsabelleProofProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case IsabelleProofProcessPackage.NAMED_TERM_TREE: {
+				NamedTermTree namedTermTree = (NamedTermTree)theEObject;
+				T result = caseNamedTermTree(namedTermTree);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case IsabelleProofProcessPackage.ISABELLE_COMMAND: {
+				IsabelleCommand isabelleCommand = (IsabelleCommand)theEObject;
+				T result = caseIsabelleCommand(isabelleCommand);
+				if (result == null) result = caseNamedTermTree(isabelleCommand);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -141,6 +154,36 @@ public class IsabelleProofProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseIsabelleTrace(IsabelleTrace object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Named Term Tree</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Named Term Tree</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNamedTermTree(NamedTermTree object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Isabelle Command</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Isabelle Command</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIsabelleCommand(IsabelleCommand object) {
 		return null;
 	}
 

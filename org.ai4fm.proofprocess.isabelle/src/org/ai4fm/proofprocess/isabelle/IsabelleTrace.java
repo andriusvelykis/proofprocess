@@ -29,30 +29,30 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface IsabelleTrace extends Trace {
 	/**
-	 * Returns the value of the '<em><b>Command</b></em>' attribute.
+	 * Returns the value of the '<em><b>Command</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Command</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Command</em>' attribute.
-	 * @see #setCommand(String)
+	 * @return the value of the '<em>Command</em>' containment reference.
+	 * @see #setCommand(IsabelleCommand)
 	 * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getIsabelleTrace_Command()
-	 * @model required="true"
+	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	String getCommand();
+	IsabelleCommand getCommand();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.isabelle.IsabelleTrace#getCommand <em>Command</em>}' attribute.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.isabelle.IsabelleTrace#getCommand <em>Command</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Command</em>' attribute.
+	 * @param value the new value of the '<em>Command</em>' containment reference.
 	 * @see #getCommand()
 	 * @generated
 	 */
-	void setCommand(String value);
+	void setCommand(IsabelleCommand value);
 
 	/**
 	 * Returns the value of the '<em><b>Simp Lemmas</b></em>' attribute list.

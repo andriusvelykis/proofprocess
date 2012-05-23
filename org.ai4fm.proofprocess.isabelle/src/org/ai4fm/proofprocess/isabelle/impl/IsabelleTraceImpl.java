@@ -8,15 +8,18 @@ package org.ai4fm.proofprocess.isabelle.impl;
 
 import java.util.Collection;
 
+import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
@@ -38,24 +41,14 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  */
 public class IsabelleTraceImpl extends EObjectImpl implements IsabelleTrace {
 	/**
-	 * The default value of the '{@link #getCommand() <em>Command</em>}' attribute.
+	 * The cached value of the '{@link #getCommand() <em>Command</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getCommand()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String COMMAND_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getCommand() <em>Command</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCommand()
-	 * @generated
-	 * @ordered
-	 */
-	protected String command = COMMAND_EDEFAULT;
+	protected IsabelleCommand command;
 
 	/**
 	 * The cached value of the '{@link #getSimpLemmas() <em>Simp Lemmas</em>}' attribute list.
@@ -91,7 +84,7 @@ public class IsabelleTraceImpl extends EObjectImpl implements IsabelleTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getCommand() {
+	public IsabelleCommand getCommand() {
 		return command;
 	}
 
@@ -100,11 +93,33 @@ public class IsabelleTraceImpl extends EObjectImpl implements IsabelleTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setCommand(String newCommand) {
-		String oldCommand = command;
+	public NotificationChain basicSetCommand(IsabelleCommand newCommand, NotificationChain msgs) {
+		IsabelleCommand oldCommand = command;
 		command = newCommand;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND, oldCommand, command));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND, oldCommand, newCommand);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setCommand(IsabelleCommand newCommand) {
+		if (newCommand != command) {
+			NotificationChain msgs = null;
+			if (command != null)
+				msgs = ((InternalEObject)command).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND, null, msgs);
+			if (newCommand != null)
+				msgs = ((InternalEObject)newCommand).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND, null, msgs);
+			msgs = basicSetCommand(newCommand, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND, newCommand, newCommand));
 	}
 
 	/**
@@ -117,6 +132,20 @@ public class IsabelleTraceImpl extends EObjectImpl implements IsabelleTrace {
 			simpLemmas = new EDataTypeUniqueEList<String>(String.class, this, IsabelleProofProcessPackage.ISABELLE_TRACE__SIMP_LEMMAS);
 		}
 		return simpLemmas;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND:
+				return basicSetCommand(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -145,7 +174,7 @@ public class IsabelleTraceImpl extends EObjectImpl implements IsabelleTrace {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND:
-				setCommand((String)newValue);
+				setCommand((IsabelleCommand)newValue);
 				return;
 			case IsabelleProofProcessPackage.ISABELLE_TRACE__SIMP_LEMMAS:
 				getSimpLemmas().clear();
@@ -164,7 +193,7 @@ public class IsabelleTraceImpl extends EObjectImpl implements IsabelleTrace {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND:
-				setCommand(COMMAND_EDEFAULT);
+				setCommand((IsabelleCommand)null);
 				return;
 			case IsabelleProofProcessPackage.ISABELLE_TRACE__SIMP_LEMMAS:
 				getSimpLemmas().clear();
@@ -182,7 +211,7 @@ public class IsabelleTraceImpl extends EObjectImpl implements IsabelleTrace {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND:
-				return COMMAND_EDEFAULT == null ? command != null : !COMMAND_EDEFAULT.equals(command);
+				return command != null;
 			case IsabelleProofProcessPackage.ISABELLE_TRACE__SIMP_LEMMAS:
 				return simpLemmas != null && !simpLemmas.isEmpty();
 		}
@@ -199,9 +228,7 @@ public class IsabelleTraceImpl extends EObjectImpl implements IsabelleTrace {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (command: ");
-		result.append(command);
-		result.append(", simpLemmas: ");
+		result.append(" (simpLemmas: ");
 		result.append(simpLemmas);
 		result.append(')');
 		return result.toString();

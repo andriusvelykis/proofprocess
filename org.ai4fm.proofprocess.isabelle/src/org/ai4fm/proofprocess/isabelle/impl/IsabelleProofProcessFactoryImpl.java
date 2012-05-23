@@ -66,6 +66,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 		switch (eClass.getClassifierID()) {
 			case IsabelleProofProcessPackage.ISA_TERM: return createIsaTerm();
 			case IsabelleProofProcessPackage.ISABELLE_TRACE: return createIsabelleTrace();
+			case IsabelleProofProcessPackage.NAMED_TERM_TREE: return createNamedTermTree();
+			case IsabelleProofProcessPackage.ISABELLE_COMMAND: return createIsabelleCommand();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -119,6 +121,26 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	public IsabelleTrace createIsabelleTrace() {
 		IsabelleTraceImpl isabelleTrace = new IsabelleTraceImpl();
 		return isabelleTrace;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NamedTermTree createNamedTermTree() {
+		NamedTermTreeImpl namedTermTree = new NamedTermTreeImpl();
+		return namedTermTree;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IsabelleCommand createIsabelleCommand() {
+		IsabelleCommandImpl isabelleCommand = new IsabelleCommandImpl();
+		return isabelleCommand;
 	}
 
 	/**

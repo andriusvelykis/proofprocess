@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 
 /**
  * <!-- begin-user-doc -->
@@ -137,7 +138,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	int ISABELLE_TRACE = 2;
 
 	/**
-	 * The feature id for the '<em><b>Command</b></em>' attribute.
+	 * The feature id for the '<em><b>Command</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -164,6 +165,107 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	int ISABELLE_TRACE_FEATURE_COUNT = ProofProcessPackage.TRACE_FEATURE_COUNT + 2;
 
 	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.NamedTermTreeImpl <em>Named Term Tree</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.isabelle.impl.NamedTermTreeImpl
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getNamedTermTree()
+	 * @generated
+	 */
+	int NAMED_TERM_TREE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_TERM_TREE__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Terms</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_TERM_TREE__TERMS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Branches</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_TERM_TREE__BRANCHES = 2;
+
+	/**
+	 * The number of structural features of the '<em>Named Term Tree</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMED_TERM_TREE_FEATURE_COUNT = 3;
+
+	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.IsabelleCommandImpl <em>Isabelle Command</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleCommandImpl
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleCommand()
+	 * @generated
+	 */
+	int ISABELLE_COMMAND = 4;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISABELLE_COMMAND__NAME = NAMED_TERM_TREE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Terms</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISABELLE_COMMAND__TERMS = NAMED_TERM_TREE__TERMS;
+
+	/**
+	 * The feature id for the '<em><b>Branches</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISABELLE_COMMAND__BRANCHES = NAMED_TERM_TREE__BRANCHES;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISABELLE_COMMAND__SOURCE = NAMED_TERM_TREE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Isabelle Command</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ISABELLE_COMMAND_FEATURE_COUNT = NAMED_TERM_TREE_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '<em>YXml Term</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -171,7 +273,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getYXmlTerm()
 	 * @generated
 	 */
-	int YXML_TERM = 3;
+	int YXML_TERM = 5;
 
 
 	/**
@@ -227,15 +329,15 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	EClass getIsabelleTrace();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.isabelle.IsabelleTrace#getCommand <em>Command</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.ai4fm.proofprocess.isabelle.IsabelleTrace#getCommand <em>Command</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Command</em>'.
+	 * @return the meta object for the containment reference '<em>Command</em>'.
 	 * @see org.ai4fm.proofprocess.isabelle.IsabelleTrace#getCommand()
 	 * @see #getIsabelleTrace()
 	 * @generated
 	 */
-	EAttribute getIsabelleTrace_Command();
+	EReference getIsabelleTrace_Command();
 
 	/**
 	 * Returns the meta object for the attribute list '{@link org.ai4fm.proofprocess.isabelle.IsabelleTrace#getSimpLemmas <em>Simp Lemmas</em>}'.
@@ -247,6 +349,70 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getIsabelleTrace_SimpLemmas();
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.NamedTermTree <em>Named Term Tree</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Named Term Tree</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.NamedTermTree
+	 * @generated
+	 */
+	EClass getNamedTermTree();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.isabelle.NamedTermTree#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.NamedTermTree#getName()
+	 * @see #getNamedTermTree()
+	 * @generated
+	 */
+	EAttribute getNamedTermTree_Name();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.isabelle.NamedTermTree#getTerms <em>Terms</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Terms</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.NamedTermTree#getTerms()
+	 * @see #getNamedTermTree()
+	 * @generated
+	 */
+	EReference getNamedTermTree_Terms();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.isabelle.NamedTermTree#getBranches <em>Branches</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Branches</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.NamedTermTree#getBranches()
+	 * @see #getNamedTermTree()
+	 * @generated
+	 */
+	EReference getNamedTermTree_Branches();
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.IsabelleCommand <em>Isabelle Command</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Isabelle Command</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.IsabelleCommand
+	 * @generated
+	 */
+	EClass getIsabelleCommand();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.isabelle.IsabelleCommand#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Source</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.IsabelleCommand#getSource()
+	 * @see #getIsabelleCommand()
+	 * @generated
+	 */
+	EAttribute getIsabelleCommand_Source();
 
 	/**
 	 * Returns the meta object for data type '{@link isabelle.XML.Tree <em>YXml Term</em>}'.
@@ -328,12 +494,12 @@ public interface IsabelleProofProcessPackage extends EPackage {
 		EClass ISABELLE_TRACE = eINSTANCE.getIsabelleTrace();
 
 		/**
-		 * The meta object literal for the '<em><b>Command</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Command</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ISABELLE_TRACE__COMMAND = eINSTANCE.getIsabelleTrace_Command();
+		EReference ISABELLE_TRACE__COMMAND = eINSTANCE.getIsabelleTrace_Command();
 
 		/**
 		 * The meta object literal for the '<em><b>Simp Lemmas</b></em>' attribute list feature.
@@ -342,6 +508,58 @@ public interface IsabelleProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ISABELLE_TRACE__SIMP_LEMMAS = eINSTANCE.getIsabelleTrace_SimpLemmas();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.NamedTermTreeImpl <em>Named Term Tree</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.isabelle.impl.NamedTermTreeImpl
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getNamedTermTree()
+		 * @generated
+		 */
+		EClass NAMED_TERM_TREE = eINSTANCE.getNamedTermTree();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NAMED_TERM_TREE__NAME = eINSTANCE.getNamedTermTree_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Terms</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NAMED_TERM_TREE__TERMS = eINSTANCE.getNamedTermTree_Terms();
+
+		/**
+		 * The meta object literal for the '<em><b>Branches</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NAMED_TERM_TREE__BRANCHES = eINSTANCE.getNamedTermTree_Branches();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.IsabelleCommandImpl <em>Isabelle Command</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleCommandImpl
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleCommand()
+		 * @generated
+		 */
+		EClass ISABELLE_COMMAND = eINSTANCE.getIsabelleCommand();
+
+		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ISABELLE_COMMAND__SOURCE = eINSTANCE.getIsabelleCommand_Source();
 
 		/**
 		 * The meta object literal for the '<em>YXml Term</em>' data type.

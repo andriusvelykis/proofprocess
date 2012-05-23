@@ -87,6 +87,14 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 				return createIsabelleTraceAdapter();
 			}
 			@Override
+			public Adapter caseNamedTermTree(NamedTermTree object) {
+				return createNamedTermTreeAdapter();
+			}
+			@Override
+			public Adapter caseIsabelleCommand(IsabelleCommand object) {
+				return createIsabelleCommandAdapter();
+			}
+			@Override
 			public Adapter caseTerm(Term object) {
 				return createTermAdapter();
 			}
@@ -153,6 +161,34 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIsabelleTraceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.isabelle.NamedTermTree <em>Named Term Tree</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.isabelle.NamedTermTree
+	 * @generated
+	 */
+	public Adapter createNamedTermTreeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.isabelle.IsabelleCommand <em>Isabelle Command</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.isabelle.IsabelleCommand
+	 * @generated
+	 */
+	public Adapter createIsabelleCommandAdapter() {
 		return null;
 	}
 

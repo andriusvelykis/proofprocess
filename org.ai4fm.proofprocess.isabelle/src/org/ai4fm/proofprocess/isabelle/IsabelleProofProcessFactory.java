@@ -44,6 +44,24 @@ public interface IsabelleProofProcessFactory extends EFactory {
 	IsabelleTrace createIsabelleTrace();
 
 	/**
+	 * Returns a new object of class '<em>Named Term Tree</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Named Term Tree</em>'.
+	 * @generated
+	 */
+	NamedTermTree createNamedTermTree();
+
+	/**
+	 * Returns a new object of class '<em>Isabelle Command</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Isabelle Command</em>'.
+	 * @generated
+	 */
+	IsabelleCommand createIsabelleCommand();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
