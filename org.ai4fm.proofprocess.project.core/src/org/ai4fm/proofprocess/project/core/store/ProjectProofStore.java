@@ -6,8 +6,9 @@ import java.util.List;
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Proof;
 import org.ai4fm.proofprocess.core.store.IProofStore;
+import org.ai4fm.proofprocess.core.util.PProcessUtil;
 import org.ai4fm.proofprocess.project.Project;
-import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
+
 
 public class ProjectProofStore implements IProofStore {
 
@@ -30,7 +31,7 @@ public class ProjectProofStore implements IProofStore {
 
 	@Override
 	public Intent getIntent(String intentName) {
-		return ProofProcessUtil.findCreateIntent(project, intentName);
+		return PProcessUtil.getIntent(project, intentName);
 	}
 
 	@Override
