@@ -13,6 +13,17 @@
   <eClassifiers xsi:type="ecore:EClass" name="NameTerm" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InstTerm" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="term" eType="#//NameTerm"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="insts" upperBound="-1"
+        eType="#//Inst" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Inst">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="term" lowerBound="1" eType="ecore:EClass ../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IsabelleTrace" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Trace">
     <eStructuralFeatures xsi:type="ecore:EReference" name="command" lowerBound="1"
         eType="#//IsabelleCommand" containment="true"/>

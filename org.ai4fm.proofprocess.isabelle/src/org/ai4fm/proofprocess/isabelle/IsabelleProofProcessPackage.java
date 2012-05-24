@@ -156,6 +156,80 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	int NAME_TERM_FEATURE_COUNT = ProofProcessPackage.TERM_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.InstTermImpl <em>Inst Term</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.isabelle.impl.InstTermImpl
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getInstTerm()
+	 * @generated
+	 */
+	int INST_TERM = 3;
+
+	/**
+	 * The feature id for the '<em><b>Term</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INST_TERM__TERM = ProofProcessPackage.TERM_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Insts</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INST_TERM__INSTS = ProofProcessPackage.TERM_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Inst Term</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INST_TERM_FEATURE_COUNT = ProofProcessPackage.TERM_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.InstImpl <em>Inst</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.isabelle.impl.InstImpl
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getInst()
+	 * @generated
+	 */
+	int INST = 4;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INST__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Term</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INST__TERM = 1;
+
+	/**
+	 * The number of structural features of the '<em>Inst</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INST_FEATURE_COUNT = 2;
+
+	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.IsabelleTraceImpl <em>Isabelle Trace</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -163,7 +237,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleTrace()
 	 * @generated
 	 */
-	int ISABELLE_TRACE = 3;
+	int ISABELLE_TRACE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Command</b></em>' containment reference.
@@ -200,7 +274,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getNamedTermTree()
 	 * @generated
 	 */
-	int NAMED_TERM_TREE = 4;
+	int NAMED_TERM_TREE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -246,7 +320,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleCommand()
 	 * @generated
 	 */
-	int ISABELLE_COMMAND = 5;
+	int ISABELLE_COMMAND = 7;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -301,7 +375,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getYXmlTerm()
 	 * @generated
 	 */
-	int YXML_TERM = 6;
+	int YXML_TERM = 8;
 
 
 	/**
@@ -366,6 +440,70 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getNameTerm_Name();
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.InstTerm <em>Inst Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Inst Term</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.InstTerm
+	 * @generated
+	 */
+	EClass getInstTerm();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.ai4fm.proofprocess.isabelle.InstTerm#getTerm <em>Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Term</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.InstTerm#getTerm()
+	 * @see #getInstTerm()
+	 * @generated
+	 */
+	EReference getInstTerm_Term();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.isabelle.InstTerm#getInsts <em>Insts</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Insts</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.InstTerm#getInsts()
+	 * @see #getInstTerm()
+	 * @generated
+	 */
+	EReference getInstTerm_Insts();
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.Inst <em>Inst</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Inst</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.Inst
+	 * @generated
+	 */
+	EClass getInst();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.isabelle.Inst#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.Inst#getName()
+	 * @see #getInst()
+	 * @generated
+	 */
+	EAttribute getInst_Name();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.ai4fm.proofprocess.isabelle.Inst#getTerm <em>Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Term</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.Inst#getTerm()
+	 * @see #getInst()
+	 * @generated
+	 */
+	EReference getInst_Term();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.IsabelleTrace <em>Isabelle Trace</em>}'.
@@ -549,6 +687,58 @@ public interface IsabelleProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute NAME_TERM__NAME = eINSTANCE.getNameTerm_Name();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.InstTermImpl <em>Inst Term</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.isabelle.impl.InstTermImpl
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getInstTerm()
+		 * @generated
+		 */
+		EClass INST_TERM = eINSTANCE.getInstTerm();
+
+		/**
+		 * The meta object literal for the '<em><b>Term</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INST_TERM__TERM = eINSTANCE.getInstTerm_Term();
+
+		/**
+		 * The meta object literal for the '<em><b>Insts</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INST_TERM__INSTS = eINSTANCE.getInstTerm_Insts();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.InstImpl <em>Inst</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.isabelle.impl.InstImpl
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getInst()
+		 * @generated
+		 */
+		EClass INST = eINSTANCE.getInst();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INST__NAME = eINSTANCE.getInst_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Term</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INST__TERM = eINSTANCE.getInst_Term();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.IsabelleTraceImpl <em>Isabelle Trace</em>}' class.

@@ -11,6 +11,8 @@ import isabelle.XML.Tree;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
 import org.ai4fm.proofprocess.isabelle.DisplayTerm;
+import org.ai4fm.proofprocess.isabelle.Inst;
+import org.ai4fm.proofprocess.isabelle.InstTerm;
 import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
@@ -54,6 +56,20 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * @generated
 	 */
 	private EClass nameTermEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass instTermEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass instEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -206,6 +222,60 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getInstTerm() {
+		return instTermEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getInstTerm_Term() {
+		return (EReference)instTermEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getInstTerm_Insts() {
+		return (EReference)instTermEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getInst() {
+		return instEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getInst_Name() {
+		return (EAttribute)instEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getInst_Term() {
+		return (EReference)instEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getIsabelleTrace() {
 		return isabelleTraceEClass;
 	}
@@ -328,6 +398,14 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		nameTermEClass = createEClass(NAME_TERM);
 		createEAttribute(nameTermEClass, NAME_TERM__NAME);
 
+		instTermEClass = createEClass(INST_TERM);
+		createEReference(instTermEClass, INST_TERM__TERM);
+		createEReference(instTermEClass, INST_TERM__INSTS);
+
+		instEClass = createEClass(INST);
+		createEAttribute(instEClass, INST__NAME);
+		createEReference(instEClass, INST__TERM);
+
 		isabelleTraceEClass = createEClass(ISABELLE_TRACE);
 		createEReference(isabelleTraceEClass, ISABELLE_TRACE__COMMAND);
 		createEAttribute(isabelleTraceEClass, ISABELLE_TRACE__SIMP_LEMMAS);
@@ -378,6 +456,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		displayTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		isaTermEClass.getESuperTypes().add(this.getDisplayTerm());
 		nameTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
+		instTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		isabelleTraceEClass.getESuperTypes().add(theProofProcessPackage.getTrace());
 		isabelleCommandEClass.getESuperTypes().add(this.getNamedTermTree());
 
@@ -390,6 +469,14 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 
 		initEClass(nameTermEClass, NameTerm.class, "NameTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNameTerm_Name(), ecorePackage.getEString(), "name", null, 1, 1, NameTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(instTermEClass, InstTerm.class, "InstTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getInstTerm_Term(), this.getNameTerm(), null, "term", null, 0, 1, InstTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getInstTerm_Insts(), this.getInst(), null, "insts", null, 0, -1, InstTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(instEClass, Inst.class, "Inst", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getInst_Name(), ecorePackage.getEString(), "name", null, 0, 1, Inst.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getInst_Term(), theProofProcessPackage.getTerm(), null, "term", null, 1, 1, Inst.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(isabelleTraceEClass, IsabelleTrace.class, "IsabelleTrace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getIsabelleTrace_Command(), this.getIsabelleCommand(), null, "command", null, 1, 1, IsabelleTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

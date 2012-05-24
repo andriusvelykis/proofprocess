@@ -95,6 +95,19 @@ public class IsabelleProofProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case IsabelleProofProcessPackage.INST_TERM: {
+				InstTerm instTerm = (InstTerm)theEObject;
+				T result = caseInstTerm(instTerm);
+				if (result == null) result = caseTerm(instTerm);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case IsabelleProofProcessPackage.INST: {
+				Inst inst = (Inst)theEObject;
+				T result = caseInst(inst);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case IsabelleProofProcessPackage.ISABELLE_TRACE: {
 				IsabelleTrace isabelleTrace = (IsabelleTrace)theEObject;
 				T result = caseIsabelleTrace(isabelleTrace);
@@ -161,6 +174,36 @@ public class IsabelleProofProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseNameTerm(NameTerm object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Inst Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Inst Term</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInstTerm(InstTerm object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Inst</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Inst</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInst(Inst object) {
 		return null;
 	}
 

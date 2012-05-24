@@ -122,6 +122,52 @@ public class IsabelleProofProcessItemProviderAdapterFactory extends IsabelleProo
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.InstTerm} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected InstTermItemProvider instTermItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.isabelle.InstTerm}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createInstTermAdapter() {
+		if (instTermItemProvider == null) {
+			instTermItemProvider = new InstTermItemProvider(this);
+		}
+
+		return instTermItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.Inst} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected InstItemProvider instItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.isabelle.Inst}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createInstAdapter() {
+		if (instItemProvider == null) {
+			instItemProvider = new InstItemProvider(this);
+		}
+
+		return instItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.IsabelleTrace} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -291,6 +337,8 @@ public class IsabelleProofProcessItemProviderAdapterFactory extends IsabelleProo
 	public void dispose() {
 		if (isaTermItemProvider != null) isaTermItemProvider.dispose();
 		if (nameTermItemProvider != null) nameTermItemProvider.dispose();
+		if (instTermItemProvider != null) instTermItemProvider.dispose();
+		if (instItemProvider != null) instItemProvider.dispose();
 		if (isabelleTraceItemProvider != null) isabelleTraceItemProvider.dispose();
 		if (namedTermTreeItemProvider != null) namedTermTreeItemProvider.dispose();
 		if (isabelleCommandItemProvider != null) isabelleCommandItemProvider.dispose();
