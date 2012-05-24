@@ -72,6 +72,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 			case ProofProcessPackage.PROOF_DECOR: return createProofDecor();
 			case ProofProcessPackage.ATTEMPT: return createAttempt();
 			case ProofProcessPackage.PROOF: return createProof();
+			case ProofProcessPackage.PROOF_STORE: return createProofStore();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -215,6 +216,16 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	public Proof createProof() {
 		ProofImpl proof = new ProofImpl();
 		return proof;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ProofStore createProofStore() {
+		ProofStoreImpl proofStore = new ProofStoreImpl();
+		return proofStore;
 	}
 
 	/**

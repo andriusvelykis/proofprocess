@@ -125,6 +125,15 @@ public interface ProofProcessFactory extends EFactory {
 	Proof createProof();
 
 	/**
+	 * Returns a new object of class '<em>Proof Store</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Proof Store</em>'.
+	 * @generated
+	 */
+	ProofStore createProofStore();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

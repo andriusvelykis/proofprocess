@@ -8,6 +8,7 @@ package org.ai4fm.proofprocess.project.util;
 
 import org.ai4fm.proofprocess.Loc;
 
+import org.ai4fm.proofprocess.ProofStore;
 import org.ai4fm.proofprocess.project.*;
 
 import org.eclipse.emf.ecore.EObject;
@@ -75,6 +76,7 @@ public class ProjectProofProcessSwitch<T> extends Switch<T> {
 			case ProjectProofProcessPackage.PROJECT: {
 				Project project = (Project)theEObject;
 				T result = caseProject(project);
+				if (result == null) result = caseProofStore(project);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -137,6 +139,21 @@ public class ProjectProofProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTextLoc(TextLoc object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Proof Store</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Proof Store</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProofStore(ProofStore object) {
 		return null;
 	}
 

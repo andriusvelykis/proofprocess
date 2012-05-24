@@ -72,22 +72,13 @@ public interface ProjectProofProcessPackage extends EPackage {
 	int PROJECT = 0;
 
 	/**
-	 * The feature id for the '<em><b>Label</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROJECT__LABEL = 0;
-
-	/**
 	 * The feature id for the '<em><b>Proofs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT__PROOFS = 1;
+	int PROJECT__PROOFS = ProofProcessPackage.PROOF_STORE__PROOFS;
 
 	/**
 	 * The feature id for the '<em><b>Intents</b></em>' containment reference list.
@@ -96,7 +87,16 @@ public interface ProjectProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT__INTENTS = 2;
+	int PROJECT__INTENTS = ProofProcessPackage.PROOF_STORE__INTENTS;
+
+	/**
+	 * The feature id for the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT__LABEL = ProofProcessPackage.PROOF_STORE_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Project</em>' class.
@@ -105,7 +105,7 @@ public interface ProjectProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROJECT_FEATURE_COUNT = 3;
+	int PROJECT_FEATURE_COUNT = ProofProcessPackage.PROOF_STORE_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.project.impl.PositionImpl <em>Position</em>}' class.
@@ -202,28 +202,6 @@ public interface ProjectProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getProject_Label();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.project.Project#getProofs <em>Proofs</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Proofs</em>'.
-	 * @see org.ai4fm.proofprocess.project.Project#getProofs()
-	 * @see #getProject()
-	 * @generated
-	 */
-	EReference getProject_Proofs();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.project.Project#getIntents <em>Intents</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Intents</em>'.
-	 * @see org.ai4fm.proofprocess.project.Project#getIntents()
-	 * @see #getProject()
-	 * @generated
-	 */
-	EReference getProject_Intents();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.project.Position <em>Position</em>}'.
@@ -328,22 +306,6 @@ public interface ProjectProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PROJECT__LABEL = eINSTANCE.getProject_Label();
-
-		/**
-		 * The meta object literal for the '<em><b>Proofs</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROJECT__PROOFS = eINSTANCE.getProject_Proofs();
-
-		/**
-		 * The meta object literal for the '<em><b>Intents</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROJECT__INTENTS = eINSTANCE.getProject_Intents();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.project.impl.PositionImpl <em>Position</em>}' class.

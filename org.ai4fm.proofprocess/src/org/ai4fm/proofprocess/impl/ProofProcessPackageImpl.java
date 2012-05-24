@@ -22,6 +22,7 @@ import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
+import org.ai4fm.proofprocess.ProofStore;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 
@@ -144,6 +145,13 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * @generated
 	 */
 	private EClass proofEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass proofStoreEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -569,6 +577,33 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getProofStore() {
+		return proofStoreEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProofStore_Proofs() {
+		return (EReference)proofStoreEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProofStore_Intents() {
+		return (EReference)proofStoreEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getProofFeatureType() {
 		return proofFeatureTypeEEnum;
 	}
@@ -654,6 +689,10 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		createEReference(proofEClass, PROOF__GOALS);
 		createEAttribute(proofEClass, PROOF__LABEL);
 		createEReference(proofEClass, PROOF__ATTEMPTS);
+
+		proofStoreEClass = createEClass(PROOF_STORE);
+		createEReference(proofStoreEClass, PROOF_STORE__PROOFS);
+		createEReference(proofStoreEClass, PROOF_STORE__INTENTS);
 
 		// Create enums
 		proofFeatureTypeEEnum = createEEnum(PROOF_FEATURE_TYPE);
@@ -746,6 +785,10 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		initEReference(getProof_Goals(), this.getTerm(), null, "goals", null, 1, -1, Proof.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProof_Label(), ecorePackage.getEString(), "label", null, 1, 1, Proof.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProof_Attempts(), this.getAttempt(), null, "attempts", null, 1, -1, Proof.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(proofStoreEClass, ProofStore.class, "ProofStore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProofStore_Proofs(), this.getProof(), null, "proofs", null, 0, -1, ProofStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProofStore_Intents(), this.getIntent(), null, "intents", null, 0, -1, ProofStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(proofFeatureTypeEEnum, ProofFeatureType.class, "ProofFeatureType");

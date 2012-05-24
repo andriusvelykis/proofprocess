@@ -4,39 +4,40 @@
  *
  * $Id$
  */
-package org.ai4fm.proofprocess.project.provider;
+package org.ai4fm.proofprocess.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.project.Project;
-import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
+import org.ai4fm.proofprocess.ProofProcessFactory;
+import org.ai4fm.proofprocess.ProofProcessPackage;
+import org.ai4fm.proofprocess.ProofStore;
 
-import org.ai4fm.proofprocess.provider.ProofStoreItemProvider;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.project.Project} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.ProofStore} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ProjectItemProvider
-	extends ProofStoreItemProvider
+public class ProofStoreItemProvider
+	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
 		IStructuredItemContentProvider,
@@ -49,7 +50,7 @@ public class ProjectItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProjectItemProvider(AdapterFactory adapterFactory) {
+	public ProofStoreItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -64,42 +65,50 @@ public class ProjectItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLabelPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Label feature.
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addLabelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Project_label_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Project_label_feature", "_UI_Project_type"),
-				 ProjectProofProcessPackage.Literals.PROJECT__LABEL,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_STORE__PROOFS);
+			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_STORE__INTENTS);
+		}
+		return childrenFeatures;
 	}
 
 	/**
-	 * This returns Project.gif.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
+	}
+
+	/**
+	 * This returns ProofStore.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Project"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofStore"));
 	}
 
 	/**
@@ -110,10 +119,7 @@ public class ProjectItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((Project)object).getLabel();
-		return label == null || label.length() == 0 ?
-			getString("_UI_Project_type") :
-			getString("_UI_Project_type") + " " + label;
+		return getString("_UI_ProofStore_type");
 	}
 
 	/**
@@ -127,9 +133,10 @@ public class ProjectItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(Project.class)) {
-			case ProjectProofProcessPackage.PROJECT__LABEL:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+		switch (notification.getFeatureID(ProofStore.class)) {
+			case ProofProcessPackage.PROOF_STORE__PROOFS:
+			case ProofProcessPackage.PROOF_STORE__INTENTS:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -145,6 +152,16 @@ public class ProjectItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProofProcessPackage.Literals.PROOF_STORE__PROOFS,
+				 ProofProcessFactory.eINSTANCE.createProof()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProofProcessPackage.Literals.PROOF_STORE__INTENTS,
+				 ProofProcessFactory.eINSTANCE.createIntent()));
 	}
 
 	/**
@@ -155,7 +172,7 @@ public class ProjectItemProvider
 	 */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ProjectProofProcessEditPlugin.INSTANCE;
+		return ProofProcessEditPlugin.INSTANCE;
 	}
 
 }

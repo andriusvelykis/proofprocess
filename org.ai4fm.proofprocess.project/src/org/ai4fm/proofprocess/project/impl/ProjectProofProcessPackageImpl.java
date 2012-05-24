@@ -136,24 +136,6 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProject_Proofs() {
-		return (EReference)projectEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProject_Intents() {
-		return (EReference)projectEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getPosition() {
 		return positionEClass;
 	}
@@ -233,8 +215,6 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 		// Create classes and their features
 		projectEClass = createEClass(PROJECT);
 		createEAttribute(projectEClass, PROJECT__LABEL);
-		createEReference(projectEClass, PROJECT__PROOFS);
-		createEReference(projectEClass, PROJECT__INTENTS);
 
 		positionEClass = createEClass(POSITION);
 		createEAttribute(positionEClass, POSITION__OFFSET);
@@ -276,13 +256,12 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		projectEClass.getESuperTypes().add(theProofProcessPackage.getProofStore());
 		textLocEClass.getESuperTypes().add(theProofProcessPackage.getLoc());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(projectEClass, Project.class, "Project", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getProject_Label(), ecorePackage.getEString(), "label", null, 0, 1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProject_Proofs(), theProofProcessPackage.getProof(), null, "proofs", null, 0, -1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getProject_Intents(), theProofProcessPackage.getIntent(), null, "intents", null, 0, -1, Project.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(positionEClass, Position.class, "Position", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPosition_Offset(), ecorePackage.getEInt(), "offset", null, 1, 1, Position.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -329,6 +329,29 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofStore} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ProofStoreItemProvider proofStoreItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofStore}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createProofStoreAdapter() {
+		if (proofStoreItemProvider == null) {
+			proofStoreItemProvider = new ProofStoreItemProvider(this);
+		}
+
+		return proofStoreItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -438,6 +461,7 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 		if (proofDecorItemProvider != null) proofDecorItemProvider.dispose();
 		if (attemptItemProvider != null) attemptItemProvider.dispose();
 		if (proofItemProvider != null) proofItemProvider.dispose();
+		if (proofStoreItemProvider != null) proofStoreItemProvider.dispose();
 	}
 
 }

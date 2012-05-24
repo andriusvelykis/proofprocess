@@ -598,6 +598,43 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_FEATURE_COUNT = 3;
 
 	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.ProofStoreImpl <em>Proof Store</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.impl.ProofStoreImpl
+	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofStore()
+	 * @generated
+	 */
+	int PROOF_STORE = 15;
+
+	/**
+	 * The feature id for the '<em><b>Proofs</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROOF_STORE__PROOFS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Intents</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROOF_STORE__INTENTS = 1;
+
+	/**
+	 * The number of structural features of the '<em>Proof Store</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROOF_STORE_FEATURE_COUNT = 2;
+
+	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.ProofFeatureType <em>Proof Feature Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -605,7 +642,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeatureType()
 	 * @generated
 	 */
-	int PROOF_FEATURE_TYPE = 15;
+	int PROOF_FEATURE_TYPE = 16;
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.Intent <em>Intent</em>}'.
@@ -1022,6 +1059,38 @@ public interface ProofProcessPackage extends EPackage {
 	EReference getProof_Attempts();
 
 	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.ProofStore <em>Proof Store</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Proof Store</em>'.
+	 * @see org.ai4fm.proofprocess.ProofStore
+	 * @generated
+	 */
+	EClass getProofStore();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.ProofStore#getProofs <em>Proofs</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Proofs</em>'.
+	 * @see org.ai4fm.proofprocess.ProofStore#getProofs()
+	 * @see #getProofStore()
+	 * @generated
+	 */
+	EReference getProofStore_Proofs();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.ProofStore#getIntents <em>Intents</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Intents</em>'.
+	 * @see org.ai4fm.proofprocess.ProofStore#getIntents()
+	 * @see #getProofStore()
+	 * @generated
+	 */
+	EReference getProofStore_Intents();
+
+	/**
 	 * Returns the meta object for enum '{@link org.ai4fm.proofprocess.ProofFeatureType <em>Proof Feature Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1394,6 +1463,32 @@ public interface ProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PROOF__ATTEMPTS = eINSTANCE.getProof_Attempts();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.ProofStoreImpl <em>Proof Store</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.impl.ProofStoreImpl
+		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofStore()
+		 * @generated
+		 */
+		EClass PROOF_STORE = eINSTANCE.getProofStore();
+
+		/**
+		 * The meta object literal for the '<em><b>Proofs</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROOF_STORE__PROOFS = eINSTANCE.getProofStore_Proofs();
+
+		/**
+		 * The meta object literal for the '<em><b>Intents</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROOF_STORE__INTENTS = eINSTANCE.getProofStore_Intents();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.ProofFeatureType <em>Proof Feature Type</em>}' enum.
