@@ -14,9 +14,10 @@ import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
+import org.ai4fm.proofprocess.ProofStore;
 import org.ai4fm.proofprocess.core.analyse.ProofMatcher;
-import org.ai4fm.proofprocess.core.store.IProofStore;
 import org.ai4fm.proofprocess.core.store.IProofStoreProvider;
+import org.ai4fm.proofprocess.core.util.PProcessUtil;
 import org.ai4fm.proofprocess.log.ProofActivity;
 import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
@@ -80,7 +81,7 @@ public class ProofProcessPage extends Page {
 	private TreeViewer treeViewer;
 	private final ComposedAdapterFactory adapterFactory;
 	
-	private IProofStore proofStore;
+	private ProofStore proofStore;
 	
 	private Action groupAttemptsAction;
 	
@@ -262,22 +263,6 @@ public class ProofProcessPage extends Page {
 			super(adapterFactory);
 		}
 
-		@Override
-		public Object[] getElements(Object root) {
-			
-			if (root instanceof IProofStore) {
-				IProofStore store = (IProofStore) root;
-				List<Object> rootElems = new ArrayList<Object>();
-				
-				rootElems.addAll(store.getProofs());
-				rootElems.addAll(store.getIntents());
-				
-				return rootElems.toArray();
-			}
-			
-			return super.getElements(root);
-		}
-
 		/* (non-Javadoc)
 		 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getChildren(java.lang.Object)
 		 */
@@ -425,7 +410,7 @@ public class ProofProcessPage extends Page {
 			ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
 			group.setInfo(info);
 			info.setNarrative(description);
-			info.setIntent(proofStore.getIntent(intentText));
+			info.setIntent(PProcessUtil.getIntent(proofStore, intentText));
 			
 			// TODO grouping Decor?
 			siblings.add(sublistIndex, group);

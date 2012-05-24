@@ -19,9 +19,9 @@ import org.ai4fm.proofprocess.ProofParallel;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
+import org.ai4fm.proofprocess.ProofStore;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
-import org.ai4fm.proofprocess.core.store.IProofStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -48,7 +48,7 @@ public class ProofMatcher {
 	 * @return The last matching proof
 	 * 
 	 */
-	public Proof findCreateProof(IProofStore proofStore, String proofLabel, List<Term> proofGoals) {
+	public Proof findCreateProof(ProofStore proofStore, String proofLabel, List<Term> proofGoals) {
 		
 		List<Proof> proofs = proofStore.getProofs();
 		// go backwards and use the last one
@@ -77,7 +77,7 @@ public class ProofMatcher {
 		targetProof.getGoals().addAll(copyTerms(proofGoals));
 		
 		// add to the project
-		proofStore.addProof(targetProof);
+		proofStore.getProofs().add(targetProof);
 		
 		return targetProof;
 	}
@@ -134,7 +134,7 @@ public class ProofMatcher {
 		return copy;
 	}
 	
-	public ProofElemMatch findCreateProofTree(IProofStore proofStore, Proof proof, 
+	public ProofElemMatch findCreateProofTree(ProofStore proofStore, Proof proof, 
 			List<ProofEntry> proofState) {
 
 		ProofElemMatch matched = findMatchingProofTree(proof, proofState);
@@ -351,7 +351,7 @@ public class ProofMatcher {
 	 * @param entry
 	 * @return ProofElem where to add the entry, {@code null} if add to the root
 	 */
-	protected ProofElem getGroupToAdd(IProofStore proofStore, ProofEntry previous, ProofEntry entry) {
+	protected ProofElem getGroupToAdd(ProofStore proofStore, ProofEntry previous, ProofEntry entry) {
 		// add the attempt to the same group
 		return getParentProofElem(previous);
 	}
@@ -410,7 +410,7 @@ public class ProofMatcher {
 		throw new IllegalArgumentException("Cannot add to " + group.getClass().getSimpleName());
 	}
 	
-	private ProofElemMatch createProofTree(IProofStore proofStore, Proof attemptSet, ProofEntry entry) {
+	private ProofElemMatch createProofTree(ProofStore proofStore, Proof attemptSet, ProofEntry entry) {
 		
 		Attempt attempt = ProofProcessFactory.eINSTANCE.createAttempt();
 		attempt.setProof(entry);

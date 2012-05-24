@@ -27,10 +27,11 @@ import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
+import org.ai4fm.proofprocess.ProofStore;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 import org.ai4fm.proofprocess.core.analyse.ProofMatcher;
-import org.ai4fm.proofprocess.core.store.IProofStore;
+import org.ai4fm.proofprocess.core.util.PProcessUtil;
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
@@ -42,7 +43,6 @@ import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
 import org.ai4fm.proofprocess.project.core.ProofManager;
-import org.ai4fm.proofprocess.project.core.store.ProjectProofStore;
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil;
 import org.ai4fm.proofprocess.project.core.util.ResourceUtil;
 import org.eclipse.core.resources.IProject;
@@ -127,7 +127,7 @@ public class ProofAnalyzer {
 		FileVersion fileVersion = ProofHistoryManager.syncFileVersion(
 				project, filePath, documentText, commandEnd, monitor);
 		
-		analyzeEntry(new ProjectProofStore(proofProject), proofState, fileVersion);
+		analyzeEntry(proofProject, proofState, fileVersion);
 		
 		// FIXME retrieve proof entries from the analysis
 		Map<State, ProofEntry> proofEntries = new HashMap<State, ProofEntry>();
@@ -144,7 +144,7 @@ public class ProofAnalyzer {
 		return Status.OK_STATUS;
 	}
 	
-	private void analyzeEntry(IProofStore proofStore, List<State> proofState, FileVersion fileVersion) {
+	private void analyzeEntry(ProofStore proofStore, List<State> proofState, FileVersion fileVersion) {
 		
 		// Assume that the first step in any proof is the "declaration" command, e.g. "lemma ..."
 		State initialGoalState = proofState.get(0);
@@ -179,7 +179,7 @@ public class ProofAnalyzer {
 		// TODO save the proofProject
 	}
 	
-	private List<ProofEntry> createProofSteps(ProofMatcher proofMatcher, IProofStore proofStore, 
+	private List<ProofEntry> createProofSteps(ProofMatcher proofMatcher, ProofStore proofStore, 
 			Proof proof, List<State> proofState, FileVersion fileVersion) {
 		
 		List<ProofEntry> entries = new ArrayList<ProofEntry>();
@@ -196,13 +196,13 @@ public class ProofAnalyzer {
 		return entries;
 	}
 	
-	private ProofEntry createProofStep(ProofMatcher proofMatcher, IProofStore proofStore,
+	private ProofEntry createProofStep(ProofMatcher proofMatcher, ProofStore proofStore,
 			FileVersion fileVersion, List<Term> stepInGoals, State commandState) {
 		
 		ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
 		info.setNarrative("Tactic: " + commandState.command().name());
 		
-		Intent intent = proofStore.getIntent("Tactic Application");
+		Intent intent = PProcessUtil.getIntent(proofStore, "Tactic Application");
 		info.setIntent(intent);
 		
 		// TODO set features

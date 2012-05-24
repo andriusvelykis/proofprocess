@@ -17,7 +17,8 @@ import org.eclipse.core.runtime.jobs.Job
 import org.eclipse.core.runtime.Status
 import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.core.runtime.IStatus
-import org.ai4fm.proofprocess.core.store.IProofStore
+import org.ai4fm.proofprocess.ProofStore
+
 
 class PProcessPage(private val proofStoreProvider: IProofStoreProvider) extends Page {
 
@@ -41,15 +42,7 @@ class PProcessPage(private val proofStoreProvider: IProofStoreProvider) extends 
 //    val tree = treeViewer.getTree();
 //    tree.setMenu(mgr.createContextMenu(tree));
     
-    val contentProvider = new AdapterFactoryContentProvider(adapterFactory) {
-     override def getElements(root: Object): Array[Object] = root match {
-       // get proofs and intents from the store to display as root elements
-       case store: IProofStore => store.getProofs.toArray ++ store.getIntents.toArray
-       case _ => super.getElements(root)
-     } 
-    }
-
-    treeViewer.setContentProvider(contentProvider);
+    treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
     treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
 
     // load the proof process in a separate job, otherwise it delays the startup
