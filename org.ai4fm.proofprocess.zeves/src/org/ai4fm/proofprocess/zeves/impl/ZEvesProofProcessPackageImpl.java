@@ -16,7 +16,6 @@ import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 
-import org.ai4fm.proofprocess.zeves.ZmlTerm;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
