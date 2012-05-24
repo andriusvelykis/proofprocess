@@ -6,12 +6,11 @@ import isabelle.Markup_Tree
 import isabelle.Text
 import isabelle.Token
 import isabelle.XML
-
 import org.ai4fm.proofprocess.Term
+import org.ai4fm.proofprocess.isabelle.Inst
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 import org.ai4fm.proofprocess.isabelle.NamedTermTree
-
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._
 
@@ -44,7 +43,7 @@ object CommandParser {
         command.setName(commandName(markup) getOrElse source)
         
         // parse command contents
-        parseTokens(Nil, Nil, command, command, command, tokenInfos.tail)
+        parseTokens(Nil, Nil, Nil, command, command, command, tokenInfos.tail)
         command
       }
       case _ => command
@@ -52,7 +51,7 @@ object CommandParser {
   }
 
   @tailrec
-  private def parseTokens(ids: List[TermInfo], facts: List[String],
+  private def parseTokens(ids: List[TermInfo], facts: List[Term], insts: List[Inst],
     methodRoot: NamedTermTree, namedRoot: NamedTermTree, termRoot: NamedTermTree,
     tokens: Stream[TokenInfo]) {
 
@@ -60,17 +59,17 @@ object CommandParser {
       // add all outstanding terms (from "identifiers" list
       termRoot.getTerms().addAll(consumeIds.reverse.map(info => getTerm(info)))
       // add all outstanding facts
-      termRoot.getTerms().addAll(facts.reverse.map(name => getFactTerm(name)))
+      termRoot.getTerms().addAll(facts.reverse)
     }
 
     def markIdentifier(term: TermInfo) =
-      parseTokens(term :: ids, facts, methodRoot, namedRoot, termRoot, tokens.tail)
+      parseTokens(term :: ids, facts, insts, methodRoot, namedRoot, termRoot, tokens.tail)
 
     def newBranch(methodRoot: NamedTermTree, namedRoot: NamedTermTree, termRoot: NamedTermTree) =
-      parseTokens(Nil, Nil, methodRoot, namedRoot, termRoot, tokens.tail)
+      parseTokens(Nil, Nil, Nil, methodRoot, namedRoot, termRoot, tokens.tail)
 
     def continueBranch =
-      parseTokens(ids, facts, methodRoot, namedRoot, termRoot, tokens.tail)
+      parseTokens(ids, facts, insts, methodRoot, namedRoot, termRoot, tokens.tail)
 
     if (tokens.isEmpty) {
       // consume all
@@ -88,8 +87,9 @@ object CommandParser {
         // if it is a fact, add its name to the fact list
         // also consume any outstanding terms for the fact (terms go before facts, e.g. "x="Y" in exI)
         case Markup.Entity("fact", name) =>
-          // TODO consume identifiers to produce a "fact-with-args"
-          parseTokens(ids, name :: facts, methodRoot, namedRoot, termRoot, tokens.tail)
+          // consume insts to produce a InstTerm
+          val f = fact(name, insts)
+          parseTokens(ids, f :: facts, Nil, methodRoot, namedRoot, termRoot, tokens.tail)
 
         // if it is a method, start a new method branch
         case Markup.Entity(Markup.METHOD, name) => {
@@ -117,10 +117,17 @@ object CommandParser {
         newBranch(methodRoot, namedRoot, tree)
       }
       case (Token(Token.Kind.KEYWORD, "="), _) => {
-        // a named argument encountered, e.g. "x="Y + 1""
+        // a named inst encountered, e.g. "x="Y + 1""
         // lookahead and join with the last identifier
-        println("= encountered!")
-        //        parseToken(lastIdentifier, namedFacts(lastIdentifier), tokens.tail)
+        val lookahead = tokens.tail
+        val (nextToken, markups) = lookahead.head
+        
+        // create Inst out of last identifier and next token info
+        // TODO also handle postinsts, e.g. [of _ "Y + 1"]
+        val instVal = inst(ids.head, (nextToken.source, markups))
+        
+        // continue parsing taking into account the consumed Inst
+        parseTokens(ids.tail, facts, instVal :: insts, methodRoot, namedRoot, termRoot, lookahead.tail)
       }
       case _ => {
         // ignore and continue parsing
@@ -137,6 +144,14 @@ object CommandParser {
     markupName getOrElse None
   }
   
+  private def inst(name: TermInfo, term: TermInfo): Inst = {
+    val inst = factory.createInst()
+    inst.setName(name._1)
+    inst.setTerm(getTerm(term))
+    
+    inst
+  }
+  
   private def getTerm(info: TermInfo): Term = {
     // FIXME parse the term
     val term = factory.createIsaTerm(); 
@@ -144,10 +159,21 @@ object CommandParser {
     term
   }
   
-  private def getFactTerm(fact: String): Term = {
-    val term = factory.createNameTerm(); 
-    term.setName(fact);
-    term
+  private def fact(fact: String, insts: List[Inst]): Term = {
+
+    val term = factory.createNameTerm()
+    term.setName(fact)
+    
+    if (insts.isEmpty) {
+      // not insts, just use the name term
+      term
+    } else {
+      // wrap into InstTerm
+      val instTerm = factory.createInstTerm()
+      instTerm.setTerm(term)
+      instTerm.getInsts().addAll(insts)
+      instTerm
+    }
   }
   
   private def addTermTree(parent: NamedTermTree, name: String): NamedTermTree = {
