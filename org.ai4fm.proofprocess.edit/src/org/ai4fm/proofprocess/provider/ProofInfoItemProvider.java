@@ -129,6 +129,7 @@ public class ProofInfoItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
+			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_INFO__INTENT);
 			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_INFO__IN_FEATURES);
 			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_INFO__OUT_FEATURES);
 		}

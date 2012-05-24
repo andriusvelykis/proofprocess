@@ -25,7 +25,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofStep/trace"/>
     </genClasses>
     <genClasses ecoreClass="ProofProcess.ecore#//ProofInfo">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofInfo/intent"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofInfo/intent"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//ProofInfo/narrative"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofInfo/inFeatures"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofInfo/outFeatures"/>
@@ -61,6 +62,10 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//Proof/goals"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//Proof/label"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//Proof/attempts"/>
+    </genClasses>
+    <genClasses ecoreClass="ProofProcess.ecore#//ProofStore">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofStore/proofs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofStore/intents"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
