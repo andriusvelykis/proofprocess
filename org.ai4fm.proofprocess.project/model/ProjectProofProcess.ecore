@@ -3,14 +3,8 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="project"
     nsURI="http://org/ai4fm/proofprocess/project/v1.0.0" nsPrefix="project">
-  <eClassifiers xsi:type="ecore:EClass" name="Project">
+  <eClassifiers xsi:type="ecore:EClass" name="Project" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//ProofStore">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="proofs" upperBound="-1"
-        eType="ecore:EClass ../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Proof"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="intents" upperBound="-1"
-        eType="ecore:EClass ../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Intent"
-        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Position">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="offset" lowerBound="1"

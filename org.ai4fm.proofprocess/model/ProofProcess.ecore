@@ -78,4 +78,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="attempts" lowerBound="1"
         upperBound="-1" eType="#//Attempt" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProofStore">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="proofs" upperBound="-1"
+        eType="#//Proof" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intents" ordered="false"
+        upperBound="-1" eType="#//Intent" containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>
