@@ -358,7 +358,7 @@ public class SnapshotReader {
 	
 	private boolean isError(State cmdState) {
 		for (Tree result : JavaConversions.asJavaIterable(cmdState.results().values())) {
-			boolean err = MarkupTermParser.isError(result);
+			boolean err = ResultParser.isError(result);
 			if (err) {
 				return true;
 			}
@@ -369,20 +369,13 @@ public class SnapshotReader {
 	
 	private boolean isEmptyResult(State cmdState) {
 		
-		for (Tree result : JavaConversions.asJavaIterable(cmdState.results().values())) {
-			
-			if (MarkupTermParser.getGoalCount(result) > 0) {
-				return false;
-			}
-			
-			if (MarkupTermParser.isNoSubgoals(result)) {
-				return false;
-			}
-			
-			if (!MarkupTermParser.isError(result) && "by".equals(cmdState.command().name())) {
-				// "by" commands do not have output, but treat it similarly to "no subgoals"
-				return false;
-			}
+		if (ResultParser.goalTerms(cmdState).isDefined()) {
+			return false;
+		}
+		
+		if (!isError(cmdState) && "by".equals(cmdState.command().name())) {
+			// "by" commands do not have output, but treat it similarly to "no subgoals"
+			return false;
 		}
 		
 		return true;

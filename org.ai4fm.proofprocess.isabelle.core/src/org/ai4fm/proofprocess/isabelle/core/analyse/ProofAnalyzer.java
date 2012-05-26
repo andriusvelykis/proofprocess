@@ -4,11 +4,11 @@ import isabelle.Command;
 import isabelle.Document;
 import isabelle.Command.State;
 import isabelle.Text.Range;
-import isabelle.XML.Tree;
 import isabelle.scala.DocumentRef;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,8 +37,8 @@ import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
 import org.ai4fm.proofprocess.isabelle.core.parse.CommandParser;
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser;
 import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader;
-import org.ai4fm.proofprocess.isabelle.core.parse.MarkupTermParser;
 import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 
+import scala.Option;
 import scala.collection.JavaConversions;
 
 /**
@@ -230,14 +231,12 @@ public class ProofAnalyzer {
 	
 	private List<Term> parseGoals(State commandState) {
 		
-		List<Term> parsedTerms = new ArrayList<Term>();
-		
-		for (Tree result : JavaConversions.asJavaIterable(commandState.results().values())) {
-			List<Term> parsed = MarkupTermParser.parseGoals(result);
-			parsedTerms.addAll(parsed);
+		Option<scala.collection.immutable.List<Term>> goals = ResultParser.goalTerms(commandState);
+		if (goals.isDefined()) {
+			return JavaConversions.seqAsJavaList(goals.get());
+		} else {
+			return Collections.emptyList();
 		}
-		
-		return parsedTerms;
 	}
 	
 	private Trace createProofStepTrace(State commandState) {
