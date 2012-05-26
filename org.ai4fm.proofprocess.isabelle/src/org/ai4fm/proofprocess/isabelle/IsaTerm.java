@@ -36,7 +36,7 @@ public interface IsaTerm extends DisplayTerm {
 	 * @return the value of the '<em>Term</em>' attribute.
 	 * @see #setTerm(Tree)
 	 * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getIsaTerm_Term()
-	 * @model dataType="org.ai4fm.proofprocess.isabelle.YXmlTerm" required="true"
+	 * @model dataType="org.ai4fm.proofprocess.isabelle.IsabelleXML" required="true"
 	 * @generated
 	 */
 	Tree getTerm();

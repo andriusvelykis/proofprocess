@@ -97,7 +97,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EDataType yXmlTermEDataType = null;
+	private EDataType isabelleXMLEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -357,8 +357,8 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EDataType getYXmlTerm() {
-		return yXmlTermEDataType;
+	public EDataType getIsabelleXML() {
+		return isabelleXMLEDataType;
 	}
 
 	/**
@@ -419,7 +419,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		createEAttribute(isabelleCommandEClass, ISABELLE_COMMAND__SOURCE);
 
 		// Create data types
-		yXmlTermEDataType = createEDataType(YXML_TERM);
+		isabelleXMLEDataType = createEDataType(ISABELLE_XML);
 	}
 
 	/**
@@ -465,7 +465,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		initEAttribute(getDisplayTerm_Display(), ecorePackage.getEString(), "display", null, 0, 1, DisplayTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(isaTermEClass, IsaTerm.class, "IsaTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIsaTerm_Term(), this.getYXmlTerm(), "term", null, 1, 1, IsaTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIsaTerm_Term(), this.getIsabelleXML(), "term", null, 1, 1, IsaTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(nameTermEClass, NameTerm.class, "NameTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNameTerm_Name(), ecorePackage.getEString(), "name", null, 1, 1, NameTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -491,7 +491,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		initEAttribute(getIsabelleCommand_Source(), ecorePackage.getEString(), "source", null, 1, 1, IsabelleCommand.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
-		initEDataType(yXmlTermEDataType, Tree.class, "YXmlTerm", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(isabelleXMLEDataType, Tree.class, "IsabelleXML", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

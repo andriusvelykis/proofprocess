@@ -84,8 +84,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case IsabelleProofProcessPackage.YXML_TERM:
-				return createYXmlTermFromString(eDataType, initialValue);
+			case IsabelleProofProcessPackage.ISABELLE_XML:
+				return createIsabelleXMLFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -99,8 +99,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-			case IsabelleProofProcessPackage.YXML_TERM:
-				return convertYXmlTermToString(eDataType, instanceValue);
+			case IsabelleProofProcessPackage.ISABELLE_XML:
+				return convertIsabelleXMLToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -181,7 +181,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
-	public Tree createYXmlTermFromString(EDataType eDataType, String initialValue) {
+	public Tree createIsabelleXMLFromString(EDataType eDataType, String initialValue) {
 		return YXmlParser.parseYXml(initialValue);
 	}
 
@@ -190,7 +190,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
-	public String convertYXmlTermToString(EDataType eDataType, Object instanceValue) {
+	public String convertIsabelleXMLToString(EDataType eDataType, Object instanceValue) {
 		return YXmlParser.convertToYXml((Tree) instanceValue);
 	}
 

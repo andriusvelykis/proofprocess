@@ -368,15 +368,14 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	int ISABELLE_COMMAND_FEATURE_COUNT = NAMED_TERM_TREE_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '<em>YXml Term</em>' data type.
+	 * The meta object id for the '<em>Isabelle XML</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see isabelle.XML.Tree
-	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getYXmlTerm()
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleXML()
 	 * @generated
 	 */
-	int YXML_TERM = 8;
-
+	int ISABELLE_XML = 8;
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.DisplayTerm <em>Display Term</em>}'.
@@ -602,15 +601,15 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	EAttribute getIsabelleCommand_Source();
 
 	/**
-	 * Returns the meta object for data type '{@link isabelle.XML.Tree <em>YXml Term</em>}'.
+	 * Returns the meta object for data type '{@link isabelle.XML.Tree <em>Isabelle XML</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>YXml Term</em>'.
+	 * @return the meta object for data type '<em>Isabelle XML</em>'.
 	 * @see isabelle.XML.Tree
 	 * @model instanceClass="isabelle.XML.Tree"
 	 * @generated
 	 */
-	EDataType getYXmlTerm();
+	EDataType getIsabelleXML();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -819,14 +818,14 @@ public interface IsabelleProofProcessPackage extends EPackage {
 		EAttribute ISABELLE_COMMAND__SOURCE = eINSTANCE.getIsabelleCommand_Source();
 
 		/**
-		 * The meta object literal for the '<em>YXml Term</em>' data type.
+		 * The meta object literal for the '<em>Isabelle XML</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @see isabelle.XML.Tree
-		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getYXmlTerm()
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleXML()
 		 * @generated
 		 */
-		EDataType YXML_TERM = eINSTANCE.getYXmlTerm();
+		EDataType ISABELLE_XML = eINSTANCE.getIsabelleXML();
 
 	}
 
