@@ -38,7 +38,7 @@ import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 import org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin;
 import org.ai4fm.proofprocess.isabelle.core.parse.CommandParser;
 import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader;
-import org.ai4fm.proofprocess.isabelle.core.parse.TermParser;
+import org.ai4fm.proofprocess.isabelle.core.parse.MarkupTermParser;
 import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.core.ProofHistoryManager;
@@ -233,7 +233,7 @@ public class ProofAnalyzer {
 		List<Term> parsedTerms = new ArrayList<Term>();
 		
 		for (Tree result : JavaConversions.asJavaIterable(commandState.results().values())) {
-			List<Term> parsed = TermParser.parseGoals(result);
+			List<Term> parsed = MarkupTermParser.parseGoals(result);
 			parsedTerms.addAll(parsed);
 		}
 		

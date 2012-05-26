@@ -18,7 +18,7 @@ import scala.collection.Iterator;
 /**
  * @author Andrius Velykis
  */
-public class TermParser {
+public class MarkupTermParser {
 
 	private static final IsabelleProofProcessFactory FACTORY = IsabelleProofProcessFactory.eINSTANCE;
 	
