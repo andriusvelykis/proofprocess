@@ -6,9 +6,11 @@
  */
 package org.ai4fm.proofprocess.isabelle.impl;
 
+import isabelle.Term.Term;
 import isabelle.XML.Tree;
 
 import org.ai4fm.proofprocess.isabelle.*;
+import org.ai4fm.proofprocess.isabelle.parse.IsabelleTermParser;
 import org.ai4fm.proofprocess.isabelle.parse.YXmlParser;
 
 import org.eclipse.emf.ecore.EClass;
@@ -86,6 +88,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 		switch (eDataType.getClassifierID()) {
 			case IsabelleProofProcessPackage.ISABELLE_XML:
 				return createIsabelleXMLFromString(eDataType, initialValue);
+			case IsabelleProofProcessPackage.ISABELLE_TERM:
+				return createIsabelleTermFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -101,6 +105,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 		switch (eDataType.getClassifierID()) {
 			case IsabelleProofProcessPackage.ISABELLE_XML:
 				return convertIsabelleXMLToString(eDataType, instanceValue);
+			case IsabelleProofProcessPackage.ISABELLE_TERM:
+				return convertIsabelleTermToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -192,6 +198,24 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 */
 	public String convertIsabelleXMLToString(EDataType eDataType, Object instanceValue) {
 		return YXmlParser.convertToYXml((Tree) instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Term createIsabelleTermFromString(EDataType eDataType, String initialValue) {
+		return IsabelleTermParser.parseYXml(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertIsabelleTermToString(EDataType eDataType, Object instanceValue) {
+		return IsabelleTermParser.convertToYXml((Term) instanceValue);
 	}
 
 	/**

@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess.isabelle.impl;
 
+import isabelle.Term.Term;
 import isabelle.XML.Tree;
 
 import org.ai4fm.proofprocess.ProofProcessPackage;
@@ -98,6 +99,13 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * @generated
 	 */
 	private EDataType isabelleXMLEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType isabelleTermEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -366,6 +374,15 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getIsabelleTerm() {
+		return isabelleTermEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public IsabelleProofProcessFactory getIsabelleProofProcessFactory() {
 		return (IsabelleProofProcessFactory)getEFactoryInstance();
 	}
@@ -420,6 +437,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 
 		// Create data types
 		isabelleXMLEDataType = createEDataType(ISABELLE_XML);
+		isabelleTermEDataType = createEDataType(ISABELLE_TERM);
 	}
 
 	/**
@@ -492,6 +510,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 
 		// Initialize data types
 		initEDataType(isabelleXMLEDataType, Tree.class, "IsabelleXML", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(isabelleTermEDataType, Term.class, "IsabelleTerm", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

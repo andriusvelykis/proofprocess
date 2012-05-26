@@ -10,6 +10,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="term" lowerBound="1" eType="#//IsabelleXML"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="IsabelleXML" instanceClassName="isabelle.XML.Tree"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="IsabelleTerm" instanceClassName="isabelle.Term.Term"/>
   <eClassifiers xsi:type="ecore:EClass" name="NameTerm" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>

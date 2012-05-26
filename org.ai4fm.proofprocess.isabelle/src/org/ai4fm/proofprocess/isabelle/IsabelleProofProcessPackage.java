@@ -378,6 +378,16 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	int ISABELLE_XML = 8;
 
 	/**
+	 * The meta object id for the '<em>Isabelle Term</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see isabelle.Term.Term
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleTerm()
+	 * @generated
+	 */
+	int ISABELLE_TERM = 9;
+
+	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.DisplayTerm <em>Display Term</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -612,6 +622,17 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	EDataType getIsabelleXML();
 
 	/**
+	 * Returns the meta object for data type '{@link isabelle.Term.Term <em>Isabelle Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Isabelle Term</em>'.
+	 * @see isabelle.Term.Term
+	 * @model instanceClass="isabelle.Term.Term"
+	 * @generated
+	 */
+	EDataType getIsabelleTerm();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -826,6 +847,16 @@ public interface IsabelleProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType ISABELLE_XML = eINSTANCE.getIsabelleXML();
+
+		/**
+		 * The meta object literal for the '<em>Isabelle Term</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see isabelle.Term.Term
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleTerm()
+		 * @generated
+		 */
+		EDataType ISABELLE_TERM = eINSTANCE.getIsabelleTerm();
 
 	}
 
