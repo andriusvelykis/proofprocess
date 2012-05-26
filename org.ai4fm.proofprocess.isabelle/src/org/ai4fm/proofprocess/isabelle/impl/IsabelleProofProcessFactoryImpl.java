@@ -9,7 +9,7 @@ package org.ai4fm.proofprocess.isabelle.impl;
 import isabelle.XML.Tree;
 
 import org.ai4fm.proofprocess.isabelle.*;
-import org.ai4fm.proofprocess.isabelle.parse.IsaXmlParser;
+import org.ai4fm.proofprocess.isabelle.parse.YXmlParser;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -182,7 +182,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * @generated NOT
 	 */
 	public Tree createYXmlTermFromString(EDataType eDataType, String initialValue) {
-		return IsaXmlParser.parseXml(initialValue);
+		return YXmlParser.parseYXml(initialValue);
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * @generated NOT
 	 */
 	public String convertYXmlTermToString(EDataType eDataType, Object instanceValue) {
-		return IsaXmlParser.convertToXml((Tree) instanceValue);
+		return YXmlParser.convertToYXml((Tree) instanceValue);
 	}
 
 	/**
