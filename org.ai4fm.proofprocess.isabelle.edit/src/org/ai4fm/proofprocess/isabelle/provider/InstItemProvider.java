@@ -185,7 +185,7 @@ public class InstItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(IsabelleProofProcessPackage.Literals.INST__TERM,
-				 IsabelleProofProcessFactory.eINSTANCE.createIsaTerm()));
+				 IsabelleProofProcessFactory.eINSTANCE.createMarkupTerm()));
 
 		newChildDescriptors.add
 			(createChildParameter

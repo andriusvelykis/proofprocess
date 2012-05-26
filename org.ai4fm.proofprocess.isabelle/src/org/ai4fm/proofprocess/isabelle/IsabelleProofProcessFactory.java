@@ -26,13 +26,13 @@ public interface IsabelleProofProcessFactory extends EFactory {
 	IsabelleProofProcessFactory eINSTANCE = org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Isa Term</em>'.
+	 * Returns a new object of class '<em>Markup Term</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Isa Term</em>'.
+	 * @return a new object of class '<em>Markup Term</em>'.
 	 * @generated
 	 */
-	IsaTerm createIsaTerm();
+	MarkupTerm createMarkupTerm();
 
 	/**
 	 * Returns a new object of class '<em>Name Term</em>'.

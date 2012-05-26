@@ -13,12 +13,12 @@ import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.DisplayTerm;
 import org.ai4fm.proofprocess.isabelle.Inst;
 import org.ai4fm.proofprocess.isabelle.InstTerm;
-import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 
+import org.ai4fm.proofprocess.isabelle.MarkupTerm;
 import org.ai4fm.proofprocess.isabelle.NameTerm;
 import org.ai4fm.proofprocess.isabelle.NamedTermTree;
 import org.eclipse.emf.ecore.EAttribute;
@@ -48,7 +48,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass isaTermEClass = null;
+	private EClass markupTermEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -186,8 +186,8 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getIsaTerm() {
-		return isaTermEClass;
+	public EClass getMarkupTerm() {
+		return markupTermEClass;
 	}
 
 	/**
@@ -195,8 +195,8 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIsaTerm_Term() {
-		return (EAttribute)isaTermEClass.getEStructuralFeatures().get(0);
+	public EAttribute getMarkupTerm_Term() {
+		return (EAttribute)markupTermEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -392,8 +392,8 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		displayTermEClass = createEClass(DISPLAY_TERM);
 		createEAttribute(displayTermEClass, DISPLAY_TERM__DISPLAY);
 
-		isaTermEClass = createEClass(ISA_TERM);
-		createEAttribute(isaTermEClass, ISA_TERM__TERM);
+		markupTermEClass = createEClass(MARKUP_TERM);
+		createEAttribute(markupTermEClass, MARKUP_TERM__TERM);
 
 		nameTermEClass = createEClass(NAME_TERM);
 		createEAttribute(nameTermEClass, NAME_TERM__NAME);
@@ -454,7 +454,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 
 		// Add supertypes to classes
 		displayTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
-		isaTermEClass.getESuperTypes().add(this.getDisplayTerm());
+		markupTermEClass.getESuperTypes().add(this.getDisplayTerm());
 		nameTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		instTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		isabelleTraceEClass.getESuperTypes().add(theProofProcessPackage.getTrace());
@@ -464,8 +464,8 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		initEClass(displayTermEClass, DisplayTerm.class, "DisplayTerm", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDisplayTerm_Display(), ecorePackage.getEString(), "display", null, 0, 1, DisplayTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(isaTermEClass, IsaTerm.class, "IsaTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIsaTerm_Term(), this.getIsabelleXML(), "term", null, 1, 1, IsaTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(markupTermEClass, MarkupTerm.class, "MarkupTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getMarkupTerm_Term(), this.getIsabelleXML(), "term", null, 1, 1, MarkupTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(nameTermEClass, NameTerm.class, "NameTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNameTerm_Name(), ecorePackage.getEString(), "name", null, 1, 1, NameTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

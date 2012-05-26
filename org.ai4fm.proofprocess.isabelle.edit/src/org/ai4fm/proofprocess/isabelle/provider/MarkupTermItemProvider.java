@@ -10,8 +10,8 @@ package org.ai4fm.proofprocess.isabelle.provider;
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
+import org.ai4fm.proofprocess.isabelle.MarkupTerm;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -27,12 +27,12 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.IsaTerm} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.MarkupTerm} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class IsaTermItemProvider
+public class MarkupTermItemProvider
 	extends DisplayTermItemProvider
 	implements
 		IEditingDomainItemProvider,
@@ -46,7 +46,7 @@ public class IsaTermItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public IsaTermItemProvider(AdapterFactory adapterFactory) {
+	public MarkupTermItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -77,9 +77,9 @@ public class IsaTermItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IsaTerm_term_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IsaTerm_term_feature", "_UI_IsaTerm_type"),
-				 IsabelleProofProcessPackage.Literals.ISA_TERM__TERM,
+				 getString("_UI_MarkupTerm_term_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_MarkupTerm_term_feature", "_UI_MarkupTerm_type"),
+				 IsabelleProofProcessPackage.Literals.MARKUP_TERM__TERM,
 				 true,
 				 false,
 				 false,
@@ -89,14 +89,14 @@ public class IsaTermItemProvider
 	}
 
 	/**
-	 * This returns IsaTerm.gif.
+	 * This returns MarkupTerm.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/IsaTerm"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/MarkupTerm"));
 	}
 
 	/**
@@ -107,10 +107,10 @@ public class IsaTermItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((IsaTerm)object).getDisplay();
+		String label = ((MarkupTerm)object).getDisplay();
 		return label == null || label.length() == 0 ?
-			getString("_UI_IsaTerm_type") :
-			getString("_UI_IsaTerm_type") + " " + label;
+			getString("_UI_MarkupTerm_type") :
+			getString("_UI_MarkupTerm_type") + " " + label;
 	}
 
 	/**
@@ -124,8 +124,8 @@ public class IsaTermItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(IsaTerm.class)) {
-			case IsabelleProofProcessPackage.ISA_TERM__TERM:
+		switch (notification.getFeatureID(MarkupTerm.class)) {
+			case IsabelleProofProcessPackage.MARKUP_TERM__TERM:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

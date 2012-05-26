@@ -154,7 +154,7 @@ object CommandParser {
   
   private def getTerm(info: TermInfo): Term = {
     // FIXME parse the term
-    val term = factory.createIsaTerm(); 
+    val term = factory.createMarkupTerm(); 
     term.setDisplay(info._1);
     term
   }

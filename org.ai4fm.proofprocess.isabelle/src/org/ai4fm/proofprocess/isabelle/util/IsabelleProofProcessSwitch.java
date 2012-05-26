@@ -80,11 +80,11 @@ public class IsabelleProofProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case IsabelleProofProcessPackage.ISA_TERM: {
-				IsaTerm isaTerm = (IsaTerm)theEObject;
-				T result = caseIsaTerm(isaTerm);
-				if (result == null) result = caseDisplayTerm(isaTerm);
-				if (result == null) result = caseTerm(isaTerm);
+			case IsabelleProofProcessPackage.MARKUP_TERM: {
+				MarkupTerm markupTerm = (MarkupTerm)theEObject;
+				T result = caseMarkupTerm(markupTerm);
+				if (result == null) result = caseDisplayTerm(markupTerm);
+				if (result == null) result = caseTerm(markupTerm);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -148,17 +148,17 @@ public class IsabelleProofProcessSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Isa Term</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Markup Term</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Isa Term</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Markup Term</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIsaTerm(IsaTerm object) {
+	public T caseMarkupTerm(MarkupTerm object) {
 		return null;
 	}
 

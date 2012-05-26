@@ -79,8 +79,8 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 				return createDisplayTermAdapter();
 			}
 			@Override
-			public Adapter caseIsaTerm(IsaTerm object) {
-				return createIsaTermAdapter();
+			public Adapter caseMarkupTerm(MarkupTerm object) {
+				return createMarkupTermAdapter();
 			}
 			@Override
 			public Adapter caseNameTerm(NameTerm object) {
@@ -149,16 +149,16 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.isabelle.IsaTerm <em>Isa Term</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.isabelle.MarkupTerm <em>Markup Term</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.isabelle.IsaTerm
+	 * @see org.ai4fm.proofprocess.isabelle.MarkupTerm
 	 * @generated
 	 */
-	public Adapter createIsaTermAdapter() {
+	public Adapter createMarkupTermAdapter() {
 		return null;
 	}
 

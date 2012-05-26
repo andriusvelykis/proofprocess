@@ -64,7 +64,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case IsabelleProofProcessPackage.ISA_TERM: return createIsaTerm();
+			case IsabelleProofProcessPackage.MARKUP_TERM: return createMarkupTerm();
 			case IsabelleProofProcessPackage.NAME_TERM: return createNameTerm();
 			case IsabelleProofProcessPackage.INST_TERM: return createInstTerm();
 			case IsabelleProofProcessPackage.INST: return createInst();
@@ -111,9 +111,9 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public IsaTerm createIsaTerm() {
-		IsaTermImpl isaTerm = new IsaTermImpl();
-		return isaTerm;
+	public MarkupTerm createMarkupTerm() {
+		MarkupTermImpl markupTerm = new MarkupTermImpl();
+		return markupTerm;
 	}
 
 	/**

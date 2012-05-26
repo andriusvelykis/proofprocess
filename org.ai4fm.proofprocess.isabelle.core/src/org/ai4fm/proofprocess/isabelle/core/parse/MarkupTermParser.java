@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ai4fm.proofprocess.Term;
-import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
+import org.ai4fm.proofprocess.isabelle.MarkupTerm;
 
 import scala.collection.Iterator;
 
@@ -33,7 +33,7 @@ public class MarkupTermParser {
 			
 			// wrap the <term> XML into an IsaTerm
 			
-			IsaTerm isaTerm = FACTORY.createIsaTerm();
+			MarkupTerm isaTerm = FACTORY.createMarkupTerm();
 			isaTerm.setTerm(termElem);
 			
 			// render the element for display
