@@ -35,6 +35,15 @@ public interface IsabelleProofProcessFactory extends EFactory {
 	MarkupTerm createMarkupTerm();
 
 	/**
+	 * Returns a new object of class '<em>Isa Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Isa Term</em>'.
+	 * @generated
+	 */
+	IsaTerm createIsaTerm();
+
+	/**
 	 * Returns a new object of class '<em>Name Term</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

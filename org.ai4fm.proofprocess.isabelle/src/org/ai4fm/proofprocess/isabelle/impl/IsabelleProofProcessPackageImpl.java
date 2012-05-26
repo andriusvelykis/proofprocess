@@ -14,6 +14,7 @@ import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.DisplayTerm;
 import org.ai4fm.proofprocess.isabelle.Inst;
 import org.ai4fm.proofprocess.isabelle.InstTerm;
+import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
@@ -50,6 +51,13 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * @generated
 	 */
 	private EClass markupTermEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass isaTermEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -205,6 +213,24 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 */
 	public EAttribute getMarkupTerm_Term() {
 		return (EAttribute)markupTermEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIsaTerm() {
+		return isaTermEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIsaTerm_Term() {
+		return (EAttribute)isaTermEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -412,6 +438,9 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		markupTermEClass = createEClass(MARKUP_TERM);
 		createEAttribute(markupTermEClass, MARKUP_TERM__TERM);
 
+		isaTermEClass = createEClass(ISA_TERM);
+		createEAttribute(isaTermEClass, ISA_TERM__TERM);
+
 		nameTermEClass = createEClass(NAME_TERM);
 		createEAttribute(nameTermEClass, NAME_TERM__NAME);
 
@@ -473,6 +502,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		// Add supertypes to classes
 		displayTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		markupTermEClass.getESuperTypes().add(this.getDisplayTerm());
+		isaTermEClass.getESuperTypes().add(this.getDisplayTerm());
 		nameTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		instTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		isabelleTraceEClass.getESuperTypes().add(theProofProcessPackage.getTrace());
@@ -484,6 +514,9 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 
 		initEClass(markupTermEClass, MarkupTerm.class, "MarkupTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getMarkupTerm_Term(), this.getIsabelleXML(), "term", null, 1, 1, MarkupTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(isaTermEClass, IsaTerm.class, "IsaTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIsaTerm_Term(), this.getIsabelleTerm(), "term", null, 1, 1, IsaTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(nameTermEClass, NameTerm.class, "NameTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNameTerm_Name(), ecorePackage.getEString(), "name", null, 1, 1, NameTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

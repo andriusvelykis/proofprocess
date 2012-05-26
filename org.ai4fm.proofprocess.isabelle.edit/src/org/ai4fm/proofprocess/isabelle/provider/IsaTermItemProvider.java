@@ -10,16 +10,11 @@ package org.ai4fm.proofprocess.isabelle.provider;
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.isabelle.Inst;
-import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
+import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.common.util.ResourceLocator;
-
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -29,17 +24,16 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.Inst} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.IsaTerm} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class InstItemProvider
-	extends ItemProviderAdapter
+public class IsaTermItemProvider
+	extends DisplayTermItemProvider
 	implements
 		IEditingDomainItemProvider,
 		IStructuredItemContentProvider,
@@ -52,7 +46,7 @@ public class InstItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public InstItemProvider(AdapterFactory adapterFactory) {
+	public IsaTermItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -67,25 +61,25 @@ public class InstItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addNamePropertyDescriptor(object);
+			addTermPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Name feature.
+	 * This adds a property descriptor for the Term feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addNamePropertyDescriptor(Object object) {
+	protected void addTermPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_Inst_name_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Inst_name_feature", "_UI_Inst_type"),
-				 IsabelleProofProcessPackage.Literals.INST__NAME,
+				 getString("_UI_IsaTerm_term_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_IsaTerm_term_feature", "_UI_IsaTerm_type"),
+				 IsabelleProofProcessPackage.Literals.ISA_TERM__TERM,
 				 true,
 				 false,
 				 false,
@@ -95,44 +89,14 @@ public class InstItemProvider
 	}
 
 	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
-	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
-		if (childrenFeatures == null) {
-			super.getChildrenFeatures(object);
-			childrenFeatures.add(IsabelleProofProcessPackage.Literals.INST__TERM);
-		}
-		return childrenFeatures;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EStructuralFeature getChildFeature(Object object, Object child) {
-		// Check the type of the specified child object and return the proper feature to use for
-		// adding (see {@link AddCommand}) it as a child.
-
-		return super.getChildFeature(object, child);
-	}
-
-	/**
-	 * This returns Inst.gif.
+	 * This returns IsaTerm.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Inst"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/IsaTerm"));
 	}
 
 	/**
@@ -143,10 +107,10 @@ public class InstItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((Inst)object).getName();
+		String label = ((IsaTerm)object).getDisplay();
 		return label == null || label.length() == 0 ?
-			getString("_UI_Inst_type") :
-			getString("_UI_Inst_type") + " " + label;
+			getString("_UI_IsaTerm_type") :
+			getString("_UI_IsaTerm_type") + " " + label;
 	}
 
 	/**
@@ -160,12 +124,9 @@ public class InstItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(Inst.class)) {
-			case IsabelleProofProcessPackage.INST__NAME:
+		switch (notification.getFeatureID(IsaTerm.class)) {
+			case IsabelleProofProcessPackage.ISA_TERM__TERM:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-			case IsabelleProofProcessPackage.INST__TERM:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -181,37 +142,6 @@ public class InstItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-
-		newChildDescriptors.add
-			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
-				 IsabelleProofProcessFactory.eINSTANCE.createMarkupTerm()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
-				 IsabelleProofProcessFactory.eINSTANCE.createIsaTerm()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
-				 IsabelleProofProcessFactory.eINSTANCE.createNameTerm()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
-				 IsabelleProofProcessFactory.eINSTANCE.createInstTerm()));
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return IsabelleProofProcessEditPlugin.INSTANCE;
 	}
 
 }
