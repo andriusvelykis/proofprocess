@@ -203,7 +203,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public Term createIsabelleTermFromString(EDataType eDataType, String initialValue) {
 		return IsabelleTermParser.parseYXml(initialValue);
@@ -212,7 +212,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public String convertIsabelleTermToString(EDataType eDataType, Object instanceValue) {
 		return IsabelleTermParser.convertToYXml((Term) instanceValue);
