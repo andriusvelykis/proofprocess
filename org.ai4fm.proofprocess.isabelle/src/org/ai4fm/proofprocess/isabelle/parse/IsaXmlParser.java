@@ -29,9 +29,9 @@ import isabelle.XML.Tree;
 /**
  * @author Andrius Velykis
  */
-public class YXmlTermParser {
+public class IsaXmlParser {
 
-	public static String convertToYXml(Tree term) {
+	public static String convertToXml(Tree term) {
 		// cannot use YXML, because its control characters are not representable in XML 1.0
 		// and Java XML 1.1 parsers have bugs when long attributes are encountered 
 //		return YXML.string_of_tree(term);
@@ -39,11 +39,11 @@ public class YXmlTermParser {
 		return XML.string_of_tree(term);
 	}
 	
-	public static Tree parseYXml(String yxml) {
+	public static Tree parseXml(String yxml) {
 //		return YXML.parse_failsafe(yxml);
 		
 		try {
-			return parseXml(yxml);
+			return parseXml0(yxml);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,7 +51,7 @@ public class YXmlTermParser {
 		}
 	}
 	
-	private static Tree parseXml(String xml) throws ParserConfigurationException, SAXException,
+	private static Tree parseXml0(String xml) throws ParserConfigurationException, SAXException,
 			IOException {
 		
 		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
