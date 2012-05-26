@@ -1,5 +1,6 @@
 package org.ai4fm.proofprocess.isabelle.parse;
 
+import scala.collection.immutable.List;
 import isabelle.XML.Tree;
 import isabelle.YXML;
 
@@ -28,6 +29,14 @@ public class YXmlParser {
 	
 	public static Tree parseYXml(String yxml) {
 		return YXML.parse_failsafe(safeDecode(yxml));
+	}
+	
+	public static String convertBodyToYXml(List<Tree> term) { 
+		return safeEncode(YXML.string_of_body(term));
+	}
+	
+	public static List<Tree> parseBodyYXml(String yxml) {
+		return YXML.parse_body_failsafe(safeDecode(yxml));
 	}
 	
 	private static String safeEncode(String yxml) {
