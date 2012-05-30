@@ -1,0 +1,26 @@
+Subject: [PATCH Isabelle2011-1] tracing actual terms in rule instantiations (requires src/Pure/Tools/pproc.ML)
+
+diff -rup src/Pure/Isar/rule_insts.ML src-patched/Pure/Isar/rule_insts.ML
+--- src/Pure/Isar/rule_insts.ML	2011-10-09 15:47:58.000000000 +0100
++++ src-patched/Pure/Isar/rule_insts.ML	2012-05-30 12:23:17.000000000 +0100
+@@ -173,6 +173,7 @@ fun read_instantiate_mixed ctxt mixed_in
+         else
+           Token.assign (SOME (Token.Term (the (AList.lookup (op =) term_insts xi)))) arg);
+   in
++    PProc.trace_term_insts mixed_insts term_insts;
+     Drule.instantiate_normalize insts thm |> Rule_Cases.save thm
+   end;
+ 
+diff -rup src/Pure/ROOT.ML src-patched/Pure/ROOT.ML
+--- src/Pure/ROOT.ML	2011-10-09 16:13:41.000000000 +0100
++++ src-patched/Pure/ROOT.ML	2012-05-30 12:21:26.000000000 +0100
+@@ -253,6 +253,9 @@ use "PIDE/document.ML";
+ use "Thy/rail.ML";
+ 
+ (*theory and proof operations*)
++
++use "Tools/pproc.ML";
++
+ use "Isar/rule_insts.ML";
+ use "Thy/thm_deps.ML";
+ use "Isar/isar_cmd.ML";
