@@ -14,7 +14,7 @@ object ProverData {
   
   sealed abstract class ATac
   case class Auto(simp: List[ThmName], intro: List[ThmName], dest: List[ThmName]) extends ATac
-  case class Simp(thms: List[ThmName]) extends ATac
+  case class Simp(add: List[ThmName], del: List[ThmName], only: Option[List[ThmName]]) extends ATac
   case class Conj(term: Term) extends ATac // subgoal tac (and have statement?)
   case class Blast(dest: List[ThmName], intro: List[ThmName]) extends ATac
   case class Force(simp: List[ThmName], intro: List[ThmName], dest: List[ThmName]) extends ATac
