@@ -6,40 +6,41 @@ Proof process support -- tracing proof information to read outside Isabelle.
 
 signature PPROC_SIG =
 sig
-  val trace_term_insts: (Token.T * (indexname * 'a)) list -> (indexname * term) list -> unit
+  val trace_inst_names: (Token.T * (indexname * 'a)) list -> unit
+  val trace_cmd_terms: string list -> term list -> unit
 end;
 
 
 structure PProc: PPROC_SIG =
 struct
 
-(** tracing instantiations **)
-
 local
 
-val new_id = Synchronized.counter();
+(** tracing instantiations **)
 
-fun find_token mixed_insts iname = 
-  Option.map (op fst) (List.find (fn (_, (index, _)) => index = iname) mixed_insts);
-  
-fun inst_token mixed_insts term_inst =
-  Option.map (fn token => (token, term_inst, new_id())) (find_token mixed_insts (fst term_inst));
-  
-fun inst_tokens mixed_insts term_insts = List.mapPartial (inst_token mixed_insts) term_insts;
+fun inst_markup ((name, index), _) =
+  (Markup.properties ([("index", (Markup.print_int index))]) (Markup.name name ("inst", [])));
 
-fun inst_markup id = Markup.properties [("trace_id", (Markup.print_int id))] ("inst", []);
+fun report_inst (token, inst) =
+  Position.report (Token.position_of token) (inst_markup inst);
 
-fun inst_trace value_xml ((name, index), value) id =
-  XML.Elem((Markup.properties ([("index", (Markup.print_int index))]) (Markup.name name (inst_markup id))), (value_xml value));
-  
-fun report_inst inst_value_xml (token, inst, id) = (
-  tracing(YXML.string_of (inst_trace inst_value_xml inst id));
-  Position.report (Token.position_of token) (inst_markup id));
+(** tracing command terms **)
+
+fun encode_term term = XML.Elem(("term", []), Term_XML.Encode.term term)
+
+fun encode_term_source str = XML.Elem(("source", []), [XML.Text(str)])
+
+fun cmd_term (str, term) = XML.Elem(("cmd_term", []), [encode_term_source str, encode_term term]);
+
+fun cmd_terms strs terms = XML.Elem(("cmd_terms", []), map cmd_term (ListPair.zip (strs, terms)));
 
 in
 
-fun trace_term_insts mixed_insts term_insts =
-  List.app (report_inst Term_XML.Encode.term) (inst_tokens mixed_insts term_insts)
+fun trace_inst_names mixed_insts =
+  List.app report_inst mixed_insts;
+
+fun trace_cmd_terms strs terms =
+  tracing(YXML.string_of (cmd_terms strs terms));
 
 end;
 end;
