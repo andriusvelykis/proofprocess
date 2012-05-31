@@ -20,7 +20,7 @@ object ProverData {
   case class Force(simp: List[ThmName], intro: List[ThmName], dest: List[ThmName]) extends ATac
   case class Metis(thms: List[ThmName]) extends ATac
   case class Induction(rule: ThmName, arg: String) extends ATac // not sure about args here
-  case class UnknownTac(source: String) extends ATac // not sure about args here
+  case class UnknownTac(source: String) extends ATac
   
   sealed abstract class Meth
   case class Rule(rule: ThmName) extends Meth
