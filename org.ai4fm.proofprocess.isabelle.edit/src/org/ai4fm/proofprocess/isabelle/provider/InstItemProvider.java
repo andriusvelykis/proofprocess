@@ -68,6 +68,7 @@ public class InstItemProvider
 			super.getPropertyDescriptors(object);
 
 			addNamePropertyDescriptor(object);
+			addIndexPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -90,6 +91,28 @@ public class InstItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Index feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addIndexPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Inst_index_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Inst_index_feature", "_UI_Inst_type"),
+				 IsabelleProofProcessPackage.Literals.INST__INDEX,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -162,6 +185,7 @@ public class InstItemProvider
 
 		switch (notification.getFeatureID(Inst.class)) {
 			case IsabelleProofProcessPackage.INST__NAME:
+			case IsabelleProofProcessPackage.INST__INDEX:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case IsabelleProofProcessPackage.INST__TERM:

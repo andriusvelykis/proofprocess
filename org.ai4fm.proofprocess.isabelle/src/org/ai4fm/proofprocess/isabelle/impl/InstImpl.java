@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.ai4fm.proofprocess.isabelle.impl.InstImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.isabelle.impl.InstImpl#getIndex <em>Index</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.isabelle.impl.InstImpl#getTerm <em>Term</em>}</li>
  * </ul>
  * </p>
@@ -54,6 +55,26 @@ public class InstImpl extends EObjectImpl implements Inst {
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getIndex()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int INDEX_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getIndex() <em>Index</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getIndex()
+	 * @generated
+	 * @ordered
+	 */
+	protected int index = INDEX_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getTerm() <em>Term</em>}' containment reference.
@@ -103,6 +124,27 @@ public class InstImpl extends EObjectImpl implements Inst {
 		name = newName;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.INST__NAME, oldName, name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getIndex() {
+		return index;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setIndex(int newIndex) {
+		int oldIndex = index;
+		index = newIndex;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.INST__INDEX, oldIndex, index));
 	}
 
 	/**
@@ -172,6 +214,8 @@ public class InstImpl extends EObjectImpl implements Inst {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.INST__NAME:
 				return getName();
+			case IsabelleProofProcessPackage.INST__INDEX:
+				return getIndex();
 			case IsabelleProofProcessPackage.INST__TERM:
 				return getTerm();
 		}
@@ -188,6 +232,9 @@ public class InstImpl extends EObjectImpl implements Inst {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.INST__NAME:
 				setName((String)newValue);
+				return;
+			case IsabelleProofProcessPackage.INST__INDEX:
+				setIndex((Integer)newValue);
 				return;
 			case IsabelleProofProcessPackage.INST__TERM:
 				setTerm((Term)newValue);
@@ -207,6 +254,9 @@ public class InstImpl extends EObjectImpl implements Inst {
 			case IsabelleProofProcessPackage.INST__NAME:
 				setName(NAME_EDEFAULT);
 				return;
+			case IsabelleProofProcessPackage.INST__INDEX:
+				setIndex(INDEX_EDEFAULT);
+				return;
 			case IsabelleProofProcessPackage.INST__TERM:
 				setTerm((Term)null);
 				return;
@@ -224,6 +274,8 @@ public class InstImpl extends EObjectImpl implements Inst {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.INST__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case IsabelleProofProcessPackage.INST__INDEX:
+				return index != INDEX_EDEFAULT;
 			case IsabelleProofProcessPackage.INST__TERM:
 				return term != null;
 		}
@@ -242,6 +294,8 @@ public class InstImpl extends EObjectImpl implements Inst {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: ");
 		result.append(name);
+		result.append(", index: ");
+		result.append(index);
 		result.append(')');
 		return result.toString();
 	}

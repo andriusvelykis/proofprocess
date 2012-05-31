@@ -301,8 +301,17 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getInst_Index() {
+		return (EAttribute)instEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getInst_Term() {
-		return (EReference)instEClass.getEStructuralFeatures().get(1);
+		return (EReference)instEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -450,6 +459,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 
 		instEClass = createEClass(INST);
 		createEAttribute(instEClass, INST__NAME);
+		createEAttribute(instEClass, INST__INDEX);
 		createEReference(instEClass, INST__TERM);
 
 		isabelleTraceEClass = createEClass(ISABELLE_TRACE);
@@ -527,6 +537,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 
 		initEClass(instEClass, Inst.class, "Inst", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getInst_Name(), ecorePackage.getEString(), "name", null, 0, 1, Inst.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getInst_Index(), ecorePackage.getEInt(), "index", "0", 0, 1, Inst.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getInst_Term(), theProofProcessPackage.getTerm(), null, "term", null, 1, 1, Inst.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(isabelleTraceEClass, IsabelleTrace.class, "IsabelleTrace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

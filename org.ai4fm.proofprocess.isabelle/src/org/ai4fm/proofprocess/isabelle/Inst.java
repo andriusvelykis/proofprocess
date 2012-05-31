@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.ai4fm.proofprocess.isabelle.Inst#getName <em>Name</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.isabelle.Inst#getIndex <em>Index</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.isabelle.Inst#getTerm <em>Term</em>}</li>
  * </ul>
  * </p>
@@ -53,6 +54,33 @@ public interface Inst extends EObject {
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Index</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Index</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Index</em>' attribute.
+	 * @see #setIndex(int)
+	 * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getInst_Index()
+	 * @model default="0"
+	 * @generated
+	 */
+	int getIndex();
+
+	/**
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.isabelle.Inst#getIndex <em>Index</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Index</em>' attribute.
+	 * @see #getIndex()
+	 * @generated
+	 */
+	void setIndex(int value);
 
 	/**
 	 * Returns the value of the '<em><b>Term</b></em>' containment reference.

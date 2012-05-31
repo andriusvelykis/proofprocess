@@ -249,13 +249,22 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	int INST__NAME = 0;
 
 	/**
+	 * The feature id for the '<em><b>Index</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INST__INDEX = 1;
+
+	/**
 	 * The feature id for the '<em><b>Term</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INST__TERM = 1;
+	int INST__TERM = 2;
 
 	/**
 	 * The number of structural features of the '<em>Inst</em>' class.
@@ -264,7 +273,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INST_FEATURE_COUNT = 2;
+	int INST_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.IsabelleTraceImpl <em>Isabelle Trace</em>}' class.
@@ -562,6 +571,17 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	EAttribute getInst_Name();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.isabelle.Inst#getIndex <em>Index</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Index</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.Inst#getIndex()
+	 * @see #getInst()
+	 * @generated
+	 */
+	EAttribute getInst_Index();
+
+	/**
 	 * Returns the meta object for the containment reference '{@link org.ai4fm.proofprocess.isabelle.Inst#getTerm <em>Term</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -827,6 +847,14 @@ public interface IsabelleProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute INST__NAME = eINSTANCE.getInst_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Index</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INST__INDEX = eINSTANCE.getInst_Index();
 
 		/**
 		 * The meta object literal for the '<em><b>Term</b></em>' containment reference feature.
