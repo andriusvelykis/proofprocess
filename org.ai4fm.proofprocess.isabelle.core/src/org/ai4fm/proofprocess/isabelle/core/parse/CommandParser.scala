@@ -42,97 +42,98 @@ object CommandParser {
         
         command.setName(commandName(markup) getOrElse source)
         
+
+        @tailrec
+        def parseTokens(ids: List[TermInfo], facts: List[Term], insts: List[Inst],
+          namedRoot: NamedTermTree, termRoot: NamedTermTree,
+          tokens: Stream[TokenInfo]) {
+
+          def consume(consumeIds: List[TermInfo] = ids) {
+            // add all outstanding terms (from "identifiers" list
+            termRoot.getTerms().addAll(consumeIds.reverse.map(info => getTerm(info)))
+            // add all outstanding facts
+            termRoot.getTerms().addAll(facts.reverse)
+          }
+
+          def markIdentifier(term: TermInfo) =
+            parseTokens(term :: ids, facts, insts, namedRoot, termRoot, tokens.tail)
+
+          def newBranch(namedRoot: NamedTermTree, termRoot: NamedTermTree) =
+            parseTokens(Nil, Nil, Nil, namedRoot, termRoot, tokens.tail)
+
+          def continueBranch =
+            parseTokens(ids, facts, insts, namedRoot, termRoot, tokens.tail)
+
+          if (tokens.isEmpty) {
+            // consume all
+            consume()
+          } else tokens.head match {
+            case (Token(Token.Kind.STRING | Token.Kind.ALT_STRING, source), markups) =>
+              // found a string, treat it as "term" identifier
+              markIdentifier((source, markups))
+            case (Token(Token.Kind.IDENT, source), markups) if markups.isEmpty =>
+              // no markup for the identifier - add it to the identifier list
+              markIdentifier((source, markups))
+            case (Token(Token.Kind.IDENT, source), markups) => markups.head match {
+              // for identifiers, assume a single markup statement (TODO review?)
+
+              // if it is a fact, add its name to the fact list
+              // also consume any outstanding terms for the fact (terms go before facts, e.g. "x="Y" in exI)
+              case Markup.Entity("fact", name) =>
+                // consume insts to produce a InstTerm
+                val f = fact(name, insts)
+                parseTokens(ids, f :: facts, Nil, namedRoot, termRoot, tokens.tail)
+
+              // if it is a method, start a new method branch
+              case Markup.Entity(Markup.METHOD, name) => {
+                val method = addTermTree(command, name)
+
+                consume()
+                newBranch(method, method)
+              }
+              case markup => {
+                println("Unknown identifier markup: " + markup)
+                // ignore and continue parsing
+                continueBranch
+              }
+            }
+            case (Token(Token.Kind.KEYWORD, ":"), _) => {
+              // a named fact list encountered, e.g. "intro: allI"
+              // collect all subsequent facts into a named term tree
+
+              // take the last identifier: it will be the name for this term tree
+              val termsName = ids.head._1
+              val tree = addTermTree(namedRoot, termsName)
+
+              // consume previous
+              consume(ids.tail)
+              newBranch(namedRoot, tree)
+            }
+            case (Token(Token.Kind.KEYWORD, "="), _) => {
+              // a named inst encountered, e.g. "x="Y + 1""
+              // lookahead and join with the last identifier
+              val lookahead = tokens.tail
+              val (nextToken, markups) = lookahead.head
+
+              // create Inst out of last identifier and next token info
+              // TODO also handle postinsts, e.g. [of _ "Y + 1"]
+              val instVal = inst(ids.head, (nextToken.source, markups))
+
+              // continue parsing taking into account the consumed Inst
+              parseTokens(ids.tail, facts, instVal :: insts, namedRoot, termRoot, lookahead.tail)
+            }
+            case _ => {
+              // ignore and continue parsing
+              continueBranch
+            }
+          }
+        }
+        
         // parse command contents
-        parseTokens(Nil, Nil, Nil, command, command, command, tokenInfos.tail)
+        parseTokens(Nil, Nil, Nil, command, command, tokenInfos.tail)
         command
       }
       case _ => command
-    }
-  }
-
-  @tailrec
-  private def parseTokens(ids: List[TermInfo], facts: List[Term], insts: List[Inst],
-    methodRoot: NamedTermTree, namedRoot: NamedTermTree, termRoot: NamedTermTree,
-    tokens: Stream[TokenInfo]) {
-
-    def consume(consumeIds: List[TermInfo] = ids) {
-      // add all outstanding terms (from "identifiers" list
-      termRoot.getTerms().addAll(consumeIds.reverse.map(info => getTerm(info)))
-      // add all outstanding facts
-      termRoot.getTerms().addAll(facts.reverse)
-    }
-
-    def markIdentifier(term: TermInfo) =
-      parseTokens(term :: ids, facts, insts, methodRoot, namedRoot, termRoot, tokens.tail)
-
-    def newBranch(methodRoot: NamedTermTree, namedRoot: NamedTermTree, termRoot: NamedTermTree) =
-      parseTokens(Nil, Nil, Nil, methodRoot, namedRoot, termRoot, tokens.tail)
-
-    def continueBranch =
-      parseTokens(ids, facts, insts, methodRoot, namedRoot, termRoot, tokens.tail)
-
-    if (tokens.isEmpty) {
-      // consume all
-      consume()
-    } else tokens.head match {
-      case (Token(Token.Kind.STRING | Token.Kind.ALT_STRING, source), markups) =>
-        // found a string, treat it as "term" identifier
-        markIdentifier((source, markups))
-      case (Token(Token.Kind.IDENT, source), markups) if markups.isEmpty =>
-        // no markup for the identifier - add it to the identifier list
-        markIdentifier((source, markups))
-      case (Token(Token.Kind.IDENT, source), markups) => markups.head match {
-        // for identifiers, assume a single markup statement (TODO review?)
-
-        // if it is a fact, add its name to the fact list
-        // also consume any outstanding terms for the fact (terms go before facts, e.g. "x="Y" in exI)
-        case Markup.Entity("fact", name) =>
-          // consume insts to produce a InstTerm
-          val f = fact(name, insts)
-          parseTokens(ids, f :: facts, Nil, methodRoot, namedRoot, termRoot, tokens.tail)
-
-        // if it is a method, start a new method branch
-        case Markup.Entity(Markup.METHOD, name) => {
-          val method = addTermTree(methodRoot, name)
-
-          consume()
-          newBranch(methodRoot, method, method)
-        }
-        case markup => {
-          println("Unknown identifier markup: " + markup)
-          // ignore and continue parsing
-          continueBranch
-        }
-      }
-      case (Token(Token.Kind.KEYWORD, ":"), _) => {
-        // a named fact list encountered, e.g. "intro: allI"
-        // collect all subsequent facts into a named term tree
-
-        // take the last identifier: it will be the name for this term tree
-        val termsName = ids.head._1
-        val tree = addTermTree(namedRoot, termsName)
-
-        // consume previous
-        consume(ids.tail)
-        newBranch(methodRoot, namedRoot, tree)
-      }
-      case (Token(Token.Kind.KEYWORD, "="), _) => {
-        // a named inst encountered, e.g. "x="Y + 1""
-        // lookahead and join with the last identifier
-        val lookahead = tokens.tail
-        val (nextToken, markups) = lookahead.head
-        
-        // create Inst out of last identifier and next token info
-        // TODO also handle postinsts, e.g. [of _ "Y + 1"]
-        val instVal = inst(ids.head, (nextToken.source, markups))
-        
-        // continue parsing taking into account the consumed Inst
-        parseTokens(ids.tail, facts, instVal :: insts, methodRoot, namedRoot, termRoot, lookahead.tail)
-      }
-      case _ => {
-        // ignore and continue parsing
-        continueBranch
-      }
     }
   }
   
