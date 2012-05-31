@@ -3,6 +3,7 @@ package org.ai4fm.proofprocess.isabelle.core.parse
 import isabelle.Command.State
 import isabelle.Markup
 import isabelle.Markup_Tree
+import isabelle.Properties
 import isabelle.Term.{Term => ITerm}
 import isabelle.Term_XML
 import isabelle.Text
@@ -15,6 +16,7 @@ import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 import org.ai4fm.proofprocess.isabelle.NamedTermTree
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._
+
 
 /** A parser for Isabelle Commands. Parses a named-term-tree structure from the
   * command token/markup information. The structure allows having a command with
@@ -147,11 +149,42 @@ object CommandParser {
     
     markupName getOrElse None
   }
+
+  /**
+   * Extractor object for instantiation trace markup
+   * 
+   * @author Andrius Velykis
+   */
+  object InstTrace {
+
+    // inst index property
+    val Index = new Properties.Int("index")
+
+    def unapply(markup: Markup): Option[(String, Int)] =
+      markup match {
+        case Markup("inst", props @ Markup.Name(name)) => props match {
+          case Index(index) => Some(name, index)
+          case _ => None
+        }
+        case _ => None
+      }
+  }
   
   private def inst(terms: Map[String, ITerm], name: TermInfo, term: TermInfo): Inst = {
     val inst = factory.createInst()
-    // TODO parse inst name
-    inst.setName(name._1)
+    
+    // try if there is a reported inst name on the term markup
+    val instTrace = term._2.collectFirst({ case InstTrace(name, index) => (name, index) })
+    
+    val (instName, instIndex) = instTrace match {
+      case Some(res) => res
+      // trace not available - just use the name from parsing
+      // TODO split it if it has index in the name?
+      case None => (name._1, 0)
+    }
+    
+    inst.setName(instName)
+    inst.setIndex(instIndex)
     inst.setTerm(getTerm(terms, term))
     
     inst
