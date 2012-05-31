@@ -23,7 +23,7 @@ import isabelle.Session;
 import isabelle.Session.Commands_Changed;
 import isabelle.eclipse.core.IsabelleCorePlugin;
 import isabelle.eclipse.core.util.SafeSessionActor;
-import isabelle.eclipse.ui.util.SessionEventSupport;
+import isabelle.eclipse.core.util.SessionEventSupport;
 import isabelle.scala.ISessionCommandsListener;
 import isabelle.scala.SessionActor;
 import isabelle.scala.SessionEventType;
