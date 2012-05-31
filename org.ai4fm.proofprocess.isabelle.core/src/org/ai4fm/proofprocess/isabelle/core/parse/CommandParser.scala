@@ -3,6 +3,8 @@ package org.ai4fm.proofprocess.isabelle.core.parse
 import isabelle.Command.State
 import isabelle.Markup
 import isabelle.Markup_Tree
+import isabelle.Term.{Term => ITerm}
+import isabelle.Term_XML
 import isabelle.Text
 import isabelle.Token
 import isabelle.XML
@@ -42,6 +44,7 @@ object CommandParser {
         
         command.setName(commandName(markup) getOrElse source)
         
+        val terms = cmdTerms(cmdState)
 
         @tailrec
         def parseTokens(ids: List[TermInfo], facts: List[Term], insts: List[Inst],
@@ -50,7 +53,7 @@ object CommandParser {
 
           def consume(consumeIds: List[TermInfo] = ids) {
             // add all outstanding terms (from "identifiers" list
-            termRoot.getTerms().addAll(consumeIds.reverse.map(info => getTerm(info)))
+            termRoot.getTerms().addAll(consumeIds.reverse.map(info => getTerm(terms, info)))
             // add all outstanding facts
             termRoot.getTerms().addAll(facts.reverse)
           }
@@ -117,7 +120,7 @@ object CommandParser {
 
               // create Inst out of last identifier and next token info
               // TODO also handle postinsts, e.g. [of _ "Y + 1"]
-              val instVal = inst(ids.head, (nextToken.source, markups))
+              val instVal = inst(terms, ids.head, (nextToken.source, markups))
 
               // continue parsing taking into account the consumed Inst
               parseTokens(ids.tail, facts, instVal :: insts, namedRoot, termRoot, lookahead.tail)
@@ -145,19 +148,44 @@ object CommandParser {
     markupName getOrElse None
   }
   
-  private def inst(name: TermInfo, term: TermInfo): Inst = {
+  private def inst(terms: Map[String, ITerm], name: TermInfo, term: TermInfo): Inst = {
     val inst = factory.createInst()
+    // TODO parse inst name
     inst.setName(name._1)
-    inst.setTerm(getTerm(term))
+    inst.setTerm(getTerm(terms, term))
     
     inst
   }
   
-  private def getTerm(info: TermInfo): Term = {
-    // FIXME parse the term
-    val term = factory.createMarkupTerm(); 
-    term.setDisplay(info._1);
+  private def getTerm(terms: Map[String, ITerm], info: TermInfo): Term = {
+    
+    val src = stripTerm(info._1)
+    
+    val srcTerm = terms.get(src)
+    
+    val term = terms.get(src) match {
+      case Some(term) => {
+        // term representation was traced
+        val isaTerm = factory.createIsaTerm;
+        isaTerm.setTerm(term)
+        isaTerm
+      }
+      case None => {
+        // no Isabelle term available, use markup term
+        val isaTerm = factory.createMarkupTerm;
+        // TODO parse markup?
+        isaTerm
+      }
+    }
+    
+    term.setDisplay(src);
     term
+  }
+  
+  private def stripTerm(term: String) = {
+    def strip(term: String, quote: String) = term.stripPrefix(quote).stripSuffix(quote)
+    
+    strip(strip(term, "\""), "'").trim
   }
   
   private def fact(fact: String, insts: List[Inst]): Term = {
@@ -206,6 +234,37 @@ object CommandParser {
           (token, markupInfos), 
           tokenInfoStream(cmdState, tokens.tail, tokenRange.stop))
     }
+  }
+  
+  private def cmdTerms(cmdState: State): Map[String, ITerm] = {
+    // get everything nested in TRACING->cmd_terms elements - it will give us the command term XML
+    // structures
+    val cmdXmlTerms = cmdState.results map { _._2 } collect {
+      case XML.Elem(Markup(Markup.TRACING, _), XML.Elem(Markup("cmd_terms", _), cterms) :: Nil) => cterms
+    } flatten;
+
+    // split each XML term into source/term pair and parse the values
+    val terms = cmdXmlTerms collect {
+      case XML.Elem(Markup("cmd_term", _), XML.Elem(Markup("source", _), src) :: XML.Elem(Markup("term", _), term) :: Nil) => 
+        // couple source with term if the source can be determined 
+        (cmdTermSrc(src) map {src => (src, Term_XML.Decode.term(term))})
+    }
+    
+    // filter terms with invalid source and return a map
+    terms.flatten.toMap
+  }
+
+  private def cmdTermSrc(body: XML.Body): Option[String] = {
+    // assume a single element
+    val src = body.headOption flatMap {
+      // the source can be given as a String or wrapped into a token
+      case XML.Text(str) => Some(str)
+      case XML.Elem(Markup("token", _), XML.Text(str) :: Nil) => Some(str)
+      case _ => None
+    }
+    
+    // sometimes DEL character appears and messes up the source - delete it
+    src.map( _.filterNot( _ == '\u007F'))
   }
   
 }
