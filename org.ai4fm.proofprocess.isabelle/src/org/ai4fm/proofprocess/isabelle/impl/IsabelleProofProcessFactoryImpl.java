@@ -69,6 +69,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 			case IsabelleProofProcessPackage.MARKUP_TERM: return createMarkupTerm();
 			case IsabelleProofProcessPackage.ISA_TERM: return createIsaTerm();
 			case IsabelleProofProcessPackage.NAME_TERM: return createNameTerm();
+			case IsabelleProofProcessPackage.NAMED_TERM: return createNamedTerm();
 			case IsabelleProofProcessPackage.INST_TERM: return createInstTerm();
 			case IsabelleProofProcessPackage.INST: return createInst();
 			case IsabelleProofProcessPackage.ISABELLE_TRACE: return createIsabelleTrace();
@@ -141,6 +142,16 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	public NameTerm createNameTerm() {
 		NameTermImpl nameTerm = new NameTermImpl();
 		return nameTerm;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NamedTerm createNamedTerm() {
+		NamedTermImpl namedTerm = new NamedTermImpl();
+		return namedTerm;
 	}
 
 	/**

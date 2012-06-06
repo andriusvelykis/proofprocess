@@ -145,6 +145,29 @@ public class IsabelleProofProcessItemProviderAdapterFactory extends IsabelleProo
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.NamedTerm} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected NamedTermItemProvider namedTermItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.isabelle.NamedTerm}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createNamedTermAdapter() {
+		if (namedTermItemProvider == null) {
+			namedTermItemProvider = new NamedTermItemProvider(this);
+		}
+
+		return namedTermItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.InstTerm} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -361,6 +384,7 @@ public class IsabelleProofProcessItemProviderAdapterFactory extends IsabelleProo
 		if (markupTermItemProvider != null) markupTermItemProvider.dispose();
 		if (isaTermItemProvider != null) isaTermItemProvider.dispose();
 		if (nameTermItemProvider != null) nameTermItemProvider.dispose();
+		if (namedTermItemProvider != null) namedTermItemProvider.dispose();
 		if (instTermItemProvider != null) instTermItemProvider.dispose();
 		if (instItemProvider != null) instItemProvider.dispose();
 		if (isabelleTraceItemProvider != null) isabelleTraceItemProvider.dispose();

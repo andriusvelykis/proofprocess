@@ -17,6 +17,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="NameTerm" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NamedTerm" eSuperTypes="#//NameTerm">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="term" lowerBound="1" eType="ecore:EClass ../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InstTerm" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
     <eStructuralFeatures xsi:type="ecore:EReference" name="term" eType="#//NameTerm"
         containment="true"/>
