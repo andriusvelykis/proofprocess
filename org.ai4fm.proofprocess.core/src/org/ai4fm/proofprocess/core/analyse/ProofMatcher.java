@@ -55,13 +55,15 @@ public class ProofMatcher {
 		for (int index = proofs.size() - 1; index >= 0; index--) {
 			Proof proof = proofs.get(index);
 			
-			if (proofLabel != null) {
-				boolean sameLabel = proofLabel.equals(proof.getLabel());
-				if (!sameLabel) {
-					// different label
-					continue;
-				}
-			}
+			// do not match on proof label for now..
+			// TODO change the proof label if needed but do not make it part of the matching
+//			if (proofLabel != null) {
+//				boolean sameLabel = proofLabel.equals(proof.getLabel());
+//				if (!sameLabel) {
+//					// different label
+//					continue;
+//				}
+//			}
 			
 			if (matchGoals(proofGoals, proof.getGoals())) {
 				// matching goals and label
