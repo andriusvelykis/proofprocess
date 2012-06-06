@@ -24,7 +24,7 @@ object SnapshotReader {
   case class ProofTextData(val path: String, val documentText: String, syncPoint: Int)
   case class ProofData(val proofState: List[(State, List[Term])], val textData: ProofTextData)
 
-  def readProofs(docState: Document.State, changedCommands: Set[Command]): List[ProofData] = {
+  def readProofs(docState: Document.State, changedCommands: Set[Command]): (List[ProofData], Map[Command, Int]) = {
     // filter the proof process commands to valid one 
     val validCmds = changedCommands.filter(isValidProofCommand)
 
@@ -43,19 +43,25 @@ object SnapshotReader {
     // Print the commands into a text document. Each command carries the original source from
     // the text document, so concatenating them back together produces the original document.
     val docTexts = snapshots.map({ case (doc, snapshot) => (doc, snapshot.node.commands.toList.map(_.source).mkString)})
+    // create a map of all command starts - needed to indicate command location
+    val commandStarts = snapshots.values.map(_.node.command_starts.toMap) reduce (_ ++ _)
     
-    proofs map { proof =>
+    val proofData = proofs map { proof =>
       
       val (lastState, _) = proof.last
       val lastCmd = lastState.command
       val doc = lastCmd.node_name
       val snapshot = snapshots.get(doc).get
       
+      val command_starts = snapshot.node.command_starts.toMap
+      
       val lastCmdOffset = snapshot.node.command_start(lastCmd).get
       val documentText = docTexts.get(doc).get
       
       ProofData(proof, ProofTextData(doc.node, documentText, lastCmdOffset + lastCmd.length))
     }
+    
+    (proofData, commandStarts)
   }
   
 

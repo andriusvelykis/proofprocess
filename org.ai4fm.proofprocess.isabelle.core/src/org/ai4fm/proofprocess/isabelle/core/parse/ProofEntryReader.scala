@@ -26,7 +26,7 @@ trait ProofEntryReader {
   
   def cloneTerm(term: Term): Term
   
-  def textLoc(range: Text.Range): Loc
+  def textLoc(cmd: State): Loc
 
   def readEntries(proofState: List[(State, List[Term])]): Option[ProofEntryData] = proofState match {
     // Assume that a proof with just one command (e.g. "declaration") is too short to be included
@@ -62,7 +62,7 @@ trait ProofEntryReader {
 
     val step = factory.createProofStep
     step.setTrace(proofStepTrace(cmdState))
-    step.setSource(textLoc(cmdState.command.range))
+    step.setSource(textLoc(cmdState))
 
     // copy the goals defensively because inGoals is a containment ref
     step.getInGoals.addAll(inGoals.map(cloneTerm))

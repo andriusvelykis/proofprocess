@@ -6,6 +6,7 @@ import isabelle.Document
 import isabelle.Text
 import java.io.IOException
 import org.ai4fm.filehistory.FileVersion
+import org.ai4fm.proofprocess.Loc
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofStore
 import org.ai4fm.proofprocess.Term
@@ -39,11 +40,11 @@ object ProofAnalyzer {
   def analyze(docState: Document.State, changedCommands: Set[Command], monitor: IProgressMonitor): IStatus = {
 
     // TODO sort proofs?
-    val proofs = SnapshotReader.readProofs(docState, changedCommands)
+    val (proofs, commandStarts) = SnapshotReader.readProofs(docState, changedCommands)
 
     proofs foreach { proofData =>
       
-      val proofEntriesOpt = readProofEntries(proofData, monitor)
+      val proofEntriesOpt = readProofEntries(proofData, commandStarts, monitor)
 
       proofEntriesOpt foreach {
         case (project, proofStore, proofEntryData) => {
@@ -62,7 +63,8 @@ object ProofAnalyzer {
   }
   
   @throws(classOf[CoreException])
-  private def readProofEntries(proofData: ProofData, monitor: IProgressMonitor): Option[(IProject, ProofStore, ProofEntryData)] = {
+  private def readProofEntries(proofData: ProofData, commandStarts: Map[Command, Int],
+      monitor: IProgressMonitor): Option[(IProject, ProofStore, ProofEntryData)] = {
 
     val proofTextData = proofData.textData
     val filePath = Path.fromOSString(proofTextData.path)
@@ -82,24 +84,31 @@ object ProofAnalyzer {
         val fileVersion = ProofHistoryManager.syncFileVersion(
           project, filePath, proofTextData.documentText, proofTextData.syncPoint, monitor);
 
-        val proofInfoOpt = proofEntries(proofProject, proofData.proofState, fileVersion)
+        def textLoc(cmdState: State): Loc = {
+          val cmd = cmdState.command
+          // TODO ignore position at all instead of 0?
+          val offset = commandStarts.getOrElse(cmd, 0)
+          ProofProcessUtil.createTextLoc(fileVersion, offset, cmd.range.stop - cmd.range.start);
+        }
+        
+        val proofInfoOpt = proofEntries(proofProject, proofData.proofState, textLoc)
 
         proofInfoOpt.map((project, proofProject, _))
       }
     }
   }
 
-  private def proofEntries(proofStore: ProofStore, proofState: List[(State, List[Term])], fileVersion: FileVersion) = {
+  private def proofEntries(proofStore: ProofStore, proofState: List[(State, List[Term])],
+      cmdLoc: State => Loc) = {
 
     val entryReader = new ProofEntryReader {
 
       lazy val stepIntent = PProcessUtil.getIntent(proofStore, "Tactic Application")
 
       // TODO review
-      def cloneTerm(term: Term): Term = EcoreUtil.copy(term)
+      override def cloneTerm(term: Term): Term = EcoreUtil.copy(term)
 
-      def textLoc(range: Text.Range) =
-        ProofProcessUtil.createTextLoc(fileVersion, range.start, range.stop - range.start);
+      override def textLoc(cmdState: State) = cmdLoc(cmdState)
     }
 
     entryReader.readEntries(proofState)
