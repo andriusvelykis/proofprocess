@@ -12,7 +12,6 @@ import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.isabelle.Inst;
 import org.ai4fm.proofprocess.isabelle.InstTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
-import org.ai4fm.proofprocess.isabelle.NameTerm;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
