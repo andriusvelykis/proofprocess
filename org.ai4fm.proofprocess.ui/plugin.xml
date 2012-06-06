@@ -16,5 +16,38 @@
             restorable="true">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.ai4fm.proofprocess.ui.trackProofProcessToggle"
+            name="Toggle Proof Process Tracking">
+         <state
+               class="org.ai4fm.proofprocess.ui.actions.TrackProofProcessState"
+               id="toggleState">
+         </state>
+         <defaultHandler
+               class="org.ai4fm.proofprocess.ui.actions.ToggleHandler">
+            <parameter
+                  name="org.ai4fm.proofprocess.ui.toggleHandler.commandId"
+                  value="org.ai4fm.proofprocess.ui.trackProofProcessToggle">
+            </parameter>
+         </defaultHandler>
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="org.ai4fm.proofprocess.ui.main.toolbar">
+            <command
+                  commandId="org.ai4fm.proofprocess.ui.trackProofProcessToggle"
+                  icon="icons/proofprocess.png"
+                  style="toggle">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
 
 </plugin>
