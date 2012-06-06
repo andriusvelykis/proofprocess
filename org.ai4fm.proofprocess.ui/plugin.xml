@@ -11,6 +11,7 @@
             allowMultiple="true"
             category="org.ai4fm.proofprocess.ui"
             class="org.ai4fm.proofprocess.ui.views.PProcessView"
+            icon="icons/proofprocess.png"
             id="org.ai4fm.proofprocess.ui.PProcessView"
             name="Proof Process"
             restorable="true">
