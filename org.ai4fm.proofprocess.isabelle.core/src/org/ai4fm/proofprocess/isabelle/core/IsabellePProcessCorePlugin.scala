@@ -1,11 +1,10 @@
 package org.ai4fm.proofprocess.isabelle.core
 
-import org.eclipse.core.runtime.Plugin
-import org.ai4fm.proofprocess.isabelle.core.parse.SessionTracker
-import org.osgi.framework.BundleContext
 import org.ai4fm.proofprocess.isabelle.core.parse.SessionTracker
 import org.eclipse.core.runtime.IStatus
+import org.eclipse.core.runtime.Plugin
 import org.eclipse.core.runtime.Status
+import org.osgi.framework.BundleContext
 
 
 /**
@@ -22,8 +21,8 @@ object IsabellePProcessCorePlugin {
   /** Returns a new error `IStatus` for this plug-in.
     *
     * @param message    text to have as status message
-    * @param exception  exception to wrap in the error `IStatus}
-    * @return  the error `IStatus} wrapping the exception
+    * @param exception  exception to wrap in the error `IStatus`
+    * @return  the error `IStatus` wrapping the exception
     */
   def error(ex: Option[Throwable] = None, msg: Option[String] = None): IStatus = {
     
