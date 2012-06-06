@@ -55,7 +55,7 @@ object CommandParser {
           tokens: Stream[TokenInfo]) {
 
           def consume(consumeIds: List[TermInfo] = ids) {
-            // add all outstanding terms (from "identifiers" list
+            // add all outstanding terms (from "identifiers" list)
             termRoot.getTerms().addAll(consumeIds.reverse.map(info => getTerm(terms, info)))
             // add all outstanding facts
             termRoot.getTerms().addAll(facts.reverse)
