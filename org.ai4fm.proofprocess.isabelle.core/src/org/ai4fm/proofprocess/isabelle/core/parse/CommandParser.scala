@@ -74,11 +74,8 @@ object CommandParser {
             // consume all
             consume()
           } else tokens.head match {
-            case (Token(Token.Kind.STRING | Token.Kind.ALT_STRING, source), markups) =>
-              // found a string, treat it as "term" identifier
-              markIdentifier((source, markups))
-            case (Token(Token.Kind.IDENT, source), markups) if markups.isEmpty =>
-              // no markup for the identifier - add it to the identifier list
+            case IdentifierToken(source, markups) =>
+              // add it to the identifier list
               markIdentifier((source, markups))
             case (Token(Token.Kind.IDENT, source), markups) => markups.head match {
               // for identifiers, assume a single markup statement (TODO review?)
@@ -87,8 +84,12 @@ object CommandParser {
               // also consume any outstanding terms for the fact (terms go before facts, e.g. "x="Y" in exI)
               case Markup.Entity("fact", name) =>
                 // consume insts to produce a InstTerm
-                val f = fact(name, insts)
-                parseTokens(ids, f :: facts, Nil, namedRoot, termRoot, tokens.tail)
+                
+                val namedFactOpt = lookaheadNamedFact(terms, name, tokens.tail)
+                val (fact, nextTokens) = namedFactOpt getOrElse ((nameTerm(name), tokens.tail))
+                
+                val instFact = withInsts(fact, insts)
+                parseTokens(ids, instFact :: facts, Nil, namedRoot, termRoot, nextTokens)
 
               // if it is a method, start a new method branch
               case Markup.Entity(Markup.METHOD, name) => {
@@ -103,11 +104,19 @@ object CommandParser {
                 continueBranch
               }
             }
+            // extractor SemiToken not working here somehow
+            // maybe a bug in pattern matcher (e.g. https://issues.scala-lang.org/browse/SI-1697)
+            // TODO review with Scala 2.10
             case (Token(Token.Kind.KEYWORD, ":"), _) => {
               // a named fact list encountered, e.g. "intro: allI"
               // collect all subsequent facts into a named term tree
 
               // take the last identifier: it will be the name for this term tree
+              
+              if (ids.headOption.isEmpty) {
+                println(command.getSource)
+              }
+              
               val termsName = ids.head._1
               val tree = addTermTree(namedRoot, termsName)
 
@@ -222,11 +231,13 @@ object CommandParser {
     strip(strip(term, "\""), "'").trim
   }
   
-  private def fact(fact: String, insts: List[Inst]): Term = {
-
+  private def nameTerm(name: String): Term = {
     val term = factory.createNameTerm()
-    term.setName(fact)
-    
+    term.setName(name)
+    term
+  }
+  
+  private def withInsts(term: Term, insts: List[Inst]): Term =
     if (insts.isEmpty) {
       // not insts, just use the name term
       term
@@ -237,7 +248,6 @@ object CommandParser {
       instTerm.getInsts().addAll(insts)
       instTerm
     }
-  }
   
   private def addTermTree(parent: NamedTermTree, name: String): NamedTermTree = {
     val tree = factory.createNamedTermTree()
@@ -299,6 +309,54 @@ object CommandParser {
     
     // sometimes DEL character appears and messes up the source - delete it
     src.map( _.filterNot( _ == '\u007F'))
+  }
+  
+  private object SemiToken {
+    def unapply(tokenInfo: TokenInfo): Option[_] = tokenInfo match {
+      case (Token(Token.Kind.KEYWORD, ":"), _) => Some()
+      case _ => None
+    }
+  }
+
+  private object IdentifierToken {
+    def unapply(tokenInfo: TokenInfo): Option[(String, Stream[Markup])] = tokenInfo match {
+      case (Token(Token.Kind.STRING | Token.Kind.ALT_STRING, source), markups) =>
+        // found a string, treat it as "term" identifier
+        Some((source, markups))
+      case (Token(Token.Kind.IDENT, source), markups) if markups.isEmpty =>
+        // no markup for the identifier - add it to the identifier list
+        Some((source, markups))
+      case _ => None
+    }
+  }
+
+  /** Checks if the following tokens represent a named fact, e.g. "foo: "x > 10"" */
+  private def lookaheadNamedFact(terms: Map[String, ITerm], name: String,
+    tokens: Stream[TokenInfo]): Option[(Term, Stream[TokenInfo])] = {
+
+    // require semicolon as the next token
+    val semicolonOpt = tokens.headOption collect { case SemiToken(_) => tokens.tail  }
+
+    // require identified/term as a next token
+    val nextTerm = semicolonOpt flatMap { nextTokens =>
+      {
+        val nextToken = nextTokens.headOption
+        nextToken collect { case IdentifierToken(source, markups) => (getTerm(terms, (source, markups)), nextTokens.tail) }
+      }
+    }
+
+    // create NamedTerm if found
+    nextTerm map {
+      case (term, nextTokens) =>
+        {
+          val namedFact = factory.createNamedTerm
+          namedFact.setName(name)
+          namedFact.setTerm(term)
+
+          // return the named term and the fact that two tokens were consumed
+          (namedFact, nextTokens)
+        }
+    }
   }
   
   def commandId(cmd: Command): Option[String] = {
