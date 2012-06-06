@@ -20,8 +20,6 @@ The Isabelle/ProofProcess plug-ins are named `org.ai4fm.proofprocess.isabelle.*`
 
 Prototype implementation with [Z/EVES][zeves] proof assistant is available. The integration is based on and requires [Community Z Tools (CZT)][czt] link with Z/EVES. It is available from [CZT repository][czt-repo] (not included in the official 1.5 release).
 
-Currently it requires [Isabelle/Eclipse IDE][isabelle-eclipse] (source code available on [GitHub][isabelle-eclipse]).
-
 The Isabelle/ProofProcess plug-ins are named `org.ai4fm.proofprocess.zeves.*`.
 
 
