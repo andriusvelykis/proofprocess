@@ -1,5 +1,6 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
+import isabelle.Command
 import isabelle.Command.State
 import isabelle.Markup
 import isabelle.Markup_Tree
@@ -31,7 +32,7 @@ object CommandParser {
   
   val factory = IsabelleProofProcessFactory.eINSTANCE
   
-  def parse(cmdState: State) = {
+  def parse(cmdState: State): IsabelleCommand = {
 
     val command = factory.createIsabelleCommand()
     command.setSource(cmdState.command.source.trim)
@@ -298,6 +299,14 @@ object CommandParser {
     
     // sometimes DEL character appears and messes up the source - delete it
     src.map( _.filterNot( _ == '\u007F'))
+  }
+  
+  def commandId(cmd: Command): Option[String] = {
+    // find first non-ignored token and use it if applicable
+    val firstId = cmd.span.find(token => !token.is_command && !token.is_ignored)
+    
+    // ensure it is a name and then use its source
+    firstId filter {_.is_name} map {_.source}
   }
   
 }

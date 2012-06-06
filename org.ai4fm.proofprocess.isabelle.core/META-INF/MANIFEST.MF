@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.ai4fm.proofprocess.isabelle.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ai4fm.proofprocess.isabelle.core.IsabelleProofPlugin
+Bundle-Activator: org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
