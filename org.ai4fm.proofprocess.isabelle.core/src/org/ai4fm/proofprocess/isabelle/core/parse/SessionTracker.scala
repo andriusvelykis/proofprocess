@@ -16,6 +16,8 @@ import org.eclipse.core.runtime.Status
 import org.eclipse.core.runtime.jobs.IJobChangeEvent
 import org.eclipse.core.runtime.jobs.Job
 import org.eclipse.core.runtime.jobs.JobChangeAdapter
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent
 import scala.actors.Actor._
 
 
@@ -37,9 +39,30 @@ class SessionTracker extends SessionEvents {
 
   // subscribe to commands change session events
   override protected def sessionEvents(session: Session) = List(session.commands_changed)
+  
+  // check core preferences whether proof process tracking is enabled
+  import org.ai4fm.proofprocess.core.prefs.PProcessCorePreferences._
+  private def trackingPref() = getBoolean(TRACK_PROOF_PROCESS, false)
+  private var tracking = trackingPref()
+  
+  // listener for "tracking" preference change
+  private lazy val prefsListener = prefKeyListener(TRACK_PROOF_PROCESS) {
+    tracking = trackingPref()
+    
+    if (!tracking) {
+      // no longer tracking, so discard all pending events
+      pendingEvents.clear
+    }
+  }
 
-  def init() = initSessionEvents()
-  def dispose() = disposeSessionEvents()
+  def init() {
+    initSessionEvents()
+    preferences.addPreferenceChangeListener(prefsListener)
+  }
+  def dispose() {
+    preferences.removePreferenceChangeListener(prefsListener)
+    disposeSessionEvents()
+  }
 
   /** A concurrent queue is used for pending events, because the queue is
     * likely to be updated from multiple threads.
@@ -55,7 +78,7 @@ class SessionTracker extends SessionEvents {
     }
   })
 
-  private def addPendingAnalysis(changed: Session.Commands_Changed) {
+  private def addPendingAnalysis(changed: Session.Commands_Changed) = if (tracking) {
 
     val session = IsabelleCorePlugin.getIsabelle.getSession
     // Isabelle State is immutable, so just take the whole state for processing 
@@ -89,6 +112,15 @@ class SessionTracker extends SessionEvents {
   private def jobDoneListener(f: => Unit) =
     new JobChangeAdapter {
       override def done(event: IJobChangeEvent) = f
+    }
+
+  private def prefKeyListener(key: String)(f: => Unit) =
+    new IPreferenceChangeListener {
+      def preferenceChange(event: PreferenceChangeEvent) {
+        if (event.getKey == key) {
+          f
+        }
+      }
     }
 
   @throws(classOf[CoreException])
