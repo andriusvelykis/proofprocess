@@ -156,12 +156,27 @@ public class InstTermItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(IsabelleProofProcessPackage.Literals.INST_TERM__TERM,
+				 IsabelleProofProcessFactory.eINSTANCE.createMarkupTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.INST_TERM__TERM,
+				 IsabelleProofProcessFactory.eINSTANCE.createIsaTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.INST_TERM__TERM,
 				 IsabelleProofProcessFactory.eINSTANCE.createNameTerm()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(IsabelleProofProcessPackage.Literals.INST_TERM__TERM,
 				 IsabelleProofProcessFactory.eINSTANCE.createNamedTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.INST_TERM__TERM,
+				 IsabelleProofProcessFactory.eINSTANCE.createInstTerm()));
 
 		newChildDescriptors.add
 			(createChildParameter

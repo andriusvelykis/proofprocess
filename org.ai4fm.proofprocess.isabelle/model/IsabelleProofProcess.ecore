@@ -22,7 +22,7 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InstTerm" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="term" eType="#//NameTerm"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="term" eType="ecore:EClass ../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="insts" upperBound="-1"
         eType="#//Inst" containment="true"/>

@@ -8,6 +8,7 @@ package org.ai4fm.proofprocess.isabelle.impl;
 
 import java.util.Collection;
 
+import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.isabelle.Inst;
 import org.ai4fm.proofprocess.isabelle.InstTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
@@ -50,7 +51,7 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	 * @generated
 	 * @ordered
 	 */
-	protected NameTerm term;
+	protected Term term;
 
 	/**
 	 * The cached value of the '{@link #getInsts() <em>Insts</em>}' containment reference list.
@@ -86,7 +87,7 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NameTerm getTerm() {
+	public Term getTerm() {
 		return term;
 	}
 
@@ -95,8 +96,8 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetTerm(NameTerm newTerm, NotificationChain msgs) {
-		NameTerm oldTerm = term;
+	public NotificationChain basicSetTerm(Term newTerm, NotificationChain msgs) {
+		Term oldTerm = term;
 		term = newTerm;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.INST_TERM__TERM, oldTerm, newTerm);
@@ -110,7 +111,7 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setTerm(NameTerm newTerm) {
+	public void setTerm(Term newTerm) {
 		if (newTerm != term) {
 			NotificationChain msgs = null;
 			if (term != null)
@@ -178,7 +179,7 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.INST_TERM__TERM:
-				setTerm((NameTerm)newValue);
+				setTerm((Term)newValue);
 				return;
 			case IsabelleProofProcessPackage.INST_TERM__INSTS:
 				getInsts().clear();
@@ -197,7 +198,7 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.INST_TERM__TERM:
-				setTerm((NameTerm)null);
+				setTerm((Term)null);
 				return;
 			case IsabelleProofProcessPackage.INST_TERM__INSTS:
 				getInsts().clear();

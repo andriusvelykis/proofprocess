@@ -37,12 +37,12 @@ public interface InstTerm extends Term {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Term</em>' containment reference.
-	 * @see #setTerm(NameTerm)
+	 * @see #setTerm(Term)
 	 * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getInstTerm_Term()
 	 * @model containment="true"
 	 * @generated
 	 */
-	NameTerm getTerm();
+	Term getTerm();
 
 	/**
 	 * Sets the value of the '{@link org.ai4fm.proofprocess.isabelle.InstTerm#getTerm <em>Term</em>}' containment reference.
@@ -52,7 +52,7 @@ public interface InstTerm extends Term {
 	 * @see #getTerm()
 	 * @generated
 	 */
-	void setTerm(NameTerm value);
+	void setTerm(Term value);
 
 	/**
 	 * Returns the value of the '<em><b>Insts</b></em>' containment reference list.
