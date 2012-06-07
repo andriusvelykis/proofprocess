@@ -11,7 +11,6 @@ import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.Trace
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil
-import scala.annotation.tailrec
 import scala.collection.JavaConversions._
 
 /**
@@ -42,7 +41,6 @@ trait ProofEntryReader {
     case _ => None
   }
 
-  @tailrec
   private def readProofSteps(proofSteps: List[(State, List[Term])], inGoals: List[Term]): List[ProofEntry] =
     proofSteps match {
     case (step, goals) :: rest => proofEntry(step, inGoals, goals) :: readProofSteps(rest, goals)

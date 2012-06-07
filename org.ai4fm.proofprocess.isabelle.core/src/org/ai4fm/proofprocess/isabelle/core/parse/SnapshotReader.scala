@@ -8,7 +8,6 @@ import isabelle.Document.Snapshot
 import isabelle.Linear_Set
 import isabelle.Isar_Document
 import org.ai4fm.proofprocess.Term
-import scala.annotation.tailrec
 
 
 /** Reads the proof states from the current snapshot. Given a set of changed commands, calculates
@@ -74,7 +73,6 @@ object SnapshotReader {
   }
   
 
-  @tailrec
   private def collectProofSpans(snapshots: Map[Name, Snapshot], commands: Set[Command]): List[List[State]] = {
 
     if (commands.isEmpty) {

@@ -8,7 +8,6 @@ import isabelle.Term_XML
 import isabelle.XML
 import org.ai4fm.proofprocess.{Term => PPTerm}
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
-import scala.annotation.tailrec
 
 
 object ResultParser {
@@ -105,7 +104,6 @@ object ResultParser {
     case _ => None
   }
   
-  @tailrec
   def collectDepthFirst[A](elem: XML.Tree, pf: PartialFunction[XML.Tree, A]): List[A] = {
     if (pf.isDefinedAt(elem)) {
       List(pf(elem))
@@ -116,7 +114,6 @@ object ResultParser {
     }
   }
   
-  @tailrec
   def isNoSubgoals(elem: XML.Tree): Boolean = elem match {
     case XML.Text(text) if (text.contains("No subgoals!")) => true
     case XML.Elem(_, body) => body exists isNoSubgoals
