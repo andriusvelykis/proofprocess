@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.ai4fm.filehistory.core
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ai4fm.filehistory.core.FileHistoryCorePlugin
 Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.io;bundle-version="2.0.1",
  org.eclipse.emf.common;bundle-version="2.7.0",

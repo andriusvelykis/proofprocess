@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.ai4fm.proofprocess.zeves.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ai4fm.proofprocess.zeves.ui.ZEvesProofUIPlugin
 Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
