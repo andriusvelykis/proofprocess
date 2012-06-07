@@ -43,7 +43,9 @@ object SnapshotReader {
     // the text document, so concatenating them back together produces the original document.
     val docTexts = snapshots.map({ case (doc, snapshot) => (doc, snapshot.node.commands.toList.map(_.source).mkString)})
     // create a map of all command starts - needed to indicate command location
-    val commandStarts = snapshots.values.map(_.node.command_starts.toMap) reduce (_ ++ _)
+    val commandStartMaps = snapshots.values.map(_.node.command_starts.toMap)
+    // merge all maps (check for empty map case)
+    val commandStarts = commandStartMaps reduceLeftOption (_ ++ _) getOrElse (Map.empty)
     
     val proofData = proofs map { proof =>
       
