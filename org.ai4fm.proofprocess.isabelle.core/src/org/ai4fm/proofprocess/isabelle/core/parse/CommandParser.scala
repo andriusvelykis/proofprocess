@@ -61,22 +61,13 @@ object CommandParser {
             termRoot.getTerms().addAll(facts.reverse)
           }
 
-          def markIdentifier(term: TermInfo) =
-            parseTokens(term :: ids, facts, insts, namedRoot, termRoot, tokens.tail)
-
-          def newBranch(namedRoot: NamedTermTree, termRoot: NamedTermTree) =
-            parseTokens(Nil, Nil, Nil, namedRoot, termRoot, tokens.tail)
-
-          def continueBranch =
-            parseTokens(ids, facts, insts, namedRoot, termRoot, tokens.tail)
-
           if (tokens.isEmpty) {
             // consume all
             consume()
           } else tokens.head match {
             case IdentifierToken(source, markups) =>
               // add it to the identifier list
-              markIdentifier((source, markups))
+              parseTokens((source, markups) :: ids, facts, insts, namedRoot, termRoot, tokens.tail)
             case (Token(Token.Kind.IDENT, source), markups) => markups.head match {
               // for identifiers, assume a single markup statement (TODO review?)
 
@@ -96,12 +87,13 @@ object CommandParser {
                 val method = addTermTree(command, name)
 
                 consume()
-                newBranch(method, method)
+                // new branch on the method
+                parseTokens(Nil, Nil, Nil, method, method, tokens.tail)
               }
               case markup => {
                 println("Unknown identifier markup: " + markup)
                 // ignore and continue parsing
-                continueBranch
+                parseTokens(ids, facts, insts, namedRoot, termRoot, tokens.tail)
               }
             }
             // extractor SemiToken not working here somehow
@@ -122,7 +114,8 @@ object CommandParser {
 
               // consume previous
               consume(ids.tail)
-              newBranch(namedRoot, tree)
+              // new branch on the named tree
+              parseTokens(Nil, Nil, Nil, namedRoot, tree, tokens.tail)
             }
             case (Token(Token.Kind.KEYWORD, "="), _) => {
               // a named inst encountered, e.g. "x="Y + 1""
@@ -139,7 +132,7 @@ object CommandParser {
             }
             case _ => {
               // ignore and continue parsing
-              continueBranch
+              parseTokens(ids, facts, insts, namedRoot, termRoot, tokens.tail)
             }
           }
         }
