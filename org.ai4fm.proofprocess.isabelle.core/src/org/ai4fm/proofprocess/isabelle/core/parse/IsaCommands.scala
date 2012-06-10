@@ -72,6 +72,13 @@ object IsaCommands {
     }
   }
   
+  object ProofMethCommand {
+    def unapply(cmd: IsabelleCommand): Option[List[NamedTermTree]] = cmd.getName match {
+      case "apply" | "by" | "proof" => Some(cmd.getBranches toList)
+      case _ => None
+    }
+  }
+  
   def namedBranch[T <: NamedTermTree](branch: T, name: String): Option[T] =
     Option(branch) filter {_.getName() == name}
   

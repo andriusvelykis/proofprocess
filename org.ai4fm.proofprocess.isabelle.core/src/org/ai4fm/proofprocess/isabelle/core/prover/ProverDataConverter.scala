@@ -16,7 +16,8 @@ object ProverDataConverter {
   
   def command(cmd: IsabelleCommand): Meth = {
     val res = cmd match {
-      case isa.Apply1(method) => method match {
+      // TODO multiple branches (e.g. apply (auto, simp))
+      case isa.ProofMethCommand(methods) if methods.size == 1 => methods.head match {
         case isa.Auto(simp, intro, dest) => Some(Tactic(Auto(thms(simp), thms(intro), thms(dest))))
         case isa.Force(simp, intro, dest) => Some(Tactic(Force(thms(simp), thms(intro), thms(dest))))
         case isa.Blast(intro, dest) => Some(Tactic(Blast(thms(dest), thms(intro))))
@@ -31,8 +32,6 @@ object ProverDataConverter {
         case isa.FRule(facts) => Some(Frule(None, thms(facts).head))
         case _ => None 
       }
-      // TODO multiple branches (e.g. apply (auto, simp))
-      case isa.Apply(methods) => None
       // TODO support others (e.g. "unfolding" etc)
       case _ => None
     }
