@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.ai4fm.proofprocess.isabelle.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ai4fm.proofprocess.isabelle.ui.IsabellePProcessUIPlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.scala-ide.scala.library;bundle-version="2.9.2"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
