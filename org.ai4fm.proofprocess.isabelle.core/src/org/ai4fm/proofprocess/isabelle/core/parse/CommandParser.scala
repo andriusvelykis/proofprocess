@@ -104,11 +104,6 @@ object CommandParser {
               // collect all subsequent facts into a named term tree
 
               // take the last identifier: it will be the name for this term tree
-              
-              if (ids.headOption.isEmpty) {
-                println(command.getSource)
-              }
-              
               val termsName = ids.head._1
               val tree = addTermTree(namedRoot, termsName)
 
