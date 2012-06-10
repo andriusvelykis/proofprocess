@@ -45,6 +45,9 @@ class PProcessPage(private val proofStoreProvider: IProofStoreProvider) extends 
     treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
     treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
 
+    // register as global selection provider
+    getSite().setSelectionProvider(treeViewer);
+
     // load the proof process in a separate job, otherwise it delays the startup
     val loadJob = new Job("Loading proof process") {
 
