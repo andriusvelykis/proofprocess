@@ -65,15 +65,12 @@ object CommandParser {
             // consume all
             consume()
           } else tokens.head match {
-            case IdentifierToken(source, markups) =>
-              // add it to the identifier list
-              parseTokens((source, markups) :: ids, facts, insts, namedRoot, termRoot, tokens.tail)
-            case (Token(Token.Kind.IDENT, source), markups) => markups.head match {
+            case NameToken(source, markups) => markups.headOption match {
               // for identifiers, assume a single markup statement (TODO review?)
 
               // if it is a fact, add its name to the fact list
               // also consume any outstanding terms for the fact (terms go before facts, e.g. "x="Y" in exI)
-              case Markup.Entity("fact", name) =>
+              case Some(Markup.Entity("fact", name)) =>
                 // consume insts to produce a InstTerm
                 
                 val namedFactOpt = lookaheadNamedFact(terms, name, tokens.tail)
@@ -83,17 +80,18 @@ object CommandParser {
                 parseTokens(ids, instFact :: facts, Nil, namedRoot, termRoot, nextTokens)
 
               // if it is a method, start a new method branch
-              case Markup.Entity(Markup.METHOD, name) => {
+              case Some(Markup.Entity(Markup.METHOD, name)) => {
                 val method = addTermTree(command, name)
 
                 consume()
                 // new branch on the method
                 parseTokens(Nil, Nil, Nil, method, method, tokens.tail)
               }
-              case markup => {
-                println("Unknown identifier markup: " + markup)
-                // ignore and continue parsing
-                parseTokens(ids, facts, insts, namedRoot, termRoot, tokens.tail)
+              
+              // for all other cases, assume it is a term
+              case _ => {
+                // add it to the identifier list
+                parseTokens((source, markups) :: ids, facts, insts, namedRoot, termRoot, tokens.tail)
               }
             }
             // extractor SemiToken not working here somehow
@@ -306,15 +304,14 @@ object CommandParser {
     }
   }
 
-  private object IdentifierToken {
-    def unapply(tokenInfo: TokenInfo): Option[(String, Stream[Markup])] = tokenInfo match {
-      case (Token(Token.Kind.STRING | Token.Kind.ALT_STRING, source), markups) =>
-        // found a string, treat it as "term" identifier
-        Some((source, markups))
-      case (Token(Token.Kind.IDENT, source), markups) if markups.isEmpty =>
-        // no markup for the identifier - add it to the identifier list
-        Some((source, markups))
-      case _ => None
+  private object NameToken {
+    def unapply(tokenInfo: TokenInfo): Option[(String, Stream[Markup])] = {
+      val (token, markups) = tokenInfo
+      if (token.is_xname) {
+        Some(token.source, markups)
+      } else {
+        None
+      }
     }
   }
 
@@ -329,7 +326,7 @@ object CommandParser {
     val nextTerm = semicolonOpt flatMap { nextTokens =>
       {
         val nextToken = nextTokens.headOption
-        nextToken collect { case IdentifierToken(source, markups) => (getTerm(terms, (source, markups)), nextTokens.tail) }
+        nextToken collect { case NameToken(source, markups) => (getTerm(terms, (source, markups)), nextTokens.tail) }
       }
     }
 
