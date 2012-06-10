@@ -24,8 +24,8 @@ object ProverData {
   
   sealed abstract class Meth
   case class Rule(rule: ThmName) extends Meth
-  case class Erule(assumption: ThmName, rule: ThmName) extends Meth // which assumption + thm
-  case class Frule(assumption: ThmName, rule: ThmName) extends Meth // which assumption + thm
+  case class Erule(assumption: Option[ThmName], rule: ThmName) extends Meth // which assumption + thm
+  case class Frule(assumption: Option[ThmName], rule: ThmName) extends Meth // which assumption + thm
   case class SubstThm(rule: ThmName) extends Meth // rule used
   case class SubstAsmThm(assumption: ThmName, rule: ThmName) extends Meth // rule used
   case class SubstUsingAsm(assumption: ThmName) extends Meth // which assumption in list

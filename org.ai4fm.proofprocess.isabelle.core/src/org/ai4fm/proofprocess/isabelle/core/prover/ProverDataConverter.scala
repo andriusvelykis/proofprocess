@@ -24,6 +24,11 @@ object ProverDataConverter {
         case isa.Metis(facts) => Some(Tactic(Metis(thms(facts))))
         case isa.SubgoalTac(facts) => Some(Tactic(Conj(terms(facts).head)))
 //        case isa.Induct(rules, args, _, _) => Some(Tactic(Induction(thms(rules).head, terms(args).head)))
+        case isa.Rule(facts) => Some(Rule(thms(facts).head))
+        case isa.Intro(facts) => Some(Rule(thms(facts).head))
+        case isa.ERule(facts) => Some(Erule(None, thms(facts).head))
+        case isa.Elim(facts) => Some(Erule(None, thms(facts).head))
+        case isa.FRule(facts) => Some(Frule(None, thms(facts).head))
         case _ => None 
       }
       // TODO multiple branches (e.g. apply (auto, simp))

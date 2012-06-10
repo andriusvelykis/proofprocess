@@ -40,6 +40,12 @@ object IsaCommands {
   
   object Metis extends NamedBranchTerms("Metis.metis")
   object SubgoalTac extends NamedBranchTerms("Pure.subgoal_tac")
+  object Rule extends NamedBranchTerms("HOL.rule")
+  object ERule extends NamedBranchTerms("Pure.erule")
+  object FRule extends NamedBranchTerms("Pure.frule")
+  
+  object Intro extends NamedBranchTerms("Pure.intro")
+  object Elim extends NamedBranchTerms("Pure.elim")
   
   object Induct {
     // rules, args, arbitrary, taking
