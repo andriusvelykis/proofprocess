@@ -23,7 +23,7 @@ object ProverDataConverter {
         case isa.Simp(add, del, only) => Some(Tactic(Simp(thms(add), thms(del), only.map(thms _))))
         case isa.Metis(facts) => Some(Tactic(Metis(thms(facts))))
         case isa.SubgoalTac(facts) => Some(Tactic(Conj(terms(facts).head)))
-//        case isa.Induct(rules, args, _, _) => Some(Tactic(Induction(thms(rules).head, terms(args).head)))
+        case isa.Induct(rules, args, _, _) => Some(Tactic(Induction(thms(rules).headOption, terms(args).headOption)))
         case isa.Rule(facts) => Some(Rule(thms(facts).head))
         case isa.Intro(facts) => Some(Rule(thms(facts).head))
         case isa.ERule(facts) => Some(Erule(None, thms(facts).head))
