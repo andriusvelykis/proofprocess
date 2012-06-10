@@ -27,7 +27,7 @@ class PProcessView extends ScalaPageBookView {
     val proofStoreProvider = getProofStore(part).get
 
     // create a page with the proof store provider
-    val proofProcessPage = new PProcessPage(proofStoreProvider)
+    val proofProcessPage = new PProcessPage(this, proofStoreProvider)
     initPage(proofProcessPage)
     proofProcessPage.createControl(getPageBook())
 

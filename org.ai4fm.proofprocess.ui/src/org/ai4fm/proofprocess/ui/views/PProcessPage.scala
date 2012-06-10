@@ -1,26 +1,29 @@
 package org.ai4fm.proofprocess.ui.views
 
+import org.ai4fm.proofprocess.ProofStore
 import org.ai4fm.proofprocess.core.store.IProofStoreProvider
-import org.eclipse.swt.widgets.Composite
-import org.eclipse.ui.part.Page
-import org.eclipse.swt.widgets.Control
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory
-import org.eclipse.swt.SWT
-import org.eclipse.jface.layout.GridLayoutFactory
-import org.eclipse.swt.widgets.Label
-import org.eclipse.jface.viewers.TreeViewer
-import org.eclipse.jface.layout.GridDataFactory
-import org.eclipse.jface.action.MenuManager
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
-import org.eclipse.core.runtime.jobs.Job
-import org.eclipse.core.runtime.Status
 import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.core.runtime.IStatus
-import org.ai4fm.proofprocess.ProofStore
+import org.eclipse.core.runtime.Status
+import org.eclipse.core.runtime.jobs.Job
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.jface.action.GroupMarker
+import org.eclipse.jface.action.MenuManager
+import org.eclipse.jface.layout.GridDataFactory
+import org.eclipse.jface.layout.GridLayoutFactory
+import org.eclipse.jface.viewers.TreeViewer
+import org.eclipse.swt.SWT
+import org.eclipse.swt.widgets.Control
+import org.eclipse.swt.widgets.Composite
+import org.eclipse.swt.widgets.Label
+import org.eclipse.ui.IViewPart
+import org.eclipse.ui.IWorkbenchActionConstants
+import org.eclipse.ui.part.Page
 
 
-class PProcessPage(private val proofStoreProvider: IProofStoreProvider) extends Page {
+class PProcessPage(private val viewPart: IViewPart, private val proofStoreProvider: IProofStoreProvider) extends Page {
 
   private val adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
   
@@ -36,11 +39,16 @@ class PProcessPage(private val proofStoreProvider: IProofStoreProvider) extends 
     treeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults.grab(true, true).create);
 
 //    val groupAttemptsAction = new GroupAttemptsAction();
-//    // add context menu
-//    val mgr = new MenuManager();
+    // add context menu
+    val mgr = new MenuManager();
 //    mgr.add(groupAttemptsAction);
-//    val tree = treeViewer.getTree();
-//    tree.setMenu(mgr.createContextMenu(tree));
+    // add a placeholder for contributed actions
+    mgr.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS))
+    val menu = mgr.createContextMenu(treeViewer.getTree)
+    treeViewer.getTree.setMenu(menu)
+    // register the menu with site to allow contributions
+    getSite.registerContextMenu(viewPart.getViewSite.getId, mgr, treeViewer)
+    
     
     treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
     treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
