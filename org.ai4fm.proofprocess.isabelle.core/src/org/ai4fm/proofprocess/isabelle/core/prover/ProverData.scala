@@ -38,9 +38,9 @@ object ProverData {
   
   sealed abstract class ProofTree
   case class Gap() extends ProofTree
-  case class Proof(why: Why, goals: List[ProofGoal]) extends ProofTree
+  case class Proof(why: Why, goals: List[ProofState], cont: ProofTree) extends ProofTree
   case class Failure(failures: List[ProofTree], valid: Option[ProofTree]) extends ProofTree
   
-  case class ProofGoal(state: ProofState, cont: ProofTree)
+//  case class ProofGoal(state: ProofState, cont: ProofTree)
   
 }
