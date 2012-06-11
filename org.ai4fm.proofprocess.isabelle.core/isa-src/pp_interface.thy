@@ -95,6 +95,8 @@ fun decode_opt e = Option.map hd (decode_opts e);
 
 fun thm_elem name thm = XML.Elem ((name,[]),[encode_thm_name thm])
 fun thms_elem name thms = XML.Elem ((name,[]),map encode_thm_name thms)
+fun opt_thm_elem name thm = XML.Elem ((name,[]),[encode_opt(Option.map encode_thm_name thm)])
+fun opt_thms_elem name thms = XML.Elem ((name,[]),[encode_opts(Option.map (map encode_thm_name) thms)])
 
 fun encode_tac (Auto {simp,intro,dest}) = XML.Elem (("Auto",[]),
          [thms_elem "Simp" simp,
@@ -103,7 +105,7 @@ fun encode_tac (Auto {simp,intro,dest}) = XML.Elem (("Auto",[]),
  |  encode_tac (Simp {add,del,only}) = XML.Elem (("Simp",[]),
          [thms_elem "Add" add,
          thms_elem "Del" del,
-         XML.Elem (("Only",[]),[encode_opts(Option.map (map encode_thm_name) only)])])
+         opt_thms_elem "Only" only])
  |  encode_tac (Conj trm) = (XML.Elem (("Conj",[]),encode_term trm))
  |  encode_tac (Blast {dest,intro}) = XML.Elem (("Blast",[]),
          [thms_elem "Intro" intro,
@@ -114,7 +116,7 @@ fun encode_tac (Auto {simp,intro,dest}) = XML.Elem (("Auto",[]),
          thms_elem "Dest" dest])
  |  encode_tac (Metis thms) = thms_elem "Metis" thms
  |  encode_tac (Induction (rule,arg)) = XML.Elem (("Induction",[]),
-         [XML.Elem (("Rule",[]),[encode_opt(Option.map encode_thm_name rule)]),
+         [opt_thm_elem "Rule" rule,
          XML.Elem (("Arg",[]),[encode_opts(Option.map encode_term arg)])])
  |  encode_tac (UnknownTac s) = XML.Elem (("UnknownTac",[("val",s)]),[]);
 
@@ -144,11 +146,11 @@ fun decode_tac (XML.Elem (("Auto",[]),[XML.Elem (("Simp",[]),simp_trees),XML.Ele
 fun encode_meth (Rule thm) = thm_elem "Rule" thm
  |  encode_meth (Erule (asm,thm)) = 
        XML.Elem (("Erule",[]),
-         [XML.Elem (("Assumption",[]),[encode_opt(Option.map encode_thm_name asm)]),
+         [opt_thm_elem "Assumption" asm,
           thm_elem "Theorem" thm])
  |  encode_meth (Frule (asm,thm)) = 
        XML.Elem (("Frule",[]),
-         [XML.Elem (("Assumption",[]),[encode_opt(Option.map encode_thm_name asm)]),
+         [opt_thm_elem "Assumption" asm,
           thm_elem "Theorem" thm])
  |  encode_meth (Subst_thm thm) = thm_elem "Subst_thm" thm
  |  encode_meth (Subst_asm_thm (asm,thm)) = 
