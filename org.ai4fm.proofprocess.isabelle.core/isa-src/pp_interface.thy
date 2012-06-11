@@ -70,9 +70,9 @@ fun encode_assocl als = XML.Elem (("AssocList",[]),map encode_st_pair als);
 fun decode_assocl (XML.Elem (("AssocList",[]),als_tree)) = map decode_st_pair als_tree
  |  decode_assocl tree  = raise decode_exp ("Assoc list has wrong args",tree);
 
-fun encode_ps (_,accls,g) = XML.Elem (("PS",[]),[encode_assocl accls] @ encode_term g);
-fun decode_ps (XML.Elem (("PS",[]),[accls_tree,g_tree])) = 
-     ([],decode_assocl accls_tree, decode_term [g_tree])
+fun encode_ps (_,accls,g) = XML.Elem (("PS",[]),[encode_assocl accls, XML.Elem (("Term",[]),encode_term g)]);
+fun decode_ps (XML.Elem (("PS",[]),[accls_tree,XML.Elem (("Term",[]),g_tree)])) = 
+     ([],decode_assocl accls_tree, decode_term g_tree)
  |  decode_ps tree  = raise decode_exp ("PS has wrong args",tree);
 
 fun encode_thm_name (Thm s) = XML.Elem (("Thm",[("name",s)]),[])
