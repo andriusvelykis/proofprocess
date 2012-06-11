@@ -93,24 +93,26 @@ fun decode_opts (XML.Elem (("NONE",[]),[])) = NONE
 
 fun decode_opt e = Option.map hd (decode_opts e);
 
+fun thm_elem name thm = XML.Elem ((name,[]),[encode_thm_name thm])
+fun thms_elem name thms = XML.Elem ((name,[]),map encode_thm_name thms)
 
 fun encode_tac (Auto {simp,intro,dest}) = XML.Elem (("Auto",[]),
-         [XML.Elem (("Simp",[]),map encode_thm_name simp),
-         XML.Elem (("Intro",[]),map encode_thm_name intro),
-         XML.Elem (("Dest",[]),map encode_thm_name dest)])
+         [thms_elem "Simp" simp,
+         thms_elem "Intro" intro,
+         thms_elem "Dest" dest])
  |  encode_tac (Simp {add,del,only}) = XML.Elem (("Simp",[]),
-         [XML.Elem (("Add",[]),map encode_thm_name add),
-         XML.Elem (("Del",[]),map encode_thm_name del),
+         [thms_elem "Add" add,
+         thms_elem "Del" del,
          XML.Elem (("Only",[]),[encode_opts(Option.map (map encode_thm_name) only)])])
  |  encode_tac (Conj trm) = (XML.Elem (("Conj",[]),encode_term trm))
  |  encode_tac (Blast {dest,intro}) = XML.Elem (("Blast",[]),
-         [XML.Elem (("Intro",[]),map encode_thm_name intro),
-         XML.Elem (("Dest",[]),map encode_thm_name dest)])
+         [thms_elem "Intro" intro,
+         thms_elem "Dest" dest])
  |  encode_tac (Force {simp,intro,dest}) = XML.Elem (("Force",[]),
-         [XML.Elem (("Simp",[]),map encode_thm_name simp),
-         XML.Elem (("Intro",[]),map encode_thm_name intro),
-         XML.Elem (("Dest",[]),map encode_thm_name dest)])
- |  encode_tac (Metis thms) = XML.Elem (("Metis",[]),map encode_thm_name thms)
+         [thms_elem "Simp" simp,
+         thms_elem "Intro" intro,
+         thms_elem "Dest" dest])
+ |  encode_tac (Metis thms) = thms_elem "Metis" thms
  |  encode_tac (Induction (rule,arg)) = XML.Elem (("Induction",[]),
          [XML.Elem (("Rule",[]),[encode_opt(Option.map encode_thm_name rule)]),
          XML.Elem (("Arg",[]),[encode_opts(Option.map encode_term arg)])])
@@ -139,26 +141,26 @@ fun decode_tac (XML.Elem (("Auto",[]),[XML.Elem (("Simp",[]),simp_trees),XML.Ele
  | decode_tac (XML.Elem (("UnknownTac",[("val",s)]),[])) = UnknownTac s
  | decode_tac tree =  raise decode_exp ("cannot decode tactic",tree);
 
-fun encode_meth (Rule thm) = XML.Elem (("Rule",[]),[encode_thm_name thm])
+fun encode_meth (Rule thm) = thm_elem "Rule" thm
  |  encode_meth (Erule (asm,thm)) = 
        XML.Elem (("Erule",[]),
          [XML.Elem (("Assumption",[]),[encode_opt(Option.map encode_thm_name asm)]),
-          XML.Elem (("Theorem",[]),[encode_thm_name thm])])
+          thm_elem "Theorem" thm])
  |  encode_meth (Frule (asm,thm)) = 
        XML.Elem (("Frule",[]),
          [XML.Elem (("Assumption",[]),[encode_opt(Option.map encode_thm_name asm)]),
-          XML.Elem (("Theorem",[]),[encode_thm_name thm])])
- |  encode_meth (Subst_thm thm) = XML.Elem (("Subst_thm",[]),[encode_thm_name thm])
+          thm_elem "Theorem" thm])
+ |  encode_meth (Subst_thm thm) = thm_elem "Subst_thm" thm
  |  encode_meth (Subst_asm_thm (asm,thm)) = 
        XML.Elem (("Subst_asm_thm",[]),
-         [XML.Elem (("Assumption",[]),[encode_thm_name asm]),
-         XML.Elem (("Theorem",[]),[encode_thm_name thm])])
- |  encode_meth (Subst_using_asm thm) = XML.Elem (("Subst_using_asm",[]),[encode_thm_name thm])
+         [thm_elem "Assumption" asm,
+         thm_elem "Theorem" thm])
+ |  encode_meth (Subst_using_asm thm) = thm_elem "Subst_using_asm" thm
  |  encode_meth (Case trm) = (XML.Elem (("Case",[]),encode_term trm))
  |  encode_meth (Tactic tac) = (XML.Elem (("Tactic",[]),[encode_tac tac]))
  |  encode_meth (Using (thms,meth)) =
        XML.Elem (("Using",[]),
-         [XML.Elem (("Thms",[]),map encode_thm_name thms),
+         [thms_elem "Thms" thms,
          XML.Elem (("Method",[]),[encode_meth meth])])
  |  encode_meth (Unknown str) = (XML.Elem (("Unknown",[("name",str)]),[]));
 
