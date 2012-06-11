@@ -6,7 +6,7 @@ object ProverData {
   
   // Proof state
   // need to know about "used" assumptions etc.
-  case class ProofState(fixes: List[String], assumptions: List[(String, Term)], term: Term)
+  case class ProofState(fixes: List[String], assumptions: List[(String, Term)], goal: Term)
 
   sealed abstract class ThmName
   case class Thm(name: String) extends ThmName
