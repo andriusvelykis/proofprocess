@@ -1,13 +1,17 @@
 package org.ai4fm.proofprocess.isabelle.ui.actions
 
+import isabelle.YXML
 import org.ai4fm.proofprocess.Attempt
+import org.ai4fm.proofprocess.isabelle.core.prover.ProverData
+import org.ai4fm.proofprocess.isabelle.core.prover.ProverDataConverter
 import org.eclipse.core.commands.AbstractHandler
 import org.eclipse.core.commands.ExecutionEvent
 import org.eclipse.core.commands.ExecutionException
 import org.eclipse.jface.viewers.IStructuredSelection
+import org.eclipse.swt.SWT
+import org.eclipse.swt.widgets.FileDialog
 import org.eclipse.ui.handlers.HandlerUtil
 import scala.collection.JavaConversions._
-import org.ai4fm.proofprocess.isabelle.core.prover.ProverDataConverter
 
 
 class ExportPProcessToIsabelleHandler extends AbstractHandler {
@@ -23,13 +27,36 @@ class ExportPProcessToIsabelleHandler extends AbstractHandler {
     val attempts = selected map { _.collect{ case a: Attempt => a } }
 
     attempts foreach {
-      _.foreach { attempt =>
-        println("Export attempt: " + ProverDataConverter.attempt(attempt))
-      }
+      _ foreach exportToFile(event)
     }
 
     // return value is reserved for future APIs
     null
+  }
+  
+  private def exportToFile(event: ExecutionEvent)(attempt: Attempt) {
+    val proofTree = ProverDataConverter.attempt(attempt)
+    val encoded = ProverData.Encode.encodePT(proofTree)
+    val yxml = YXML.string_of_tree(encoded)
+
+    val fileDialog = new FileDialog(HandlerUtil.getActiveShell(event), SWT.SAVE)
+    fileDialog.setText("Select File to Export ProofProcess Data as Isabelle YXML")
+    fileDialog.setOverwrite(true)
+    fileDialog.setFilterExtensions(Array("*.yxml", "*.*"))
+    fileDialog.setFileName("attempt.yxml")
+    val savePath = Option(fileDialog.open())
+
+    savePath foreach { path =>
+      printToFile(new java.io.File(path))(p => {
+        p.println(yxml)
+      })
+    }
+    
+  }
+
+  private def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) {
+    val p = new java.io.PrintWriter(f)
+    try { op(p) } finally { p.close() }
   }
   
 }
