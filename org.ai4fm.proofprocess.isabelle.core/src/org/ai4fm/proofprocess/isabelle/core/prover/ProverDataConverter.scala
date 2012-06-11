@@ -10,9 +10,10 @@ import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofParallel
 import org.ai4fm.proofprocess.ProofSeq
 import org.ai4fm.proofprocess.Term
+import org.ai4fm.proofprocess.isabelle.DisplayTerm
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace
-import org.ai4fm.proofprocess.isabelle.IsaTerm
+import org.ai4fm.proofprocess.isabelle.{IsaTerm => PPIsaTerm}
 import org.ai4fm.proofprocess.isabelle.NameTerm
 import org.ai4fm.proofprocess.isabelle.core.parse.{IsaCommands => isa}
 import org.ai4fm.proofprocess.isabelle.core.prover.ProverData._
@@ -45,7 +46,7 @@ object ProverDataConverter {
     case p: ProofParallel => p.getEntries.foldRight(cont)(proofTree)
   }
   
-  def entry(entry: ProofEntry): (Why, List[ITerm]) = {
+  def entry(entry: ProofEntry): (Why, List[TermRef]) = {
     val intentName = entry.getInfo.getIntent.getName
     
     val proofStep = entry.getProofStep
@@ -62,7 +63,7 @@ object ProverDataConverter {
     (Why(intentName, cmd), inGoals)
   }
   
-  private def nameGoalState(term: ITerm): ProofState = {
+  private def nameGoalState(term: TermRef): ProofState = {
     // for now just pack the term into the proof state without naming assumptions/fixes
     // TODO name assumptions
     ProofState(Nil, Nil, term)
@@ -97,22 +98,28 @@ object ProverDataConverter {
     // TODO support insts
     terms.map({ case t: NameTerm => Thm(t.getName) })
     
-  def terms(terms: List[Term]): List[ITerm] =
+  def terms(terms: List[Term]): List[TermRef] =
     // TODO something about markup terms?
-    terms.map({ case t: IsaTerm => t.getTerm })
+    terms.map({
+      case t: PPIsaTerm => IsaTerm(t.getTerm)
+      case s: DisplayTerm => StrTerm(s.getDisplay)
+    })
 
     
   object Encode {
 
     import XML._
     
-    val encodeTerm = Term_XML.Encode.term
+    def encodeTerm(term: TermRef) = term match {
+      case IsaTerm(t) => elem ("Term", Term_XML.Encode.term(t))
+      case StrTerm(s) => Elem(Markup("TermStr", List(("val", s))), Nil)
+    }
 
-    def encodeStringPair(s: String, t: ITerm) = Elem(Markup("Pair", List(("name", s))), encodeTerm(t))
+    def encodeStringPair(s: String, t: TermRef) = Elem(Markup("Pair", List(("name", s))), List(encodeTerm(t)))
 
-    def encodeAssocL(als: List[(String, ITerm)]) = elem("AssocList", als.map(Function.tupled(encodeStringPair)))
+    def encodeAssocL(als: List[(String, TermRef)]) = elem("AssocList", als.map(Function.tupled(encodeStringPair)))
 
-    def encodePS(state: ProofState) = elem("PS", List(encodeAssocL(state.assumptions), elem("Term", encodeTerm(state.goal))))
+    def encodePS(state: ProofState) = elem("PS", List(encodeAssocL(state.assumptions), encodeTerm(state.goal)))
 
     def encodeThmName(thmName: ThmName) = thmName match {
       case Thm(s) => Elem(Markup("Thm", List(("name", s))), Nil)
@@ -143,7 +150,7 @@ object ProverDataConverter {
           thmsElem("Add", add),
           thmsElem("Del", del),
           optThmsElem("Only", only)))
-      case Conj(term) => elem("Conj", encodeTerm(term))
+      case Conj(term) => elem("Conj", List(encodeTerm(term)))
       case Blast(dest, intro) => elem("Blast", List(
           thmsElem("Intro", intro),
           thmsElem("Dest", dest)))
@@ -154,7 +161,7 @@ object ProverDataConverter {
       case Metis(thms) => thmsElem("Metis", thms)
       case Induction(rule, arg) => elem("Induction", List(
           optThmElem("Rule", rule),
-          elem("Arg", List(encodeOpts(arg map encodeTerm)))))
+          elem("Arg", List(encodeOpt(arg map encodeTerm)))))
       case UnknownTac(s) => Elem(Markup("UnknownTac", List(("val", s))), Nil)
     }
     
@@ -171,7 +178,7 @@ object ProverDataConverter {
           thmElem("Assumption", asm),
           thmElem("Theorem", thm)))
       case SubstUsingAsm(thm) => thmElem("Subst_using_asm", thm)
-      case Case(term) => elem("Subst_using_asm", encodeTerm(term))
+      case Case(term) => elem("Subst_using_asm", List(encodeTerm(term)))
       case Tactic(tac) => elem("Tactic", List(encodeTac(tac)))
       case Using(thms, meth) => elem("Using", List(
           thmsElem("Thms", thms),

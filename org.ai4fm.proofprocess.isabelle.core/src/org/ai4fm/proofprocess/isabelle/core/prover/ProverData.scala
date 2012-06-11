@@ -4,9 +4,13 @@ import isabelle.Term.Term
 
 object ProverData {
   
+  sealed abstract class TermRef
+  case class IsaTerm(term: Term) extends TermRef
+  case class StrTerm(str: String) extends TermRef
+  
   // Proof state
   // need to know about "used" assumptions etc.
-  case class ProofState(fixes: List[String], assumptions: List[(String, Term)], goal: Term)
+  case class ProofState(fixes: List[String], assumptions: List[(String, TermRef)], goal: TermRef)
 
   sealed abstract class ThmName
   case class Thm(name: String) extends ThmName
@@ -15,11 +19,11 @@ object ProverData {
   sealed abstract class ATac
   case class Auto(simp: List[ThmName], intro: List[ThmName], dest: List[ThmName]) extends ATac
   case class Simp(add: List[ThmName], del: List[ThmName], only: Option[List[ThmName]]) extends ATac
-  case class Conj(term: Term) extends ATac // subgoal tac (and have statement?)
+  case class Conj(term: TermRef) extends ATac // subgoal tac (and have statement?)
   case class Blast(dest: List[ThmName], intro: List[ThmName]) extends ATac
   case class Force(simp: List[ThmName], intro: List[ThmName], dest: List[ThmName]) extends ATac
   case class Metis(thms: List[ThmName]) extends ATac
-  case class Induction(rule: Option[ThmName], arg: Option[Term]) extends ATac // not sure about args here
+  case class Induction(rule: Option[ThmName], arg: Option[TermRef]) extends ATac // not sure about args here
   case class UnknownTac(source: String) extends ATac
   
   sealed abstract class Meth
@@ -29,7 +33,7 @@ object ProverData {
   case class SubstThm(rule: ThmName) extends Meth // rule used
   case class SubstAsmThm(assumption: ThmName, rule: ThmName) extends Meth // rule used
   case class SubstUsingAsm(assumption: ThmName) extends Meth // which assumption in list
-  case class Case(term: Term) extends Meth // term which case is applied for
+  case class Case(term: TermRef) extends Meth // term which case is applied for
   case class Tactic(tactic: ATac) extends Meth
   case class Using(facts: List[ThmName], meth: Meth) extends Meth
   case class Unknown(source: String) extends Meth
