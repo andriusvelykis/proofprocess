@@ -14,6 +14,8 @@ import scala.collection.JavaConversions._
   */
 object ProverDataConverter {
   
+  private type ITerm = isabelle.Term.Term
+  
   def command(cmd: IsabelleCommand): Meth = {
     val res = cmd match {
       // TODO multiple branches (e.g. apply (auto, simp))
@@ -43,7 +45,7 @@ object ProverDataConverter {
     // TODO support insts
     terms.map({ case t: NameTerm => Thm(t.getName) })
     
-  def terms(terms: List[Term]): List[isabelle.Term.Term] =
+  def terms(terms: List[Term]): List[ITerm] =
     // TODO something about markup terms?
     terms.map({ case t: IsaTerm => t.getTerm })
     
