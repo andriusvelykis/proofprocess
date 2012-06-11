@@ -8,6 +8,9 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.scala-ide.scala.library;bundle-version="2.9.2"
+ org.scala-ide.scala.library;bundle-version="2.9.2",
+ org.ai4fm.proofprocess;bundle-version="1.0.0",
+ org.ai4fm.proofprocess.isabelle;bundle-version="1.0.0",
+ org.ai4fm.proofprocess.isabelle.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
