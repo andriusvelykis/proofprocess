@@ -121,7 +121,7 @@ object ProverData {
           thmElem("Assumption", asm),
           thmElem("Theorem", thm)))
       case SubstUsingAsm(thm) => thmElem("Subst_using_asm", thm)
-      case Case(term) => elem("Subst_using_asm", List(encodeTerm(term)))
+      case Case(term) => elem("Case", List(encodeTerm(term)))
       case Tactic(tac) => elem("Tactic", List(encodeTac(tac)))
       case Using(thms, meth) => elem("Using", List(
           thmsElem("Thms", thms),
