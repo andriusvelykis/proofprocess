@@ -63,8 +63,8 @@ val t2 = Goal {state = s0,cont = Proof (("",Tactic tac1),[])}*)
 ML{*
 exception decode_exp of string * XML.tree;
 
-fun encode_term (IsaTerm(t)) = XML.Elem (("Term",[]), Term_XML.Encode.term t)
- |  encode_term (StrTerm(s)) = XML.Elem (("TermStr",[("val", s)]), []); 
+fun encode_term (IsaTerm(t)) = XML.Elem (("IsaTerm",[]), Term_XML.Encode.term t)
+ |  encode_term (StrTerm(s)) = XML.Elem (("StrTerm",[("val", s)]), []); 
 fun decode_term (XML.Elem (("IsaTerm",[]), term_tree)) = IsaTerm (Term_XML.Decode.term term_tree)
  |  decode_term (XML.Elem (("StrTerm",[("val", s)]), [])) = StrTerm s
  |  decode_term tree  = raise decode_exp ("Term has wrong args",tree);

@@ -56,8 +56,8 @@ object ProverData {
     import isabelle.XML._
     
     def encodeTerm(term: TermRef) = term match {
-      case IsaTerm(t) => elem ("Term", Term_XML.Encode.term(t))
-      case StrTerm(s) => Elem(Markup("TermStr", List(("val", s))), Nil)
+      case IsaTerm(t) => elem ("IsaTerm", Term_XML.Encode.term(t))
+      case StrTerm(s) => Elem(Markup("StrTerm", List(("val", s))), Nil)
     }
 
     def encodeStringPair(s: String, t: TermRef) = Elem(Markup("Pair", List(("name", s))), List(encodeTerm(t)))
