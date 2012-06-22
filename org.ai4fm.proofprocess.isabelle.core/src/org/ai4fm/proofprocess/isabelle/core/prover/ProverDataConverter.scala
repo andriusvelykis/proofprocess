@@ -158,7 +158,8 @@ object ProverDataConverter {
   def terms(terms: List[Term]): List[TermRef] =
     // TODO something about markup terms?
     terms.map({
-      case t: PPIsaTerm => IsaTerm(t.getTerm)
+      // use StrTerm always for now
+      case t: PPIsaTerm => StrTerm(t.getDisplay) //IsaTerm(t.getTerm)
       case s: DisplayTerm => StrTerm(s.getDisplay)
     })
     
