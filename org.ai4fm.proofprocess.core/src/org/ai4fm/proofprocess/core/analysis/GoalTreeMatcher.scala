@@ -23,10 +23,12 @@ object GoalTreeMatcher {
         handleTreeNodes(branches, mergeBranches, info, inGoals, outGoals)
     }
 
-    // TODO sort and eliminate nested parallel/seq, e.g. Seq(e1, Seq(e2, ...)) => Seq(e1, e2, ...)?
-
+    // TODO sort? preserve original order somehow?
+    
     val root = mergedRoot(branchRoot(rootBranches), mergeBranches)
-    root
+    
+    // also compact tree to eliminate nested parallel/seq , e.g. Seq(e1, Seq(e2, ...)) => Seq(e1, e2, ...)
+    root.map(compactTree)
   }
 
   private def handleTreeNodes[A, T](branches: List[Branch[A, T]], mergeBranches: List[Branch[A, T]],
@@ -186,4 +188,16 @@ object GoalTreeMatcher {
     val unchanged: (List[Branch[A, T]], List[T]),
     val changed: (List[Branch[A, T]], List[T]))
 
+  private def compactTree[A, T](tree: GoalTree[A, T]): GoalTree[A, T] = tree match {
+    // leaf entries are not compacted
+    case e @ GoalEntry(_, _, _) => e
+    // for sequences, 'pull up' nested sequences into the parent
+    case GoalSeq(seq) => GoalSeq(compactElems(seq){case GoalSeq(childSeq) => childSeq})
+    // for parallels, 'pull up' nested branches into the parent
+    case GoalParallel(par) => GoalParallel(compactElems(par){case GoalParallel(childPar) => childPar})
+  }
+
+  private def compactElems[A, T](elems: List[GoalTree[A, T]])
+    (pf: PartialFunction[GoalTree[A, T], List[GoalTree[A, T]]]) : List[GoalTree[A, T]] =
+      elems.map(compactTree).map(e => if (pf.isDefinedAt(e)) pf(e) else List(e)).flatten
 }
