@@ -142,6 +142,7 @@ object ProverDataConverter {
         case isa.ERule(facts) => Some(Erule(None, thms(facts).head))
         case isa.Elim(facts) => Some(Erule(None, thms(facts).head))
         case isa.FRule(facts) => Some(Frule(None, thms(facts).head))
+        case isa.CaseTac(facts) => Some(Case(terms(facts).head))
         case _ => None 
       }
       // TODO support others (e.g. "unfolding" etc)
