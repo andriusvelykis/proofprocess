@@ -219,8 +219,12 @@ and decode_pg (XML.Elem (("Goal",[]),[state_tree,cont_tree])) =
 
 encode_meth (Rule (Thm "a")) |> decode_meth;
 encode_tac (Simp{add = [Thm "a",Thm "a",Hyp "B"], del=[], only=NONE});
-
 *}
+
+ML{*
+print_depth 100;
+*}
+
 ML{*
 XML.Text "test";
 XML.Elem (("Unknown",[("arg","test")]),[]);
@@ -228,6 +232,16 @@ val t = XML.Elem (("Simp",[]),[XML.Elem (("dest",[("val","l1")]),[]),XML.Elem ((
 val yt = YXML.string_of t;
 val t' = YXML.parse yt;
 *}
+
+ML{*
+val is = TextIO.openIn "<<path/to/file.yxml>>"
+val inp = TextIO.inputAll is;
+val _ = TextIO.closeIn is;
+
+val [a,b] = YXML.parse_body inp;
+decode_pg a;
+*}
+
 
 
 end;
