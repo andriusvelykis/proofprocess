@@ -6,10 +6,10 @@ package org.ai4fm.proofprocess.core.analysis
   */
 object GoalTreeMatcher {
 
-  private case class Branch[A, T](root: GoalTree[A], inGoals: List[T])
+  private case class Branch[A, T](root: GoalTree[A, T], inGoals: List[T])
   
 
-  def goalTree[A, T](initialGoals: List[T], steps: List[(A, List[T])]): Option[GoalTree[A]] = {
+  def goalTree[A, T](initialGoals: List[T], steps: List[(A, List[T])]): Option[GoalTree[A, T]] = {
 
     // make a list with ingoals-info-outgoals steps
     val inGoals = initialGoals :: steps.map(_._2)
@@ -125,7 +125,7 @@ object GoalTreeMatcher {
     (newBranch :: unaffectedBranches, newMergeBranches)
   }
 
-  private def branchRoot[A, T](branches: List[Branch[A, T]]): Option[GoalTree[A]] = branches match {
+  private def branchRoot[A, T](branches: List[Branch[A, T]]): Option[GoalTree[A, T]] = branches match {
     // no branches, so nothing to join into a root
     case Nil => None
     // if single branch, it is the root
@@ -134,7 +134,7 @@ object GoalTreeMatcher {
     case multiple => Some(GoalParallel(multiple.map(_.root)))
   }
 
-  private def mergedRoot[A, T](branchRoot: Option[GoalTree[A]], mergeBranches: List[Branch[A, T]]) =
+  private def mergedRoot[A, T](branchRoot: Option[GoalTree[A, T]], mergeBranches: List[Branch[A, T]]) =
     if (mergeBranches.isEmpty) {
       branchRoot
     } else {
