@@ -42,12 +42,14 @@ object ProverData {
   
   sealed abstract class ProofTree
   case class Gap() extends ProofTree
-  case class Proof(why: Why, goals: List[ProofState], cont: ProofTree) extends ProofTree
+  // in Proof, the goals represent proof state after the step
+  case class Proof(why: Why, goals: List[ProofGoal]) extends ProofTree
   case class Failure(failures: List[ProofTree], valid: Option[ProofTree]) extends ProofTree
   
-//  case class ProofGoal(state: ProofState, cont: ProofTree)
+  // ProofGoal is the start of a proof tree/subtree (e.g. initial goals)
+  case class ProofGoal(state: ProofState, cont: ProofTree)
   
-    object Encode {
+  object Encode {
 
     import isabelle.Markup
     import isabelle.Term_XML
@@ -133,14 +135,15 @@ object ProverData {
     
     def encodePT(pt: ProofTree): Tree = pt match {
       case Gap() => elem("Gap")
-      case Proof(why, goals, cont) => elem("Proof", List(
+      case Proof(why, goals) => elem("Proof", List(
           encodeWhy(why),
-          elem("Goals", goals map encodePS),
-          encodePT(cont)))
+          elem("Goals", goals map encodePG)))
       case Failure(failures, valid) => elem("Failure", List(
           elem("Failures", failures map encodePT),
           elem("Valid", List(encodeOpt(valid map encodePT)))))
     }
+    
+    def encodePG (g: ProofGoal) = elem("Goal",List(encodePS(g.state),encodePT(g.cont)))
     
   }
   

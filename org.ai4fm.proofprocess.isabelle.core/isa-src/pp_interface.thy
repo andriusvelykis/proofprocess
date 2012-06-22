@@ -45,9 +45,9 @@ datatype meth =
 type why = string * meth
 
 datatype PT = Gap
-            | Proof of {w: why, goals: PS list, cont: PT}
+            | Proof of why * PG list
             | Failure of {failures : PT list, valid : PT option} (* assume failed is ordered *)
-(*and PG = Goal of {state : PS, cont : PT}*);
+and PG = Goal of {state : PS, cont : PT};
 *}
 
 
@@ -199,24 +199,22 @@ fun decode_why (XML.Elem (("Why",[("why_info",s)]),[m])) = (s,decode_meth m)
  |  decode_why tree = raise decode_exp ("cannot decode why",tree);
 
 fun encode_pt Gap = XML.Elem (("Gap",[]),[])
- |  encode_pt (Proof {w,goals,cont}) = XML.Elem (("Proof",[]),[encode_why w, XML.Elem (("Goals",[]), map encode_ps goals), encode_pt cont])
+ |  encode_pt (Proof(w, goals)) = XML.Elem (("Proof",[]),[encode_why w, XML.Elem (("Goals",[]), map encode_pg goals)])
  |  encode_pt (Failure {failures,valid}) = XML.Elem (("Failure",[]),
      [XML.Elem (("Failures",[]),map encode_pt failures),
       XML.Elem (("Valid",[]),[encode_opt (Option.map encode_pt valid)])])
-(*and encode_pg (Goal {state,cont}) = XML.Elem (("Goal",[]),[encode_ps state,encode_pt cont])*)
+and encode_pg (Goal {state,cont}) = XML.Elem (("Goal",[]),[encode_ps state,encode_pt cont])
 ;
 
 fun decode_pt (XML.Elem (("Gap",[]),[])) = Gap
- |  decode_pt (XML.Elem (("Proof",[]),(w_tree :: XML.Elem (("Goals",[]), goals_trees) :: cont_tree :: _)))  =
-      Proof {w = decode_why w_tree,
-             goals = map decode_ps goals_trees,
-             cont = decode_pt cont_tree}
+ |  decode_pt (XML.Elem (("Proof",[]),(w_tree :: XML.Elem (("Goals",[]), goals_trees) :: _)))  =
+      Proof (decode_why w_tree, map decode_pg goals_trees)
  |  decode_pt (XML.Elem (("Failure",[]),[XML.Elem (("Failures",[]),failures_trees), XML.Elem (("Valid",[]),[valid_tree])])) =
        Failure {failures = map decode_pt failures_trees,valid = Option.map decode_pt (decode_opt valid_tree)}
   | decode_pt tree = raise decode_exp ("cannot decode proof element",tree)
-(*and decode_pg (XML.Elem (("Goal",[]),[state_tree,cont_tree])) =
+and decode_pg (XML.Elem (("Goal",[]),[state_tree,cont_tree])) =
       Goal {state = decode_ps state_tree,cont = decode_pt cont_tree}
-  | decode_pg tree = raise decode_exp ("cannot decode proof goal",tree)*)
+  | decode_pg tree = raise decode_exp ("cannot decode proof goal",tree)
 ;
 
 encode_meth (Rule (Thm "a")) |> decode_meth;

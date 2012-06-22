@@ -2,6 +2,7 @@ package org.ai4fm.proofprocess.isabelle.ui.actions
 
 import isabelle.YXML
 import org.ai4fm.proofprocess.Attempt
+import org.ai4fm.proofprocess.Proof
 import org.ai4fm.proofprocess.isabelle.core.prover.ProverData
 import org.ai4fm.proofprocess.isabelle.core.prover.ProverDataConverter
 import org.eclipse.core.commands.AbstractHandler
@@ -35,8 +36,12 @@ class ExportPProcessToIsabelleHandler extends AbstractHandler {
   }
   
   private def exportToFile(event: ExecutionEvent)(attempt: Attempt) {
-    val proofTree = ProverDataConverter.attempt(attempt)
-    val encoded = ProverData.Encode.encodePT(proofTree)
+    
+    // TODO get it from selection?
+    val proof = attempt.eContainer().asInstanceOf[Proof]
+    
+    val proofTree = ProverDataConverter.attempt(proof, attempt)
+    val encoded = ProverData.Encode.encodePG(proofTree)
     val yxml = YXML.string_of_tree(encoded)
 
     val fileDialog = new FileDialog(HandlerUtil.getActiveShell(event), SWT.SAVE)

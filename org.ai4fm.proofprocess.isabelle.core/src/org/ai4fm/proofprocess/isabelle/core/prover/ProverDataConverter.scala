@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.prover
 
 import org.ai4fm.proofprocess.Attempt
+import org.ai4fm.proofprocess.{Proof => PPProof}
 import org.ai4fm.proofprocess.ProofDecor
 import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ProofEntry
@@ -25,30 +26,89 @@ object ProverDataConverter {
   
   private type ITerm = isabelle.Term.Term
   
-  def attempt(attempt: Attempt): ProofTree = {
+  def attempt(proof: PPProof, attempt: Attempt): ProofGoal = {
     val rootElem = attempt.getProof
-    proofTree(rootElem, Gap())
+    val (rootTree, inGoals) = proofTree(rootElem)
+    
+    val initialGoals = terms(proof.getGoals.toList)
+    
+    def goalState(cont: ProofTree)(goal: TermRef) = ProofGoal(nameGoalState(goal), cont)
+    
+    // check for goals not handled by the proof
+    val additionalGaps = initialGoals.diff(inGoals).map(goalState(Gap()))
+    
+    val root = if (additionalGaps.isEmpty) {
+      rootTree
+    } else {
+      // some of the initial goals may have been unhandled in the proof (e.g. unfinished proof on a single branch)
+      Proof(Why("Unhandled initial goals", Unknown("")), inGoals.map(goalState(rootTree)) ::: additionalGaps)
+    }
+    
+    // for the root goal, assume that proof has one initial goal
+    goalState(root)(initialGoals.head)
   }
   
-  private def proofTree(elem: ProofElem, cont: ProofTree) : ProofTree = elem match {
+  // only works for nice single-goal trees at the moment
+  private def proofTree(elem: ProofElem): (ProofTree, List[TermRef]) = elem match {
     
     case e: ProofEntry => {
-      val (why, goals) = entry(e)
-      val goalStates = goals.map(nameGoalState)
-      Proof(why, goalStates, cont)
+      val (why, inGoals, outGoals) = entry(e)
+      val goalStates = outGoals.map(nameGoalState)
+      
+      val proofGoals = goalStates.map(state => ProofGoal(state, Gap()))
+      (Proof(why, proofGoals), inGoals)
     }
-    case d: ProofDecor => proofTree(d.getEntry, cont)
-    case s: ProofSeq => s.getEntries.foldRight(cont)(proofTree)
-    // TODO special handling for parallel?
-    case p: ProofParallel => p.getEntries.foldRight(cont)(proofTree)
+    case d: ProofDecor => proofTree(d.getEntry)
+    case s: ProofSeq => s.getEntries.foldRight[(ProofTree, List[TermRef])]((Gap(), Nil)) {
+      case (entry, (result, resultInGoals)) => {
+        val (entryTree, inGoals) = proofTree(entry)
+        (replaceEnds(result, resultInGoals)(entryTree, None), inGoals)
+      }
+    }
+    // special handling for parallel
+    case p: ProofParallel => {
+      val branchInfos = p.getEntries.toList.map(proofTree)
+      // do not support parallels with no inGoals - actually use just the first of inGoals
+      // multiple inGoals not supported
+      val branches = branchInfos.filterNot(_._2.isEmpty).map{case (entry, inGoals) => (entry, inGoals.head)}
+      
+      // package the branches into a Proof
+      val inGoals = branches.map(_._2)
+      val branchPGs = branches.map{ case (entry, inGoal) => ProofGoal(nameGoalState(inGoal), entry)}
+      
+      (Proof(Why("prover-data-converter-parallel", Unknown("")), branchPGs), inGoals)
+    }
   }
+
+  private def matchTerm(t1: TermRef, t2: TermRef): Boolean =
+    t1 == t2
   
-  def entry(entry: ProofEntry): (Why, List[TermRef]) = {
-    val intentName = entry.getInfo.getIntent.getName
+  private def replaceEnds(replacement: ProofTree, replInGoals: List[TermRef])(tree: ProofTree, outGoal: Option[TermRef]): ProofTree =
+    (tree, replacement) match {
+      // for goals, go deeper and replace each cont Gap() with the replacement
+      case (Proof(why, proofGoals), _) => Proof(why, proofGoals.map(
+        goal => ProofGoal(goal.state, replaceEnds(replacement, replInGoals)(goal.cont, Some(goal.state.goal)))))
+      case (Gap(), Proof(Why("prover-data-converter-parallel", _), parGoals)) => {
+        val replGoal = replInGoals.indexWhere(g => outGoal.filter(matchTerm(_, g)).isDefined)
+        if (replGoal >= 0) {
+          // use the parallel goal
+          parGoals(replGoal).cont
+        } else {
+          // use the Gap
+          Gap()
+        }
+      }
+      case (Gap(), _) => replacement
+      // skip all non-proofs here
+      case _ => replacement
+    }
+  
+  def entry(entry: ProofEntry): (Why, List[TermRef], List[TermRef]) = {
+    val intentName = Option(entry.getInfo.getIntent).map(_.getName).getOrElse("")
     
     val proofStep = entry.getProofStep
-    // how about out goals?
     val inGoals = terms(proofStep.getInGoals.toList)
+    val outGoals = terms(proofStep.getOutGoals.toList)
     
     val commandOpt = proofStep.getTrace match {
       case isaTrace: IsabelleTrace => Some(command(isaTrace.getCommand))
@@ -57,7 +117,7 @@ object ProverDataConverter {
     
     val cmd = commandOpt getOrElse {Unknown(String.valueOf(proofStep.getTrace))}
     
-    (Why(intentName, cmd), inGoals)
+    (Why(intentName, cmd), inGoals, outGoals)
   }
   
   private def nameGoalState(term: TermRef): ProofState = {
