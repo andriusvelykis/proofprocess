@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.scala-ide.scala.library;bundle-version="2.9.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.ai4fm.proofprocess.core.analyse,
+Export-Package: org.ai4fm.proofprocess.core.analysis,
  org.ai4fm.proofprocess.core.prefs,
  org.ai4fm.proofprocess.core.store,
  org.ai4fm.proofprocess.core.util

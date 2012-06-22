@@ -1,4 +1,4 @@
-package org.ai4fm.proofprocess.core.analyse;
+package org.ai4fm.proofprocess.core.analysis;
 
 import java.util.ArrayList;
 import java.util.Arrays;

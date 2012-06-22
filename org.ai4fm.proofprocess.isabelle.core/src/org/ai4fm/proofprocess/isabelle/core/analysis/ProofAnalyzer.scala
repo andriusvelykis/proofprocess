@@ -10,7 +10,7 @@ import org.ai4fm.proofprocess.Loc
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofStore
 import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.core.analyse.ProofMatcher
+import org.ai4fm.proofprocess.core.analysis.ProofMatcher
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin._
 import org.ai4fm.proofprocess.isabelle.core.parse.ProofEntryData
