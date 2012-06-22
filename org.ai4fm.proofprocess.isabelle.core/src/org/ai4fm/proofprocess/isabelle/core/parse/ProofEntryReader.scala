@@ -5,13 +5,20 @@ import isabelle.Text
 import org.ai4fm.filehistory.FileVersion
 import org.ai4fm.proofprocess.Intent
 import org.ai4fm.proofprocess.Loc
+import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofProcessFactory
 import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.Trace
+import org.ai4fm.proofprocess.core.analysis.CacheGoalTreeMatcher
+import org.ai4fm.proofprocess.core.analysis.GoalEntry
+import org.ai4fm.proofprocess.core.analysis.GoalParallel
+import org.ai4fm.proofprocess.core.analysis.GoalSeq
+import org.ai4fm.proofprocess.core.analysis.GoalTree
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil
 import scala.collection.JavaConversions._
+
 
 /**
   * @author Andrius Velykis 
@@ -25,6 +32,8 @@ trait ProofEntryReader {
   
   def cloneTerm(term: Term): Term
   
+  def matchTerms(term1: Term, term2: Term): Boolean
+  
   def textLoc(cmd: State): Loc
 
   def readEntries(proofState: List[(State, List[Term])]): Option[ProofEntryData] = proofState match {
@@ -34,17 +43,36 @@ trait ProofEntryReader {
     case (firstCmd, initialGoals) :: restCmds if !initialGoals.isEmpty && !restCmds.isEmpty => {
       // Assume that the first step in any proof is the "declaration" command, e.g. "lemma ..."
       // Also check that initial goals are not empty - don't allow proofs with empty goals
+      // Also check that proof steps are available
+      val proofSteps = readProofSteps(restCmds, initialGoals)
       
-      Some(ProofEntryData(initialGoals, CommandParser.commandId(firstCmd.command), readProofSteps(restCmds, initialGoals)))
+      proofSteps.map(steps => ProofEntryData(initialGoals, CommandParser.commandId(firstCmd.command), steps))
     }
     // empty/short proof state - nothing to parse
     case _ => None
   }
 
-  private def readProofSteps(proofSteps: List[(State, List[Term])], inGoals: List[Term]): List[ProofEntry] =
-    proofSteps match {
-    case (step, goals) :: rest => proofEntry(step, inGoals, goals) :: readProofSteps(rest, goals)
-    case Nil => Nil
+  private def readProofSteps(proofSteps: List[(State, List[Term])], inGoals: List[Term]): Option[ProofElem] = {
+    // try finding a structure of the flat proof steps based on how the goals change
+    val goalTree = CacheGoalTreeMatcher.goalTree(matchTerms)(inGoals, proofSteps)
+    // map the tree structure to corresponding proof process data elements
+    goalTree.map(proofProcessTree)
+  }
+  
+  private def proofProcessTree(tree: GoalTree[State, Term]): ProofElem = tree match {
+    case GoalEntry(state, inGoals, outGoals) => proofEntry(state, inGoals, outGoals)
+    case GoalParallel(par) => {
+      val proofPar = factory.createProofParallel
+      proofPar.getEntries.addAll(par.map(proofProcessTree))
+      proofPar.setInfo(factory.createProofInfo)
+      proofPar
+    }
+    case GoalSeq(seq) => {
+      val proofSeq = factory.createProofSeq
+      proofSeq.getEntries.addAll(seq.map(proofProcessTree))
+      proofSeq.setInfo(factory.createProofInfo)
+      proofSeq
+    }
   }
 
   private def proofEntry(cmdState: State, inGoals: List[Term], outGoals: List[Term]): ProofEntry = {
@@ -90,5 +118,5 @@ trait ProofEntryReader {
 
 }
 
-case class ProofEntryData(val goals: List[Term], val label: Option[String], val entries: List[ProofEntry])
+case class ProofEntryData(val goals: List[Term], val label: Option[String], val rootEntry: ProofElem)
 

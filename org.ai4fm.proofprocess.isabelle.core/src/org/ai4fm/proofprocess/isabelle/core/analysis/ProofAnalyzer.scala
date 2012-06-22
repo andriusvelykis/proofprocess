@@ -107,6 +107,9 @@ object ProofAnalyzer {
 
       // TODO review
       override def cloneTerm(term: Term): Term = EcoreUtil.copy(term)
+      
+      // TODO ignore some properties, e.g. display?
+      override def matchTerms(term1: Term, term2: Term): Boolean = EcoreUtil.equals(term1, term2);
 
       override def textLoc(cmdState: State) = cmdLoc(cmdState)
     }
@@ -139,7 +142,7 @@ object ProofAnalyzer {
     val proof = proofMatcher.findCreateProof(proofStore, entryData.label.orNull, entryData.goals);
 
     // TODO export State-Entry matchings for Activities
-    proofMatcher.findCreateProofTree(proofStore, proof, entryData.entries);
+    proofMatcher.findCreateProofTree(proofStore, proof, entryData.rootEntry);
   }
 
 }

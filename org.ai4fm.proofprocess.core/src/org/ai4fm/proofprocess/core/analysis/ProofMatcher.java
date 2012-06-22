@@ -136,6 +136,28 @@ public class ProofMatcher {
 		return copy;
 	}
 	
+	public void findCreateProofTree(ProofStore proofStore, Proof proof, 
+			ProofElem proofRoot) {
+		
+//		// wrap all entries into a root Seq
+//		ProofSeq seq = ProofProcessFactory.eINSTANCE.createProofSeq();
+//		seq.getEntries().addAll(proofState)
+//		seq.setInfo(ProofProcessFactory.eINSTANCE.createProofInfo());
+		
+		List<ProofEntry> seqEntries = getProofEntriesDepthFirst(proofRoot);
+		ProofElemMatch matched = findMatchingProofTree(proof, seqEntries);
+		if (matched != null) {
+			// found a proof tree fully matching the given proof, use it
+			return;
+		}
+		
+		// partial mapping for non-sequential structures not yet implemented - always create new attempt
+		Attempt attempt = ProofProcessFactory.eINSTANCE.createAttempt();
+		attempt.setProof(proofRoot);
+		
+		proof.getAttempts().add(attempt);
+	}
+		
 	public ProofElemMatch findCreateProofTree(ProofStore proofStore, Proof proof, 
 			List<ProofEntry> proofState) {
 
