@@ -79,10 +79,19 @@ object GoalTreeMatcher {
     // create the current entry with changed goals
     val entry = GoalEntry(info, changedInGoals, changedOutGoals)
 
-    val (affectedBranches, additionalGoals) = matched.changed
+    val (changedBranches, additionalGoals) = matched.changed
 
     // the additional goals are frequently non-empty, especially for branch ends
     // the additional goals are yet unsolved end-goals
+    
+    // also get all unchanged branches with empty inGoals
+    // these branches represent either reorder (no changes) or newly inserted goals (no incoming goals)
+    // since they do not change anything, we just attach them to the next parent,
+    // otherwise they get uncaught right to the top of the proof
+    val unchangedEmptyBranches = branches.diff(changedBranches).filter(_.inGoals.isEmpty)
+    
+    // now affected branches consist of changed branches plus the unchanged empty ones
+    val affectedBranches = changedBranches ::: unchangedEmptyBranches
 
     // get the root element for the affected branches (e.g. join in parallel if needed)
     val jointBranchRoot = branchRoot(affectedBranches)
