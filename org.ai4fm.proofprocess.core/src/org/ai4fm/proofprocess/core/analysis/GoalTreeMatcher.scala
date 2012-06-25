@@ -94,9 +94,9 @@ object GoalTreeMatcher {
     val (newBranch, newMergeBranches) = if (containsAll(changedOutGoals, affectedInGoals)) {
 
       // Check if the merge branches can be fulfilled
-      // a merge branch is fulfilled when after update its ingoals match new entry ingoals
+      // a merge branch is fulfilled when after update its ingoals are covered by new entry ingoals
       val (matchedMergeBranches, openMergeBranches) =
-        updatedMergeBranches.partition(b => listsEqual(b.inGoals, entry.inGoals))
+        updatedMergeBranches.partition(b => b.inGoals.diff(entry.inGoals).isEmpty)
 
       val mergedJointRoot = mergedRoot(jointBranchRoot, matchedMergeBranches)
 
