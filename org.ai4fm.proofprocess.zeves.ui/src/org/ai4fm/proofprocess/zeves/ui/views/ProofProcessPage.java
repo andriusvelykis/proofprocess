@@ -15,7 +15,7 @@ import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStore;
-import org.ai4fm.proofprocess.core.analyse.ProofMatcher;
+import org.ai4fm.proofprocess.core.analysis.ProofMatcher;
 import org.ai4fm.proofprocess.core.store.IProofStoreProvider;
 import org.ai4fm.proofprocess.core.util.PProcessUtil;
 import org.ai4fm.proofprocess.log.ProofActivity;
