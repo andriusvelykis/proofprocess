@@ -8,6 +8,8 @@ object PProcessUIPlugin {
   // The shared instance
   private var instance: PProcessUIPlugin = _
   def plugin = instance
+  
+  def prefStore = plugin.getPreferenceStore
     
 }
 
