@@ -16,6 +16,15 @@
             name="Proof Process"
             restorable="true">
       </view>
+      <view
+            allowMultiple="true"
+            category="org.ai4fm.proofprocess.ui"
+            class="org.ai4fm.proofprocess.ui.views.PProcessGraphView"
+            icon="icons/proofprocess.png"
+            id="org.ai4fm.proofprocess.ui.PProcessGraphView"
+            name="Proof Process Graph"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
