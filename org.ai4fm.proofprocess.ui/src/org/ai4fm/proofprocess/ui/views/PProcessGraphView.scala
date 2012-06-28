@@ -36,7 +36,9 @@ import org.eclipse.zest.core.viewers.EntityConnectionData
 import org.eclipse.zest.core.viewers.GraphViewer
 import org.eclipse.zest.core.widgets.ZestStyles
 import org.eclipse.zest.layouts.LayoutAlgorithm
+import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm
 import org.eclipse.zest.layouts.algorithms.DirectedGraphLayoutAlgorithm
+import org.eclipse.zest.layouts.algorithms.HorizontalShiftAlgorithm
 
 
 /** @author Andrius Velykis
@@ -124,7 +126,7 @@ class PProcessGraphView extends ViewPart {
 
   def layout(): LayoutAlgorithm = {
     // new SpaceTreeLayoutAlgorithm()
-    new DirectedGraphLayoutAlgorithm
+    new CompositeLayoutAlgorithm(Array(new DirectedGraphLayoutAlgorithm, new HorizontalShiftAlgorithm))
   }
 
   override def setFocus = graphViewer.getControl.setFocus
