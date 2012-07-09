@@ -215,7 +215,7 @@ public class ProofMatcher {
 		
 		// use the same group as the last entry has
 		// FIXME what about case splits?
-		ProofElem groupToAdd = getGroupToAdd(proofStore, targetMatch.entry, proofStep);
+		ProofElem groupToAdd = getGroupToAdd(proofStore, targetMatch.attempt, targetMatch.entry, proofStep);
 		addToGroup(targetMatch.attempt, groupToAdd, proofStep);
 		
 		List<ProofEntry> entriesPlus = new ArrayList<ProofEntry>(targetMatch.allEntries);
@@ -375,7 +375,7 @@ public class ProofMatcher {
 	 * @param entry
 	 * @return ProofElem where to add the entry, {@code null} if add to the root
 	 */
-	protected ProofElem getGroupToAdd(ProofStore proofStore, ProofEntry previous, ProofEntry entry) {
+	protected ProofElem getGroupToAdd(ProofStore proofStore, Attempt attempt, ProofEntry previous, ProofEntry entry) {
 		// add the attempt to the same group
 		return getParentProofElem(previous);
 	}

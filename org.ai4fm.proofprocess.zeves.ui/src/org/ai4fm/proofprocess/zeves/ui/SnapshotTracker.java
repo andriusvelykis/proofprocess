@@ -35,6 +35,7 @@ import net.sourceforge.czt.zeves.response.ZEvesProofTrace.TraceType;
 import net.sourceforge.czt.zeves.response.form.ZEvesName;
 
 import org.ai4fm.filehistory.FileVersion;
+import org.ai4fm.proofprocess.Attempt;
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Proof;
 import org.ai4fm.proofprocess.ProofElem;
@@ -328,7 +329,7 @@ public class SnapshotTracker {
 		}
 
 		@Override
-		protected ProofElem getGroupToAdd(ProofStore proofStore, ProofEntry previous,
+		protected ProofElem getGroupToAdd(ProofStore proofStore, Attempt attempt, ProofEntry previous,
 				ProofEntry entry) {
 			
 			// TODO check cast
@@ -348,16 +349,16 @@ public class SnapshotTracker {
 				
 				if (sizeP == size) {
 					// same size - a sibling of the previous case (add a split?) 
-					return addParallelBranch(proofStore, getParentParallel(previous), caseStr);
+					return addParallelBranch(proofStore, attempt, getParentParallel(previous), caseStr);
 				} else if (sizeP > size) {
 					// shorter size, the previous case has ended - exit split
 					// this means take the group of parent parallel - will be added
 					// to the same level as parallel
 					// FIXME this does not work if the jump is via multiple steps
-					return getGroupToAdd(proofStore, getPreviousEntry(getParentParallel(previous)), entry);
+					return getGroupToAdd(proofStore, attempt, getPreviousEntry(getParentParallel(previous)), entry);
 				} else {
 					// longer size, going deeper into the case
-					return addParallelBranch(proofStore, createParallel(proofStore, getParentProofElem(previous)), caseStr);
+					return addParallelBranch(proofStore, attempt, createParallel(proofStore, attempt, getParentProofElem(previous)), caseStr);
 				}
 			}
 		}
@@ -389,7 +390,7 @@ public class SnapshotTracker {
 			//193
 		}
 		
-		private ProofSeq addParallelBranch(ProofStore proofStore, ProofParallel parentParallel, String caseStr) {
+		private ProofSeq addParallelBranch(ProofStore proofStore, Attempt attempt, ProofParallel parentParallel, String caseStr) {
 			
 			ProofSeq branch = ProofProcessFactory.eINSTANCE.createProofSeq();
 			ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
@@ -397,11 +398,11 @@ public class SnapshotTracker {
 			info.setNarrative("Case #" + caseStr);
 			info.setIntent(PProcessUtil.getIntent(proofStore, "Parallel Branch"));
 			
-			addToGroup(parentParallel, branch);
+			addToGroup(attempt, parentParallel, branch);
 			return branch;
 		}
 		
-		private ProofParallel createParallel(ProofStore proofStore, ProofElem parent) {
+		private ProofParallel createParallel(ProofStore proofStore, Attempt attempt, ProofElem parent) {
 			
 			ProofParallel parallel = ProofProcessFactory.eINSTANCE.createProofParallel();
 			ProofInfo info = ProofProcessFactory.eINSTANCE.createProofInfo();
@@ -411,7 +412,7 @@ public class SnapshotTracker {
 			info.setIntent(PProcessUtil.getIntent(proofStore, "Parallel"));
 			
 			// FIXME add to root?
-			addToGroup(parent, parallel);
+			addToGroup(attempt, parent, parallel);
 			return parallel;
 		}
 	}
