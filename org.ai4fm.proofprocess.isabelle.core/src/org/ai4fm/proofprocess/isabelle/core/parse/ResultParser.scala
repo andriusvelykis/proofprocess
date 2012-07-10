@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
 import isabelle.Command.State
+import isabelle.Isabelle_Markup
 import isabelle.Markup
 import isabelle.Pretty
 import isabelle.Term.Term
@@ -62,7 +63,7 @@ object ResultParser {
     *         or None if term information could not be parsed.
     */
   def traceGoalTerms(resultElem: XML.Tree): Option[List[Term]] = resultElem match {
-    case XML.Elem(Markup(Markup.TRACING, _), trace) =>
+    case XML.Elem(Markup(Isabelle_Markup.TRACING, _), trace) =>
       // find "subgoal_terms" elem and then decode each "subgoal_term" in it
       trace collectFirst
         { case XML.Elem(Markup("subgoal_terms", _), subgoals) => subgoals } map
@@ -77,12 +78,12 @@ object ResultParser {
     *         {@code term} is the marked-up term XML element.
     */
   def resultGoalMarkup(resultElem: XML.Tree): Option[List[(String, XML.Elem)]] = resultElem match {
-    case output @ XML.Elem(Markup(Markup.WRITELN, _), _) =>
+    case output @ XML.Elem(Markup(Isabelle_Markup.WRITELN, _), _) =>
       val subgoalOpts = collectDepthFirst(output,
         {
-          case subgoal @ XML.Elem(Markup(Markup.SUBGOAL, _), _) =>
+          case subgoal @ XML.Elem(Markup(Isabelle_Markup.SUBGOAL, _), _) =>
             collectDepthFirst(subgoal, {
-              case termXml @ XML.Elem(Markup(Markup.TERM, _), _) => termXml
+              case termXml @ XML.Elem(Markup(Isabelle_Markup.TERM, _), _) => termXml
             }).headOption
         })
       
@@ -121,7 +122,7 @@ object ResultParser {
   }
   
   def isError(elem: XML.Tree): Boolean = elem match {
-    case XML.Elem(Markup(Markup.ERROR, _), _) => true
+    case XML.Elem(Markup(Isabelle_Markup.ERROR, _), _) => true
     case _ => false
   }
   
