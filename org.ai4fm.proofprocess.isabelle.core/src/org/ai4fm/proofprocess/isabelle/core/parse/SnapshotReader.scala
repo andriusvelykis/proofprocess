@@ -6,7 +6,7 @@ import isabelle.Document
 import isabelle.Document.Node.Name
 import isabelle.Document.Snapshot
 import isabelle.Linear_Set
-import isabelle.Isar_Document
+import isabelle.Protocol
 import org.ai4fm.proofprocess.Term
 
 
@@ -42,8 +42,11 @@ object SnapshotReader {
     // Print the commands into a text document. Each command carries the original source from
     // the text document, so concatenating them back together produces the original document.
     val docTexts = snapshots.map({ case (doc, snapshot) => (doc, snapshot.node.commands.toList.map(_.source).mkString)})
+    
+    def nodeCommandStarts(node: Document.Node) = Document.Node.command_starts(node.commands.iterator)
+    
     // create a map of all command starts - needed to indicate command location
-    val commandStartMaps = snapshots.values.map(_.node.command_starts.toMap)
+    val commandStartMaps = snapshots.values.map(s => nodeCommandStarts(s.node).toMap)
     // merge all maps (check for empty map case)
     val commandStarts = commandStartMaps reduceLeftOption (_ ++ _) getOrElse (Map.empty)
     
@@ -54,7 +57,7 @@ object SnapshotReader {
       val doc = lastCmd.node_name
       val snapshot = snapshots.get(doc).get
       
-      val command_starts = snapshot.node.command_starts.toMap
+      val command_starts = nodeCommandStarts(snapshot.node).toMap
       
       val lastCmdOffset = snapshot.node.command_start(lastCmd).get
       val documentText = docTexts.get(doc).get
@@ -114,10 +117,12 @@ object SnapshotReader {
     */
   private def collectProofSpan(snapshot: Snapshot, commands: Linear_Set[Command], targetCommand: Command): List[State] = {
 
+    def commandState(cmd: Command) = snapshot.state.command_state(snapshot.version, cmd)
+    
     // first of all go backwards and collect everything before the target command
     // stop when the proof start command is reached
     var lastProofStart = false
-    val beforeCmdsRev = commands.reverse_iterator(targetCommand).map(snapshot.command_state).takeWhile(state => {
+    val beforeCmdsRev = commands.reverse_iterator(targetCommand).map(commandState).takeWhile(state => {
       val prevStart = lastProofStart
       lastProofStart = isProofStart(state)
       // take while previous is not proof start
@@ -126,7 +131,7 @@ object SnapshotReader {
 
     // then go forwards from the target command until the start of the next proof is reached
     val afterIt = commands.iterator(targetCommand).filterNot(_ == targetCommand)
-    val afterCmds = afterIt.map(snapshot.command_state).takeWhile(!isProofStart(_))
+    val afterCmds = afterIt.map(commandState).takeWhile(!isProofStart(_))
 
     beforeCmdsRev.toList.reverse ::: afterCmds.toList
   }
@@ -153,8 +158,8 @@ object SnapshotReader {
   }
 
   def isFinished(cmdState: State) = {
-    import isabelle.Isar_Document._
-    command_status(cmdState.status) == Finished
+    import isabelle.Protocol._
+    command_status(cmdState.status).is_finished
   }
   
   def isError(cmdState: State) =
