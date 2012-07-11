@@ -80,13 +80,15 @@ class SessionTracker extends SessionEvents {
 
   private def addPendingAnalysis(changed: Session.Commands_Changed) = if (tracking) {
 
-    val session = IsabelleCorePlugin.getIsabelle.getSession
-    // Isabelle State is immutable, so just take the whole state for processing 
-    // we can analyse what is needed in a low-priority analysis thread
-    pendingEvents.add(CommandAnalysisEvent(changed.commands, session.current_state))
+    IsabelleCorePlugin.getIsabelle.session foreach{ session =>
+      
+      // Isabelle State is immutable, so just take the whole state for processing 
+      // we can analyse what is needed in a low-priority analysis thread
+      pendingEvents.add(CommandAnalysisEvent(changed.commands, session.current_state))
 
-    // wake up the analysis job
-    analysisJob.schedule()
+      // wake up the analysis job
+      analysisJob.schedule()
+    }
   }
 
   private class AnalysisJob extends Job("Analysing proof process") {
