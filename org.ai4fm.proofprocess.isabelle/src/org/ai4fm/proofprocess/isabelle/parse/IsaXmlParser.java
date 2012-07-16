@@ -20,8 +20,6 @@ import scala.collection.JavaConversions.JListWrapper;
 
 import isabelle.Markup;
 import isabelle.XML;
-import isabelle.XML$Elem$;
-import isabelle.XML$Text$;
 import isabelle.XML.Elem;
 import isabelle.XML.Text;
 import isabelle.XML.Tree;
@@ -90,7 +88,7 @@ public class IsaXmlParser {
 		public void endElement(String uri, String localName, String qName) throws SAXException {
 			
 			IsaElemData elemData = elemStack.pop();
-			Elem elem = XML$Elem$.MODULE$.apply(elemData.markup, toScalaList(elemData.children));
+			Elem elem = XML.Elem$.MODULE$.apply(elemData.markup, toScalaList(elemData.children));
 			
 			// add to the parent
 			if (elemStack.isEmpty()) {
@@ -112,7 +110,7 @@ public class IsaXmlParser {
 				text.append(ch[start + i]);
 			}
 			
-			Text textElem = XML$Text$.MODULE$.apply(text.toString());
+			Text textElem = XML.Text$.MODULE$.apply(text.toString());
 			elemStack.peek().children.add(textElem);
 		}
 	}
