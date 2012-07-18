@@ -19,6 +19,7 @@
     <module>org.ai4fm.proofprocess.project</module>
     <module>org.ai4fm.proofprocess.project.core</module>
     <module>org.ai4fm.proofprocess.project.edit</module>
+    <module>org.ai4fm.proofprocess-feature</module>
     <module>org.ai4fm.proofprocess.isabelle</module>
     <module>org.ai4fm.proofprocess.isabelle.core</module>
     <module>org.ai4fm.proofprocess.isabelle.edit</module>

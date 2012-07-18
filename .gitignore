@@ -14,6 +14,7 @@ org.ai4fm.proofprocess.isabelle/target
 org.ai4fm.proofprocess.isabelle.core/target
 org.ai4fm.proofprocess.isabelle.edit/target
 org.ai4fm.proofprocess.isabelle.ui/target
+org.ai4fm.proofprocess-feature/target
 model/.project
 .cache
 
