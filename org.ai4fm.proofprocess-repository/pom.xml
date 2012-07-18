@@ -10,6 +10,6 @@
   <artifactId>org.ai4fm.proofprocess-repository</artifactId>
   <packaging>eclipse-repository</packaging>
 
-  <name>ProofProcess Framework P2 Repository</name>
+  <name>ProofProcess Framework p2 Repository</name>
 
 </project>
