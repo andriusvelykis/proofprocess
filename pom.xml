@@ -61,6 +61,18 @@
        <layout>p2</layout>
        <url>https://hudson.eclipse.org/hudson/job/gef-zest-integration/lastSuccessfulBuild/artifact/targetPlatform</url>
     </repository>
+
+    <repository>
+       <id>isabelle-eclipse</id>
+       <layout>p2</layout>
+       <url>http://www.ai4fm.org/isabelle-eclipse/updates/latest/</url>
+    </repository>
+
+    <repository>
+       <id>czt-eclipse</id>
+       <layout>p2</layout>
+       <url>http://czt.sourceforge.net/eclipse/updates/latest/</url>
+    </repository>
   </repositories>
 
   <build>
