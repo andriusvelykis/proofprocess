@@ -19,13 +19,17 @@
     <module>org.ai4fm.proofprocess.project</module>
     <module>org.ai4fm.proofprocess.project.core</module>
     <module>org.ai4fm.proofprocess.project.edit</module>
+    <module>org.ai4fm.proofprocess-feature</module>
     <module>org.ai4fm.proofprocess.isabelle</module>
     <module>org.ai4fm.proofprocess.isabelle.core</module>
     <module>org.ai4fm.proofprocess.isabelle.edit</module>
     <module>org.ai4fm.proofprocess.isabelle.ui</module>
+    <module>org.ai4fm.proofprocess.isabelle-feature</module>
     <module>org.ai4fm.proofprocess.zeves</module>
     <module>org.ai4fm.proofprocess.zeves.edit</module>
     <module>org.ai4fm.proofprocess.zeves.ui</module>
+    <module>org.ai4fm.proofprocess.zeves-feature</module>
+    <module>org.ai4fm.proofprocess-repository</module>
   </modules>
 
   <properties>

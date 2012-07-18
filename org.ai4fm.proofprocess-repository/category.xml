@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.ai4fm.proofprocess-feature_1.0.0.qualifier.jar" id="org.ai4fm.proofprocess-feature" version="1.0.0.qualifier">
+      <category name="org.ai4fm.proofprocess.category"/>
+   </feature>
+   <feature url="features/org.ai4fm.proofprocess.isabelle-feature_1.0.0.qualifier.jar" id="org.ai4fm.proofprocess.isabelle-feature" version="1.0.0.qualifier">
+      <category name="org.ai4fm.proofprocess.category"/>
+   </feature>
+   <feature url="features/org.ai4fm.proofprocess.zeves-feature_1.0.0.qualifier.jar" id="org.ai4fm.proofprocess.zeves-feature" version="1.0.0.qualifier">
+      <category name="org.ai4fm.proofprocess.category"/>
+   </feature>
+   <category-def name="org.ai4fm.proofprocess.category" label="ProofProcess Framework">
+      <description>
+         A framework to capture, store and analyse expert&apos;s interactive proof process. The framework is part of the AI4FM research project, which aims to learn from an expert doing interactive theorem proving to increase automation of formal proofs.
+      </description>
+   </category-def>
+</site>
