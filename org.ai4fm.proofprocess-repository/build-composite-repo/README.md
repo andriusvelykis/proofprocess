@@ -13,7 +13,7 @@ The `comp-repo.sh` shell script builds (or modifies) a composite p2 repository.
 Below is a sample execution that produces the 'latest' composite repository
 that contains the ProofProcess update site together with its main dependencies.
 
-The assumption here ist hat this composite repository is placed under
+The assumption here is that this composite repository is placed under
 `http://www.ai4fm.org/proofprocess/updates/latest`
 and the actual ProofProcess repository is under
 `http://www.ai4fm.org/proofprocess/updates/latest/proofprocess`.
