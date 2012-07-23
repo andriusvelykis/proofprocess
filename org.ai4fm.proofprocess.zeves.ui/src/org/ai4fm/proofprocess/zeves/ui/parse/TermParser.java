@@ -48,7 +48,7 @@ public class TermParser {
 				
 				List<Term> goals = new ArrayList<Term>();
 				
-				// parse the goal from Z/Eves response
+				// parse the goal from Z/EVES response
 				Pred goalPred = ZEvesResultConverter.parseZEvesPred((SectionManager) sectInfo, sectName, goalStr);
 				
 				if (goalPred instanceof TruePred) {
@@ -57,7 +57,7 @@ public class TermParser {
 				}
 				
 				// pretty-print the goal back, so that we get uniform CZT-printing, instead
-				// of using Z/Eves conversion to CZT unicode
+				// of using Z/EVES conversion to CZT unicode
 				String goalPrinted = ZEvesResultConverter.printResult((SectionManager) sectInfo,
 						sectName, goalPred, Markup.UNICODE, 0, true);
 
@@ -79,7 +79,7 @@ public class TermParser {
 				cause = e;
 			}
 			
-			String msg = "Cannot parse Z/Eves result: " + ZEditorUtil.clean(cause.getMessage()).trim();
+			String msg = "Cannot parse Z/EVES result: " + ZEditorUtil.clean(cause.getMessage()).trim();
 			ZEvesProofUIPlugin.log(msg, e);
 		}
 		
