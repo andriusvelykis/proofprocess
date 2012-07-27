@@ -12,6 +12,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 public class ResourceUtil {
 
@@ -24,7 +25,7 @@ public class ResourceUtil {
 		
 		Assert.isNotNull(filePath);
 		
-		List<IFile> files = findFile(filePath);
+		List<IFile> files = findFile(URIUtil.toURI(filePath));
 		
 		// take the first one, if available
 		if (!files.isEmpty()) {
@@ -46,11 +47,34 @@ public class ResourceUtil {
 		return null;
 	}
 	
-	public static List<IFile> findFile(IPath filePath) {
+	public static List<IFile> findFile(URI uri) {
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		URI path = URIUtil.toURI(filePath);
-		IFile[] files = workspaceRoot.findFilesForLocationURI(path);
+		IFile[] files = workspaceRoot.findFilesForLocationURI(uri);
 		return Arrays.asList(files);
+	}
+	
+	public static IProject findProject(URI uri) {
+		
+		Assert.isNotNull(uri);
+		
+		List<IFile> files = findFile(uri);
+		
+		// take the first one, if available
+		if (!files.isEmpty()) {
+			return files.get(0).getProject();
+		}
+		
+		// try the Path part of the URI to use as IPath
+		// TODO review
+		String path = uri.getPath();
+		if (path != null) {
+			IPath resPath = Path.fromPortableString(path);
+			return findProject(resPath);
+		}
+		
+		// any other lookup options?
+		// E.g. use the last-used project or similar?
+		return null;
 	}
 	
 	public static String getPath(IResource resource) {

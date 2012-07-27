@@ -66,14 +66,25 @@ object ProofAnalyzer {
   private def readProofEntries(proofData: ProofData, commandStarts: Map[Command, Int],
       monitor: IProgressMonitor): Option[(IProject, ProofStore, ProofEntryData)] = {
 
+    import isabelle.eclipse.core.resource.URIThyLoad._
+    
     val proofTextData = proofData.textData
-    val filePath = Path.fromOSString(proofTextData.path)
-
-    val project = Option(ResourceUtil.findProject(filePath))
+    
+    val pathStr = proofTextData.name.node
+    val pathUri = proofTextData.name.uri
+    
+    val project = if (pathUri.isAbsolute) {
+      // URI encoding
+      Option(ResourceUtil.findProject(pathUri))
+    } else {
+      // Path encoding
+      val filePath = Path.fromOSString(pathStr)
+      Option(ResourceUtil.findProject(filePath))
+    }
 
     if (project.isEmpty) {
       // cannot locate the project, therefore cannot access proof process model
-      error(msg = Some("Unable to locate project for resource " + filePath))
+      error(msg = Some("Unable to locate project for resource " + pathStr))
     }
 
     project flatMap { project =>
@@ -81,8 +92,9 @@ object ProofAnalyzer {
 
         val proofProject = ProofManager.getProofProject(project, monitor)
 
+        // TODO make path relative for file history
         val fileVersion = ProofHistoryManager.syncFileVersion(
-          project, filePath, proofTextData.documentText, proofTextData.syncPoint, monitor);
+          project, pathStr, proofTextData.documentText, proofTextData.syncPoint, monitor);
 
         def textLoc(cmdState: State): Loc = {
           val cmd = cmdState.command

@@ -20,7 +20,7 @@ object SnapshotReader {
   /** List of commands which can start the proof, so everything after such a command would be a new proof. */
   private val PROOF_START_CMDS = Set("lemma", "theorem", "function", "primrec", "definition")
   
-  case class ProofTextData(val path: String, val documentText: String, syncPoint: Int)
+  case class ProofTextData(val name: Document.Node.Name, val documentText: String, syncPoint: Int)
   case class ProofData(val proofState: List[(State, List[Term])], val textData: ProofTextData)
 
   def readProofs(docState: Document.State, changedCommands: Set[Command]): (List[ProofData], Map[Command, Int]) = {
@@ -62,7 +62,7 @@ object SnapshotReader {
       val lastCmdOffset = snapshot.node.command_start(lastCmd).get
       val documentText = docTexts.get(doc).get
       
-      ProofData(proof, ProofTextData(doc.node, documentText, lastCmdOffset + lastCmd.length))
+      ProofData(proof, ProofTextData(doc, documentText, lastCmdOffset + lastCmd.length))
     }
     
     (proofData, commandStarts)
