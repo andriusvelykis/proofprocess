@@ -1,5 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.prover
 
+import isabelle.Symbol
+import isabelle.eclipse.core.IsabelleCorePlugin
 import org.ai4fm.proofprocess.Attempt
 import org.ai4fm.proofprocess.{Proof => PPProof}
 import org.ai4fm.proofprocess.ProofDecor
@@ -160,8 +162,13 @@ object ProverDataConverter {
     // TODO something about markup terms?
     terms.map({
       // use StrTerm always for now
-      case t: PPIsaTerm => StrTerm(t.getDisplay) //IsaTerm(t.getTerm)
-      case s: DisplayTerm => StrTerm(s.getDisplay)
+      case t: PPIsaTerm => StrTerm(encode(t.getDisplay)) //IsaTerm(t.getTerm)
+      case s: DisplayTerm => StrTerm(encode(s.getDisplay))
     })
+    
+  // TODO move encoding to capture process?
+  // E.g. so that we could access and convert the data without running Isabelle
+  def encode(termStr: String): String =
+    if (IsabelleCorePlugin.getIsabelle.isInit) Symbol.encode(termStr) else termStr
     
 }
