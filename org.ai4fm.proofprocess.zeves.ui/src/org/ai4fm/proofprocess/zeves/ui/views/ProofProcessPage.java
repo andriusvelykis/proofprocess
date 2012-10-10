@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sourceforge.czt.eclipse.zeves.ZEvesImages;
+import net.sourceforge.czt.eclipse.zeves.ui.ZEvesImages;
 
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.ProofElem;
@@ -53,6 +53,9 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -121,6 +124,7 @@ public class ProofProcessPage extends Page {
         final MenuManager mgr = new MenuManager();
         mgr.add(groupAttemptsAction);
         Control tree = treeViewer.getTree();
+        final ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), tree);
         tree.setMenu(mgr.createContextMenu(tree));
 		
 		treeViewer.setContentProvider(new CustomizedAdapterContentProvider(adapterFactory));
@@ -134,7 +138,7 @@ public class ProofProcessPage extends Page {
 					ProofEntry entry = (ProofEntry) object;
 					if (entry.getProofStep().getOutGoals().isEmpty()) {
 						// no outstanding goals - proved
-						return ZEvesImages.getImage(ZEvesImages.IMG_THEOREM_PROVED);
+						return resourceManager.createImageWithDefault(ZEvesImages.THEOREM_PROVED);
  					}
 				}
 				return super.getImage(object);

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.sourceforge.czt.eclipse.editors.zeditor.ZEditorUtil;
-import net.sourceforge.czt.eclipse.zeves.core.ZEvesResultConverter;
+import net.sourceforge.czt.eclipse.ui.editors.ZEditorUtil;
+import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesResultConverter;
 import net.sourceforge.czt.session.CommandException;
 import net.sourceforge.czt.session.Markup;
 import net.sourceforge.czt.session.SectionInfo;

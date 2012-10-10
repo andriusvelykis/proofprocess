@@ -16,18 +16,16 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import net.sourceforge.czt.eclipse.editors.parser.ZCompiler;
-import net.sourceforge.czt.eclipse.outline.TermLabelVisitorFactory;
-import net.sourceforge.czt.eclipse.zeves.core.ISnapshotChangedListener;
-import net.sourceforge.czt.eclipse.zeves.core.SnapshotChangedEvent;
-import net.sourceforge.czt.eclipse.zeves.core.SnapshotChangedEvent.SnapshotChangeType;
-import net.sourceforge.czt.eclipse.zeves.core.ZEvesSnapshot;
-import net.sourceforge.czt.eclipse.zeves.core.ZEvesSnapshot.ISnapshotEntry;
-import net.sourceforge.czt.eclipse.zeves.core.ZEvesSnapshot.ResultType;
+import net.sourceforge.czt.eclipse.ui.CztUI;
+import net.sourceforge.czt.eclipse.zeves.ui.core.ISnapshotChangedListener;
+import net.sourceforge.czt.eclipse.zeves.ui.core.SnapshotChangedEvent;
+import net.sourceforge.czt.eclipse.zeves.ui.core.SnapshotChangedEvent.SnapshotChangeType;
+import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot;
+import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ISnapshotEntry;
+import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ResultType;
 import net.sourceforge.czt.session.Key;
 import net.sourceforge.czt.session.SectionInfo;
 import net.sourceforge.czt.session.Source;
-import net.sourceforge.czt.util.Visitor;
 import net.sourceforge.czt.zeves.ast.ProofCommand;
 import net.sourceforge.czt.zeves.response.ZEvesOutput;
 import net.sourceforge.czt.zeves.response.ZEvesProofTrace;
@@ -205,7 +203,8 @@ public class SnapshotTracker {
 		Key<Source> sectionSourceKey = new Key<Source>(entry.getSectionName(), Source.class);
 		if (!sectInfo.isCached(sectionSourceKey)) {
 			// use editor source
-			sectionSourceKey = new Key<Source>(ZCompiler.DEFAULT_SECTION_NAME, Source.class);
+			// FIXME avoid hardcoding ZCompiler.DEFAULT_SECTION_NAME
+			sectionSourceKey = new Key<Source>("NEWSECTION", Source.class);
 			try {
 				Source source = sectInfo.get(sectionSourceKey);
 				text = IOUtils.toString(source.getReader());
@@ -426,8 +425,7 @@ public class SnapshotTracker {
 		net.sourceforge.czt.base.ast.Term entryTerm = proofEntry.getData().getTerm();
 		String commandText;
 		if (entryTerm instanceof ProofCommand) {
-			Visitor<String> textVisitor = TermLabelVisitorFactory.getTermLabelVisitor(true);
-			commandText = entryTerm.accept(textVisitor);			
+			commandText = CztUI.getTermLabel(entryTerm);			
 		} else {
 			commandText = entryResult.getCommand().toString();
 		}

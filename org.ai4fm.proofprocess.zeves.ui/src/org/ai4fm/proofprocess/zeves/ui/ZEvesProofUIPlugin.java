@@ -1,6 +1,6 @@
 package org.ai4fm.proofprocess.zeves.ui;
 
-import net.sourceforge.czt.eclipse.zeves.ZEvesPlugin;
+import net.sourceforge.czt.eclipse.zeves.ui.ZEvesUIPlugin;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -36,7 +36,7 @@ public class ZEvesProofUIPlugin extends AbstractUIPlugin implements IStartup {
 		super.start(context);
 		plugin = this;
 		
-		snapshotTracker = new SnapshotTracker(ZEvesPlugin.getZEves().getSnapshot());
+		snapshotTracker = new SnapshotTracker(ZEvesUIPlugin.getZEves().getSnapshot());
 	}
 
 	/*

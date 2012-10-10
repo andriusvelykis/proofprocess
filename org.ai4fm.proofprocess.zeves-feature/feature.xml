@@ -19,8 +19,6 @@
 
    <requires>
       <import feature="org.ai4fm.proofprocess-feature" version="1.0.0.qualifier"/>
-      <import feature="net.sourceforge.czt.eclipse-feature" version="1.6.0.qualifier"/>
-      <import feature="net.sourceforge.czt.eclipse.zeves-feature" version="1.0.0.qualifier"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.emf.edit"/>
@@ -34,6 +32,9 @@
       <import plugin="org.eclipse.emf.databinding.edit" version="1.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.databinding.property" version="1.4.0" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.lang" version="2.4.0" match="greaterOrEqual"/>
+      <import feature="net.sourceforge.czt.core.feature" version="1.6.0.qualifier"/>
+      <import feature="net.sourceforge.czt.eclipse.feature" version="1.6.0.qualifier"/>
+      <import feature="net.sourceforge.czt.eclipse.zeves.feature" version="1.0.0.qualifier"/>
    </requires>
 
    <plugin
