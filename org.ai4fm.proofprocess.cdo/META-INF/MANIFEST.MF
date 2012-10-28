@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.ai4fm.proofprocess.cdo;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ai4fm.proofprocess.cdo.PProcessCDOPlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.scala-ide.scala.library;bundle-version="2.9.1",
+ org.ai4fm.filehistory.core;bundle-version="1.0.0",
+ org.ai4fm.proofprocess.project.core;bundle-version="1.0.0",
+ org.ai4fm.proofprocess;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy

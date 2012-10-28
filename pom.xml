@@ -12,6 +12,7 @@
   <modules>
     <module>org.ai4fm.filehistory</module>
     <module>org.ai4fm.filehistory.core</module>
+    <module>org.ai4fm.proofprocess.cdo</module>
     <module>org.ai4fm.proofprocess</module>
     <module>org.ai4fm.proofprocess.core</module>
     <module>org.ai4fm.proofprocess.edit</module>
