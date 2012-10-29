@@ -34,16 +34,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class NamedTermImpl extends NameTermImpl implements NamedTerm {
 	/**
-	 * The cached value of the '{@link #getTerm() <em>Term</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTerm()
-	 * @generated
-	 * @ordered
-	 */
-	protected Term term;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -68,7 +58,7 @@ public class NamedTermImpl extends NameTermImpl implements NamedTerm {
 	 * @generated
 	 */
 	public Term getTerm() {
-		return term;
+		return (Term)eDynamicGet(IsabelleProofProcessPackage.NAMED_TERM__TERM, IsabelleProofProcessPackage.Literals.NAMED_TERM__TERM, true, true);
 	}
 
 	/**
@@ -77,12 +67,7 @@ public class NamedTermImpl extends NameTermImpl implements NamedTerm {
 	 * @generated
 	 */
 	public NotificationChain basicSetTerm(Term newTerm, NotificationChain msgs) {
-		Term oldTerm = term;
-		term = newTerm;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.NAMED_TERM__TERM, oldTerm, newTerm);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eDynamicInverseAdd((InternalEObject)newTerm, IsabelleProofProcessPackage.NAMED_TERM__TERM, msgs);
 		return msgs;
 	}
 
@@ -92,17 +77,7 @@ public class NamedTermImpl extends NameTermImpl implements NamedTerm {
 	 * @generated
 	 */
 	public void setTerm(Term newTerm) {
-		if (newTerm != term) {
-			NotificationChain msgs = null;
-			if (term != null)
-				msgs = ((InternalEObject)term).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IsabelleProofProcessPackage.NAMED_TERM__TERM, null, msgs);
-			if (newTerm != null)
-				msgs = ((InternalEObject)newTerm).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IsabelleProofProcessPackage.NAMED_TERM__TERM, null, msgs);
-			msgs = basicSetTerm(newTerm, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.NAMED_TERM__TERM, newTerm, newTerm));
+		eDynamicSet(IsabelleProofProcessPackage.NAMED_TERM__TERM, IsabelleProofProcessPackage.Literals.NAMED_TERM__TERM, newTerm);
 	}
 
 	/**
@@ -172,7 +147,7 @@ public class NamedTermImpl extends NameTermImpl implements NamedTerm {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.NAMED_TERM__TERM:
-				return term != null;
+				return getTerm() != null;
 		}
 		return super.eIsSet(featureID);
 	}

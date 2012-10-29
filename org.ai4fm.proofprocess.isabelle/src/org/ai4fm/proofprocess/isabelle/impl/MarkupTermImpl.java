@@ -42,16 +42,6 @@ public class MarkupTermImpl extends DisplayTermImpl implements MarkupTerm {
 	protected static final Tree TERM_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getTerm() <em>Term</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTerm()
-	 * @generated
-	 * @ordered
-	 */
-	protected Tree term = TERM_EDEFAULT;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -76,7 +66,7 @@ public class MarkupTermImpl extends DisplayTermImpl implements MarkupTerm {
 	 * @generated
 	 */
 	public Tree getTerm() {
-		return term;
+		return (Tree)eDynamicGet(IsabelleProofProcessPackage.MARKUP_TERM__TERM, IsabelleProofProcessPackage.Literals.MARKUP_TERM__TERM, true, true);
 	}
 
 	/**
@@ -85,10 +75,7 @@ public class MarkupTermImpl extends DisplayTermImpl implements MarkupTerm {
 	 * @generated
 	 */
 	public void setTerm(Tree newTerm) {
-		Tree oldTerm = term;
-		term = newTerm;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.MARKUP_TERM__TERM, oldTerm, term));
+		eDynamicSet(IsabelleProofProcessPackage.MARKUP_TERM__TERM, IsabelleProofProcessPackage.Literals.MARKUP_TERM__TERM, newTerm);
 	}
 
 	/**
@@ -144,25 +131,9 @@ public class MarkupTermImpl extends DisplayTermImpl implements MarkupTerm {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.MARKUP_TERM__TERM:
-				return TERM_EDEFAULT == null ? term != null : !TERM_EDEFAULT.equals(term);
+				return TERM_EDEFAULT == null ? getTerm() != null : !TERM_EDEFAULT.equals(getTerm());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (term: ");
-		result.append(term);
-		result.append(')');
-		return result.toString();
 	}
 
 } //MarkupTermImpl

@@ -17,6 +17,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
@@ -35,7 +36,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class InstImpl extends EObjectImpl implements Inst {
+public class InstImpl extends CDOObjectImpl implements Inst {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -47,16 +48,6 @@ public class InstImpl extends EObjectImpl implements Inst {
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected String name = NAME_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -65,26 +56,6 @@ public class InstImpl extends EObjectImpl implements Inst {
 	 * @ordered
 	 */
 	protected static final int INDEX_EDEFAULT = 0;
-
-	/**
-	 * The cached value of the '{@link #getIndex() <em>Index</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getIndex()
-	 * @generated
-	 * @ordered
-	 */
-	protected int index = INDEX_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getTerm() <em>Term</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTerm()
-	 * @generated
-	 * @ordered
-	 */
-	protected Term term;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -110,8 +81,18 @@ public class InstImpl extends EObjectImpl implements Inst {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getName() {
-		return name;
+		return (String)eDynamicGet(IsabelleProofProcessPackage.INST__NAME, IsabelleProofProcessPackage.Literals.INST__NAME, true, true);
 	}
 
 	/**
@@ -120,10 +101,7 @@ public class InstImpl extends EObjectImpl implements Inst {
 	 * @generated
 	 */
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.INST__NAME, oldName, name));
+		eDynamicSet(IsabelleProofProcessPackage.INST__NAME, IsabelleProofProcessPackage.Literals.INST__NAME, newName);
 	}
 
 	/**
@@ -132,7 +110,7 @@ public class InstImpl extends EObjectImpl implements Inst {
 	 * @generated
 	 */
 	public int getIndex() {
-		return index;
+		return (Integer)eDynamicGet(IsabelleProofProcessPackage.INST__INDEX, IsabelleProofProcessPackage.Literals.INST__INDEX, true, true);
 	}
 
 	/**
@@ -141,10 +119,7 @@ public class InstImpl extends EObjectImpl implements Inst {
 	 * @generated
 	 */
 	public void setIndex(int newIndex) {
-		int oldIndex = index;
-		index = newIndex;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.INST__INDEX, oldIndex, index));
+		eDynamicSet(IsabelleProofProcessPackage.INST__INDEX, IsabelleProofProcessPackage.Literals.INST__INDEX, newIndex);
 	}
 
 	/**
@@ -153,7 +128,7 @@ public class InstImpl extends EObjectImpl implements Inst {
 	 * @generated
 	 */
 	public Term getTerm() {
-		return term;
+		return (Term)eDynamicGet(IsabelleProofProcessPackage.INST__TERM, IsabelleProofProcessPackage.Literals.INST__TERM, true, true);
 	}
 
 	/**
@@ -162,12 +137,7 @@ public class InstImpl extends EObjectImpl implements Inst {
 	 * @generated
 	 */
 	public NotificationChain basicSetTerm(Term newTerm, NotificationChain msgs) {
-		Term oldTerm = term;
-		term = newTerm;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.INST__TERM, oldTerm, newTerm);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eDynamicInverseAdd((InternalEObject)newTerm, IsabelleProofProcessPackage.INST__TERM, msgs);
 		return msgs;
 	}
 
@@ -177,17 +147,7 @@ public class InstImpl extends EObjectImpl implements Inst {
 	 * @generated
 	 */
 	public void setTerm(Term newTerm) {
-		if (newTerm != term) {
-			NotificationChain msgs = null;
-			if (term != null)
-				msgs = ((InternalEObject)term).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IsabelleProofProcessPackage.INST__TERM, null, msgs);
-			if (newTerm != null)
-				msgs = ((InternalEObject)newTerm).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IsabelleProofProcessPackage.INST__TERM, null, msgs);
-			msgs = basicSetTerm(newTerm, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.INST__TERM, newTerm, newTerm));
+		eDynamicSet(IsabelleProofProcessPackage.INST__TERM, IsabelleProofProcessPackage.Literals.INST__TERM, newTerm);
 	}
 
 	/**
@@ -273,31 +233,13 @@ public class InstImpl extends EObjectImpl implements Inst {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.INST__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+				return NAME_EDEFAULT == null ? getName() != null : !NAME_EDEFAULT.equals(getName());
 			case IsabelleProofProcessPackage.INST__INDEX:
-				return index != INDEX_EDEFAULT;
+				return getIndex() != INDEX_EDEFAULT;
 			case IsabelleProofProcessPackage.INST__TERM:
-				return term != null;
+				return getTerm() != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (name: ");
-		result.append(name);
-		result.append(", index: ");
-		result.append(index);
-		result.append(')');
-		return result.toString();
 	}
 
 } //InstImpl

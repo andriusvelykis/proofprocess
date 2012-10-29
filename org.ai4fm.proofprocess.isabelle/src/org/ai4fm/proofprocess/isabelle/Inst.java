@@ -8,6 +8,7 @@ package org.ai4fm.proofprocess.isabelle;
 
 import org.ai4fm.proofprocess.Term;
 
+import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -26,9 +27,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getInst()
  * @model
+ * @extends CDOObject
  * @generated
  */
-public interface Inst extends EObject {
+public interface Inst extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

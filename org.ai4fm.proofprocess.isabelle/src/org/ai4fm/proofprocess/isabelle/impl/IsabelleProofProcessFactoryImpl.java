@@ -66,15 +66,15 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case IsabelleProofProcessPackage.MARKUP_TERM: return createMarkupTerm();
-			case IsabelleProofProcessPackage.ISA_TERM: return createIsaTerm();
-			case IsabelleProofProcessPackage.NAME_TERM: return createNameTerm();
-			case IsabelleProofProcessPackage.NAMED_TERM: return createNamedTerm();
-			case IsabelleProofProcessPackage.INST_TERM: return createInstTerm();
-			case IsabelleProofProcessPackage.INST: return createInst();
-			case IsabelleProofProcessPackage.ISABELLE_TRACE: return createIsabelleTrace();
-			case IsabelleProofProcessPackage.NAMED_TERM_TREE: return createNamedTermTree();
-			case IsabelleProofProcessPackage.ISABELLE_COMMAND: return createIsabelleCommand();
+			case IsabelleProofProcessPackage.MARKUP_TERM: return (EObject)createMarkupTerm();
+			case IsabelleProofProcessPackage.ISA_TERM: return (EObject)createIsaTerm();
+			case IsabelleProofProcessPackage.NAME_TERM: return (EObject)createNameTerm();
+			case IsabelleProofProcessPackage.NAMED_TERM: return (EObject)createNamedTerm();
+			case IsabelleProofProcessPackage.INST_TERM: return (EObject)createInstTerm();
+			case IsabelleProofProcessPackage.INST: return (EObject)createInst();
+			case IsabelleProofProcessPackage.ISABELLE_TRACE: return (EObject)createIsabelleTrace();
+			case IsabelleProofProcessPackage.NAMED_TERM_TREE: return (EObject)createNamedTermTree();
+			case IsabelleProofProcessPackage.ISABELLE_COMMAND: return (EObject)createIsabelleCommand();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}

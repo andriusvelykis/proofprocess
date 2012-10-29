@@ -12,6 +12,7 @@ import org.ai4fm.proofprocess.isabelle.NameTerm;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
@@ -28,7 +29,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class NameTermImpl extends EObjectImpl implements NameTerm {
+public class NameTermImpl extends CDOObjectImpl implements NameTerm {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -38,16 +39,6 @@ public class NameTermImpl extends EObjectImpl implements NameTerm {
 	 * @ordered
 	 */
 	protected static final String NAME_EDEFAULT = null;
-	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected String name = NAME_EDEFAULT;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -72,8 +63,18 @@ public class NameTermImpl extends EObjectImpl implements NameTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getName() {
-		return name;
+		return (String)eDynamicGet(IsabelleProofProcessPackage.NAME_TERM__NAME, IsabelleProofProcessPackage.Literals.NAME_TERM__NAME, true, true);
 	}
 
 	/**
@@ -82,10 +83,7 @@ public class NameTermImpl extends EObjectImpl implements NameTerm {
 	 * @generated
 	 */
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.NAME_TERM__NAME, oldName, name));
+		eDynamicSet(IsabelleProofProcessPackage.NAME_TERM__NAME, IsabelleProofProcessPackage.Literals.NAME_TERM__NAME, newName);
 	}
 
 	/**
@@ -141,25 +139,9 @@ public class NameTermImpl extends EObjectImpl implements NameTerm {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.NAME_TERM__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+				return NAME_EDEFAULT == null ? getName() != null : !NAME_EDEFAULT.equals(getName());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (name: ");
-		result.append(name);
-		result.append(')');
-		return result.toString();
 	}
 
 } //NameTermImpl
