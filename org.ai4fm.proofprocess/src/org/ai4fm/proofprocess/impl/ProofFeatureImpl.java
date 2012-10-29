@@ -14,7 +14,6 @@ import org.ai4fm.proofprocess.ProofFeatureType;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.Term;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -22,10 +21,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
@@ -89,6 +84,7 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofFeatureDef getName() {
 		return (ProofFeatureDef)eDynamicGet(ProofProcessPackage.PROOF_FEATURE__NAME, ProofProcessPackage.Literals.PROOF_FEATURE__NAME, true, true);
 	}
@@ -107,6 +103,7 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(ProofFeatureDef newName) {
 		eDynamicSet(ProofProcessPackage.PROOF_FEATURE__NAME, ProofProcessPackage.Literals.PROOF_FEATURE__NAME, newName);
 	}
@@ -116,6 +113,7 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofFeatureType getType() {
 		return (ProofFeatureType)eDynamicGet(ProofProcessPackage.PROOF_FEATURE__TYPE, ProofProcessPackage.Literals.PROOF_FEATURE__TYPE, true, true);
 	}
@@ -125,6 +123,7 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(ProofFeatureType newType) {
 		eDynamicSet(ProofProcessPackage.PROOF_FEATURE__TYPE, ProofProcessPackage.Literals.PROOF_FEATURE__TYPE, newType);
 	}
@@ -134,6 +133,7 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<Term> getParams() {
 		return (EList<Term>)eDynamicGet(ProofProcessPackage.PROOF_FEATURE__PARAMS, ProofProcessPackage.Literals.PROOF_FEATURE__PARAMS, true, true);

@@ -19,7 +19,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -60,6 +59,7 @@ public class ProofSeqImpl extends ProofElemImpl implements ProofSeq {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<ProofElem> getEntries() {
 		return (EList<ProofElem>)eDynamicGet(ProofProcessPackage.PROOF_SEQ__ENTRIES, ProofProcessPackage.Literals.PROOF_SEQ__ENTRIES, true, true);

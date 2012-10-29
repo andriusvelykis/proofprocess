@@ -9,13 +9,9 @@ package org.ai4fm.proofprocess.impl;
 import org.ai4fm.proofprocess.ProofFeatureDef;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -86,6 +82,7 @@ public class ProofFeatureDefImpl extends CDOObjectImpl implements ProofFeatureDe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return (String)eDynamicGet(ProofProcessPackage.PROOF_FEATURE_DEF__NAME, ProofProcessPackage.Literals.PROOF_FEATURE_DEF__NAME, true, true);
 	}
@@ -95,6 +92,7 @@ public class ProofFeatureDefImpl extends CDOObjectImpl implements ProofFeatureDe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		eDynamicSet(ProofProcessPackage.PROOF_FEATURE_DEF__NAME, ProofProcessPackage.Literals.PROOF_FEATURE_DEF__NAME, newName);
 	}
@@ -104,6 +102,7 @@ public class ProofFeatureDefImpl extends CDOObjectImpl implements ProofFeatureDe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return (String)eDynamicGet(ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION, ProofProcessPackage.Literals.PROOF_FEATURE_DEF__DESCRIPTION, true, true);
 	}
@@ -113,6 +112,7 @@ public class ProofFeatureDefImpl extends CDOObjectImpl implements ProofFeatureDe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		eDynamicSet(ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION, ProofProcessPackage.Literals.PROOF_FEATURE_DEF__DESCRIPTION, newDescription);
 	}

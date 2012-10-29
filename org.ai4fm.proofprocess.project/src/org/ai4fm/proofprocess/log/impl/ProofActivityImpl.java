@@ -11,12 +11,7 @@ import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.log.ProofActivity;
 import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -56,6 +51,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofEntry getProofRef() {
 		return (ProofEntry)eDynamicGet(ProofProcessLogPackage.PROOF_ACTIVITY__PROOF_REF, ProofProcessLogPackage.Literals.PROOF_ACTIVITY__PROOF_REF, true, true);
 	}
@@ -74,6 +70,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProofRef(ProofEntry newProofRef) {
 		eDynamicSet(ProofProcessLogPackage.PROOF_ACTIVITY__PROOF_REF, ProofProcessLogPackage.Literals.PROOF_ACTIVITY__PROOF_REF, newProofRef);
 	}

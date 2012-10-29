@@ -9,13 +9,9 @@ package org.ai4fm.filehistory.impl;
 import org.ai4fm.filehistory.FileHistoryPackage;
 import org.ai4fm.filehistory.FileVersion;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -119,6 +115,7 @@ public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public long getTimestamp() {
 		return (Long)eDynamicGet(FileHistoryPackage.FILE_VERSION__TIMESTAMP, FileHistoryPackage.Literals.FILE_VERSION__TIMESTAMP, true, true);
 	}
@@ -128,6 +125,7 @@ public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTimestamp(long newTimestamp) {
 		eDynamicSet(FileHistoryPackage.FILE_VERSION__TIMESTAMP, FileHistoryPackage.Literals.FILE_VERSION__TIMESTAMP, newTimestamp);
 	}
@@ -137,6 +135,7 @@ public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getPath() {
 		return (String)eDynamicGet(FileHistoryPackage.FILE_VERSION__PATH, FileHistoryPackage.Literals.FILE_VERSION__PATH, true, true);
 	}
@@ -146,6 +145,7 @@ public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPath(String newPath) {
 		eDynamicSet(FileHistoryPackage.FILE_VERSION__PATH, FileHistoryPackage.Literals.FILE_VERSION__PATH, newPath);
 	}
@@ -155,6 +155,7 @@ public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getChecksum() {
 		return (String)eDynamicGet(FileHistoryPackage.FILE_VERSION__CHECKSUM, FileHistoryPackage.Literals.FILE_VERSION__CHECKSUM, true, true);
 	}
@@ -164,6 +165,7 @@ public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setChecksum(String newChecksum) {
 		eDynamicSet(FileHistoryPackage.FILE_VERSION__CHECKSUM, FileHistoryPackage.Literals.FILE_VERSION__CHECKSUM, newChecksum);
 	}
@@ -173,6 +175,7 @@ public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getSyncPoint() {
 		return (Integer)eDynamicGet(FileHistoryPackage.FILE_VERSION__SYNC_POINT, FileHistoryPackage.Literals.FILE_VERSION__SYNC_POINT, true, true);
 	}
@@ -182,6 +185,7 @@ public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSyncPoint(int newSyncPoint) {
 		eDynamicSet(FileHistoryPackage.FILE_VERSION__SYNC_POINT, FileHistoryPackage.Literals.FILE_VERSION__SYNC_POINT, newSyncPoint);
 	}
@@ -191,6 +195,7 @@ public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSyncChecksum() {
 		return (String)eDynamicGet(FileHistoryPackage.FILE_VERSION__SYNC_CHECKSUM, FileHistoryPackage.Literals.FILE_VERSION__SYNC_CHECKSUM, true, true);
 	}
@@ -200,6 +205,7 @@ public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSyncChecksum(String newSyncChecksum) {
 		eDynamicSet(FileHistoryPackage.FILE_VERSION__SYNC_CHECKSUM, FileHistoryPackage.Literals.FILE_VERSION__SYNC_CHECKSUM, newSyncChecksum);
 	}

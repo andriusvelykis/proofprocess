@@ -19,9 +19,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
@@ -73,6 +70,7 @@ public class ProofLogImpl extends CDOObjectImpl implements ProofLog {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<Activity> getActivities() {
 		return (EList<Activity>)eDynamicGet(ProofProcessLogPackage.PROOF_LOG__ACTIVITIES, ProofProcessLogPackage.Literals.PROOF_LOG__ACTIVITIES, true, true);

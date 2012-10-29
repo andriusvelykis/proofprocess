@@ -10,13 +10,10 @@ import org.ai4fm.proofprocess.ProofDecor;
 import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -56,6 +53,7 @@ public class ProofDecorImpl extends ProofElemImpl implements ProofDecor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofElem getEntry() {
 		return (ProofElem)eDynamicGet(ProofProcessPackage.PROOF_DECOR__ENTRY, ProofProcessPackage.Literals.PROOF_DECOR__ENTRY, true, true);
 	}
@@ -75,6 +73,7 @@ public class ProofDecorImpl extends ProofElemImpl implements ProofDecor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEntry(ProofElem newEntry) {
 		eDynamicSet(ProofProcessPackage.PROOF_DECOR__ENTRY, ProofProcessPackage.Literals.PROOF_DECOR__ENTRY, newEntry);
 	}

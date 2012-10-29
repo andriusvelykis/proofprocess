@@ -10,15 +10,12 @@ import org.ai4fm.proofprocess.Attempt;
 import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -68,6 +65,7 @@ public class AttemptImpl extends CDOObjectImpl implements Attempt {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofElem getProof() {
 		return (ProofElem)eDynamicGet(ProofProcessPackage.ATTEMPT__PROOF, ProofProcessPackage.Literals.ATTEMPT__PROOF, true, true);
 	}
@@ -87,6 +85,7 @@ public class AttemptImpl extends CDOObjectImpl implements Attempt {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProof(ProofElem newProof) {
 		eDynamicSet(ProofProcessPackage.ATTEMPT__PROOF, ProofProcessPackage.Literals.ATTEMPT__PROOF, newProof);
 	}

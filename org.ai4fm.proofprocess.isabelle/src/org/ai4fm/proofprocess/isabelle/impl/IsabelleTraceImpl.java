@@ -12,8 +12,6 @@ import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
@@ -21,10 +19,6 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -75,6 +69,7 @@ public class IsabelleTraceImpl extends CDOObjectImpl implements IsabelleTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IsabelleCommand getCommand() {
 		return (IsabelleCommand)eDynamicGet(IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND, IsabelleProofProcessPackage.Literals.ISABELLE_TRACE__COMMAND, true, true);
 	}
@@ -94,6 +89,7 @@ public class IsabelleTraceImpl extends CDOObjectImpl implements IsabelleTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCommand(IsabelleCommand newCommand) {
 		eDynamicSet(IsabelleProofProcessPackage.ISABELLE_TRACE__COMMAND, IsabelleProofProcessPackage.Literals.ISABELLE_TRACE__COMMAND, newCommand);
 	}
@@ -103,6 +99,7 @@ public class IsabelleTraceImpl extends CDOObjectImpl implements IsabelleTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<String> getSimpLemmas() {
 		return (EList<String>)eDynamicGet(IsabelleProofProcessPackage.ISABELLE_TRACE__SIMP_LEMMAS, IsabelleProofProcessPackage.Literals.ISABELLE_TRACE__SIMP_LEMMAS, true, true);

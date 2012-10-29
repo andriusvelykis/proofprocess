@@ -11,11 +11,7 @@ import org.ai4fm.proofprocess.impl.ProofStoreImpl;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -65,6 +61,7 @@ public class ProjectImpl extends ProofStoreImpl implements Project {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLabel() {
 		return (String)eDynamicGet(ProjectProofProcessPackage.PROJECT__LABEL, ProjectProofProcessPackage.Literals.PROJECT__LABEL, true, true);
 	}
@@ -74,6 +71,7 @@ public class ProjectImpl extends ProofStoreImpl implements Project {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabel(String newLabel) {
 		eDynamicSet(ProjectProofProcessPackage.PROJECT__LABEL, ProjectProofProcessPackage.Literals.PROJECT__LABEL, newLabel);
 	}

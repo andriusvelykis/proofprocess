@@ -9,13 +9,9 @@ package org.ai4fm.proofprocess.zeves.impl;
 import org.ai4fm.proofprocess.zeves.DisplayTerm;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -75,6 +71,7 @@ public abstract class DisplayTermImpl extends CDOObjectImpl implements DisplayTe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDisplay() {
 		return (String)eDynamicGet(ZEvesProofProcessPackage.DISPLAY_TERM__DISPLAY, ZEvesProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY, true, true);
 	}
@@ -84,6 +81,7 @@ public abstract class DisplayTermImpl extends CDOObjectImpl implements DisplayTe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplay(String newDisplay) {
 		eDynamicSet(ZEvesProofProcessPackage.DISPLAY_TERM__DISPLAY, ZEvesProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY, newDisplay);
 	}

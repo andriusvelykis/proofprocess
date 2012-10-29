@@ -7,7 +7,6 @@
 package org.ai4fm.proofprocess.isabelle.impl;
 
 import isabelle.XML.Tree;
-
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.MarkupTerm;
 
@@ -65,6 +64,7 @@ public class MarkupTermImpl extends DisplayTermImpl implements MarkupTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Tree getTerm() {
 		return (Tree)eDynamicGet(IsabelleProofProcessPackage.MARKUP_TERM__TERM, IsabelleProofProcessPackage.Literals.MARKUP_TERM__TERM, true, true);
 	}

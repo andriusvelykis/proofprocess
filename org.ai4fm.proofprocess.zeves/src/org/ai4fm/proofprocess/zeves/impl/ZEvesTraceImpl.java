@@ -11,17 +11,11 @@ import java.util.Collection;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -93,6 +87,7 @@ public class ZEvesTraceImpl extends CDOObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<String> getUsedLemmas() {
 		return (EList<String>)eDynamicGet(ZEvesProofProcessPackage.ZEVES_TRACE__USED_LEMMAS, ZEvesProofProcessPackage.Literals.ZEVES_TRACE__USED_LEMMAS, true, true);
@@ -103,6 +98,7 @@ public class ZEvesTraceImpl extends CDOObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getText() {
 		return (String)eDynamicGet(ZEvesProofProcessPackage.ZEVES_TRACE__TEXT, ZEvesProofProcessPackage.Literals.ZEVES_TRACE__TEXT, true, true);
 	}
@@ -112,6 +108,7 @@ public class ZEvesTraceImpl extends CDOObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setText(String newText) {
 		eDynamicSet(ZEvesProofProcessPackage.ZEVES_TRACE__TEXT, ZEvesProofProcessPackage.Literals.ZEVES_TRACE__TEXT, newText);
 	}
@@ -121,6 +118,7 @@ public class ZEvesTraceImpl extends CDOObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getCase() {
 		return (String)eDynamicGet(ZEvesProofProcessPackage.ZEVES_TRACE__CASE, ZEvesProofProcessPackage.Literals.ZEVES_TRACE__CASE, true, true);
 	}
@@ -130,6 +128,7 @@ public class ZEvesTraceImpl extends CDOObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCase(String newCase) {
 		eDynamicSet(ZEvesProofProcessPackage.ZEVES_TRACE__CASE, ZEvesProofProcessPackage.Literals.ZEVES_TRACE__CASE, newCase);
 	}

@@ -10,15 +10,11 @@ import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -68,6 +64,7 @@ public abstract class ProofElemImpl extends CDOObjectImpl implements ProofElem {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofInfo getInfo() {
 		return (ProofInfo)eDynamicGet(ProofProcessPackage.PROOF_ELEM__INFO, ProofProcessPackage.Literals.PROOF_ELEM__INFO, true, true);
 	}
@@ -87,6 +84,7 @@ public abstract class ProofElemImpl extends CDOObjectImpl implements ProofElem {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInfo(ProofInfo newInfo) {
 		eDynamicSet(ProofProcessPackage.PROOF_ELEM__INFO, ProofProcessPackage.Literals.PROOF_ELEM__INFO, newInfo);
 	}

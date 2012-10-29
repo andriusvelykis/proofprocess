@@ -13,7 +13,6 @@ import org.ai4fm.proofprocess.isabelle.Inst;
 import org.ai4fm.proofprocess.isabelle.InstTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -21,10 +20,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
@@ -77,6 +72,7 @@ public class InstTermImpl extends CDOObjectImpl implements InstTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Term getTerm() {
 		return (Term)eDynamicGet(IsabelleProofProcessPackage.INST_TERM__TERM, IsabelleProofProcessPackage.Literals.INST_TERM__TERM, true, true);
 	}
@@ -96,6 +92,7 @@ public class InstTermImpl extends CDOObjectImpl implements InstTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTerm(Term newTerm) {
 		eDynamicSet(IsabelleProofProcessPackage.INST_TERM__TERM, IsabelleProofProcessPackage.Literals.INST_TERM__TERM, newTerm);
 	}
@@ -105,6 +102,7 @@ public class InstTermImpl extends CDOObjectImpl implements InstTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<Inst> getInsts() {
 		return (EList<Inst>)eDynamicGet(IsabelleProofProcessPackage.INST_TERM__INSTS, IsabelleProofProcessPackage.Literals.INST_TERM__INSTS, true, true);

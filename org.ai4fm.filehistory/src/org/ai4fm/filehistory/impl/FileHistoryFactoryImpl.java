@@ -73,6 +73,7 @@ public class FileHistoryFactoryImpl extends EFactoryImpl implements FileHistoryF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FileHistoryProject createFileHistoryProject() {
 		FileHistoryProjectImpl fileHistoryProject = new FileHistoryProjectImpl();
 		return fileHistoryProject;
@@ -83,6 +84,7 @@ public class FileHistoryFactoryImpl extends EFactoryImpl implements FileHistoryF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FileEntry createFileEntry() {
 		FileEntryImpl fileEntry = new FileEntryImpl();
 		return fileEntry;
@@ -93,6 +95,7 @@ public class FileHistoryFactoryImpl extends EFactoryImpl implements FileHistoryF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FileVersion createFileVersion() {
 		FileVersionImpl fileVersion = new FileVersionImpl();
 		return fileVersion;
@@ -103,6 +106,7 @@ public class FileHistoryFactoryImpl extends EFactoryImpl implements FileHistoryF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FileHistoryPackage getFileHistoryPackage() {
 		return (FileHistoryPackage)getEPackage();
 	}

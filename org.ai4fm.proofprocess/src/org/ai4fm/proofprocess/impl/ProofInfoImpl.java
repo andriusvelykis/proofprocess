@@ -13,7 +13,6 @@ import org.ai4fm.proofprocess.ProofFeature;
 import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -21,10 +20,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
@@ -89,6 +84,7 @@ public class ProofInfoImpl extends CDOObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Intent getIntent() {
 		return (Intent)eDynamicGet(ProofProcessPackage.PROOF_INFO__INTENT, ProofProcessPackage.Literals.PROOF_INFO__INTENT, true, true);
 	}
@@ -107,6 +103,7 @@ public class ProofInfoImpl extends CDOObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIntent(Intent newIntent) {
 		eDynamicSet(ProofProcessPackage.PROOF_INFO__INTENT, ProofProcessPackage.Literals.PROOF_INFO__INTENT, newIntent);
 	}
@@ -116,6 +113,7 @@ public class ProofInfoImpl extends CDOObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getNarrative() {
 		return (String)eDynamicGet(ProofProcessPackage.PROOF_INFO__NARRATIVE, ProofProcessPackage.Literals.PROOF_INFO__NARRATIVE, true, true);
 	}
@@ -125,6 +123,7 @@ public class ProofInfoImpl extends CDOObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNarrative(String newNarrative) {
 		eDynamicSet(ProofProcessPackage.PROOF_INFO__NARRATIVE, ProofProcessPackage.Literals.PROOF_INFO__NARRATIVE, newNarrative);
 	}
@@ -134,6 +133,7 @@ public class ProofInfoImpl extends CDOObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<ProofFeature> getInFeatures() {
 		return (EList<ProofFeature>)eDynamicGet(ProofProcessPackage.PROOF_INFO__IN_FEATURES, ProofProcessPackage.Literals.PROOF_INFO__IN_FEATURES, true, true);
@@ -144,6 +144,7 @@ public class ProofInfoImpl extends CDOObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<ProofFeature> getOutFeatures() {
 		return (EList<ProofFeature>)eDynamicGet(ProofProcessPackage.PROOF_INFO__OUT_FEATURES, ProofProcessPackage.Literals.PROOF_INFO__OUT_FEATURES, true, true);

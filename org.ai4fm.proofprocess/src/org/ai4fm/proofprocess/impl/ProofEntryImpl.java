@@ -10,13 +10,10 @@ import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.ProofStep;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -56,6 +53,7 @@ public class ProofEntryImpl extends ProofElemImpl implements ProofEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofStep getProofStep() {
 		return (ProofStep)eDynamicGet(ProofProcessPackage.PROOF_ENTRY__PROOF_STEP, ProofProcessPackage.Literals.PROOF_ENTRY__PROOF_STEP, true, true);
 	}
@@ -75,6 +73,7 @@ public class ProofEntryImpl extends ProofElemImpl implements ProofEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProofStep(ProofStep newProofStep) {
 		eDynamicSet(ProofProcessPackage.PROOF_ENTRY__PROOF_STEP, ProofProcessPackage.Literals.PROOF_ENTRY__PROOF_STEP, newProofStep);
 	}

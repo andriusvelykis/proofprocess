@@ -118,6 +118,7 @@ public class ProofProcessLogPackageImpl extends EPackageImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofLog() {
 		return proofLogEClass;
 	}
@@ -127,6 +128,7 @@ public class ProofProcessLogPackageImpl extends EPackageImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofLog_Activities() {
 		return (EReference)proofLogEClass.getEStructuralFeatures().get(0);
 	}
@@ -136,6 +138,7 @@ public class ProofProcessLogPackageImpl extends EPackageImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getActivity() {
 		return activityEClass;
 	}
@@ -145,6 +148,7 @@ public class ProofProcessLogPackageImpl extends EPackageImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getActivity_Description() {
 		return (EAttribute)activityEClass.getEStructuralFeatures().get(0);
 	}
@@ -154,6 +158,7 @@ public class ProofProcessLogPackageImpl extends EPackageImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getActivity_Timestamp() {
 		return (EAttribute)activityEClass.getEStructuralFeatures().get(1);
 	}
@@ -163,6 +168,7 @@ public class ProofProcessLogPackageImpl extends EPackageImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofActivity() {
 		return proofActivityEClass;
 	}
@@ -172,6 +178,7 @@ public class ProofProcessLogPackageImpl extends EPackageImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofActivity_ProofRef() {
 		return (EReference)proofActivityEClass.getEStructuralFeatures().get(0);
 	}
@@ -181,6 +188,7 @@ public class ProofProcessLogPackageImpl extends EPackageImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofProcessLogFactory getProofProcessLogFactory() {
 		return (ProofProcessLogFactory)getEFactoryInstance();
 	}

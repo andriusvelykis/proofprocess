@@ -73,6 +73,7 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Project createProject() {
 		ProjectImpl project = new ProjectImpl();
 		return project;
@@ -83,6 +84,7 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Position createPosition() {
 		PositionImpl position = new PositionImpl();
 		return position;
@@ -93,6 +95,7 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TextLoc createTextLoc() {
 		TextLocImpl textLoc = new TextLocImpl();
 		return textLoc;
@@ -103,6 +106,7 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProjectProofProcessPackage getProjectProofProcessPackage() {
 		return (ProjectProofProcessPackage)getEPackage();
 	}

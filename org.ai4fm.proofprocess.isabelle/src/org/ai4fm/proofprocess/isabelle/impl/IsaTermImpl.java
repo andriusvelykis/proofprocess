@@ -7,7 +7,6 @@
 package org.ai4fm.proofprocess.isabelle.impl;
 
 import isabelle.Term.Term;
-
 import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 
@@ -65,6 +64,7 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Term getTerm() {
 		return (Term)eDynamicGet(IsabelleProofProcessPackage.ISA_TERM__TERM, IsabelleProofProcessPackage.Literals.ISA_TERM__TERM, true, true);
 	}

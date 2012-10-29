@@ -13,7 +13,6 @@ import org.ai4fm.proofprocess.Proof;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.Term;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -21,10 +20,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
@@ -88,6 +83,7 @@ public class ProofImpl extends CDOObjectImpl implements Proof {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<Term> getGoals() {
 		return (EList<Term>)eDynamicGet(ProofProcessPackage.PROOF__GOALS, ProofProcessPackage.Literals.PROOF__GOALS, true, true);
@@ -98,6 +94,7 @@ public class ProofImpl extends CDOObjectImpl implements Proof {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLabel() {
 		return (String)eDynamicGet(ProofProcessPackage.PROOF__LABEL, ProofProcessPackage.Literals.PROOF__LABEL, true, true);
 	}
@@ -107,6 +104,7 @@ public class ProofImpl extends CDOObjectImpl implements Proof {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabel(String newLabel) {
 		eDynamicSet(ProofProcessPackage.PROOF__LABEL, ProofProcessPackage.Literals.PROOF__LABEL, newLabel);
 	}
@@ -116,6 +114,7 @@ public class ProofImpl extends CDOObjectImpl implements Proof {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<Attempt> getAttempts() {
 		return (EList<Attempt>)eDynamicGet(ProofProcessPackage.PROOF__ATTEMPTS, ProofProcessPackage.Literals.PROOF__ATTEMPTS, true, true);

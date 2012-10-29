@@ -119,6 +119,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MarkupTerm createMarkupTerm() {
 		MarkupTermImpl markupTerm = new MarkupTermImpl();
 		return markupTerm;
@@ -129,6 +130,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IsaTerm createIsaTerm() {
 		IsaTermImpl isaTerm = new IsaTermImpl();
 		return isaTerm;
@@ -139,6 +141,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NameTerm createNameTerm() {
 		NameTermImpl nameTerm = new NameTermImpl();
 		return nameTerm;
@@ -149,6 +152,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NamedTerm createNamedTerm() {
 		NamedTermImpl namedTerm = new NamedTermImpl();
 		return namedTerm;
@@ -159,6 +163,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public InstTerm createInstTerm() {
 		InstTermImpl instTerm = new InstTermImpl();
 		return instTerm;
@@ -169,6 +174,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Inst createInst() {
 		InstImpl inst = new InstImpl();
 		return inst;
@@ -179,6 +185,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IsabelleTrace createIsabelleTrace() {
 		IsabelleTraceImpl isabelleTrace = new IsabelleTraceImpl();
 		return isabelleTrace;
@@ -189,6 +196,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NamedTermTree createNamedTermTree() {
 		NamedTermTreeImpl namedTermTree = new NamedTermTreeImpl();
 		return namedTermTree;
@@ -199,6 +207,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IsabelleCommand createIsabelleCommand() {
 		IsabelleCommandImpl isabelleCommand = new IsabelleCommandImpl();
 		return isabelleCommand;
@@ -245,6 +254,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IsabelleProofProcessPackage getIsabelleProofProcessPackage() {
 		return (IsabelleProofProcessPackage)getEPackage();
 	}

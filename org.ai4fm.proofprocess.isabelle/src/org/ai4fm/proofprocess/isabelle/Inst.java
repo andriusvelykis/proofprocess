@@ -9,7 +9,6 @@ package org.ai4fm.proofprocess.isabelle;
 import org.ai4fm.proofprocess.Term;
 
 import org.eclipse.emf.cdo.CDOObject;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->

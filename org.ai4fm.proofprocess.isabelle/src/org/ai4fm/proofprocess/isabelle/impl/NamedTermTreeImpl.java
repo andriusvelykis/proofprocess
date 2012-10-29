@@ -13,18 +13,12 @@ import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.NamedTermTree;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
@@ -88,6 +82,7 @@ public class NamedTermTreeImpl extends CDOObjectImpl implements NamedTermTree {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return (String)eDynamicGet(IsabelleProofProcessPackage.NAMED_TERM_TREE__NAME, IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__NAME, true, true);
 	}
@@ -97,6 +92,7 @@ public class NamedTermTreeImpl extends CDOObjectImpl implements NamedTermTree {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		eDynamicSet(IsabelleProofProcessPackage.NAMED_TERM_TREE__NAME, IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__NAME, newName);
 	}
@@ -106,6 +102,7 @@ public class NamedTermTreeImpl extends CDOObjectImpl implements NamedTermTree {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<Term> getTerms() {
 		return (EList<Term>)eDynamicGet(IsabelleProofProcessPackage.NAMED_TERM_TREE__TERMS, IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__TERMS, true, true);
@@ -116,6 +113,7 @@ public class NamedTermTreeImpl extends CDOObjectImpl implements NamedTermTree {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<NamedTermTree> getBranches() {
 		return (EList<NamedTermTree>)eDynamicGet(IsabelleProofProcessPackage.NAMED_TERM_TREE__BRANCHES, IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__BRANCHES, true, true);

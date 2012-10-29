@@ -20,9 +20,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
@@ -75,6 +72,7 @@ public class ProofStoreImpl extends CDOObjectImpl implements ProofStore {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<Proof> getProofs() {
 		return (EList<Proof>)eDynamicGet(ProofProcessPackage.PROOF_STORE__PROOFS, ProofProcessPackage.Literals.PROOF_STORE__PROOFS, true, true);
@@ -85,6 +83,7 @@ public class ProofStoreImpl extends CDOObjectImpl implements ProofStore {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<Intent> getIntents() {
 		return (EList<Intent>)eDynamicGet(ProofProcessPackage.PROOF_STORE__INTENTS, ProofProcessPackage.Literals.PROOF_STORE__INTENTS, true, true);

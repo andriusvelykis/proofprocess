@@ -9,13 +9,9 @@ package org.ai4fm.proofprocess.impl;
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -86,6 +82,7 @@ public class IntentImpl extends CDOObjectImpl implements Intent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return (String)eDynamicGet(ProofProcessPackage.INTENT__NAME, ProofProcessPackage.Literals.INTENT__NAME, true, true);
 	}
@@ -95,6 +92,7 @@ public class IntentImpl extends CDOObjectImpl implements Intent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		eDynamicSet(ProofProcessPackage.INTENT__NAME, ProofProcessPackage.Literals.INTENT__NAME, newName);
 	}
@@ -104,6 +102,7 @@ public class IntentImpl extends CDOObjectImpl implements Intent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return (String)eDynamicGet(ProofProcessPackage.INTENT__DESCRIPTION, ProofProcessPackage.Literals.INTENT__DESCRIPTION, true, true);
 	}
@@ -113,6 +112,7 @@ public class IntentImpl extends CDOObjectImpl implements Intent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		eDynamicSet(ProofProcessPackage.INTENT__DESCRIPTION, ProofProcessPackage.Literals.INTENT__DESCRIPTION, newDescription);
 	}

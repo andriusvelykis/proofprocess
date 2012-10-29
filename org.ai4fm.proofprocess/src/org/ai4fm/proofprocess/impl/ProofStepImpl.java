@@ -14,7 +14,6 @@ import org.ai4fm.proofprocess.ProofStep;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -22,10 +21,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
@@ -80,6 +75,7 @@ public class ProofStepImpl extends CDOObjectImpl implements ProofStep {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<Term> getInGoals() {
 		return (EList<Term>)eDynamicGet(ProofProcessPackage.PROOF_STEP__IN_GOALS, ProofProcessPackage.Literals.PROOF_STEP__IN_GOALS, true, true);
@@ -90,6 +86,7 @@ public class ProofStepImpl extends CDOObjectImpl implements ProofStep {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<Term> getOutGoals() {
 		return (EList<Term>)eDynamicGet(ProofProcessPackage.PROOF_STEP__OUT_GOALS, ProofProcessPackage.Literals.PROOF_STEP__OUT_GOALS, true, true);
@@ -100,6 +97,7 @@ public class ProofStepImpl extends CDOObjectImpl implements ProofStep {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Loc getSource() {
 		return (Loc)eDynamicGet(ProofProcessPackage.PROOF_STEP__SOURCE, ProofProcessPackage.Literals.PROOF_STEP__SOURCE, true, true);
 	}
@@ -119,6 +117,7 @@ public class ProofStepImpl extends CDOObjectImpl implements ProofStep {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSource(Loc newSource) {
 		eDynamicSet(ProofProcessPackage.PROOF_STEP__SOURCE, ProofProcessPackage.Literals.PROOF_STEP__SOURCE, newSource);
 	}
@@ -128,6 +127,7 @@ public class ProofStepImpl extends CDOObjectImpl implements ProofStep {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Trace getTrace() {
 		return (Trace)eDynamicGet(ProofProcessPackage.PROOF_STEP__TRACE, ProofProcessPackage.Literals.PROOF_STEP__TRACE, true, true);
 	}
@@ -147,6 +147,7 @@ public class ProofStepImpl extends CDOObjectImpl implements ProofStep {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTrace(Trace newTrace) {
 		eDynamicSet(ProofProcessPackage.PROOF_STEP__TRACE, ProofProcessPackage.Literals.PROOF_STEP__TRACE, newTrace);
 	}

@@ -9,12 +9,9 @@ package org.ai4fm.proofprocess.isabelle.impl;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.NameTerm;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -73,6 +70,7 @@ public class NameTermImpl extends CDOObjectImpl implements NameTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return (String)eDynamicGet(IsabelleProofProcessPackage.NAME_TERM__NAME, IsabelleProofProcessPackage.Literals.NAME_TERM__NAME, true, true);
 	}
@@ -82,6 +80,7 @@ public class NameTermImpl extends CDOObjectImpl implements NameTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		eDynamicSet(IsabelleProofProcessPackage.NAME_TERM__NAME, IsabelleProofProcessPackage.Literals.NAME_TERM__NAME, newName);
 	}

@@ -11,11 +11,7 @@ import net.sourceforge.czt.base.ast.Term;
 import org.ai4fm.proofprocess.zeves.CztTerm;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -65,6 +61,7 @@ public class CztTermImpl extends DisplayTermImpl implements CztTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Term getTerm() {
 		return (Term)eDynamicGet(ZEvesProofProcessPackage.CZT_TERM__TERM, ZEvesProofProcessPackage.Literals.CZT_TERM__TERM, true, true);
 	}
@@ -74,6 +71,7 @@ public class CztTermImpl extends DisplayTermImpl implements CztTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTerm(Term newTerm) {
 		eDynamicSet(ZEvesProofProcessPackage.CZT_TERM__TERM, ZEvesProofProcessPackage.Literals.CZT_TERM__TERM, newTerm);
 	}

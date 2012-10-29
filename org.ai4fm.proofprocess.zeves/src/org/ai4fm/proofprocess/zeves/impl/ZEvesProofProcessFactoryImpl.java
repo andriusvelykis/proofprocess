@@ -106,6 +106,7 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public UnparsedTerm createUnparsedTerm() {
 		UnparsedTermImpl unparsedTerm = new UnparsedTermImpl();
 		return unparsedTerm;
@@ -116,6 +117,7 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public CztTerm createCztTerm() {
 		CztTermImpl cztTerm = new CztTermImpl();
 		return cztTerm;
@@ -126,6 +128,7 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ZEvesTrace createZEvesTrace() {
 		ZEvesTraceImpl zEvesTrace = new ZEvesTraceImpl();
 		return zEvesTrace;
@@ -154,6 +157,7 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ZEvesProofProcessPackage getZEvesProofProcessPackage() {
 		return (ZEvesProofProcessPackage)getEPackage();
 	}

@@ -9,13 +9,9 @@ package org.ai4fm.proofprocess.project.impl;
 import org.ai4fm.proofprocess.project.Position;
 import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -86,6 +82,7 @@ public class PositionImpl extends CDOObjectImpl implements Position {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getOffset() {
 		return (Integer)eDynamicGet(ProjectProofProcessPackage.POSITION__OFFSET, ProjectProofProcessPackage.Literals.POSITION__OFFSET, true, true);
 	}
@@ -95,6 +92,7 @@ public class PositionImpl extends CDOObjectImpl implements Position {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOffset(int newOffset) {
 		eDynamicSet(ProjectProofProcessPackage.POSITION__OFFSET, ProjectProofProcessPackage.Literals.POSITION__OFFSET, newOffset);
 	}
@@ -104,6 +102,7 @@ public class PositionImpl extends CDOObjectImpl implements Position {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getLength() {
 		return (Integer)eDynamicGet(ProjectProofProcessPackage.POSITION__LENGTH, ProjectProofProcessPackage.Literals.POSITION__LENGTH, true, true);
 	}
@@ -113,6 +112,7 @@ public class PositionImpl extends CDOObjectImpl implements Position {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLength(int newLength) {
 		eDynamicSet(ProjectProofProcessPackage.POSITION__LENGTH, ProjectProofProcessPackage.Literals.POSITION__LENGTH, newLength);
 	}

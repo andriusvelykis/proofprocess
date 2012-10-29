@@ -11,13 +11,9 @@ import java.util.Date;
 import org.ai4fm.proofprocess.log.Activity;
 import org.ai4fm.proofprocess.log.ProofProcessLogPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -88,6 +84,7 @@ public class ActivityImpl extends CDOObjectImpl implements Activity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return (String)eDynamicGet(ProofProcessLogPackage.ACTIVITY__DESCRIPTION, ProofProcessLogPackage.Literals.ACTIVITY__DESCRIPTION, true, true);
 	}
@@ -97,6 +94,7 @@ public class ActivityImpl extends CDOObjectImpl implements Activity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		eDynamicSet(ProofProcessLogPackage.ACTIVITY__DESCRIPTION, ProofProcessLogPackage.Literals.ACTIVITY__DESCRIPTION, newDescription);
 	}
@@ -106,6 +104,7 @@ public class ActivityImpl extends CDOObjectImpl implements Activity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Date getTimestamp() {
 		return (Date)eDynamicGet(ProofProcessLogPackage.ACTIVITY__TIMESTAMP, ProofProcessLogPackage.Literals.ACTIVITY__TIMESTAMP, true, true);
 	}
@@ -115,6 +114,7 @@ public class ActivityImpl extends CDOObjectImpl implements Activity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTimestamp(Date newTimestamp) {
 		eDynamicSet(ProofProcessLogPackage.ACTIVITY__TIMESTAMP, ProofProcessLogPackage.Literals.ACTIVITY__TIMESTAMP, newTimestamp);
 	}

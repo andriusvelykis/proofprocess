@@ -12,7 +12,6 @@ import org.ai4fm.filehistory.FileEntry;
 import org.ai4fm.filehistory.FileHistoryPackage;
 import org.ai4fm.filehistory.FileVersion;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -20,10 +19,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
@@ -86,6 +81,7 @@ public class FileEntryImpl extends CDOObjectImpl implements FileEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public EList<FileVersion> getVersions() {
 		return (EList<FileVersion>)eDynamicGet(FileHistoryPackage.FILE_ENTRY__VERSIONS, FileHistoryPackage.Literals.FILE_ENTRY__VERSIONS, true, true);
@@ -96,6 +92,7 @@ public class FileEntryImpl extends CDOObjectImpl implements FileEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getPath() {
 		return (String)eDynamicGet(FileHistoryPackage.FILE_ENTRY__PATH, FileHistoryPackage.Literals.FILE_ENTRY__PATH, true, true);
 	}
@@ -105,6 +102,7 @@ public class FileEntryImpl extends CDOObjectImpl implements FileEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPath(String newPath) {
 		eDynamicSet(FileHistoryPackage.FILE_ENTRY__PATH, FileHistoryPackage.Literals.FILE_ENTRY__PATH, newPath);
 	}

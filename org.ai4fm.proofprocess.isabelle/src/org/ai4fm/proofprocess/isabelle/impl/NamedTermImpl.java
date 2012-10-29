@@ -11,13 +11,10 @@ import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.NamedTerm;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -57,6 +54,7 @@ public class NamedTermImpl extends NameTermImpl implements NamedTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Term getTerm() {
 		return (Term)eDynamicGet(IsabelleProofProcessPackage.NAMED_TERM__TERM, IsabelleProofProcessPackage.Literals.NAMED_TERM__TERM, true, true);
 	}
@@ -76,6 +74,7 @@ public class NamedTermImpl extends NameTermImpl implements NamedTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTerm(Term newTerm) {
 		eDynamicSet(IsabelleProofProcessPackage.NAMED_TERM__TERM, IsabelleProofProcessPackage.Literals.NAMED_TERM__TERM, newTerm);
 	}

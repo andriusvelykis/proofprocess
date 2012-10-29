@@ -11,8 +11,6 @@ import org.ai4fm.proofprocess.Term;
 import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Named Term Tree</b></em>'.

@@ -11,15 +11,12 @@ import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.isabelle.Inst;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -91,6 +88,7 @@ public class InstImpl extends CDOObjectImpl implements Inst {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return (String)eDynamicGet(IsabelleProofProcessPackage.INST__NAME, IsabelleProofProcessPackage.Literals.INST__NAME, true, true);
 	}
@@ -100,6 +98,7 @@ public class InstImpl extends CDOObjectImpl implements Inst {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		eDynamicSet(IsabelleProofProcessPackage.INST__NAME, IsabelleProofProcessPackage.Literals.INST__NAME, newName);
 	}
@@ -109,6 +108,7 @@ public class InstImpl extends CDOObjectImpl implements Inst {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getIndex() {
 		return (Integer)eDynamicGet(IsabelleProofProcessPackage.INST__INDEX, IsabelleProofProcessPackage.Literals.INST__INDEX, true, true);
 	}
@@ -118,6 +118,7 @@ public class InstImpl extends CDOObjectImpl implements Inst {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIndex(int newIndex) {
 		eDynamicSet(IsabelleProofProcessPackage.INST__INDEX, IsabelleProofProcessPackage.Literals.INST__INDEX, newIndex);
 	}
@@ -127,6 +128,7 @@ public class InstImpl extends CDOObjectImpl implements Inst {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Term getTerm() {
 		return (Term)eDynamicGet(IsabelleProofProcessPackage.INST__TERM, IsabelleProofProcessPackage.Literals.INST__TERM, true, true);
 	}
@@ -146,6 +148,7 @@ public class InstImpl extends CDOObjectImpl implements Inst {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTerm(Term newTerm) {
 		eDynamicSet(IsabelleProofProcessPackage.INST__TERM, IsabelleProofProcessPackage.Literals.INST__TERM, newTerm);
 	}

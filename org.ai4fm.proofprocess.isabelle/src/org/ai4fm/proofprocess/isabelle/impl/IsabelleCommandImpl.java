@@ -9,11 +9,7 @@ package org.ai4fm.proofprocess.isabelle.impl;
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -63,6 +59,7 @@ public class IsabelleCommandImpl extends NamedTermTreeImpl implements IsabelleCo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSource() {
 		return (String)eDynamicGet(IsabelleProofProcessPackage.ISABELLE_COMMAND__SOURCE, IsabelleProofProcessPackage.Literals.ISABELLE_COMMAND__SOURCE, true, true);
 	}
@@ -72,6 +69,7 @@ public class IsabelleCommandImpl extends NamedTermTreeImpl implements IsabelleCo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSource(String newSource) {
 		eDynamicSet(IsabelleProofProcessPackage.ISABELLE_COMMAND__SOURCE, IsabelleProofProcessPackage.Literals.ISABELLE_COMMAND__SOURCE, newSource);
 	}

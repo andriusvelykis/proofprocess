@@ -10,15 +10,12 @@ import org.ai4fm.proofprocess.project.Position;
 import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 import org.ai4fm.proofprocess.project.TextLoc;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -79,6 +76,7 @@ public class TextLocImpl extends CDOObjectImpl implements TextLoc {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getFilePath() {
 		return (String)eDynamicGet(ProjectProofProcessPackage.TEXT_LOC__FILE_PATH, ProjectProofProcessPackage.Literals.TEXT_LOC__FILE_PATH, true, true);
 	}
@@ -88,6 +86,7 @@ public class TextLocImpl extends CDOObjectImpl implements TextLoc {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFilePath(String newFilePath) {
 		eDynamicSet(ProjectProofProcessPackage.TEXT_LOC__FILE_PATH, ProjectProofProcessPackage.Literals.TEXT_LOC__FILE_PATH, newFilePath);
 	}
@@ -97,6 +96,7 @@ public class TextLocImpl extends CDOObjectImpl implements TextLoc {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Position getPosition() {
 		return (Position)eDynamicGet(ProjectProofProcessPackage.TEXT_LOC__POSITION, ProjectProofProcessPackage.Literals.TEXT_LOC__POSITION, true, true);
 	}
@@ -116,6 +116,7 @@ public class TextLocImpl extends CDOObjectImpl implements TextLoc {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPosition(Position newPosition) {
 		eDynamicSet(ProjectProofProcessPackage.TEXT_LOC__POSITION, ProjectProofProcessPackage.Literals.TEXT_LOC__POSITION, newPosition);
 	}
