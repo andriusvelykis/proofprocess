@@ -16,6 +16,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
@@ -33,7 +34,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class TextLocImpl extends EObjectImpl implements TextLoc {
+public class TextLocImpl extends CDOObjectImpl implements TextLoc {
 	/**
 	 * The default value of the '{@link #getFilePath() <em>File Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -43,26 +44,6 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	 * @ordered
 	 */
 	protected static final String FILE_PATH_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getFilePath() <em>File Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getFilePath()
-	 * @generated
-	 * @ordered
-	 */
-	protected String filePath = FILE_PATH_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getPosition() <em>Position</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPosition()
-	 * @generated
-	 * @ordered
-	 */
-	protected Position position;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -88,8 +69,18 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getFilePath() {
-		return filePath;
+		return (String)eDynamicGet(ProjectProofProcessPackage.TEXT_LOC__FILE_PATH, ProjectProofProcessPackage.Literals.TEXT_LOC__FILE_PATH, true, true);
 	}
 
 	/**
@@ -98,10 +89,7 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	 * @generated
 	 */
 	public void setFilePath(String newFilePath) {
-		String oldFilePath = filePath;
-		filePath = newFilePath;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.TEXT_LOC__FILE_PATH, oldFilePath, filePath));
+		eDynamicSet(ProjectProofProcessPackage.TEXT_LOC__FILE_PATH, ProjectProofProcessPackage.Literals.TEXT_LOC__FILE_PATH, newFilePath);
 	}
 
 	/**
@@ -110,7 +98,7 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	 * @generated
 	 */
 	public Position getPosition() {
-		return position;
+		return (Position)eDynamicGet(ProjectProofProcessPackage.TEXT_LOC__POSITION, ProjectProofProcessPackage.Literals.TEXT_LOC__POSITION, true, true);
 	}
 
 	/**
@@ -119,12 +107,7 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	 * @generated
 	 */
 	public NotificationChain basicSetPosition(Position newPosition, NotificationChain msgs) {
-		Position oldPosition = position;
-		position = newPosition;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.TEXT_LOC__POSITION, oldPosition, newPosition);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eDynamicInverseAdd((InternalEObject)newPosition, ProjectProofProcessPackage.TEXT_LOC__POSITION, msgs);
 		return msgs;
 	}
 
@@ -134,17 +117,7 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	 * @generated
 	 */
 	public void setPosition(Position newPosition) {
-		if (newPosition != position) {
-			NotificationChain msgs = null;
-			if (position != null)
-				msgs = ((InternalEObject)position).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProjectProofProcessPackage.TEXT_LOC__POSITION, null, msgs);
-			if (newPosition != null)
-				msgs = ((InternalEObject)newPosition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProjectProofProcessPackage.TEXT_LOC__POSITION, null, msgs);
-			msgs = basicSetPosition(newPosition, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.TEXT_LOC__POSITION, newPosition, newPosition));
+		eDynamicSet(ProjectProofProcessPackage.TEXT_LOC__POSITION, ProjectProofProcessPackage.Literals.TEXT_LOC__POSITION, newPosition);
 	}
 
 	/**
@@ -222,27 +195,11 @@ public class TextLocImpl extends EObjectImpl implements TextLoc {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProjectProofProcessPackage.TEXT_LOC__FILE_PATH:
-				return FILE_PATH_EDEFAULT == null ? filePath != null : !FILE_PATH_EDEFAULT.equals(filePath);
+				return FILE_PATH_EDEFAULT == null ? getFilePath() != null : !FILE_PATH_EDEFAULT.equals(getFilePath());
 			case ProjectProofProcessPackage.TEXT_LOC__POSITION:
-				return position != null;
+				return getPosition() != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (filePath: ");
-		result.append(filePath);
-		result.append(')');
-		return result.toString();
 	}
 
 } //TextLocImpl

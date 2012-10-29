@@ -15,6 +15,7 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
@@ -32,7 +33,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class ActivityImpl extends EObjectImpl implements Activity {
+public class ActivityImpl extends CDOObjectImpl implements Activity {
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -44,16 +45,6 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	protected static final String DESCRIPTION_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDescription()
-	 * @generated
-	 * @ordered
-	 */
-	protected String description = DESCRIPTION_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -62,16 +53,6 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	 * @ordered
 	 */
 	protected static final Date TIMESTAMP_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTimestamp()
-	 * @generated
-	 * @ordered
-	 */
-	protected Date timestamp = TIMESTAMP_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -97,8 +78,18 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getDescription() {
-		return description;
+		return (String)eDynamicGet(ProofProcessLogPackage.ACTIVITY__DESCRIPTION, ProofProcessLogPackage.Literals.ACTIVITY__DESCRIPTION, true, true);
 	}
 
 	/**
@@ -107,10 +98,7 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	 * @generated
 	 */
 	public void setDescription(String newDescription) {
-		String oldDescription = description;
-		description = newDescription;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessLogPackage.ACTIVITY__DESCRIPTION, oldDescription, description));
+		eDynamicSet(ProofProcessLogPackage.ACTIVITY__DESCRIPTION, ProofProcessLogPackage.Literals.ACTIVITY__DESCRIPTION, newDescription);
 	}
 
 	/**
@@ -119,7 +107,7 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	 * @generated
 	 */
 	public Date getTimestamp() {
-		return timestamp;
+		return (Date)eDynamicGet(ProofProcessLogPackage.ACTIVITY__TIMESTAMP, ProofProcessLogPackage.Literals.ACTIVITY__TIMESTAMP, true, true);
 	}
 
 	/**
@@ -128,10 +116,7 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	 * @generated
 	 */
 	public void setTimestamp(Date newTimestamp) {
-		Date oldTimestamp = timestamp;
-		timestamp = newTimestamp;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessLogPackage.ACTIVITY__TIMESTAMP, oldTimestamp, timestamp));
+		eDynamicSet(ProofProcessLogPackage.ACTIVITY__TIMESTAMP, ProofProcessLogPackage.Literals.ACTIVITY__TIMESTAMP, newTimestamp);
 	}
 
 	/**
@@ -195,29 +180,11 @@ public class ActivityImpl extends EObjectImpl implements Activity {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessLogPackage.ACTIVITY__DESCRIPTION:
-				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+				return DESCRIPTION_EDEFAULT == null ? getDescription() != null : !DESCRIPTION_EDEFAULT.equals(getDescription());
 			case ProofProcessLogPackage.ACTIVITY__TIMESTAMP:
-				return TIMESTAMP_EDEFAULT == null ? timestamp != null : !TIMESTAMP_EDEFAULT.equals(timestamp);
+				return TIMESTAMP_EDEFAULT == null ? getTimestamp() != null : !TIMESTAMP_EDEFAULT.equals(getTimestamp());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (description: ");
-		result.append(description);
-		result.append(", timestamp: ");
-		result.append(timestamp);
-		result.append(')');
-		return result.toString();
 	}
 
 } //ActivityImpl

@@ -33,16 +33,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	/**
-	 * The cached value of the '{@link #getProofRef() <em>Proof Ref</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getProofRef()
-	 * @generated
-	 * @ordered
-	 */
-	protected ProofEntry proofRef;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -67,15 +57,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	 * @generated
 	 */
 	public ProofEntry getProofRef() {
-		if (proofRef != null && proofRef.eIsProxy()) {
-			InternalEObject oldProofRef = (InternalEObject)proofRef;
-			proofRef = (ProofEntry)eResolveProxy(oldProofRef);
-			if (proofRef != oldProofRef) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProofProcessLogPackage.PROOF_ACTIVITY__PROOF_REF, oldProofRef, proofRef));
-			}
-		}
-		return proofRef;
+		return (ProofEntry)eDynamicGet(ProofProcessLogPackage.PROOF_ACTIVITY__PROOF_REF, ProofProcessLogPackage.Literals.PROOF_ACTIVITY__PROOF_REF, true, true);
 	}
 
 	/**
@@ -84,7 +66,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	 * @generated
 	 */
 	public ProofEntry basicGetProofRef() {
-		return proofRef;
+		return (ProofEntry)eDynamicGet(ProofProcessLogPackage.PROOF_ACTIVITY__PROOF_REF, ProofProcessLogPackage.Literals.PROOF_ACTIVITY__PROOF_REF, false, true);
 	}
 
 	/**
@@ -93,10 +75,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	 * @generated
 	 */
 	public void setProofRef(ProofEntry newProofRef) {
-		ProofEntry oldProofRef = proofRef;
-		proofRef = newProofRef;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessLogPackage.PROOF_ACTIVITY__PROOF_REF, oldProofRef, proofRef));
+		eDynamicSet(ProofProcessLogPackage.PROOF_ACTIVITY__PROOF_REF, ProofProcessLogPackage.Literals.PROOF_ACTIVITY__PROOF_REF, newProofRef);
 	}
 
 	/**
@@ -153,7 +132,7 @@ public class ProofActivityImpl extends ActivityImpl implements ProofActivity {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessLogPackage.PROOF_ACTIVITY__PROOF_REF:
-				return proofRef != null;
+				return basicGetProofRef() != null;
 		}
 		return super.eIsSet(featureID);
 	}

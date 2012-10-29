@@ -60,9 +60,9 @@ public class ProofProcessLogFactoryImpl extends EFactoryImpl implements ProofPro
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ProofProcessLogPackage.PROOF_LOG: return createProofLog();
-			case ProofProcessLogPackage.ACTIVITY: return createActivity();
-			case ProofProcessLogPackage.PROOF_ACTIVITY: return createProofActivity();
+			case ProofProcessLogPackage.PROOF_LOG: return (EObject)createProofLog();
+			case ProofProcessLogPackage.ACTIVITY: return (EObject)createActivity();
+			case ProofProcessLogPackage.PROOF_ACTIVITY: return (EObject)createProofActivity();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}

@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess.log;
 
+import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -24,9 +25,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.proofprocess.log.ProofProcessLogPackage#getProofLog()
  * @model
+ * @extends CDOObject
  * @generated
  */
-public interface ProofLog extends EObject {
+public interface ProofLog extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Activities</b></em>' containment reference list.
 	 * The list contents are of type {@link org.ai4fm.proofprocess.log.Activity}.

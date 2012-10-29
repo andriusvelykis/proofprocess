@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.ai4fm.proofprocess.project/src"
-    modelPluginID="org.ai4fm.proofprocess.project" modelName="ProjectProofProcess"
-    importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" copyrightFields="false"
-    usedGenPackages="../../org.ai4fm.proofprocess/model/ProofProcess.genmodel#//proofprocess">
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.ai4fm.proofprocess.project/src" modelPluginID="org.ai4fm.proofprocess.project" modelName="ProjectProofProcess" rootExtendsInterface="org.eclipse.emf.cdo.CDOObject" rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl" importerID="org.eclipse.emf.importer.ecore" featureDelegation="Dynamic" complianceLevel="6.0" copyrightFields="false">
   <foreignModel>ProjectProofProcess.ecore</foreignModel>
-  <genPackages prefix="ProjectProofProcess" basePackage="org.ai4fm.proofprocess" disposableProviderFactory="true"
-      ecorePackage="ProjectProofProcess.ecore#/">
-    <genClasses ecoreClass="ProjectProofProcess.ecore#//Project">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProjectProofProcess.ecore#//Project/label"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProjectProofProcess.ecore#//Project/proofs"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProjectProofProcess.ecore#//Project/intents"/>
+  <modelPluginVariables>CDO=org.eclipse.emf.cdo</modelPluginVariables>
+  <genPackages prefix="ProjectProofProcess" basePackage="org.ai4fm.proofprocess" disposableProviderFactory="true">
+    <ecorePackage href="ProjectProofProcess.ecore#/"/>
+    <genClasses>
+      <ecoreClass href="ProjectProofProcess.ecore#//Project"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="ProjectProofProcess.ecore#//Project/label"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ProjectProofProcess.ecore#//Project/proofs"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ProjectProofProcess.ecore#//Project/intents"/>
+      </genFeatures>
     </genClasses>
-    <genClasses ecoreClass="ProjectProofProcess.ecore#//Position">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProjectProofProcess.ecore#//Position/offset"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProjectProofProcess.ecore#//Position/length"/>
+    <genClasses>
+      <ecoreClass href="ProjectProofProcess.ecore#//Position"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="ProjectProofProcess.ecore#//Position/offset"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="ProjectProofProcess.ecore#//Position/length"/>
+      </genFeatures>
     </genClasses>
-    <genClasses ecoreClass="ProjectProofProcess.ecore#//TextLoc">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProjectProofProcess.ecore#//TextLoc/filePath"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProjectProofProcess.ecore#//TextLoc/position"/>
+    <genClasses>
+      <ecoreClass href="ProjectProofProcess.ecore#//TextLoc"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="ProjectProofProcess.ecore#//TextLoc/filePath"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ProjectProofProcess.ecore#//TextLoc/position"/>
+      </genFeatures>
     </genClasses>
   </genPackages>
+  <usedGenPackages href="../../org.ai4fm.proofprocess/model/ProofProcess.genmodel#//proofprocess"/>
 </genmodel:GenModel>

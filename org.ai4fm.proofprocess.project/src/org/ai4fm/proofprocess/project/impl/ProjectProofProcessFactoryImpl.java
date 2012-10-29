@@ -60,9 +60,9 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ProjectProofProcessPackage.PROJECT: return createProject();
-			case ProjectProofProcessPackage.POSITION: return createPosition();
-			case ProjectProofProcessPackage.TEXT_LOC: return createTextLoc();
+			case ProjectProofProcessPackage.PROJECT: return (EObject)createProject();
+			case ProjectProofProcessPackage.POSITION: return (EObject)createPosition();
+			case ProjectProofProcessPackage.TEXT_LOC: return (EObject)createTextLoc();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}

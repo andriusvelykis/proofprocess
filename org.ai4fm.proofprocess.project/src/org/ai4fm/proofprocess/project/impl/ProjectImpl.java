@@ -42,16 +42,6 @@ public class ProjectImpl extends ProofStoreImpl implements Project {
 	protected static final String LABEL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLabel()
-	 * @generated
-	 * @ordered
-	 */
-	protected String label = LABEL_EDEFAULT;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -76,7 +66,7 @@ public class ProjectImpl extends ProofStoreImpl implements Project {
 	 * @generated
 	 */
 	public String getLabel() {
-		return label;
+		return (String)eDynamicGet(ProjectProofProcessPackage.PROJECT__LABEL, ProjectProofProcessPackage.Literals.PROJECT__LABEL, true, true);
 	}
 
 	/**
@@ -85,10 +75,7 @@ public class ProjectImpl extends ProofStoreImpl implements Project {
 	 * @generated
 	 */
 	public void setLabel(String newLabel) {
-		String oldLabel = label;
-		label = newLabel;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.PROJECT__LABEL, oldLabel, label));
+		eDynamicSet(ProjectProofProcessPackage.PROJECT__LABEL, ProjectProofProcessPackage.Literals.PROJECT__LABEL, newLabel);
 	}
 
 	/**
@@ -144,25 +131,9 @@ public class ProjectImpl extends ProofStoreImpl implements Project {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProjectProofProcessPackage.PROJECT__LABEL:
-				return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
+				return LABEL_EDEFAULT == null ? getLabel() != null : !LABEL_EDEFAULT.equals(getLabel());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (label: ");
-		result.append(label);
-		result.append(')');
-		return result.toString();
 	}
 
 } //ProjectImpl

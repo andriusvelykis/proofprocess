@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,17 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ProofLogImpl extends EObjectImpl implements ProofLog {
-	/**
-	 * The cached value of the '{@link #getActivities() <em>Activities</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getActivities()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Activity> activities;
-
+public class ProofLogImpl extends CDOObjectImpl implements ProofLog {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -72,11 +63,19 @@ public class ProofLogImpl extends EObjectImpl implements ProofLog {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
 	public EList<Activity> getActivities() {
-		if (activities == null) {
-			activities = new EObjectContainmentEList<Activity>(Activity.class, this, ProofProcessLogPackage.PROOF_LOG__ACTIVITIES);
-		}
-		return activities;
+		return (EList<Activity>)eDynamicGet(ProofProcessLogPackage.PROOF_LOG__ACTIVITIES, ProofProcessLogPackage.Literals.PROOF_LOG__ACTIVITIES, true, true);
 	}
 
 	/**
@@ -148,7 +147,7 @@ public class ProofLogImpl extends EObjectImpl implements ProofLog {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessLogPackage.PROOF_LOG__ACTIVITIES:
-				return activities != null && !activities.isEmpty();
+				return !getActivities().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
