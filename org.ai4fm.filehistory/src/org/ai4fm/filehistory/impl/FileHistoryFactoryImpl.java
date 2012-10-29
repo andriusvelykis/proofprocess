@@ -60,9 +60,9 @@ public class FileHistoryFactoryImpl extends EFactoryImpl implements FileHistoryF
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case FileHistoryPackage.FILE_HISTORY_PROJECT: return createFileHistoryProject();
-			case FileHistoryPackage.FILE_ENTRY: return createFileEntry();
-			case FileHistoryPackage.FILE_VERSION: return createFileVersion();
+			case FileHistoryPackage.FILE_HISTORY_PROJECT: return (EObject)createFileHistoryProject();
+			case FileHistoryPackage.FILE_ENTRY: return (EObject)createFileEntry();
+			case FileHistoryPackage.FILE_VERSION: return (EObject)createFileVersion();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}

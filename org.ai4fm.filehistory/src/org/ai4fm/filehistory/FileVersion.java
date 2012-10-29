@@ -6,6 +6,7 @@
  */
 package org.ai4fm.filehistory;
 
+import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -26,9 +27,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.filehistory.FileHistoryPackage#getFileVersion()
  * @model
+ * @extends CDOObject
  * @generated
  */
-public interface FileVersion extends EObject {
+public interface FileVersion extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Timestamp</b></em>' attribute.
 	 * <!-- begin-user-doc -->

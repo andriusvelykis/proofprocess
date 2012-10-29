@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -40,17 +41,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class FileEntryImpl extends EObjectImpl implements FileEntry {
-	/**
-	 * The cached value of the '{@link #getVersions() <em>Versions</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getVersions()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<FileVersion> versions;
-
+public class FileEntryImpl extends CDOObjectImpl implements FileEntry {
 	/**
 	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -60,16 +51,6 @@ public class FileEntryImpl extends EObjectImpl implements FileEntry {
 	 * @ordered
 	 */
 	protected static final String PATH_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPath()
-	 * @generated
-	 * @ordered
-	 */
-	protected String path = PATH_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -95,11 +76,19 @@ public class FileEntryImpl extends EObjectImpl implements FileEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
 	public EList<FileVersion> getVersions() {
-		if (versions == null) {
-			versions = new EObjectContainmentEList<FileVersion>(FileVersion.class, this, FileHistoryPackage.FILE_ENTRY__VERSIONS);
-		}
-		return versions;
+		return (EList<FileVersion>)eDynamicGet(FileHistoryPackage.FILE_ENTRY__VERSIONS, FileHistoryPackage.Literals.FILE_ENTRY__VERSIONS, true, true);
 	}
 
 	/**
@@ -108,7 +97,7 @@ public class FileEntryImpl extends EObjectImpl implements FileEntry {
 	 * @generated
 	 */
 	public String getPath() {
-		return path;
+		return (String)eDynamicGet(FileHistoryPackage.FILE_ENTRY__PATH, FileHistoryPackage.Literals.FILE_ENTRY__PATH, true, true);
 	}
 
 	/**
@@ -117,10 +106,7 @@ public class FileEntryImpl extends EObjectImpl implements FileEntry {
 	 * @generated
 	 */
 	public void setPath(String newPath) {
-		String oldPath = path;
-		path = newPath;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FileHistoryPackage.FILE_ENTRY__PATH, oldPath, path));
+		eDynamicSet(FileHistoryPackage.FILE_ENTRY__PATH, FileHistoryPackage.Literals.FILE_ENTRY__PATH, newPath);
 	}
 
 	/**
@@ -200,27 +186,11 @@ public class FileEntryImpl extends EObjectImpl implements FileEntry {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case FileHistoryPackage.FILE_ENTRY__VERSIONS:
-				return versions != null && !versions.isEmpty();
+				return !getVersions().isEmpty();
 			case FileHistoryPackage.FILE_ENTRY__PATH:
-				return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
+				return PATH_EDEFAULT == null ? getPath() != null : !PATH_EDEFAULT.equals(getPath());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (path: ");
-		result.append(path);
-		result.append(')');
-		return result.toString();
 	}
 
 } //FileEntryImpl

@@ -6,6 +6,7 @@
  */
 package org.ai4fm.filehistory;
 
+import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -25,9 +26,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.filehistory.FileHistoryPackage#getFileEntry()
  * @model
+ * @extends CDOObject
  * @generated
  */
-public interface FileEntry extends EObject {
+public interface FileEntry extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Versions</b></em>' containment reference list.
 	 * The list contents are of type {@link org.ai4fm.filehistory.FileVersion}.
