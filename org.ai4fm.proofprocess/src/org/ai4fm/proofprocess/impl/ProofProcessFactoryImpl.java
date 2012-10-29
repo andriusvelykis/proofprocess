@@ -61,18 +61,18 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ProofProcessPackage.INTENT: return createIntent();
-			case ProofProcessPackage.PROOF_STEP: return createProofStep();
-			case ProofProcessPackage.PROOF_INFO: return createProofInfo();
-			case ProofProcessPackage.PROOF_FEATURE_DEF: return createProofFeatureDef();
-			case ProofProcessPackage.PROOF_FEATURE: return createProofFeature();
-			case ProofProcessPackage.PROOF_ENTRY: return createProofEntry();
-			case ProofProcessPackage.PROOF_SEQ: return createProofSeq();
-			case ProofProcessPackage.PROOF_PARALLEL: return createProofParallel();
-			case ProofProcessPackage.PROOF_DECOR: return createProofDecor();
-			case ProofProcessPackage.ATTEMPT: return createAttempt();
-			case ProofProcessPackage.PROOF: return createProof();
-			case ProofProcessPackage.PROOF_STORE: return createProofStore();
+			case ProofProcessPackage.INTENT: return (EObject)createIntent();
+			case ProofProcessPackage.PROOF_STEP: return (EObject)createProofStep();
+			case ProofProcessPackage.PROOF_INFO: return (EObject)createProofInfo();
+			case ProofProcessPackage.PROOF_FEATURE_DEF: return (EObject)createProofFeatureDef();
+			case ProofProcessPackage.PROOF_FEATURE: return (EObject)createProofFeature();
+			case ProofProcessPackage.PROOF_ENTRY: return (EObject)createProofEntry();
+			case ProofProcessPackage.PROOF_SEQ: return (EObject)createProofSeq();
+			case ProofProcessPackage.PROOF_PARALLEL: return (EObject)createProofParallel();
+			case ProofProcessPackage.PROOF_DECOR: return (EObject)createProofDecor();
+			case ProofProcessPackage.ATTEMPT: return (EObject)createAttempt();
+			case ProofProcessPackage.PROOF: return (EObject)createProof();
+			case ProofProcessPackage.PROOF_STORE: return (EObject)createProofStore();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}

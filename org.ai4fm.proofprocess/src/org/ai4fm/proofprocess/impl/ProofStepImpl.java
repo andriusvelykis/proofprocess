@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -44,47 +45,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ProofStepImpl extends EObjectImpl implements ProofStep {
-	/**
-	 * The cached value of the '{@link #getInGoals() <em>In Goals</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getInGoals()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Term> inGoals;
-
-	/**
-	 * The cached value of the '{@link #getOutGoals() <em>Out Goals</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getOutGoals()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Term> outGoals;
-
-	/**
-	 * The cached value of the '{@link #getSource() <em>Source</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSource()
-	 * @generated
-	 * @ordered
-	 */
-	protected Loc source;
-
-	/**
-	 * The cached value of the '{@link #getTrace() <em>Trace</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTrace()
-	 * @generated
-	 * @ordered
-	 */
-	protected Trace trace;
-
+public class ProofStepImpl extends CDOObjectImpl implements ProofStep {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -109,11 +70,9 @@ public class ProofStepImpl extends EObjectImpl implements ProofStep {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Term> getInGoals() {
-		if (inGoals == null) {
-			inGoals = new EObjectContainmentEList<Term>(Term.class, this, ProofProcessPackage.PROOF_STEP__IN_GOALS);
-		}
-		return inGoals;
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
 	}
 
 	/**
@@ -121,11 +80,19 @@ public class ProofStepImpl extends EObjectImpl implements ProofStep {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+	public EList<Term> getInGoals() {
+		return (EList<Term>)eDynamicGet(ProofProcessPackage.PROOF_STEP__IN_GOALS, ProofProcessPackage.Literals.PROOF_STEP__IN_GOALS, true, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
 	public EList<Term> getOutGoals() {
-		if (outGoals == null) {
-			outGoals = new EObjectContainmentEList<Term>(Term.class, this, ProofProcessPackage.PROOF_STEP__OUT_GOALS);
-		}
-		return outGoals;
+		return (EList<Term>)eDynamicGet(ProofProcessPackage.PROOF_STEP__OUT_GOALS, ProofProcessPackage.Literals.PROOF_STEP__OUT_GOALS, true, true);
 	}
 
 	/**
@@ -134,7 +101,7 @@ public class ProofStepImpl extends EObjectImpl implements ProofStep {
 	 * @generated
 	 */
 	public Loc getSource() {
-		return source;
+		return (Loc)eDynamicGet(ProofProcessPackage.PROOF_STEP__SOURCE, ProofProcessPackage.Literals.PROOF_STEP__SOURCE, true, true);
 	}
 
 	/**
@@ -143,12 +110,7 @@ public class ProofStepImpl extends EObjectImpl implements ProofStep {
 	 * @generated
 	 */
 	public NotificationChain basicSetSource(Loc newSource, NotificationChain msgs) {
-		Loc oldSource = source;
-		source = newSource;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_STEP__SOURCE, oldSource, newSource);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eDynamicInverseAdd((InternalEObject)newSource, ProofProcessPackage.PROOF_STEP__SOURCE, msgs);
 		return msgs;
 	}
 
@@ -158,17 +120,7 @@ public class ProofStepImpl extends EObjectImpl implements ProofStep {
 	 * @generated
 	 */
 	public void setSource(Loc newSource) {
-		if (newSource != source) {
-			NotificationChain msgs = null;
-			if (source != null)
-				msgs = ((InternalEObject)source).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_STEP__SOURCE, null, msgs);
-			if (newSource != null)
-				msgs = ((InternalEObject)newSource).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_STEP__SOURCE, null, msgs);
-			msgs = basicSetSource(newSource, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_STEP__SOURCE, newSource, newSource));
+		eDynamicSet(ProofProcessPackage.PROOF_STEP__SOURCE, ProofProcessPackage.Literals.PROOF_STEP__SOURCE, newSource);
 	}
 
 	/**
@@ -177,7 +129,7 @@ public class ProofStepImpl extends EObjectImpl implements ProofStep {
 	 * @generated
 	 */
 	public Trace getTrace() {
-		return trace;
+		return (Trace)eDynamicGet(ProofProcessPackage.PROOF_STEP__TRACE, ProofProcessPackage.Literals.PROOF_STEP__TRACE, true, true);
 	}
 
 	/**
@@ -186,12 +138,7 @@ public class ProofStepImpl extends EObjectImpl implements ProofStep {
 	 * @generated
 	 */
 	public NotificationChain basicSetTrace(Trace newTrace, NotificationChain msgs) {
-		Trace oldTrace = trace;
-		trace = newTrace;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_STEP__TRACE, oldTrace, newTrace);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eDynamicInverseAdd((InternalEObject)newTrace, ProofProcessPackage.PROOF_STEP__TRACE, msgs);
 		return msgs;
 	}
 
@@ -201,17 +148,7 @@ public class ProofStepImpl extends EObjectImpl implements ProofStep {
 	 * @generated
 	 */
 	public void setTrace(Trace newTrace) {
-		if (newTrace != trace) {
-			NotificationChain msgs = null;
-			if (trace != null)
-				msgs = ((InternalEObject)trace).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_STEP__TRACE, null, msgs);
-			if (newTrace != null)
-				msgs = ((InternalEObject)newTrace).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_STEP__TRACE, null, msgs);
-			msgs = basicSetTrace(newTrace, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_STEP__TRACE, newTrace, newTrace));
+		eDynamicSet(ProofProcessPackage.PROOF_STEP__TRACE, ProofProcessPackage.Literals.PROOF_STEP__TRACE, newTrace);
 	}
 
 	/**
@@ -314,13 +251,13 @@ public class ProofStepImpl extends EObjectImpl implements ProofStep {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_STEP__IN_GOALS:
-				return inGoals != null && !inGoals.isEmpty();
+				return !getInGoals().isEmpty();
 			case ProofProcessPackage.PROOF_STEP__OUT_GOALS:
-				return outGoals != null && !outGoals.isEmpty();
+				return !getOutGoals().isEmpty();
 			case ProofProcessPackage.PROOF_STEP__SOURCE:
-				return source != null;
+				return getSource() != null;
 			case ProofProcessPackage.PROOF_STEP__TRACE:
-				return trace != null;
+				return getTrace() != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -37,16 +37,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ProofSeqImpl extends ProofElemImpl implements ProofSeq {
 	/**
-	 * The cached value of the '{@link #getEntries() <em>Entries</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getEntries()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ProofElem> entries;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -70,11 +60,9 @@ public class ProofSeqImpl extends ProofElemImpl implements ProofSeq {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public EList<ProofElem> getEntries() {
-		if (entries == null) {
-			entries = new EObjectContainmentEList<ProofElem>(ProofElem.class, this, ProofProcessPackage.PROOF_SEQ__ENTRIES);
-		}
-		return entries;
+		return (EList<ProofElem>)eDynamicGet(ProofProcessPackage.PROOF_SEQ__ENTRIES, ProofProcessPackage.Literals.PROOF_SEQ__ENTRIES, true, true);
 	}
 
 	/**
@@ -146,7 +134,7 @@ public class ProofSeqImpl extends ProofElemImpl implements ProofSeq {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_SEQ__ENTRIES:
-				return entries != null && !entries.isEmpty();
+				return !getEntries().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

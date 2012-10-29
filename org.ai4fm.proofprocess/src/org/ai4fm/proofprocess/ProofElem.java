@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess;
 
+import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -22,9 +23,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofElem()
  * @model abstract="true"
+ * @extends CDOObject
  * @generated
  */
-public interface ProofElem extends EObject {
+public interface ProofElem extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Info</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

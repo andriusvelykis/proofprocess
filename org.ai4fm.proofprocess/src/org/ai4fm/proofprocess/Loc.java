@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess;
 
+import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -16,7 +17,8 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.proofprocess.ProofProcessPackage#getLoc()
  * @model interface="true" abstract="true"
+ * @extends CDOObject
  * @generated
  */
-public interface Loc extends EObject {
+public interface Loc extends CDOObject {
 } // Loc

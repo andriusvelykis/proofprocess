@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -43,17 +44,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
-	/**
-	 * The cached value of the '{@link #getIntent() <em>Intent</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getIntent()
-	 * @generated
-	 * @ordered
-	 */
-	protected Intent intent;
-
+public class ProofInfoImpl extends CDOObjectImpl implements ProofInfo {
 	/**
 	 * The default value of the '{@link #getNarrative() <em>Narrative</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -63,36 +54,6 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * @ordered
 	 */
 	protected static final String NARRATIVE_EDEFAULT = "\"\"";
-
-	/**
-	 * The cached value of the '{@link #getNarrative() <em>Narrative</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getNarrative()
-	 * @generated
-	 * @ordered
-	 */
-	protected String narrative = NARRATIVE_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getInFeatures() <em>In Features</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getInFeatures()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ProofFeature> inFeatures;
-
-	/**
-	 * The cached value of the '{@link #getOutFeatures() <em>Out Features</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getOutFeatures()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ProofFeature> outFeatures;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -118,16 +79,18 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Intent getIntent() {
-		if (intent != null && intent.eIsProxy()) {
-			InternalEObject oldIntent = (InternalEObject)intent;
-			intent = (Intent)eResolveProxy(oldIntent);
-			if (intent != oldIntent) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProofProcessPackage.PROOF_INFO__INTENT, oldIntent, intent));
-			}
-		}
-		return intent;
+		return (Intent)eDynamicGet(ProofProcessPackage.PROOF_INFO__INTENT, ProofProcessPackage.Literals.PROOF_INFO__INTENT, true, true);
 	}
 
 	/**
@@ -136,7 +99,7 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * @generated
 	 */
 	public Intent basicGetIntent() {
-		return intent;
+		return (Intent)eDynamicGet(ProofProcessPackage.PROOF_INFO__INTENT, ProofProcessPackage.Literals.PROOF_INFO__INTENT, false, true);
 	}
 
 	/**
@@ -145,10 +108,7 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * @generated
 	 */
 	public void setIntent(Intent newIntent) {
-		Intent oldIntent = intent;
-		intent = newIntent;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_INFO__INTENT, oldIntent, intent));
+		eDynamicSet(ProofProcessPackage.PROOF_INFO__INTENT, ProofProcessPackage.Literals.PROOF_INFO__INTENT, newIntent);
 	}
 
 	/**
@@ -157,7 +117,7 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * @generated
 	 */
 	public String getNarrative() {
-		return narrative;
+		return (String)eDynamicGet(ProofProcessPackage.PROOF_INFO__NARRATIVE, ProofProcessPackage.Literals.PROOF_INFO__NARRATIVE, true, true);
 	}
 
 	/**
@@ -166,10 +126,7 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * @generated
 	 */
 	public void setNarrative(String newNarrative) {
-		String oldNarrative = narrative;
-		narrative = newNarrative;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_INFO__NARRATIVE, oldNarrative, narrative));
+		eDynamicSet(ProofProcessPackage.PROOF_INFO__NARRATIVE, ProofProcessPackage.Literals.PROOF_INFO__NARRATIVE, newNarrative);
 	}
 
 	/**
@@ -177,11 +134,9 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public EList<ProofFeature> getInFeatures() {
-		if (inFeatures == null) {
-			inFeatures = new EObjectContainmentEList<ProofFeature>(ProofFeature.class, this, ProofProcessPackage.PROOF_INFO__IN_FEATURES);
-		}
-		return inFeatures;
+		return (EList<ProofFeature>)eDynamicGet(ProofProcessPackage.PROOF_INFO__IN_FEATURES, ProofProcessPackage.Literals.PROOF_INFO__IN_FEATURES, true, true);
 	}
 
 	/**
@@ -189,11 +144,9 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public EList<ProofFeature> getOutFeatures() {
-		if (outFeatures == null) {
-			outFeatures = new EObjectContainmentEList<ProofFeature>(ProofFeature.class, this, ProofProcessPackage.PROOF_INFO__OUT_FEATURES);
-		}
-		return outFeatures;
+		return (EList<ProofFeature>)eDynamicGet(ProofProcessPackage.PROOF_INFO__OUT_FEATURES, ProofProcessPackage.Literals.PROOF_INFO__OUT_FEATURES, true, true);
 	}
 
 	/**
@@ -293,31 +246,15 @@ public class ProofInfoImpl extends EObjectImpl implements ProofInfo {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_INFO__INTENT:
-				return intent != null;
+				return basicGetIntent() != null;
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
-				return NARRATIVE_EDEFAULT == null ? narrative != null : !NARRATIVE_EDEFAULT.equals(narrative);
+				return NARRATIVE_EDEFAULT == null ? getNarrative() != null : !NARRATIVE_EDEFAULT.equals(getNarrative());
 			case ProofProcessPackage.PROOF_INFO__IN_FEATURES:
-				return inFeatures != null && !inFeatures.isEmpty();
+				return !getInFeatures().isEmpty();
 			case ProofProcessPackage.PROOF_INFO__OUT_FEATURES:
-				return outFeatures != null && !outFeatures.isEmpty();
+				return !getOutFeatures().isEmpty();
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (narrative: ");
-		result.append(narrative);
-		result.append(')');
-		return result.toString();
 	}
 
 } //ProofInfoImpl

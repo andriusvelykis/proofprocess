@@ -33,16 +33,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class ProofEntryImpl extends ProofElemImpl implements ProofEntry {
 	/**
-	 * The cached value of the '{@link #getProofStep() <em>Proof Step</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getProofStep()
-	 * @generated
-	 * @ordered
-	 */
-	protected ProofStep proofStep;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -67,7 +57,7 @@ public class ProofEntryImpl extends ProofElemImpl implements ProofEntry {
 	 * @generated
 	 */
 	public ProofStep getProofStep() {
-		return proofStep;
+		return (ProofStep)eDynamicGet(ProofProcessPackage.PROOF_ENTRY__PROOF_STEP, ProofProcessPackage.Literals.PROOF_ENTRY__PROOF_STEP, true, true);
 	}
 
 	/**
@@ -76,12 +66,7 @@ public class ProofEntryImpl extends ProofElemImpl implements ProofEntry {
 	 * @generated
 	 */
 	public NotificationChain basicSetProofStep(ProofStep newProofStep, NotificationChain msgs) {
-		ProofStep oldProofStep = proofStep;
-		proofStep = newProofStep;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_ENTRY__PROOF_STEP, oldProofStep, newProofStep);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eDynamicInverseAdd((InternalEObject)newProofStep, ProofProcessPackage.PROOF_ENTRY__PROOF_STEP, msgs);
 		return msgs;
 	}
 
@@ -91,17 +76,7 @@ public class ProofEntryImpl extends ProofElemImpl implements ProofEntry {
 	 * @generated
 	 */
 	public void setProofStep(ProofStep newProofStep) {
-		if (newProofStep != proofStep) {
-			NotificationChain msgs = null;
-			if (proofStep != null)
-				msgs = ((InternalEObject)proofStep).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_ENTRY__PROOF_STEP, null, msgs);
-			if (newProofStep != null)
-				msgs = ((InternalEObject)newProofStep).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_ENTRY__PROOF_STEP, null, msgs);
-			msgs = basicSetProofStep(newProofStep, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_ENTRY__PROOF_STEP, newProofStep, newProofStep));
+		eDynamicSet(ProofProcessPackage.PROOF_ENTRY__PROOF_STEP, ProofProcessPackage.Literals.PROOF_ENTRY__PROOF_STEP, newProofStep);
 	}
 
 	/**
@@ -171,7 +146,7 @@ public class ProofEntryImpl extends ProofElemImpl implements ProofEntry {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_ENTRY__PROOF_STEP:
-				return proofStep != null;
+				return getProofStep() != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -43,17 +44,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ProofFeatureImpl extends EObjectImpl implements ProofFeature {
-	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected ProofFeatureDef name;
-
+public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 	/**
 	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -63,26 +54,6 @@ public class ProofFeatureImpl extends EObjectImpl implements ProofFeature {
 	 * @ordered
 	 */
 	protected static final ProofFeatureType TYPE_EDEFAULT = ProofFeatureType.USER;
-
-	/**
-	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getType()
-	 * @generated
-	 * @ordered
-	 */
-	protected ProofFeatureType type = TYPE_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getParams() <em>Params</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getParams()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Term> params;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -108,16 +79,18 @@ public class ProofFeatureImpl extends EObjectImpl implements ProofFeature {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ProofFeatureDef getName() {
-		if (name != null && name.eIsProxy()) {
-			InternalEObject oldName = (InternalEObject)name;
-			name = (ProofFeatureDef)eResolveProxy(oldName);
-			if (name != oldName) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ProofProcessPackage.PROOF_FEATURE__NAME, oldName, name));
-			}
-		}
-		return name;
+		return (ProofFeatureDef)eDynamicGet(ProofProcessPackage.PROOF_FEATURE__NAME, ProofProcessPackage.Literals.PROOF_FEATURE__NAME, true, true);
 	}
 
 	/**
@@ -126,7 +99,7 @@ public class ProofFeatureImpl extends EObjectImpl implements ProofFeature {
 	 * @generated
 	 */
 	public ProofFeatureDef basicGetName() {
-		return name;
+		return (ProofFeatureDef)eDynamicGet(ProofProcessPackage.PROOF_FEATURE__NAME, ProofProcessPackage.Literals.PROOF_FEATURE__NAME, false, true);
 	}
 
 	/**
@@ -135,10 +108,7 @@ public class ProofFeatureImpl extends EObjectImpl implements ProofFeature {
 	 * @generated
 	 */
 	public void setName(ProofFeatureDef newName) {
-		ProofFeatureDef oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_FEATURE__NAME, oldName, name));
+		eDynamicSet(ProofProcessPackage.PROOF_FEATURE__NAME, ProofProcessPackage.Literals.PROOF_FEATURE__NAME, newName);
 	}
 
 	/**
@@ -147,7 +117,7 @@ public class ProofFeatureImpl extends EObjectImpl implements ProofFeature {
 	 * @generated
 	 */
 	public ProofFeatureType getType() {
-		return type;
+		return (ProofFeatureType)eDynamicGet(ProofProcessPackage.PROOF_FEATURE__TYPE, ProofProcessPackage.Literals.PROOF_FEATURE__TYPE, true, true);
 	}
 
 	/**
@@ -156,10 +126,7 @@ public class ProofFeatureImpl extends EObjectImpl implements ProofFeature {
 	 * @generated
 	 */
 	public void setType(ProofFeatureType newType) {
-		ProofFeatureType oldType = type;
-		type = newType == null ? TYPE_EDEFAULT : newType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_FEATURE__TYPE, oldType, type));
+		eDynamicSet(ProofProcessPackage.PROOF_FEATURE__TYPE, ProofProcessPackage.Literals.PROOF_FEATURE__TYPE, newType);
 	}
 
 	/**
@@ -167,11 +134,9 @@ public class ProofFeatureImpl extends EObjectImpl implements ProofFeature {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public EList<Term> getParams() {
-		if (params == null) {
-			params = new EObjectContainmentEList<Term>(Term.class, this, ProofProcessPackage.PROOF_FEATURE__PARAMS);
-		}
-		return params;
+		return (EList<Term>)eDynamicGet(ProofProcessPackage.PROOF_FEATURE__PARAMS, ProofProcessPackage.Literals.PROOF_FEATURE__PARAMS, true, true);
 	}
 
 	/**
@@ -260,29 +225,13 @@ public class ProofFeatureImpl extends EObjectImpl implements ProofFeature {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_FEATURE__NAME:
-				return name != null;
+				return basicGetName() != null;
 			case ProofProcessPackage.PROOF_FEATURE__TYPE:
-				return type != TYPE_EDEFAULT;
+				return getType() != TYPE_EDEFAULT;
 			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
-				return params != null && !params.isEmpty();
+				return !getParams().isEmpty();
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (type: ");
-		result.append(type);
-		result.append(')');
-		return result.toString();
 	}
 
 } //ProofFeatureImpl

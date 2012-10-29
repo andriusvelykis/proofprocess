@@ -37,16 +37,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ProofParallelImpl extends ProofElemImpl implements ProofParallel {
 	/**
-	 * The cached value of the '{@link #getEntries() <em>Entries</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getEntries()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ProofElem> entries;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -70,11 +60,9 @@ public class ProofParallelImpl extends ProofElemImpl implements ProofParallel {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public EList<ProofElem> getEntries() {
-		if (entries == null) {
-			entries = new EObjectContainmentEList<ProofElem>(ProofElem.class, this, ProofProcessPackage.PROOF_PARALLEL__ENTRIES);
-		}
-		return entries;
+		return (EList<ProofElem>)eDynamicGet(ProofProcessPackage.PROOF_PARALLEL__ENTRIES, ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES, true, true);
 	}
 
 	/**
@@ -146,7 +134,7 @@ public class ProofParallelImpl extends ProofElemImpl implements ProofParallel {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_PARALLEL__ENTRIES:
-				return entries != null && !entries.isEmpty();
+				return !getEntries().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

@@ -13,6 +13,7 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
@@ -30,7 +31,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class ProofFeatureDefImpl extends EObjectImpl implements ProofFeatureDef {
+public class ProofFeatureDefImpl extends CDOObjectImpl implements ProofFeatureDef {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -42,16 +43,6 @@ public class ProofFeatureDefImpl extends EObjectImpl implements ProofFeatureDef 
 	protected static final String NAME_EDEFAULT = "";
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected String name = NAME_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -60,16 +51,6 @@ public class ProofFeatureDefImpl extends EObjectImpl implements ProofFeatureDef 
 	 * @ordered
 	 */
 	protected static final String DESCRIPTION_EDEFAULT = "\"\"";
-
-	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDescription()
-	 * @generated
-	 * @ordered
-	 */
-	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -95,8 +76,18 @@ public class ProofFeatureDefImpl extends EObjectImpl implements ProofFeatureDef 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getName() {
-		return name;
+		return (String)eDynamicGet(ProofProcessPackage.PROOF_FEATURE_DEF__NAME, ProofProcessPackage.Literals.PROOF_FEATURE_DEF__NAME, true, true);
 	}
 
 	/**
@@ -105,10 +96,7 @@ public class ProofFeatureDefImpl extends EObjectImpl implements ProofFeatureDef 
 	 * @generated
 	 */
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_FEATURE_DEF__NAME, oldName, name));
+		eDynamicSet(ProofProcessPackage.PROOF_FEATURE_DEF__NAME, ProofProcessPackage.Literals.PROOF_FEATURE_DEF__NAME, newName);
 	}
 
 	/**
@@ -117,7 +105,7 @@ public class ProofFeatureDefImpl extends EObjectImpl implements ProofFeatureDef 
 	 * @generated
 	 */
 	public String getDescription() {
-		return description;
+		return (String)eDynamicGet(ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION, ProofProcessPackage.Literals.PROOF_FEATURE_DEF__DESCRIPTION, true, true);
 	}
 
 	/**
@@ -126,10 +114,7 @@ public class ProofFeatureDefImpl extends EObjectImpl implements ProofFeatureDef 
 	 * @generated
 	 */
 	public void setDescription(String newDescription) {
-		String oldDescription = description;
-		description = newDescription;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION, oldDescription, description));
+		eDynamicSet(ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION, ProofProcessPackage.Literals.PROOF_FEATURE_DEF__DESCRIPTION, newDescription);
 	}
 
 	/**
@@ -193,29 +178,11 @@ public class ProofFeatureDefImpl extends EObjectImpl implements ProofFeatureDef 
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_FEATURE_DEF__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+				return NAME_EDEFAULT == null ? getName() != null : !NAME_EDEFAULT.equals(getName());
 			case ProofProcessPackage.PROOF_FEATURE_DEF__DESCRIPTION:
-				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+				return DESCRIPTION_EDEFAULT == null ? getDescription() != null : !DESCRIPTION_EDEFAULT.equals(getDescription());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (name: ");
-		result.append(name);
-		result.append(", description: ");
-		result.append(description);
-		result.append(')');
-		return result.toString();
 	}
 
 } //ProofFeatureDefImpl

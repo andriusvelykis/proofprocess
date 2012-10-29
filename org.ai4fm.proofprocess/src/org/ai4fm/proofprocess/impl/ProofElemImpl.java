@@ -16,6 +16,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
@@ -32,17 +33,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public abstract class ProofElemImpl extends EObjectImpl implements ProofElem {
-	/**
-	 * The cached value of the '{@link #getInfo() <em>Info</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getInfo()
-	 * @generated
-	 * @ordered
-	 */
-	protected ProofInfo info;
-
+public abstract class ProofElemImpl extends CDOObjectImpl implements ProofElem {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -67,8 +58,18 @@ public abstract class ProofElemImpl extends EObjectImpl implements ProofElem {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ProofInfo getInfo() {
-		return info;
+		return (ProofInfo)eDynamicGet(ProofProcessPackage.PROOF_ELEM__INFO, ProofProcessPackage.Literals.PROOF_ELEM__INFO, true, true);
 	}
 
 	/**
@@ -77,12 +78,7 @@ public abstract class ProofElemImpl extends EObjectImpl implements ProofElem {
 	 * @generated
 	 */
 	public NotificationChain basicSetInfo(ProofInfo newInfo, NotificationChain msgs) {
-		ProofInfo oldInfo = info;
-		info = newInfo;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_ELEM__INFO, oldInfo, newInfo);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eDynamicInverseAdd((InternalEObject)newInfo, ProofProcessPackage.PROOF_ELEM__INFO, msgs);
 		return msgs;
 	}
 
@@ -92,17 +88,7 @@ public abstract class ProofElemImpl extends EObjectImpl implements ProofElem {
 	 * @generated
 	 */
 	public void setInfo(ProofInfo newInfo) {
-		if (newInfo != info) {
-			NotificationChain msgs = null;
-			if (info != null)
-				msgs = ((InternalEObject)info).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_ELEM__INFO, null, msgs);
-			if (newInfo != null)
-				msgs = ((InternalEObject)newInfo).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_ELEM__INFO, null, msgs);
-			msgs = basicSetInfo(newInfo, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_ELEM__INFO, newInfo, newInfo));
+		eDynamicSet(ProofProcessPackage.PROOF_ELEM__INFO, ProofProcessPackage.Literals.PROOF_ELEM__INFO, newInfo);
 	}
 
 	/**
@@ -172,7 +158,7 @@ public abstract class ProofElemImpl extends EObjectImpl implements ProofElem {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_ELEM__INFO:
-				return info != null;
+				return getInfo() != null;
 		}
 		return super.eIsSet(featureID);
 	}

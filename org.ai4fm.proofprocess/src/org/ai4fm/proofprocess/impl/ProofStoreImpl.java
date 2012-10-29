@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -39,27 +40,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ProofStoreImpl extends EObjectImpl implements ProofStore {
-	/**
-	 * The cached value of the '{@link #getProofs() <em>Proofs</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getProofs()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Proof> proofs;
-
-	/**
-	 * The cached value of the '{@link #getIntents() <em>Intents</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getIntents()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Intent> intents;
-
+public class ProofStoreImpl extends CDOObjectImpl implements ProofStore {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -84,11 +65,9 @@ public class ProofStoreImpl extends EObjectImpl implements ProofStore {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Proof> getProofs() {
-		if (proofs == null) {
-			proofs = new EObjectContainmentEList<Proof>(Proof.class, this, ProofProcessPackage.PROOF_STORE__PROOFS);
-		}
-		return proofs;
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
 	}
 
 	/**
@@ -96,11 +75,19 @@ public class ProofStoreImpl extends EObjectImpl implements ProofStore {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+	public EList<Proof> getProofs() {
+		return (EList<Proof>)eDynamicGet(ProofProcessPackage.PROOF_STORE__PROOFS, ProofProcessPackage.Literals.PROOF_STORE__PROOFS, true, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
 	public EList<Intent> getIntents() {
-		if (intents == null) {
-			intents = new EObjectContainmentEList<Intent>(Intent.class, this, ProofProcessPackage.PROOF_STORE__INTENTS);
-		}
-		return intents;
+		return (EList<Intent>)eDynamicGet(ProofProcessPackage.PROOF_STORE__INTENTS, ProofProcessPackage.Literals.PROOF_STORE__INTENTS, true, true);
 	}
 
 	/**
@@ -183,9 +170,9 @@ public class ProofStoreImpl extends EObjectImpl implements ProofStore {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_STORE__PROOFS:
-				return proofs != null && !proofs.isEmpty();
+				return !getProofs().isEmpty();
 			case ProofProcessPackage.PROOF_STORE__INTENTS:
-				return intents != null && !intents.isEmpty();
+				return !getIntents().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
