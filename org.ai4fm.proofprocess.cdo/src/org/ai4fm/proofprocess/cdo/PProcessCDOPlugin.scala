@@ -1,26 +1,15 @@
 package org.ai4fm.proofprocess.cdo
 
-import scala.collection.JavaConversions.mapAsJavaMap
+import scala.actors.Future
+import scala.actors.Futures.future
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.SynchronizedMap
 
+import org.ai4fm.proofprocess.cdo.internal.db.PProcessRepository
 import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.Plugin
 import org.eclipse.core.runtime.Status
-import org.eclipse.emf.cdo.net4j.CDONet4jUtil
-import org.eclipse.emf.cdo.server.CDOServerUtil
-import org.eclipse.emf.cdo.server.IRepository
-import org.eclipse.emf.cdo.server.db.CDODBUtil
-import org.eclipse.emf.cdo.server.net4j.CDONet4jServerUtil
-import org.eclipse.emf.cdo.session.CDOSession
-import org.eclipse.net4j.acceptor.IAcceptor
-import org.eclipse.net4j.connector.IConnector
-import org.eclipse.net4j.db.DBUtil
-import org.eclipse.net4j.db.h2.H2Adapter
-import org.eclipse.net4j.jvm.JVMUtil
-import org.eclipse.net4j.util.container.IPluginContainer
-import org.eclipse.net4j.util.lifecycle.LifecycleUtil
-import org.h2.jdbcx.JdbcDataSource
 import org.osgi.framework.BundleContext
-
 
 /**
   * @author Andrius Velykis 
@@ -54,67 +43,36 @@ class PProcessCDOPlugin extends Plugin {
   
   // The plug-in ID
   def pluginId = "org.ai4fm.proofprocess.cdo" //$NON-NLS-1$
+
+  /** A synchronized lazy map for connected CDO repositories */
+  private val repositories =
+    new HashMap[String, Future[PProcessRepository]] with SynchronizedMap[String, Future[PProcessRepository]]
   
-  // a flag to check if lazy values have been initialised
-  private var lazyInit = false
-
-  // CDO instance variables
-  // adapted from Gastro CDO example and http://wiki.eclipse.org/Run_a_CDO_container_inside_eclipse_runtime
-  lazy val (acceptor: IAcceptor, connector: IConnector,
-      repository: IRepository, session: CDOSession) = {
-
-    val dbName = "proofprocess"
-    val serverPort = "9090"
-
-    // lazy init is happening
-    lazyInit = true
+  /** Retrieves a Proof Process repository with a given name.
+    * Initializes a new one if no such repository exists currently.
+    */
+  private def repository(repositoryName: String) = {
+    // get the repository future from the map, or create new one if not exists
+    val repoFuture = repositories.getOrElseUpdate(repositoryName, future {
+      new PProcessRepository(repositoryName)
+    })
     
-    val container = IPluginContainer.INSTANCE
-
-    val dataSource = new JdbcDataSource
-    dataSource.setURL("jdbc:h2:database/" + dbName)
-
-    val mappingStrategy = CDODBUtil.createHorizontalMappingStrategy(true)
-    val dbAdapter = new H2Adapter
-    val dbConnectionProvider = DBUtil.createConnectionProvider(dataSource)
-    val store = CDODBUtil.createStore(mappingStrategy, dbAdapter, dbConnectionProvider)
-
-    val props = Map(
-      IRepository.Props.OVERRIDE_UUID -> dbName,
-      IRepository.Props.SUPPORTING_AUDITS -> "true",
-      IRepository.Props.SUPPORTING_BRANCHES -> "false")
-
-    val repository = CDOServerUtil.createRepository(dbName, store, props)
-    CDOServerUtil.addRepository(container, repository)
-    CDONet4jServerUtil.prepareContainer(container)
-
-    val acceptor = JVMUtil.getAcceptor(container, "default")
-    val connector = JVMUtil.getConnector(container, "default")
-    
-    val config = CDONet4jUtil.createNet4jSessionConfiguration()
-    config.setConnector(connector)
-    config.setRepositoryName(dbName)
-    
-//    config.setLazyPopulatingPackageRegistry()
-
-    val session = config.openNet4jSession
-    (acceptor, connector, repository, session)
+    // block until the future is resolved (repository is connected initially)
+    val r = repoFuture();
+    r
   }
   
-  lazy val transaction = session.openTransaction
-  lazy val resource = transaction.getOrCreateResource("/proofprocess")
+  /** Retrieves an open session for the given repository.
+    * Initialises a new repository if one does not exist.
+    */
+  def session(repositoryName: String) = repository(repositoryName).session
+  
   
   @throws(classOf[Exception])
   override def stop(context: BundleContext) {
-    
-    if (lazyInit) {
-      LifecycleUtil.deactivate(resource)
-      LifecycleUtil.deactivate(transaction)
-      LifecycleUtil.deactivate(session)
-      LifecycleUtil.deactivate(acceptor)
-      LifecycleUtil.deactivate(connector)
-      LifecycleUtil.deactivate(repository)
-    }
+
+    // deactivate each repository
+    repositories.values.foreach(_().deactivate)
     
     super.stop(context)
   }
