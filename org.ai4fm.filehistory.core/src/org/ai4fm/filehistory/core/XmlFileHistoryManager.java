@@ -9,8 +9,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
@@ -30,21 +28,6 @@ import scala.Option;
 public class XmlFileHistoryManager {
 
 	private static final String FILE_HISTORY_EXT = "filehistory";
-	
-	/**
-	 * Scheduling rule used for loading project resource.
-	 */
-	private static final ISchedulingRule SYNC_RULE = new ISchedulingRule() {
-		@Override
-		public boolean contains(ISchedulingRule rule) {
-			return rule == this;
-		}
-
-		@Override
-		public boolean isConflicting(ISchedulingRule rule) {
-			return rule == this;
-		}
-	};
 	
 	private static <T> Option<T> none() { 
 		return Option.apply(null);
@@ -68,15 +51,11 @@ public class XmlFileHistoryManager {
 		}
 
 		try {
-
-			Job.getJobManager().beginRule(SYNC_RULE, monitor);
-
 			monitor.beginTask("Loading file history", IProgressMonitor.UNKNOWN);
 
 			return loadProject(historyProjectPath);
 
 		} finally {
-			Job.getJobManager().endRule(SYNC_RULE);
 			monitor.done();
 		}
 	}
