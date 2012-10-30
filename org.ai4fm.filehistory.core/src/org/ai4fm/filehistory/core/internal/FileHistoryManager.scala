@@ -18,6 +18,7 @@ import org.ai4fm.filehistory.FileHistoryProject
 import org.ai4fm.filehistory.FileVersion
 import org.ai4fm.filehistory.core.FileHistoryCorePlugin.error
 import org.ai4fm.filehistory.core.FileHistoryCorePlugin.log
+import org.ai4fm.filehistory.core.IFileHistoryManager
 import org.eclipse.core.runtime.Assert
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.IProgressMonitor
@@ -25,7 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor
 /**
   * @author Andrius Velykis 
   */
-class FileHistoryManager(val historyRoot: File, val historyFileDir: File) {
+class FileHistoryManager(val historyRoot: File, val historyFileDir: File) extends IFileHistoryManager {
 
   private def checksumPart(text: String, textPoint: Int, fullChecksum: /*=> */ String): String =
     if (textPoint == text.length) {
@@ -76,7 +77,7 @@ class FileHistoryManager(val historyRoot: File, val historyFileDir: File) {
     }
 
   @throws(classOf[CoreException])
-  def syncFileVersion(historyProject: FileHistoryProject, sourceRootPath: String, sourcePath: String,
+  override def syncFileVersion(historyProject: FileHistoryProject, sourceRootPath: String, sourcePath: String,
     textOpt: Option[String], syncPointOpt: Option[Int], monitor: IProgressMonitor): FileVersion = {
 
     // get the file record for the given path
@@ -194,7 +195,7 @@ class FileHistoryManager(val historyRoot: File, val historyFileDir: File) {
     version
   }
 
-  def historyFile(version: FileVersion): File = {
+  override def historyFile(version: FileVersion): File = {
     val relativePath = version.getPath
     new File(historyRoot.toURI().resolve(relativePath))
   }
