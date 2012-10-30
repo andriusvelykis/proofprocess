@@ -26,9 +26,6 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.QualifiedName
 import org.eclipse.core.runtime.SubProgressMonitor
 import org.eclipse.core.runtime.jobs.Job
-import org.eclipse.emf.cdo.CDOObject
-import org.eclipse.emf.cdo.transaction.CDOTransaction
-import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.common.command.BasicCommandStack
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
@@ -140,7 +137,7 @@ object ProofHistoryManager {
         
         resourceContents.clear
         resourceContents.add(newProject)
-        commitTransaction(transaction, monitor)
+        ProofManager.commitTransaction(transaction, monitor)
 
         newProject
       }
@@ -177,7 +174,7 @@ object ProofHistoryManager {
     }
 
     // commit transaction after each sync
-    commitTransaction(syncedVersion, monitor)
+    ProofManager.commitTransaction(syncedVersion, monitor)
 
     syncedVersion
   }
@@ -191,21 +188,6 @@ object ProofHistoryManager {
     projectResource.getFile(relativePath)
   }
   
-  private def commitTransaction(cdoObj: CDOObject, monitor: IProgressMonitor) {
-    cdoObj.cdoView match {
-      case tr: CDOTransaction => commitTransaction(tr, monitor)
-      case _ => log(error(msg = Some("Cannot commit transaction - object does not belong to one: " + cdoObj)))
-    }
-  }
-
-  private def commitTransaction(transaction: CDOTransaction, monitor: IProgressMonitor) {
-    try {
-      transaction.commit(monitor)
-    } catch {
-      case e: CommitException => log(error(Some(e)))
-    }
-  }
-
   private case class ProjectHistoryManager(val manager: IFileHistoryManager, val history: FileHistoryProject)
 
   /** Load file history from XML to migrate */
