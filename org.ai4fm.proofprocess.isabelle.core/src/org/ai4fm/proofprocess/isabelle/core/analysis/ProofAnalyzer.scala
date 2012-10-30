@@ -94,7 +94,7 @@ object ProofAnalyzer {
 
         // TODO make path relative for file history
         val fileVersion = ProofHistoryManager.syncFileVersion(
-          project, pathStr, proofTextData.documentText, proofTextData.syncPoint, monitor);
+          project, pathStr, Some(proofTextData.documentText), Some(proofTextData.syncPoint), monitor)
 
         def textLoc(cmdState: State): Loc = {
           val cmd = cmdState.command

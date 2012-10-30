@@ -215,7 +215,8 @@ public class SnapshotTracker {
 		
 		int posEnd = entry.getPosition().offset + entry.getPosition().length;
 
-		return ProofHistoryManager.syncFileVersion(project, filePath, text, posEnd, monitor);
+		return ProofHistoryManager.syncFileVersion(project, filePath, 
+				scala.Option.apply(text), scala.Option.apply((Object) new Integer(posEnd)), monitor);
 	}
 	
 	private void analyseEntry(ProofStore proofStore, ProofLog proofLog, ISnapshotEntry entry,
