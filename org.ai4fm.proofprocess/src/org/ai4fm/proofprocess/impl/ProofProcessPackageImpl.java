@@ -226,6 +226,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIntent() {
 		return intentEClass;
 	}
@@ -235,6 +236,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIntent_Name() {
 		return (EAttribute)intentEClass.getEStructuralFeatures().get(0);
 	}
@@ -244,6 +246,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIntent_Description() {
 		return (EAttribute)intentEClass.getEStructuralFeatures().get(1);
 	}
@@ -253,6 +256,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTerm() {
 		return termEClass;
 	}
@@ -262,6 +266,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getLoc() {
 		return locEClass;
 	}
@@ -271,6 +276,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTrace() {
 		return traceEClass;
 	}
@@ -280,6 +286,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofStep() {
 		return proofStepEClass;
 	}
@@ -289,6 +296,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofStep_InGoals() {
 		return (EReference)proofStepEClass.getEStructuralFeatures().get(0);
 	}
@@ -298,6 +306,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofStep_OutGoals() {
 		return (EReference)proofStepEClass.getEStructuralFeatures().get(1);
 	}
@@ -307,6 +316,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofStep_Source() {
 		return (EReference)proofStepEClass.getEStructuralFeatures().get(2);
 	}
@@ -316,6 +326,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofStep_Trace() {
 		return (EReference)proofStepEClass.getEStructuralFeatures().get(3);
 	}
@@ -325,6 +336,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofInfo() {
 		return proofInfoEClass;
 	}
@@ -334,6 +346,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofInfo_Intent() {
 		return (EReference)proofInfoEClass.getEStructuralFeatures().get(0);
 	}
@@ -343,6 +356,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProofInfo_Narrative() {
 		return (EAttribute)proofInfoEClass.getEStructuralFeatures().get(1);
 	}
@@ -352,6 +366,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofInfo_InFeatures() {
 		return (EReference)proofInfoEClass.getEStructuralFeatures().get(2);
 	}
@@ -361,6 +376,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofInfo_OutFeatures() {
 		return (EReference)proofInfoEClass.getEStructuralFeatures().get(3);
 	}
@@ -370,6 +386,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofFeatureDef() {
 		return proofFeatureDefEClass;
 	}
@@ -379,6 +396,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProofFeatureDef_Name() {
 		return (EAttribute)proofFeatureDefEClass.getEStructuralFeatures().get(0);
 	}
@@ -388,6 +406,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProofFeatureDef_Description() {
 		return (EAttribute)proofFeatureDefEClass.getEStructuralFeatures().get(1);
 	}
@@ -397,6 +416,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofFeature() {
 		return proofFeatureEClass;
 	}
@@ -406,6 +426,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofFeature_Name() {
 		return (EReference)proofFeatureEClass.getEStructuralFeatures().get(0);
 	}
@@ -415,6 +436,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProofFeature_Type() {
 		return (EAttribute)proofFeatureEClass.getEStructuralFeatures().get(1);
 	}
@@ -424,6 +446,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofFeature_Params() {
 		return (EReference)proofFeatureEClass.getEStructuralFeatures().get(2);
 	}
@@ -433,6 +456,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofElem() {
 		return proofElemEClass;
 	}
@@ -442,6 +466,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofElem_Info() {
 		return (EReference)proofElemEClass.getEStructuralFeatures().get(0);
 	}
@@ -451,6 +476,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofEntry() {
 		return proofEntryEClass;
 	}
@@ -460,6 +486,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofEntry_ProofStep() {
 		return (EReference)proofEntryEClass.getEStructuralFeatures().get(0);
 	}
@@ -469,6 +496,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofSeq() {
 		return proofSeqEClass;
 	}
@@ -478,6 +506,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofSeq_Entries() {
 		return (EReference)proofSeqEClass.getEStructuralFeatures().get(0);
 	}
@@ -487,6 +516,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofParallel() {
 		return proofParallelEClass;
 	}
@@ -496,6 +526,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofParallel_Entries() {
 		return (EReference)proofParallelEClass.getEStructuralFeatures().get(0);
 	}
@@ -505,6 +536,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofDecor() {
 		return proofDecorEClass;
 	}
@@ -514,6 +546,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofDecor_Entry() {
 		return (EReference)proofDecorEClass.getEStructuralFeatures().get(0);
 	}
@@ -523,6 +556,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAttempt() {
 		return attemptEClass;
 	}
@@ -532,6 +566,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAttempt_Proof() {
 		return (EReference)attemptEClass.getEStructuralFeatures().get(0);
 	}
@@ -541,6 +576,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProof() {
 		return proofEClass;
 	}
@@ -550,6 +586,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProof_Goals() {
 		return (EReference)proofEClass.getEStructuralFeatures().get(0);
 	}
@@ -559,6 +596,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProof_Label() {
 		return (EAttribute)proofEClass.getEStructuralFeatures().get(1);
 	}
@@ -568,6 +606,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProof_Attempts() {
 		return (EReference)proofEClass.getEStructuralFeatures().get(2);
 	}
@@ -577,6 +616,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProofStore() {
 		return proofStoreEClass;
 	}
@@ -586,6 +626,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofStore_Proofs() {
 		return (EReference)proofStoreEClass.getEStructuralFeatures().get(0);
 	}
@@ -595,6 +636,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProofStore_Intents() {
 		return (EReference)proofStoreEClass.getEStructuralFeatures().get(1);
 	}
@@ -604,6 +646,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getProofFeatureType() {
 		return proofFeatureTypeEEnum;
 	}
@@ -613,6 +656,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofProcessFactory getProofProcessFactory() {
 		return (ProofProcessFactory)getEFactoryInstance();
 	}

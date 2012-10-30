@@ -37,6 +37,7 @@ public interface IsaTerm extends DisplayTerm {
 	 * @see #setTerm(Term)
 	 * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getIsaTerm_Term()
 	 * @model dataType="org.ai4fm.proofprocess.isabelle.IsabelleTerm" required="true"
+	 *        annotation="http://www.eclipse.org/CDO/DBStore columnType='CLOB'"
 	 * @generated
 	 */
 	Term getTerm();

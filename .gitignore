@@ -1,24 +1,6 @@
-org.ai4fm.filehistory/target
-org.ai4fm.filehistory.core/target
-org.ai4fm.proofprocess/target
-org.ai4fm.proofprocess.edit/target
-org.ai4fm.proofprocess.core/target
-org.ai4fm.proofprocess.ui/target
-org.ai4fm.proofprocess.project/target
-org.ai4fm.proofprocess.project.edit/target
-org.ai4fm.proofprocess.project.core/target
-org.ai4fm.proofprocess.zeves/target
-org.ai4fm.proofprocess.zeves.edit/target
-org.ai4fm.proofprocess.zeves.ui/target
-org.ai4fm.proofprocess.isabelle/target
-org.ai4fm.proofprocess.isabelle.core/target
-org.ai4fm.proofprocess.isabelle.edit/target
-org.ai4fm.proofprocess.isabelle.ui/target
-org.ai4fm.proofprocess.mlearning.data/target
-org.ai4fm.proofprocess-feature/target
-org.ai4fm.proofprocess.zeves-feature/target
-org.ai4fm.proofprocess.isabelle-feature/target
-org.ai4fm.proofprocess-repository/target
+# Maven output dirs
+target/
+
 model/.project
 .cache
 

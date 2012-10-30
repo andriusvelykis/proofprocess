@@ -7,15 +7,10 @@
 package org.ai4fm.proofprocess.isabelle.impl;
 
 import isabelle.Term.Term;
-
 import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,16 +37,6 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	protected static final Term TERM_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getTerm() <em>Term</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTerm()
-	 * @generated
-	 * @ordered
-	 */
-	protected Term term = TERM_EDEFAULT;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -75,8 +60,9 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Term getTerm() {
-		return term;
+		return (Term)eDynamicGet(IsabelleProofProcessPackage.ISA_TERM__TERM, IsabelleProofProcessPackage.Literals.ISA_TERM__TERM, true, true);
 	}
 
 	/**
@@ -85,10 +71,7 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	 * @generated
 	 */
 	public void setTerm(Term newTerm) {
-		Term oldTerm = term;
-		term = newTerm;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.ISA_TERM__TERM, oldTerm, term));
+		eDynamicSet(IsabelleProofProcessPackage.ISA_TERM__TERM, IsabelleProofProcessPackage.Literals.ISA_TERM__TERM, newTerm);
 	}
 
 	/**
@@ -144,25 +127,9 @@ public class IsaTermImpl extends DisplayTermImpl implements IsaTerm {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.ISA_TERM__TERM:
-				return TERM_EDEFAULT == null ? term != null : !TERM_EDEFAULT.equals(term);
+				return TERM_EDEFAULT == null ? getTerm() != null : !TERM_EDEFAULT.equals(getTerm());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (term: ");
-		result.append(term);
-		result.append(')');
-		return result.toString();
 	}
 
 } //IsaTermImpl

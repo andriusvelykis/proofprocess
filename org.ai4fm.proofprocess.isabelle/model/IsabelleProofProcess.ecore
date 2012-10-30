@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="isabelle"
-    nsURI="http://org/ai4fm/proofprocess/isabelle/v1.0.0" nsPrefix="isabelle">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="isabelle" nsURI="http://org/ai4fm/proofprocess/isabelle/v1.0.0"
+    nsPrefix="isabelle">
   <eClassifiers xsi:type="ecore:EClass" name="DisplayTerm" abstract="true" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MarkupTerm" eSuperTypes="#//DisplayTerm">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="term" lowerBound="1" eType="#//IsabelleXML"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="term" lowerBound="1" eType="#//IsabelleXML">
+      <eAnnotations source="http://www.eclipse.org/CDO/DBStore">
+        <details key="columnType" value="CLOB"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="IsabelleXML" instanceClassName="isabelle.XML.Tree"/>
   <eClassifiers xsi:type="ecore:EClass" name="IsaTerm" eSuperTypes="#//DisplayTerm">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="term" lowerBound="1" eType="#//IsabelleTerm"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="term" lowerBound="1" eType="#//IsabelleTerm">
+      <eAnnotations source="http://www.eclipse.org/CDO/DBStore">
+        <details key="columnType" value="CLOB"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="IsabelleTerm" instanceClassName="isabelle.Term.Term"/>
   <eClassifiers xsi:type="ecore:EClass" name="NameTerm" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">

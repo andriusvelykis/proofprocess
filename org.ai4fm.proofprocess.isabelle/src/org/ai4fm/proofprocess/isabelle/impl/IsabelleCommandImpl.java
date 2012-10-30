@@ -9,11 +9,7 @@ package org.ai4fm.proofprocess.isabelle.impl;
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -40,16 +36,6 @@ public class IsabelleCommandImpl extends NamedTermTreeImpl implements IsabelleCo
 	protected static final String SOURCE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSource() <em>Source</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSource()
-	 * @generated
-	 * @ordered
-	 */
-	protected String source = SOURCE_EDEFAULT;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -73,8 +59,9 @@ public class IsabelleCommandImpl extends NamedTermTreeImpl implements IsabelleCo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSource() {
-		return source;
+		return (String)eDynamicGet(IsabelleProofProcessPackage.ISABELLE_COMMAND__SOURCE, IsabelleProofProcessPackage.Literals.ISABELLE_COMMAND__SOURCE, true, true);
 	}
 
 	/**
@@ -82,11 +69,9 @@ public class IsabelleCommandImpl extends NamedTermTreeImpl implements IsabelleCo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSource(String newSource) {
-		String oldSource = source;
-		source = newSource;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.ISABELLE_COMMAND__SOURCE, oldSource, source));
+		eDynamicSet(IsabelleProofProcessPackage.ISABELLE_COMMAND__SOURCE, IsabelleProofProcessPackage.Literals.ISABELLE_COMMAND__SOURCE, newSource);
 	}
 
 	/**
@@ -142,25 +127,9 @@ public class IsabelleCommandImpl extends NamedTermTreeImpl implements IsabelleCo
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.ISABELLE_COMMAND__SOURCE:
-				return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
+				return SOURCE_EDEFAULT == null ? getSource() != null : !SOURCE_EDEFAULT.equals(getSource());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (source: ");
-		result.append(source);
-		result.append(')');
-		return result.toString();
 	}
 
 } //IsabelleCommandImpl

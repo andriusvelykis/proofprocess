@@ -19,10 +19,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,17 +35,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class FileHistoryProjectImpl extends EObjectImpl implements FileHistoryProject {
-	/**
-	 * The cached value of the '{@link #getFiles() <em>Files</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getFiles()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<FileEntry> files;
-
+public class FileHistoryProjectImpl extends CDOObjectImpl implements FileHistoryProject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -72,11 +60,20 @@ public class FileHistoryProjectImpl extends EObjectImpl implements FileHistoryPr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public EList<FileEntry> getFiles() {
-		if (files == null) {
-			files = new EObjectContainmentEList<FileEntry>(FileEntry.class, this, FileHistoryPackage.FILE_HISTORY_PROJECT__FILES);
-		}
-		return files;
+		return (EList<FileEntry>)eDynamicGet(FileHistoryPackage.FILE_HISTORY_PROJECT__FILES, FileHistoryPackage.Literals.FILE_HISTORY_PROJECT__FILES, true, true);
 	}
 
 	/**
@@ -148,7 +145,7 @@ public class FileHistoryProjectImpl extends EObjectImpl implements FileHistoryPr
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case FileHistoryPackage.FILE_HISTORY_PROJECT__FILES:
-				return files != null && !files.isEmpty();
+				return !getFiles().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

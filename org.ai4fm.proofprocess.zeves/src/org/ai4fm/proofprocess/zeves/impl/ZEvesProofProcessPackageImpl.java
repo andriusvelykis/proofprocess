@@ -130,6 +130,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDisplayTerm() {
 		return displayTermEClass;
 	}
@@ -139,6 +140,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDisplayTerm_Display() {
 		return (EAttribute)displayTermEClass.getEStructuralFeatures().get(0);
 	}
@@ -148,6 +150,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getUnparsedTerm() {
 		return unparsedTermEClass;
 	}
@@ -157,6 +160,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getZmlTerm() {
 		return zmlTermEDataType;
 	}
@@ -166,6 +170,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getZEvesTrace() {
 		return zEvesTraceEClass;
 	}
@@ -175,6 +180,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getZEvesTrace_UsedLemmas() {
 		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(0);
 	}
@@ -184,6 +190,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getZEvesTrace_Text() {
 		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(1);
 	}
@@ -193,6 +200,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getZEvesTrace_Case() {
 		return (EAttribute)zEvesTraceEClass.getEStructuralFeatures().get(2);
 	}
@@ -202,6 +210,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCztTerm() {
 		return cztTermEClass;
 	}
@@ -211,6 +220,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getCztTerm_Term() {
 		return (EAttribute)cztTermEClass.getEStructuralFeatures().get(0);
 	}
@@ -220,6 +230,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ZEvesProofProcessFactory getZEvesProofProcessFactory() {
 		return (ZEvesProofProcessFactory)getEFactoryInstance();
 	}
@@ -315,6 +326,26 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// http://www.eclipse.org/CDO/DBStore
+		createDBStoreAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/CDO/DBStore</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createDBStoreAnnotations() {
+		String source = "http://www.eclipse.org/CDO/DBStore";		
+		addAnnotation
+		  (getCztTerm_Term(), 
+		   source, 
+		   new String[] {
+			 "columnType", "CLOB"
+		   });
 	}
 
 } //ZEvesProofProcessPackageImpl

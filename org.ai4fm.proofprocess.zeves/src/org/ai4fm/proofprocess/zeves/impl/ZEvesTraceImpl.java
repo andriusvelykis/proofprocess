@@ -11,16 +11,11 @@ import java.util.Collection;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 import org.ai4fm.proofprocess.zeves.ZEvesTrace;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,17 +32,7 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  *
  * @generated
  */
-public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
-	/**
-	 * The cached value of the '{@link #getUsedLemmas() <em>Used Lemmas</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getUsedLemmas()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> usedLemmas;
-
+public class ZEvesTraceImpl extends CDOObjectImpl implements ZEvesTrace {
 	/**
 	 * The default value of the '{@link #getText() <em>Text</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -59,16 +44,6 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	protected static final String TEXT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getText() <em>Text</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getText()
-	 * @generated
-	 * @ordered
-	 */
-	protected String text = TEXT_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #getCase() <em>Case</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -77,16 +52,6 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	 * @ordered
 	 */
 	protected static final String CASE_EDEFAULT = "\"\"";
-
-	/**
-	 * The cached value of the '{@link #getCase() <em>Case</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCase()
-	 * @generated
-	 * @ordered
-	 */
-	protected String case_ = CASE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -112,11 +77,20 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public EList<String> getUsedLemmas() {
-		if (usedLemmas == null) {
-			usedLemmas = new EDataTypeUniqueEList<String>(String.class, this, ZEvesProofProcessPackage.ZEVES_TRACE__USED_LEMMAS);
-		}
-		return usedLemmas;
+		return (EList<String>)eDynamicGet(ZEvesProofProcessPackage.ZEVES_TRACE__USED_LEMMAS, ZEvesProofProcessPackage.Literals.ZEVES_TRACE__USED_LEMMAS, true, true);
 	}
 
 	/**
@@ -124,8 +98,9 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getText() {
-		return text;
+		return (String)eDynamicGet(ZEvesProofProcessPackage.ZEVES_TRACE__TEXT, ZEvesProofProcessPackage.Literals.ZEVES_TRACE__TEXT, true, true);
 	}
 
 	/**
@@ -133,11 +108,9 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setText(String newText) {
-		String oldText = text;
-		text = newText;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.ZEVES_TRACE__TEXT, oldText, text));
+		eDynamicSet(ZEvesProofProcessPackage.ZEVES_TRACE__TEXT, ZEvesProofProcessPackage.Literals.ZEVES_TRACE__TEXT, newText);
 	}
 
 	/**
@@ -145,8 +118,9 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getCase() {
-		return case_;
+		return (String)eDynamicGet(ZEvesProofProcessPackage.ZEVES_TRACE__CASE, ZEvesProofProcessPackage.Literals.ZEVES_TRACE__CASE, true, true);
 	}
 
 	/**
@@ -154,11 +128,9 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCase(String newCase) {
-		String oldCase = case_;
-		case_ = newCase;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.ZEVES_TRACE__CASE, oldCase, case_));
+		eDynamicSet(ZEvesProofProcessPackage.ZEVES_TRACE__CASE, ZEvesProofProcessPackage.Literals.ZEVES_TRACE__CASE, newCase);
 	}
 
 	/**
@@ -232,33 +204,13 @@ public class ZEvesTraceImpl extends EObjectImpl implements ZEvesTrace {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ZEvesProofProcessPackage.ZEVES_TRACE__USED_LEMMAS:
-				return usedLemmas != null && !usedLemmas.isEmpty();
+				return !getUsedLemmas().isEmpty();
 			case ZEvesProofProcessPackage.ZEVES_TRACE__TEXT:
-				return TEXT_EDEFAULT == null ? text != null : !TEXT_EDEFAULT.equals(text);
+				return TEXT_EDEFAULT == null ? getText() != null : !TEXT_EDEFAULT.equals(getText());
 			case ZEvesProofProcessPackage.ZEVES_TRACE__CASE:
-				return CASE_EDEFAULT == null ? case_ != null : !CASE_EDEFAULT.equals(case_);
+				return CASE_EDEFAULT == null ? getCase() != null : !CASE_EDEFAULT.equals(getCase());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (usedLemmas: ");
-		result.append(usedLemmas);
-		result.append(", text: ");
-		result.append(text);
-		result.append(", case: ");
-		result.append(case_);
-		result.append(')');
-		return result.toString();
 	}
 
 } //ZEvesTraceImpl

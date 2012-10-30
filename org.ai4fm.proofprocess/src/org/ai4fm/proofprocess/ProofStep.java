@@ -6,9 +6,8 @@
  */
 package org.ai4fm.proofprocess;
 
+import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,9 +26,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofStep()
  * @model
+ * @extends CDOObject
  * @generated
  */
-public interface ProofStep extends EObject {
+public interface ProofStep extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>In Goals</b></em>' containment reference list.
 	 * The list contents are of type {@link org.ai4fm.proofprocess.Term}.

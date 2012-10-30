@@ -113,6 +113,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFileHistoryProject() {
 		return fileHistoryProjectEClass;
 	}
@@ -122,6 +123,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFileHistoryProject_Files() {
 		return (EReference)fileHistoryProjectEClass.getEStructuralFeatures().get(0);
 	}
@@ -131,6 +133,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFileEntry() {
 		return fileEntryEClass;
 	}
@@ -140,6 +143,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFileEntry_Versions() {
 		return (EReference)fileEntryEClass.getEStructuralFeatures().get(0);
 	}
@@ -149,6 +153,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFileEntry_Path() {
 		return (EAttribute)fileEntryEClass.getEStructuralFeatures().get(1);
 	}
@@ -158,6 +163,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFileVersion() {
 		return fileVersionEClass;
 	}
@@ -167,6 +173,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFileVersion_Timestamp() {
 		return (EAttribute)fileVersionEClass.getEStructuralFeatures().get(0);
 	}
@@ -176,6 +183,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFileVersion_Path() {
 		return (EAttribute)fileVersionEClass.getEStructuralFeatures().get(1);
 	}
@@ -185,6 +193,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFileVersion_Checksum() {
 		return (EAttribute)fileVersionEClass.getEStructuralFeatures().get(2);
 	}
@@ -194,6 +203,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFileVersion_SyncPoint() {
 		return (EAttribute)fileVersionEClass.getEStructuralFeatures().get(3);
 	}
@@ -203,6 +213,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getFileVersion_SyncChecksum() {
 		return (EAttribute)fileVersionEClass.getEStructuralFeatures().get(4);
 	}
@@ -212,6 +223,7 @@ public class FileHistoryPackageImpl extends EPackageImpl implements FileHistoryP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public FileHistoryFactory getFileHistoryFactory() {
 		return (FileHistoryFactory)getEFactoryInstance();
 	}

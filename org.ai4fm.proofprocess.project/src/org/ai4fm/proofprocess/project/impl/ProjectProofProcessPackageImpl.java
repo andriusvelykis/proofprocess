@@ -118,6 +118,7 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProject() {
 		return projectEClass;
 	}
@@ -127,6 +128,7 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProject_Label() {
 		return (EAttribute)projectEClass.getEStructuralFeatures().get(0);
 	}
@@ -136,6 +138,7 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPosition() {
 		return positionEClass;
 	}
@@ -145,6 +148,7 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getPosition_Offset() {
 		return (EAttribute)positionEClass.getEStructuralFeatures().get(0);
 	}
@@ -154,6 +158,7 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getPosition_Length() {
 		return (EAttribute)positionEClass.getEStructuralFeatures().get(1);
 	}
@@ -163,6 +168,7 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTextLoc() {
 		return textLocEClass;
 	}
@@ -172,6 +178,7 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getTextLoc_FilePath() {
 		return (EAttribute)textLocEClass.getEStructuralFeatures().get(0);
 	}
@@ -181,6 +188,7 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTextLoc_Position() {
 		return (EReference)textLocEClass.getEStructuralFeatures().get(1);
 	}
@@ -190,6 +198,7 @@ public class ProjectProofProcessPackageImpl extends EPackageImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProjectProofProcessFactory getProjectProofProcessFactory() {
 		return (ProjectProofProcessFactory)getEFactoryInstance();
 	}

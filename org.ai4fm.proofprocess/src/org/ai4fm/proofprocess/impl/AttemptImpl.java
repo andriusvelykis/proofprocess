@@ -10,14 +10,12 @@ import org.ai4fm.proofprocess.Attempt;
 import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -32,17 +30,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class AttemptImpl extends EObjectImpl implements Attempt {
-	/**
-	 * The cached value of the '{@link #getProof() <em>Proof</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getProof()
-	 * @generated
-	 * @ordered
-	 */
-	protected ProofElem proof;
-
+public class AttemptImpl extends CDOObjectImpl implements Attempt {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -67,8 +55,19 @@ public class AttemptImpl extends EObjectImpl implements Attempt {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ProofElem getProof() {
-		return proof;
+		return (ProofElem)eDynamicGet(ProofProcessPackage.ATTEMPT__PROOF, ProofProcessPackage.Literals.ATTEMPT__PROOF, true, true);
 	}
 
 	/**
@@ -77,12 +76,7 @@ public class AttemptImpl extends EObjectImpl implements Attempt {
 	 * @generated
 	 */
 	public NotificationChain basicSetProof(ProofElem newProof, NotificationChain msgs) {
-		ProofElem oldProof = proof;
-		proof = newProof;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProofProcessPackage.ATTEMPT__PROOF, oldProof, newProof);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eDynamicInverseAdd((InternalEObject)newProof, ProofProcessPackage.ATTEMPT__PROOF, msgs);
 		return msgs;
 	}
 
@@ -91,18 +85,9 @@ public class AttemptImpl extends EObjectImpl implements Attempt {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProof(ProofElem newProof) {
-		if (newProof != proof) {
-			NotificationChain msgs = null;
-			if (proof != null)
-				msgs = ((InternalEObject)proof).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.ATTEMPT__PROOF, null, msgs);
-			if (newProof != null)
-				msgs = ((InternalEObject)newProof).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.ATTEMPT__PROOF, null, msgs);
-			msgs = basicSetProof(newProof, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.ATTEMPT__PROOF, newProof, newProof));
+		eDynamicSet(ProofProcessPackage.ATTEMPT__PROOF, ProofProcessPackage.Literals.ATTEMPT__PROOF, newProof);
 	}
 
 	/**
@@ -172,7 +157,7 @@ public class AttemptImpl extends EObjectImpl implements Attempt {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.ATTEMPT__PROOF:
-				return proof != null;
+				return getProof() != null;
 		}
 		return super.eIsSet(featureID);
 	}

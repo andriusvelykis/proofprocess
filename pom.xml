@@ -12,6 +12,7 @@
   <modules>
     <module>org.ai4fm.filehistory</module>
     <module>org.ai4fm.filehistory.core</module>
+    <module>org.ai4fm.proofprocess.cdo</module>
     <module>org.ai4fm.proofprocess</module>
     <module>org.ai4fm.proofprocess.core</module>
     <module>org.ai4fm.proofprocess.edit</module>
@@ -77,6 +78,13 @@
        <id>czt-eclipse</id>
        <layout>p2</layout>
        <url>http://czt.sourceforge.net/eclipse/updates/latest/</url>
+    </repository>
+    
+    <repository>
+       <!-- Need Juno for CDO 4.1 -->
+       <id>eclipse-juno</id>
+       <layout>p2</layout>
+       <url>http://download.eclipse.org/releases/juno</url>
     </repository>
   </repositories>
 

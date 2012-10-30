@@ -13,7 +13,6 @@ import org.ai4fm.proofprocess.Proof;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.Term;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -21,11 +20,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,17 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class ProofImpl extends EObjectImpl implements Proof {
-	/**
-	 * The cached value of the '{@link #getGoals() <em>Goals</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getGoals()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Term> goals;
-
+public class ProofImpl extends CDOObjectImpl implements Proof {
 	/**
 	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -62,26 +48,6 @@ public class ProofImpl extends EObjectImpl implements Proof {
 	 * @ordered
 	 */
 	protected static final String LABEL_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLabel()
-	 * @generated
-	 * @ordered
-	 */
-	protected String label = LABEL_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getAttempts() <em>Attempts</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAttempts()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Attempt> attempts;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -107,11 +73,20 @@ public class ProofImpl extends EObjectImpl implements Proof {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public EList<Term> getGoals() {
-		if (goals == null) {
-			goals = new EObjectContainmentEList<Term>(Term.class, this, ProofProcessPackage.PROOF__GOALS);
-		}
-		return goals;
+		return (EList<Term>)eDynamicGet(ProofProcessPackage.PROOF__GOALS, ProofProcessPackage.Literals.PROOF__GOALS, true, true);
 	}
 
 	/**
@@ -119,8 +94,9 @@ public class ProofImpl extends EObjectImpl implements Proof {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLabel() {
-		return label;
+		return (String)eDynamicGet(ProofProcessPackage.PROOF__LABEL, ProofProcessPackage.Literals.PROOF__LABEL, true, true);
 	}
 
 	/**
@@ -128,11 +104,9 @@ public class ProofImpl extends EObjectImpl implements Proof {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabel(String newLabel) {
-		String oldLabel = label;
-		label = newLabel;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF__LABEL, oldLabel, label));
+		eDynamicSet(ProofProcessPackage.PROOF__LABEL, ProofProcessPackage.Literals.PROOF__LABEL, newLabel);
 	}
 
 	/**
@@ -140,11 +114,10 @@ public class ProofImpl extends EObjectImpl implements Proof {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public EList<Attempt> getAttempts() {
-		if (attempts == null) {
-			attempts = new EObjectContainmentEList<Attempt>(Attempt.class, this, ProofProcessPackage.PROOF__ATTEMPTS);
-		}
-		return attempts;
+		return (EList<Attempt>)eDynamicGet(ProofProcessPackage.PROOF__ATTEMPTS, ProofProcessPackage.Literals.PROOF__ATTEMPTS, true, true);
 	}
 
 	/**
@@ -235,29 +208,13 @@ public class ProofImpl extends EObjectImpl implements Proof {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF__GOALS:
-				return goals != null && !goals.isEmpty();
+				return !getGoals().isEmpty();
 			case ProofProcessPackage.PROOF__LABEL:
-				return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
+				return LABEL_EDEFAULT == null ? getLabel() != null : !LABEL_EDEFAULT.equals(getLabel());
 			case ProofProcessPackage.PROOF__ATTEMPTS:
-				return attempts != null && !attempts.isEmpty();
+				return !getAttempts().isEmpty();
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (label: ");
-		result.append(label);
-		result.append(')');
-		return result.toString();
 	}
 
 } //ProofImpl

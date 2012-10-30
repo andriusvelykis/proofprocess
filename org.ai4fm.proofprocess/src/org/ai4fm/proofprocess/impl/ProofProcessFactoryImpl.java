@@ -61,18 +61,18 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ProofProcessPackage.INTENT: return createIntent();
-			case ProofProcessPackage.PROOF_STEP: return createProofStep();
-			case ProofProcessPackage.PROOF_INFO: return createProofInfo();
-			case ProofProcessPackage.PROOF_FEATURE_DEF: return createProofFeatureDef();
-			case ProofProcessPackage.PROOF_FEATURE: return createProofFeature();
-			case ProofProcessPackage.PROOF_ENTRY: return createProofEntry();
-			case ProofProcessPackage.PROOF_SEQ: return createProofSeq();
-			case ProofProcessPackage.PROOF_PARALLEL: return createProofParallel();
-			case ProofProcessPackage.PROOF_DECOR: return createProofDecor();
-			case ProofProcessPackage.ATTEMPT: return createAttempt();
-			case ProofProcessPackage.PROOF: return createProof();
-			case ProofProcessPackage.PROOF_STORE: return createProofStore();
+			case ProofProcessPackage.INTENT: return (EObject)createIntent();
+			case ProofProcessPackage.PROOF_STEP: return (EObject)createProofStep();
+			case ProofProcessPackage.PROOF_INFO: return (EObject)createProofInfo();
+			case ProofProcessPackage.PROOF_FEATURE_DEF: return (EObject)createProofFeatureDef();
+			case ProofProcessPackage.PROOF_FEATURE: return (EObject)createProofFeature();
+			case ProofProcessPackage.PROOF_ENTRY: return (EObject)createProofEntry();
+			case ProofProcessPackage.PROOF_SEQ: return (EObject)createProofSeq();
+			case ProofProcessPackage.PROOF_PARALLEL: return (EObject)createProofParallel();
+			case ProofProcessPackage.PROOF_DECOR: return (EObject)createProofDecor();
+			case ProofProcessPackage.ATTEMPT: return (EObject)createAttempt();
+			case ProofProcessPackage.PROOF: return (EObject)createProof();
+			case ProofProcessPackage.PROOF_STORE: return (EObject)createProofStore();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -113,6 +113,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Intent createIntent() {
 		IntentImpl intent = new IntentImpl();
 		return intent;
@@ -123,6 +124,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofStep createProofStep() {
 		ProofStepImpl proofStep = new ProofStepImpl();
 		return proofStep;
@@ -133,6 +135,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofInfo createProofInfo() {
 		ProofInfoImpl proofInfo = new ProofInfoImpl();
 		return proofInfo;
@@ -143,6 +146,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofFeatureDef createProofFeatureDef() {
 		ProofFeatureDefImpl proofFeatureDef = new ProofFeatureDefImpl();
 		return proofFeatureDef;
@@ -153,6 +157,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofFeature createProofFeature() {
 		ProofFeatureImpl proofFeature = new ProofFeatureImpl();
 		return proofFeature;
@@ -163,6 +168,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofEntry createProofEntry() {
 		ProofEntryImpl proofEntry = new ProofEntryImpl();
 		return proofEntry;
@@ -173,6 +179,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofSeq createProofSeq() {
 		ProofSeqImpl proofSeq = new ProofSeqImpl();
 		return proofSeq;
@@ -183,6 +190,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofParallel createProofParallel() {
 		ProofParallelImpl proofParallel = new ProofParallelImpl();
 		return proofParallel;
@@ -193,6 +201,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofDecor createProofDecor() {
 		ProofDecorImpl proofDecor = new ProofDecorImpl();
 		return proofDecor;
@@ -203,6 +212,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Attempt createAttempt() {
 		AttemptImpl attempt = new AttemptImpl();
 		return attempt;
@@ -213,6 +223,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Proof createProof() {
 		ProofImpl proof = new ProofImpl();
 		return proof;
@@ -223,6 +234,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofStore createProofStore() {
 		ProofStoreImpl proofStore = new ProofStoreImpl();
 		return proofStore;
@@ -253,6 +265,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofProcessPackage getProofProcessPackage() {
 		return (ProofProcessPackage)getEPackage();
 	}

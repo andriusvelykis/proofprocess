@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.ai4fm.proofprocess.zeves/src"
-    modelPluginID="org.ai4fm.proofprocess.zeves" modelName="ZEvesProofProcess" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="6.0" copyrightFields="false" usedGenPackages="../../org.ai4fm.proofprocess/model/ProofProcess.genmodel#//proofprocess">
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.ai4fm.proofprocess.zeves/src" modelPluginID="org.ai4fm.proofprocess.zeves" modelName="ZEvesProofProcess" rootExtendsInterface="org.eclipse.emf.cdo.CDOObject" rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl" importerID="org.eclipse.emf.importer.ecore" featureDelegation="Dynamic" complianceLevel="6.0" copyrightFields="false">
   <foreignModel>ZEvesProofProcess.ecore</foreignModel>
-  <genPackages prefix="ZEvesProofProcess" basePackage="org.ai4fm.proofprocess" disposableProviderFactory="true"
-      ecorePackage="ZEvesProofProcess.ecore#/">
-    <genDataTypes ecoreDataType="ZEvesProofProcess.ecore#//ZmlTerm"/>
-    <genClasses image="false" ecoreClass="ZEvesProofProcess.ecore#//DisplayTerm">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//DisplayTerm/display"/>
+  <modelPluginVariables>CDO=org.eclipse.emf.cdo</modelPluginVariables>
+  <genPackages prefix="ZEvesProofProcess" basePackage="org.ai4fm.proofprocess" disposableProviderFactory="true">
+    <ecorePackage href="ZEvesProofProcess.ecore#/"/>
+    <genDataTypes>
+      <ecoreDataType href="ZEvesProofProcess.ecore#//ZmlTerm"/>
+    </genDataTypes>
+    <genClasses image="false">
+      <ecoreClass href="ZEvesProofProcess.ecore#//DisplayTerm"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="ZEvesProofProcess.ecore#//DisplayTerm/display"/>
+      </genFeatures>
     </genClasses>
-    <genClasses ecoreClass="ZEvesProofProcess.ecore#//UnparsedTerm"/>
-    <genClasses ecoreClass="ZEvesProofProcess.ecore#//CztTerm">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//CztTerm/term"/>
+    <genClasses>
+      <ecoreClass href="ZEvesProofProcess.ecore#//UnparsedTerm"/>
     </genClasses>
-    <genClasses ecoreClass="ZEvesProofProcess.ecore#//ZEvesTrace">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/usedLemmas"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/text"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ZEvesProofProcess.ecore#//ZEvesTrace/case"/>
+    <genClasses>
+      <ecoreClass href="ZEvesProofProcess.ecore#//CztTerm"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="ZEvesProofProcess.ecore#//CztTerm/term"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ZEvesProofProcess.ecore#//ZEvesTrace"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="ZEvesProofProcess.ecore#//ZEvesTrace/usedLemmas"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="ZEvesProofProcess.ecore#//ZEvesTrace/text"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="ZEvesProofProcess.ecore#//ZEvesTrace/case"/>
+      </genFeatures>
     </genClasses>
   </genPackages>
+  <usedGenPackages href="../../org.ai4fm.proofprocess/model/ProofProcess.genmodel#//proofprocess"/>
 </genmodel:GenModel>

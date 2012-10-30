@@ -6,7 +6,7 @@
  */
 package org.ai4fm.proofprocess;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.cdo.CDOObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,9 +23,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofFeatureDef()
  * @model
+ * @extends CDOObject
  * @generated
  */
-public interface ProofFeatureDef extends EObject {
+public interface ProofFeatureDef extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * The default value is <code>""</code>.

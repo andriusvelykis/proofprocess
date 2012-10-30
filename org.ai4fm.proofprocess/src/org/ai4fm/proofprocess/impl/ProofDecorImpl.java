@@ -10,13 +10,10 @@ import org.ai4fm.proofprocess.ProofDecor;
 import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -32,16 +29,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * @generated
  */
 public class ProofDecorImpl extends ProofElemImpl implements ProofDecor {
-	/**
-	 * The cached value of the '{@link #getEntry() <em>Entry</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getEntry()
-	 * @generated
-	 * @ordered
-	 */
-	protected ProofElem entry;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -66,8 +53,9 @@ public class ProofDecorImpl extends ProofElemImpl implements ProofDecor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofElem getEntry() {
-		return entry;
+		return (ProofElem)eDynamicGet(ProofProcessPackage.PROOF_DECOR__ENTRY, ProofProcessPackage.Literals.PROOF_DECOR__ENTRY, true, true);
 	}
 
 	/**
@@ -76,12 +64,7 @@ public class ProofDecorImpl extends ProofElemImpl implements ProofDecor {
 	 * @generated
 	 */
 	public NotificationChain basicSetEntry(ProofElem newEntry, NotificationChain msgs) {
-		ProofElem oldEntry = entry;
-		entry = newEntry;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_DECOR__ENTRY, oldEntry, newEntry);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eDynamicInverseAdd((InternalEObject)newEntry, ProofProcessPackage.PROOF_DECOR__ENTRY, msgs);
 		return msgs;
 	}
 
@@ -90,18 +73,9 @@ public class ProofDecorImpl extends ProofElemImpl implements ProofDecor {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEntry(ProofElem newEntry) {
-		if (newEntry != entry) {
-			NotificationChain msgs = null;
-			if (entry != null)
-				msgs = ((InternalEObject)entry).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_DECOR__ENTRY, null, msgs);
-			if (newEntry != null)
-				msgs = ((InternalEObject)newEntry).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ProofProcessPackage.PROOF_DECOR__ENTRY, null, msgs);
-			msgs = basicSetEntry(newEntry, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProofProcessPackage.PROOF_DECOR__ENTRY, newEntry, newEntry));
+		eDynamicSet(ProofProcessPackage.PROOF_DECOR__ENTRY, ProofProcessPackage.Literals.PROOF_DECOR__ENTRY, newEntry);
 	}
 
 	/**
@@ -171,7 +145,7 @@ public class ProofDecorImpl extends ProofElemImpl implements ProofDecor {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_DECOR__ENTRY:
-				return entry != null;
+				return getEntry() != null;
 		}
 		return super.eIsSet(featureID);
 	}

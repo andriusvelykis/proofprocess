@@ -13,19 +13,14 @@ import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.NamedTermTree;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,7 +37,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class NamedTermTreeImpl extends EObjectImpl implements NamedTermTree {
+public class NamedTermTreeImpl extends CDOObjectImpl implements NamedTermTree {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -52,36 +47,6 @@ public class NamedTermTreeImpl extends EObjectImpl implements NamedTermTree {
 	 * @ordered
 	 */
 	protected static final String NAME_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected String name = NAME_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getTerms() <em>Terms</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTerms()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Term> terms;
-
-	/**
-	 * The cached value of the '{@link #getBranches() <em>Branches</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getBranches()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<NamedTermTree> branches;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -107,8 +72,19 @@ public class NamedTermTreeImpl extends EObjectImpl implements NamedTermTree {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String getName() {
-		return name;
+		return (String)eDynamicGet(IsabelleProofProcessPackage.NAMED_TERM_TREE__NAME, IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__NAME, true, true);
 	}
 
 	/**
@@ -116,11 +92,9 @@ public class NamedTermTreeImpl extends EObjectImpl implements NamedTermTree {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.NAMED_TERM_TREE__NAME, oldName, name));
+		eDynamicSet(IsabelleProofProcessPackage.NAMED_TERM_TREE__NAME, IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__NAME, newName);
 	}
 
 	/**
@@ -128,11 +102,10 @@ public class NamedTermTreeImpl extends EObjectImpl implements NamedTermTree {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public EList<Term> getTerms() {
-		if (terms == null) {
-			terms = new EObjectContainmentEList<Term>(Term.class, this, IsabelleProofProcessPackage.NAMED_TERM_TREE__TERMS);
-		}
-		return terms;
+		return (EList<Term>)eDynamicGet(IsabelleProofProcessPackage.NAMED_TERM_TREE__TERMS, IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__TERMS, true, true);
 	}
 
 	/**
@@ -140,11 +113,10 @@ public class NamedTermTreeImpl extends EObjectImpl implements NamedTermTree {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public EList<NamedTermTree> getBranches() {
-		if (branches == null) {
-			branches = new EObjectContainmentEList<NamedTermTree>(NamedTermTree.class, this, IsabelleProofProcessPackage.NAMED_TERM_TREE__BRANCHES);
-		}
-		return branches;
+		return (EList<NamedTermTree>)eDynamicGet(IsabelleProofProcessPackage.NAMED_TERM_TREE__BRANCHES, IsabelleProofProcessPackage.Literals.NAMED_TERM_TREE__BRANCHES, true, true);
 	}
 
 	/**
@@ -235,29 +207,13 @@ public class NamedTermTreeImpl extends EObjectImpl implements NamedTermTree {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.NAMED_TERM_TREE__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+				return NAME_EDEFAULT == null ? getName() != null : !NAME_EDEFAULT.equals(getName());
 			case IsabelleProofProcessPackage.NAMED_TERM_TREE__TERMS:
-				return terms != null && !terms.isEmpty();
+				return !getTerms().isEmpty();
 			case IsabelleProofProcessPackage.NAMED_TERM_TREE__BRANCHES:
-				return branches != null && !branches.isEmpty();
+				return !getBranches().isEmpty();
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (name: ");
-		result.append(name);
-		result.append(')');
-		return result.toString();
 	}
 
 } //NamedTermTreeImpl

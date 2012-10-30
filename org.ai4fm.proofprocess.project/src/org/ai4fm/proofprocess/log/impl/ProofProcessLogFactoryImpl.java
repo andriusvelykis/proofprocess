@@ -60,9 +60,9 @@ public class ProofProcessLogFactoryImpl extends EFactoryImpl implements ProofPro
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ProofProcessLogPackage.PROOF_LOG: return createProofLog();
-			case ProofProcessLogPackage.ACTIVITY: return createActivity();
-			case ProofProcessLogPackage.PROOF_ACTIVITY: return createProofActivity();
+			case ProofProcessLogPackage.PROOF_LOG: return (EObject)createProofLog();
+			case ProofProcessLogPackage.ACTIVITY: return (EObject)createActivity();
+			case ProofProcessLogPackage.PROOF_ACTIVITY: return (EObject)createProofActivity();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -73,6 +73,7 @@ public class ProofProcessLogFactoryImpl extends EFactoryImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofLog createProofLog() {
 		ProofLogImpl proofLog = new ProofLogImpl();
 		return proofLog;
@@ -83,6 +84,7 @@ public class ProofProcessLogFactoryImpl extends EFactoryImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Activity createActivity() {
 		ActivityImpl activity = new ActivityImpl();
 		return activity;
@@ -93,6 +95,7 @@ public class ProofProcessLogFactoryImpl extends EFactoryImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofActivity createProofActivity() {
 		ProofActivityImpl proofActivity = new ProofActivityImpl();
 		return proofActivity;
@@ -103,6 +106,7 @@ public class ProofProcessLogFactoryImpl extends EFactoryImpl implements ProofPro
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProofProcessLogPackage getProofProcessLogPackage() {
 		return (ProofProcessLogPackage)getEPackage();
 	}

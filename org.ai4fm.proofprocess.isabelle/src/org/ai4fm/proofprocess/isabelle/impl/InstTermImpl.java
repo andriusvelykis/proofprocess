@@ -13,7 +13,6 @@ import org.ai4fm.proofprocess.isabelle.Inst;
 import org.ai4fm.proofprocess.isabelle.InstTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -21,11 +20,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -41,27 +37,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class InstTermImpl extends EObjectImpl implements InstTerm {
-	/**
-	 * The cached value of the '{@link #getTerm() <em>Term</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTerm()
-	 * @generated
-	 * @ordered
-	 */
-	protected Term term;
-
-	/**
-	 * The cached value of the '{@link #getInsts() <em>Insts</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getInsts()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Inst> insts;
-
+public class InstTermImpl extends CDOObjectImpl implements InstTerm {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -86,8 +62,19 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Term getTerm() {
-		return term;
+		return (Term)eDynamicGet(IsabelleProofProcessPackage.INST_TERM__TERM, IsabelleProofProcessPackage.Literals.INST_TERM__TERM, true, true);
 	}
 
 	/**
@@ -96,12 +83,7 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	 * @generated
 	 */
 	public NotificationChain basicSetTerm(Term newTerm, NotificationChain msgs) {
-		Term oldTerm = term;
-		term = newTerm;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.INST_TERM__TERM, oldTerm, newTerm);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eDynamicInverseAdd((InternalEObject)newTerm, IsabelleProofProcessPackage.INST_TERM__TERM, msgs);
 		return msgs;
 	}
 
@@ -110,18 +92,9 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTerm(Term newTerm) {
-		if (newTerm != term) {
-			NotificationChain msgs = null;
-			if (term != null)
-				msgs = ((InternalEObject)term).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IsabelleProofProcessPackage.INST_TERM__TERM, null, msgs);
-			if (newTerm != null)
-				msgs = ((InternalEObject)newTerm).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IsabelleProofProcessPackage.INST_TERM__TERM, null, msgs);
-			msgs = basicSetTerm(newTerm, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IsabelleProofProcessPackage.INST_TERM__TERM, newTerm, newTerm));
+		eDynamicSet(IsabelleProofProcessPackage.INST_TERM__TERM, IsabelleProofProcessPackage.Literals.INST_TERM__TERM, newTerm);
 	}
 
 	/**
@@ -129,11 +102,10 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public EList<Inst> getInsts() {
-		if (insts == null) {
-			insts = new EObjectContainmentEList<Inst>(Inst.class, this, IsabelleProofProcessPackage.INST_TERM__INSTS);
-		}
-		return insts;
+		return (EList<Inst>)eDynamicGet(IsabelleProofProcessPackage.INST_TERM__INSTS, IsabelleProofProcessPackage.Literals.INST_TERM__INSTS, true, true);
 	}
 
 	/**
@@ -215,9 +187,9 @@ public class InstTermImpl extends EObjectImpl implements InstTerm {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case IsabelleProofProcessPackage.INST_TERM__TERM:
-				return term != null;
+				return getTerm() != null;
 			case IsabelleProofProcessPackage.INST_TERM__INSTS:
-				return insts != null && !insts.isEmpty();
+				return !getInsts().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

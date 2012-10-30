@@ -1,6 +1,5 @@
 package org.ai4fm.proofprocess.zeves.ui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -170,21 +169,14 @@ public class SnapshotTracker {
 				return ZEvesProofUIPlugin.error("Unable to locate project for resource " + filePath, null);
 			}
 			
-			Project proofProject = ProofManager.getProofProject(project, monitor);
-			ProofLog proofLog = ProofManager.getProofLog(project, monitor);
+			Project proofProject = ProofManager.proofProject(project, monitor);
+			ProofLog proofLog = ProofManager.proofLog(project, monitor);
 			FileVersion fileVersion = syncFileVersion(project, event.entry, event.sectInfo, filePath, monitor);
 			analyseEntry(proofProject, proofLog, event.entry, event.entryProof, fileVersion, event.sectInfo);
 			
-			if (pendingEvents.isEmpty() || pendingEvents.peek().event.getType() != SnapshotChangeType.ADD) {
-				// no more pending events (or the next one is not ADD), save the file
-				// TODO better saving algorithm, but not one which stops all 
-				try {
-					proofProject.eResource().save(ProofManager.SAVE_OPTIONS);
-					proofLog.eResource().save(ProofManager.SAVE_OPTIONS);
-				} catch (IOException e) {
-					ZEvesProofUIPlugin.log(e);
-				}
-			}
+			// commit the changes
+			ProofManager.commitTransaction(proofProject, monitor);
+			ProofManager.commitTransaction(proofLog, monitor);
 		}
 		
 		System.out.println("Analysing event: " + event.event.getType() + " -- " + (System.currentTimeMillis() - start));
@@ -215,7 +207,8 @@ public class SnapshotTracker {
 		
 		int posEnd = entry.getPosition().offset + entry.getPosition().length;
 
-		return ProofHistoryManager.syncFileVersion(project, filePath, text, posEnd, monitor);
+		return ProofHistoryManager.syncFileVersion(project, filePath, 
+				scala.Option.apply(text), scala.Option.apply((Object) new Integer(posEnd)), monitor);
 	}
 	
 	private void analyseEntry(ProofStore proofStore, ProofLog proofLog, ISnapshotEntry entry,

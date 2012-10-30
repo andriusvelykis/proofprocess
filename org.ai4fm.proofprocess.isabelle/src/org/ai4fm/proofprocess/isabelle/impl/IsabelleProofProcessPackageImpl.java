@@ -192,6 +192,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDisplayTerm() {
 		return displayTermEClass;
 	}
@@ -201,6 +202,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDisplayTerm_Display() {
 		return (EAttribute)displayTermEClass.getEStructuralFeatures().get(0);
 	}
@@ -210,6 +212,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMarkupTerm() {
 		return markupTermEClass;
 	}
@@ -219,6 +222,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMarkupTerm_Term() {
 		return (EAttribute)markupTermEClass.getEStructuralFeatures().get(0);
 	}
@@ -228,6 +232,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIsaTerm() {
 		return isaTermEClass;
 	}
@@ -237,6 +242,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIsaTerm_Term() {
 		return (EAttribute)isaTermEClass.getEStructuralFeatures().get(0);
 	}
@@ -246,6 +252,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNameTerm() {
 		return nameTermEClass;
 	}
@@ -255,6 +262,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getNameTerm_Name() {
 		return (EAttribute)nameTermEClass.getEStructuralFeatures().get(0);
 	}
@@ -264,6 +272,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNamedTerm() {
 		return namedTermEClass;
 	}
@@ -273,6 +282,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getNamedTerm_Term() {
 		return (EReference)namedTermEClass.getEStructuralFeatures().get(0);
 	}
@@ -282,6 +292,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getInstTerm() {
 		return instTermEClass;
 	}
@@ -291,6 +302,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getInstTerm_Term() {
 		return (EReference)instTermEClass.getEStructuralFeatures().get(0);
 	}
@@ -300,6 +312,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getInstTerm_Insts() {
 		return (EReference)instTermEClass.getEStructuralFeatures().get(1);
 	}
@@ -309,6 +322,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getInst() {
 		return instEClass;
 	}
@@ -318,6 +332,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInst_Name() {
 		return (EAttribute)instEClass.getEStructuralFeatures().get(0);
 	}
@@ -327,6 +342,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getInst_Index() {
 		return (EAttribute)instEClass.getEStructuralFeatures().get(1);
 	}
@@ -336,6 +352,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getInst_Term() {
 		return (EReference)instEClass.getEStructuralFeatures().get(2);
 	}
@@ -345,6 +362,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIsabelleTrace() {
 		return isabelleTraceEClass;
 	}
@@ -354,6 +372,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIsabelleTrace_Command() {
 		return (EReference)isabelleTraceEClass.getEStructuralFeatures().get(0);
 	}
@@ -363,6 +382,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIsabelleTrace_SimpLemmas() {
 		return (EAttribute)isabelleTraceEClass.getEStructuralFeatures().get(1);
 	}
@@ -372,6 +392,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNamedTermTree() {
 		return namedTermTreeEClass;
 	}
@@ -381,6 +402,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getNamedTermTree_Name() {
 		return (EAttribute)namedTermTreeEClass.getEStructuralFeatures().get(0);
 	}
@@ -390,6 +412,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getNamedTermTree_Terms() {
 		return (EReference)namedTermTreeEClass.getEStructuralFeatures().get(1);
 	}
@@ -399,6 +422,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getNamedTermTree_Branches() {
 		return (EReference)namedTermTreeEClass.getEStructuralFeatures().get(2);
 	}
@@ -408,6 +432,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIsabelleCommand() {
 		return isabelleCommandEClass;
 	}
@@ -417,6 +442,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIsabelleCommand_Source() {
 		return (EAttribute)isabelleCommandEClass.getEStructuralFeatures().get(0);
 	}
@@ -426,6 +452,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getIsabelleXML() {
 		return isabelleXMLEDataType;
 	}
@@ -435,6 +462,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EDataType getIsabelleTerm() {
 		return isabelleTermEDataType;
 	}
@@ -444,6 +472,7 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IsabelleProofProcessFactory getIsabelleProofProcessFactory() {
 		return (IsabelleProofProcessFactory)getEFactoryInstance();
 	}
@@ -591,6 +620,32 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// http://www.eclipse.org/CDO/DBStore
+		createDBStoreAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/CDO/DBStore</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createDBStoreAnnotations() {
+		String source = "http://www.eclipse.org/CDO/DBStore";		
+		addAnnotation
+		  (getMarkupTerm_Term(), 
+		   source, 
+		   new String[] {
+			 "columnType", "CLOB"
+		   });		
+		addAnnotation
+		  (getIsaTerm_Term(), 
+		   source, 
+		   new String[] {
+			 "columnType", "CLOB"
+		   });
 	}
 
 } //IsabelleProofProcessPackageImpl

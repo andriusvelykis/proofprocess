@@ -36,6 +36,14 @@
       <import plugin="org.eclipse.zest.jface" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.draw2d" version="3.7.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.eclipse.emf.cdo" version="4.0.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.cdo.server" version="4.0.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.cdo.server.net4j" version="4.0.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.cdo.server.db" version="4.0.0" match="compatible"/>
+      <import plugin="org.eclipse.net4j.db.h2" version="4.0.0" match="compatible"/>
+      <import plugin="org.eclipse.net4j.jvm" version="4.0.0" match="compatible"/>
+      <import plugin="org.eclipse.emf.cdo.net4j" version="4.0.0" match="compatible"/>
+      <import plugin="org.h2"/>
    </requires>
 
    <plugin
@@ -110,6 +118,13 @@
 
    <plugin
          id="org.ai4fm.proofprocess.mlearning.data"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.ai4fm.proofprocess.cdo"
          download-size="0"
          install-size="0"
          version="0.0.0"

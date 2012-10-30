@@ -9,12 +9,9 @@ package org.ai4fm.proofprocess.project.impl;
 import org.ai4fm.proofprocess.project.Position;
 import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,7 +27,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class PositionImpl extends EObjectImpl implements Position {
+public class PositionImpl extends CDOObjectImpl implements Position {
 	/**
 	 * The default value of the '{@link #getOffset() <em>Offset</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -42,16 +39,6 @@ public class PositionImpl extends EObjectImpl implements Position {
 	protected static final int OFFSET_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getOffset() <em>Offset</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getOffset()
-	 * @generated
-	 * @ordered
-	 */
-	protected int offset = OFFSET_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #getLength() <em>Length</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -60,16 +47,6 @@ public class PositionImpl extends EObjectImpl implements Position {
 	 * @ordered
 	 */
 	protected static final int LENGTH_EDEFAULT = 0;
-
-	/**
-	 * The cached value of the '{@link #getLength() <em>Length</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLength()
-	 * @generated
-	 * @ordered
-	 */
-	protected int length = LENGTH_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -95,8 +72,19 @@ public class PositionImpl extends EObjectImpl implements Position {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public int getOffset() {
-		return offset;
+		return (Integer)eDynamicGet(ProjectProofProcessPackage.POSITION__OFFSET, ProjectProofProcessPackage.Literals.POSITION__OFFSET, true, true);
 	}
 
 	/**
@@ -104,11 +92,9 @@ public class PositionImpl extends EObjectImpl implements Position {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOffset(int newOffset) {
-		int oldOffset = offset;
-		offset = newOffset;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.POSITION__OFFSET, oldOffset, offset));
+		eDynamicSet(ProjectProofProcessPackage.POSITION__OFFSET, ProjectProofProcessPackage.Literals.POSITION__OFFSET, newOffset);
 	}
 
 	/**
@@ -116,8 +102,9 @@ public class PositionImpl extends EObjectImpl implements Position {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getLength() {
-		return length;
+		return (Integer)eDynamicGet(ProjectProofProcessPackage.POSITION__LENGTH, ProjectProofProcessPackage.Literals.POSITION__LENGTH, true, true);
 	}
 
 	/**
@@ -125,11 +112,9 @@ public class PositionImpl extends EObjectImpl implements Position {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLength(int newLength) {
-		int oldLength = length;
-		length = newLength;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ProjectProofProcessPackage.POSITION__LENGTH, oldLength, length));
+		eDynamicSet(ProjectProofProcessPackage.POSITION__LENGTH, ProjectProofProcessPackage.Literals.POSITION__LENGTH, newLength);
 	}
 
 	/**
@@ -193,29 +178,11 @@ public class PositionImpl extends EObjectImpl implements Position {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ProjectProofProcessPackage.POSITION__OFFSET:
-				return offset != OFFSET_EDEFAULT;
+				return getOffset() != OFFSET_EDEFAULT;
 			case ProjectProofProcessPackage.POSITION__LENGTH:
-				return length != LENGTH_EDEFAULT;
+				return getLength() != LENGTH_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (offset: ");
-		result.append(offset);
-		result.append(", length: ");
-		result.append(length);
-		result.append(')');
-		return result.toString();
 	}
 
 } //PositionImpl

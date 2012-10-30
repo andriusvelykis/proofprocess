@@ -1,18 +1,14 @@
 package org.ai4fm.proofprocess.isabelle.core.analysis
 
-import isabelle.Command
-import isabelle.Command.State
-import isabelle.Document
-import isabelle.Text
-import java.io.IOException
-import org.ai4fm.filehistory.FileVersion
+import scala.collection.JavaConversions.seqAsJavaList
+
 import org.ai4fm.proofprocess.Loc
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofStore
 import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.core.analysis.ProofMatcher
 import org.ai4fm.proofprocess.core.util.PProcessUtil
-import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin._
+import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin.error
 import org.ai4fm.proofprocess.isabelle.core.parse.ProofEntryData
 import org.ai4fm.proofprocess.isabelle.core.parse.ProofEntryReader
 import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader
@@ -25,10 +21,15 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.core.runtime.IStatus
+import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.Status
 import org.eclipse.emf.ecore.util.EcoreUtil
-import scala.collection.JavaConversions._
+
+import isabelle.Command
+import isabelle.Command.State
+import isabelle.Document
+import isabelle.eclipse.core.resource.URIThyLoad.toURINodeName
 
 
 /**
@@ -90,11 +91,11 @@ object ProofAnalyzer {
     project flatMap { project =>
       {
 
-        val proofProject = ProofManager.getProofProject(project, monitor)
+        val proofProject = ProofManager.proofProject(project, monitor)
 
         // TODO make path relative for file history
         val fileVersion = ProofHistoryManager.syncFileVersion(
-          project, pathStr, proofTextData.documentText, proofTextData.syncPoint, monitor);
+          project, pathStr, Some(proofTextData.documentText), Some(proofTextData.syncPoint), monitor)
 
         def textLoc(cmdState: State): Loc = {
           val cmd = cmdState.command
@@ -133,16 +134,12 @@ object ProofAnalyzer {
   private def logActivity(project: IProject, proofEntries: Map[State, ProofEntry],
     changedCommands: Set[Command], proofState: List[State], monitor: IProgressMonitor) {
 
-    val proofLog = ProofManager.getProofLog(project, monitor)
+    val proofLog = ProofManager.proofLog(project, monitor)
     ProofActivityLogger.logProof(proofLog, proofEntries, changedCommands, proofState)
   }
 
   private def commit(proofStore: ProofStore) {
-    try {
-      proofStore.eResource().save(ProofManager.SAVE_OPTIONS);
-    } catch {
-      case e: IOException => log(error(Some(e)))
-    }
+    ProofManager.commitTransaction(proofStore, new NullProgressMonitor)
   }
 
   private def analyzeEntries(proofStore: ProofStore, entryData: ProofEntryData) {

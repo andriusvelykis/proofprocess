@@ -60,9 +60,9 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ProjectProofProcessPackage.PROJECT: return createProject();
-			case ProjectProofProcessPackage.POSITION: return createPosition();
-			case ProjectProofProcessPackage.TEXT_LOC: return createTextLoc();
+			case ProjectProofProcessPackage.PROJECT: return (EObject)createProject();
+			case ProjectProofProcessPackage.POSITION: return (EObject)createPosition();
+			case ProjectProofProcessPackage.TEXT_LOC: return (EObject)createTextLoc();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -73,6 +73,7 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Project createProject() {
 		ProjectImpl project = new ProjectImpl();
 		return project;
@@ -83,6 +84,7 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Position createPosition() {
 		PositionImpl position = new PositionImpl();
 		return position;
@@ -93,6 +95,7 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TextLoc createTextLoc() {
 		TextLocImpl textLoc = new TextLocImpl();
 		return textLoc;
@@ -103,6 +106,7 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProjectProofProcessPackage getProjectProofProcessPackage() {
 		return (ProjectProofProcessPackage)getEPackage();
 	}

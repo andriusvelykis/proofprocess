@@ -9,12 +9,9 @@ package org.ai4fm.filehistory.impl;
 import org.ai4fm.filehistory.FileHistoryPackage;
 import org.ai4fm.filehistory.FileVersion;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -33,7 +30,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class FileVersionImpl extends EObjectImpl implements FileVersion {
+public class FileVersionImpl extends CDOObjectImpl implements FileVersion {
 	/**
 	 * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -43,16 +40,6 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * @ordered
 	 */
 	protected static final long TIMESTAMP_EDEFAULT = 0L;
-
-	/**
-	 * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTimestamp()
-	 * @generated
-	 * @ordered
-	 */
-	protected long timestamp = TIMESTAMP_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
@@ -65,16 +52,6 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	protected static final String PATH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPath()
-	 * @generated
-	 * @ordered
-	 */
-	protected String path = PATH_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #getChecksum() <em>Checksum</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -83,16 +60,6 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * @ordered
 	 */
 	protected static final String CHECKSUM_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getChecksum() <em>Checksum</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getChecksum()
-	 * @generated
-	 * @ordered
-	 */
-	protected String checksum = CHECKSUM_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getSyncPoint() <em>Sync Point</em>}' attribute.
@@ -105,16 +72,6 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	protected static final int SYNC_POINT_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getSyncPoint() <em>Sync Point</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSyncPoint()
-	 * @generated
-	 * @ordered
-	 */
-	protected int syncPoint = SYNC_POINT_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #getSyncChecksum() <em>Sync Checksum</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -123,16 +80,6 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * @ordered
 	 */
 	protected static final String SYNC_CHECKSUM_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getSyncChecksum() <em>Sync Checksum</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSyncChecksum()
-	 * @generated
-	 * @ordered
-	 */
-	protected String syncChecksum = SYNC_CHECKSUM_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -158,8 +105,19 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public long getTimestamp() {
-		return timestamp;
+		return (Long)eDynamicGet(FileHistoryPackage.FILE_VERSION__TIMESTAMP, FileHistoryPackage.Literals.FILE_VERSION__TIMESTAMP, true, true);
 	}
 
 	/**
@@ -167,11 +125,9 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTimestamp(long newTimestamp) {
-		long oldTimestamp = timestamp;
-		timestamp = newTimestamp;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FileHistoryPackage.FILE_VERSION__TIMESTAMP, oldTimestamp, timestamp));
+		eDynamicSet(FileHistoryPackage.FILE_VERSION__TIMESTAMP, FileHistoryPackage.Literals.FILE_VERSION__TIMESTAMP, newTimestamp);
 	}
 
 	/**
@@ -179,8 +135,9 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getPath() {
-		return path;
+		return (String)eDynamicGet(FileHistoryPackage.FILE_VERSION__PATH, FileHistoryPackage.Literals.FILE_VERSION__PATH, true, true);
 	}
 
 	/**
@@ -188,11 +145,9 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPath(String newPath) {
-		String oldPath = path;
-		path = newPath;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FileHistoryPackage.FILE_VERSION__PATH, oldPath, path));
+		eDynamicSet(FileHistoryPackage.FILE_VERSION__PATH, FileHistoryPackage.Literals.FILE_VERSION__PATH, newPath);
 	}
 
 	/**
@@ -200,8 +155,9 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getChecksum() {
-		return checksum;
+		return (String)eDynamicGet(FileHistoryPackage.FILE_VERSION__CHECKSUM, FileHistoryPackage.Literals.FILE_VERSION__CHECKSUM, true, true);
 	}
 
 	/**
@@ -209,11 +165,9 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setChecksum(String newChecksum) {
-		String oldChecksum = checksum;
-		checksum = newChecksum;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FileHistoryPackage.FILE_VERSION__CHECKSUM, oldChecksum, checksum));
+		eDynamicSet(FileHistoryPackage.FILE_VERSION__CHECKSUM, FileHistoryPackage.Literals.FILE_VERSION__CHECKSUM, newChecksum);
 	}
 
 	/**
@@ -221,8 +175,9 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getSyncPoint() {
-		return syncPoint;
+		return (Integer)eDynamicGet(FileHistoryPackage.FILE_VERSION__SYNC_POINT, FileHistoryPackage.Literals.FILE_VERSION__SYNC_POINT, true, true);
 	}
 
 	/**
@@ -230,11 +185,9 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSyncPoint(int newSyncPoint) {
-		int oldSyncPoint = syncPoint;
-		syncPoint = newSyncPoint;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FileHistoryPackage.FILE_VERSION__SYNC_POINT, oldSyncPoint, syncPoint));
+		eDynamicSet(FileHistoryPackage.FILE_VERSION__SYNC_POINT, FileHistoryPackage.Literals.FILE_VERSION__SYNC_POINT, newSyncPoint);
 	}
 
 	/**
@@ -242,8 +195,9 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSyncChecksum() {
-		return syncChecksum;
+		return (String)eDynamicGet(FileHistoryPackage.FILE_VERSION__SYNC_CHECKSUM, FileHistoryPackage.Literals.FILE_VERSION__SYNC_CHECKSUM, true, true);
 	}
 
 	/**
@@ -251,11 +205,9 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSyncChecksum(String newSyncChecksum) {
-		String oldSyncChecksum = syncChecksum;
-		syncChecksum = newSyncChecksum;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FileHistoryPackage.FILE_VERSION__SYNC_CHECKSUM, oldSyncChecksum, syncChecksum));
+		eDynamicSet(FileHistoryPackage.FILE_VERSION__SYNC_CHECKSUM, FileHistoryPackage.Literals.FILE_VERSION__SYNC_CHECKSUM, newSyncChecksum);
 	}
 
 	/**
@@ -343,41 +295,17 @@ public class FileVersionImpl extends EObjectImpl implements FileVersion {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case FileHistoryPackage.FILE_VERSION__TIMESTAMP:
-				return timestamp != TIMESTAMP_EDEFAULT;
+				return getTimestamp() != TIMESTAMP_EDEFAULT;
 			case FileHistoryPackage.FILE_VERSION__PATH:
-				return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
+				return PATH_EDEFAULT == null ? getPath() != null : !PATH_EDEFAULT.equals(getPath());
 			case FileHistoryPackage.FILE_VERSION__CHECKSUM:
-				return CHECKSUM_EDEFAULT == null ? checksum != null : !CHECKSUM_EDEFAULT.equals(checksum);
+				return CHECKSUM_EDEFAULT == null ? getChecksum() != null : !CHECKSUM_EDEFAULT.equals(getChecksum());
 			case FileHistoryPackage.FILE_VERSION__SYNC_POINT:
-				return syncPoint != SYNC_POINT_EDEFAULT;
+				return getSyncPoint() != SYNC_POINT_EDEFAULT;
 			case FileHistoryPackage.FILE_VERSION__SYNC_CHECKSUM:
-				return SYNC_CHECKSUM_EDEFAULT == null ? syncChecksum != null : !SYNC_CHECKSUM_EDEFAULT.equals(syncChecksum);
+				return SYNC_CHECKSUM_EDEFAULT == null ? getSyncChecksum() != null : !SYNC_CHECKSUM_EDEFAULT.equals(getSyncChecksum());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (timestamp: ");
-		result.append(timestamp);
-		result.append(", path: ");
-		result.append(path);
-		result.append(", checksum: ");
-		result.append(checksum);
-		result.append(", syncPoint: ");
-		result.append(syncPoint);
-		result.append(", syncChecksum: ");
-		result.append(syncChecksum);
-		result.append(')');
-		return result.toString();
 	}
 
 } //FileVersionImpl

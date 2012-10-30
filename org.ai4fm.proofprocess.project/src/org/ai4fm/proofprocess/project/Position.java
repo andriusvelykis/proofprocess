@@ -6,7 +6,7 @@
  */
 package org.ai4fm.proofprocess.project;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.cdo.CDOObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,9 +23,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.proofprocess.project.ProjectProofProcessPackage#getPosition()
  * @model
+ * @extends CDOObject
  * @generated
  */
-public interface Position extends EObject {
+public interface Position extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Offset</b></em>' attribute.
 	 * <!-- begin-user-doc -->

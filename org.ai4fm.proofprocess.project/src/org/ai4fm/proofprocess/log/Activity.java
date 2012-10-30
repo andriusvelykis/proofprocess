@@ -8,7 +8,7 @@ package org.ai4fm.proofprocess.log;
 
 import java.util.Date;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.cdo.CDOObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,9 +25,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.proofprocess.log.ProofProcessLogPackage#getActivity()
  * @model
+ * @extends CDOObject
  * @generated
  */
-public interface Activity extends EObject {
+public interface Activity extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->

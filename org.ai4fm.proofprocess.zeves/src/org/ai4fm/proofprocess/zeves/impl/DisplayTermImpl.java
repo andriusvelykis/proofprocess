@@ -9,12 +9,9 @@ package org.ai4fm.proofprocess.zeves.impl;
 import org.ai4fm.proofprocess.zeves.DisplayTerm;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -29,7 +26,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public abstract class DisplayTermImpl extends EObjectImpl implements DisplayTerm {
+public abstract class DisplayTermImpl extends CDOObjectImpl implements DisplayTerm {
 	/**
 	 * The default value of the '{@link #getDisplay() <em>Display</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -39,16 +36,6 @@ public abstract class DisplayTermImpl extends EObjectImpl implements DisplayTerm
 	 * @ordered
 	 */
 	protected static final String DISPLAY_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getDisplay() <em>Display</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDisplay()
-	 * @generated
-	 * @ordered
-	 */
-	protected String display = DISPLAY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -74,8 +61,9 @@ public abstract class DisplayTermImpl extends EObjectImpl implements DisplayTerm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getDisplay() {
-		return display;
+	@Override
+	protected int eStaticFeatureCount() {
+		return 0;
 	}
 
 	/**
@@ -83,11 +71,19 @@ public abstract class DisplayTermImpl extends EObjectImpl implements DisplayTerm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public String getDisplay() {
+		return (String)eDynamicGet(ZEvesProofProcessPackage.DISPLAY_TERM__DISPLAY, ZEvesProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY, true, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public void setDisplay(String newDisplay) {
-		String oldDisplay = display;
-		display = newDisplay;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ZEvesProofProcessPackage.DISPLAY_TERM__DISPLAY, oldDisplay, display));
+		eDynamicSet(ZEvesProofProcessPackage.DISPLAY_TERM__DISPLAY, ZEvesProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY, newDisplay);
 	}
 
 	/**
@@ -143,25 +139,9 @@ public abstract class DisplayTermImpl extends EObjectImpl implements DisplayTerm
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case ZEvesProofProcessPackage.DISPLAY_TERM__DISPLAY:
-				return DISPLAY_EDEFAULT == null ? display != null : !DISPLAY_EDEFAULT.equals(display);
+				return DISPLAY_EDEFAULT == null ? getDisplay() != null : !DISPLAY_EDEFAULT.equals(getDisplay());
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (display: ");
-		result.append(display);
-		result.append(')');
-		return result.toString();
 	}
 
 } //DisplayTermImpl

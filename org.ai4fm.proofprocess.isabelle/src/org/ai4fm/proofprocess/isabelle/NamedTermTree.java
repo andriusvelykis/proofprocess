@@ -8,9 +8,8 @@ package org.ai4fm.proofprocess.isabelle;
 
 import org.ai4fm.proofprocess.Term;
 
+import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,9 +27,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getNamedTermTree()
  * @model
+ * @extends CDOObject
  * @generated
  */
-public interface NamedTermTree extends EObject {
+public interface NamedTermTree extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
