@@ -9,6 +9,7 @@ import org.ai4fm.proofprocess.log.ProofLog;
 import org.ai4fm.proofprocess.log.ProofProcessLogFactory;
 import org.ai4fm.proofprocess.project.Project;
 import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
+import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;

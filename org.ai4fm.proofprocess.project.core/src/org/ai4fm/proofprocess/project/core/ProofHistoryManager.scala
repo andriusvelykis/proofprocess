@@ -11,6 +11,9 @@ import org.ai4fm.filehistory.core.FileHistoryUtil
 import org.ai4fm.filehistory.core.IFileHistoryManager
 import org.ai4fm.filehistory.core.XmlFileHistoryManager
 import org.ai4fm.proofprocess.cdo.PProcessCDOPlugin
+import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.error
+import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.log
+import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.plugin
 import org.eclipse.core.filesystem.URIUtil
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IProject
@@ -29,10 +32,6 @@ import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.common.command.BasicCommandStack
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
-
-import ProjectPProcessCorePlugin.error
-import ProjectPProcessCorePlugin.log
-import ProjectPProcessCorePlugin.plugin
 
 /**
   * @author Andrius Velykis

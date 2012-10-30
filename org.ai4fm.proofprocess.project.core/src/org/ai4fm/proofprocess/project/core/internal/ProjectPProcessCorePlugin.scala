@@ -1,4 +1,4 @@
-package org.ai4fm.proofprocess.project.core
+package org.ai4fm.proofprocess.project.core.internal
 
 import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.Plugin
