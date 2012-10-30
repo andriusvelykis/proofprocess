@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import org.ai4fm.filehistory.FileHistoryFactory;
 import org.ai4fm.filehistory.FileHistoryProject;
-import org.ai4fm.filehistory.FileVersion;
 import org.ai4fm.filehistory.core.internal.FileHistoryCorePlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,7 +23,12 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import scala.Option;
 
 
-public class FileHistoryManager {
+/**
+ * @author Andrius Velykis
+ * @deprecated old-style serialization into XML file: now only a loader is left to migrate to CDO
+ */
+@Deprecated
+public class XmlFileHistoryManager {
 
 	private static final String FILE_HISTORY_EXT = "filehistory";
 	
@@ -43,51 +47,6 @@ public class FileHistoryManager {
 		}
 	};
 	
-	private FileHistoryProject historyProject;
-	
-	private final String historyProjectPath;
-	
-	private final org.ai4fm.filehistory.core.internal.FileHistoryManager historyManager;
-	
-	public FileHistoryManager(String historyFolderPath) {
-		this(historyFolderPath, null);
-	}
-	
-	public FileHistoryManager(String historyFolderPath, String explicitProjectName) {
-		super();
-		
-		String projectFileName = explicitProjectName != null ? explicitProjectName : "project";
-		historyProjectPath = new File(historyFolderPath, projectFileName + "." + FILE_HISTORY_EXT).getPath();
-		
-		String versionsFolderName = (explicitProjectName != null ? explicitProjectName + "-" : "") + "files";
-		
-		this.historyManager = new org.ai4fm.filehistory.core.internal.FileHistoryManager(
-				new File(historyFolderPath), new File(historyFolderPath, versionsFolderName));
-	}
-	
-	public String getAbsolutePath(FileVersion version) {
-		return historyManager.historyFile(version).getAbsolutePath();
-	}
-	
-	public FileVersion syncFileVersion(String basePath, String path, String text, int syncPoint, 
-			IProgressMonitor monitor)
-			throws CoreException {
-		
-		// retrieve file history records
-		FileHistoryProject historyProject = getHistoryProject(monitor);
-		
-		// TODO syncPoint = -1
-		FileVersion version = historyManager.syncFileVersion(historyProject, basePath, path, 
-				Option.apply(text), Option.apply((Object) syncPoint), monitor);
-		updated();
-		
-		return version;
-	}
-
-	private void updated() {
-		historyProject.eResource().setModified(true);
-	}
-	
 	private static <T> Option<T> none() { 
 		return Option.apply(null);
 	}
@@ -96,37 +55,31 @@ public class FileHistoryManager {
 		return none();
 	}
 	
-	public FileHistoryProject getHistoryProject(IProgressMonitor monitor)
-			throws CoreException {
+	public static FileHistoryProject getHistoryProject(String historyFolderPath,
+			IProgressMonitor monitor) throws CoreException {
+
+		String historyProjectPath = new File(historyFolderPath, "project." + FILE_HISTORY_EXT).getPath();
 		
-		if (historyProject == null) {
-			
-			// load project
-			
-			if (monitor == null) {
-				monitor = new NullProgressMonitor();
-			} else {
-				monitor = new SubProgressMonitor(monitor, 10);
-			}
-			
-			try {
-				
-				Job.getJobManager().beginRule(SYNC_RULE, monitor);
-				
-				monitor.beginTask("Loading file history", IProgressMonitor.UNKNOWN);
-				
-				// check maybe it has already been loaded (double-checked locking)
-				if (historyProject == null) {
-					historyProject = loadProject(historyProjectPath);
-				}
-				
-			} finally {
-				Job.getJobManager().endRule(SYNC_RULE);
-				monitor.done();
-			}
+		// load project
+
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
+		} else {
+			monitor = new SubProgressMonitor(monitor, 10);
 		}
-		
-		return historyProject;
+
+		try {
+
+			Job.getJobManager().beginRule(SYNC_RULE, monitor);
+
+			monitor.beginTask("Loading file history", IProgressMonitor.UNKNOWN);
+
+			return loadProject(historyProjectPath);
+
+		} finally {
+			Job.getJobManager().endRule(SYNC_RULE);
+			monitor.done();
+		}
 	}
 	
 	private static FileHistoryProject loadProject(String projectFilePath) {
