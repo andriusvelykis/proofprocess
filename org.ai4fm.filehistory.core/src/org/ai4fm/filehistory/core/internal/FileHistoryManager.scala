@@ -16,9 +16,9 @@ import org.ai4fm.filehistory.FileEntry
 import org.ai4fm.filehistory.FileHistoryFactory
 import org.ai4fm.filehistory.FileHistoryProject
 import org.ai4fm.filehistory.FileVersion
-import org.ai4fm.filehistory.core.FileHistoryCorePlugin.error
-import org.ai4fm.filehistory.core.FileHistoryCorePlugin.log
 import org.ai4fm.filehistory.core.IFileHistoryManager
+import org.ai4fm.filehistory.core.internal.FileHistoryCorePlugin.error
+import org.ai4fm.filehistory.core.internal.FileHistoryCorePlugin.log
 import org.eclipse.core.runtime.Assert
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.IProgressMonitor

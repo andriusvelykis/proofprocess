@@ -1,4 +1,4 @@
-package org.ai4fm.filehistory.core
+package org.ai4fm.filehistory.core.internal
 
 import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.Plugin

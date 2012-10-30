@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.ai4fm.filehistory.FileHistoryFactory;
 import org.ai4fm.filehistory.FileHistoryProject;
 import org.ai4fm.filehistory.FileVersion;
+import org.ai4fm.filehistory.core.internal.FileHistoryCorePlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
