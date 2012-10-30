@@ -2,15 +2,10 @@ package org.ai4fm.filehistory.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 
-import org.ai4fm.filehistory.FileEntry;
 import org.ai4fm.filehistory.FileHistoryFactory;
 import org.ai4fm.filehistory.FileHistoryProject;
 import org.ai4fm.filehistory.FileVersion;
-import org.apache.commons.io.FileUtils;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -27,14 +22,10 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
 import scala.Option;
 
-import static org.ai4fm.filehistory.core.internal.FileHistoryManager.checksum;
-import static org.ai4fm.filehistory.core.internal.FileHistoryManager.checksumPart;
 
 public class FileHistoryManager {
 
 	private static final String FILE_HISTORY_EXT = "filehistory";
-	
-	private static final String ENCODING = "UTF-8";
 	
 	/**
 	 * Scheduling rule used for loading project resource.
@@ -54,7 +45,8 @@ public class FileHistoryManager {
 	private FileHistoryProject historyProject;
 	
 	private final String historyProjectPath;
-	private final String versionsFolderPath;
+	
+	private final org.ai4fm.filehistory.core.internal.FileHistoryManager historyManager;
 	
 	public FileHistoryManager(String historyFolderPath) {
 		this(historyFolderPath, null);
@@ -67,7 +59,9 @@ public class FileHistoryManager {
 		historyProjectPath = new File(historyFolderPath, projectFileName + "." + FILE_HISTORY_EXT).getPath();
 		
 		String versionsFolderName = (explicitProjectName != null ? explicitProjectName + "-" : "") + "files";
-		versionsFolderPath = new File(historyFolderPath, versionsFolderName).getPath();
+		
+		this.historyManager = new org.ai4fm.filehistory.core.internal.FileHistoryManager(
+				new File(historyFolderPath), new File(historyFolderPath, versionsFolderName));
 	}
 	
 	public String getAbsolutePath(FileVersion version) {
@@ -81,203 +75,26 @@ public class FileHistoryManager {
 		// retrieve file history records
 		FileHistoryProject historyProject = getHistoryProject(monitor);
 		
-		// get file record for the given path
-		FileEntry file = getHistoryFileEntry(historyProject, path);
-		
-//		long start = System.currentTimeMillis();
-		
-		if (text == null) {
-			// load text from file
-			File sourceFile = getFile(basePath, path);
-			text = loadFile(sourceFile);
-		}
-		
-		// calculate checksum for new content
-		String newChecksum = checksum(text);
-		
-		// get the latest version
-		List<FileVersion> versions = file.getVersions();
-		if (!versions.isEmpty()) {
-			FileVersion lastVersion = versions.get(versions.size() - 1);
-			
-			// check if new version contents have changed
-			String lastChecksum = lastVersion.getChecksum();
-
-			if (newChecksum.equals(lastChecksum)) {
-				// same file contents - use last version
-				return lastVersion;
-			} else {
-				
-				if (syncPoint < 0) {
-					syncPoint = text.length();
-				}
-				
-				Assert.isLegal(syncPoint <= text.length());
-				
-				// different file contents - need to check the sync points
-				int lastSyncPoint = lastVersion.getSyncPoint();
-				String lastSyncChecksum = lastVersion.getSyncChecksum();
-				
-				boolean lastSyncMatches = checkLastSyncMatches(
-						text, newChecksum, lastSyncPoint, lastSyncChecksum);
-				
-				if (lastSyncMatches) {
-					if (lastSyncPoint >= syncPoint) {
-						/*
-						 * The current sync point is before the last one, but
-						 * everything up to the last one still matches, so keep the
-						 * last version (the change happened after the last sync)
-						 */
-						return lastVersion;
-					} else {
-						/*
-						 * Everything up to the last sync matches, so update the
-						 * version to the new one (since it will encompass the
-						 * old sync and add the new one)
-						 */
-						String relativePath = lastVersion.getPath();
-						File versionFile = new File(new File(historyProjectPath).getParentFile().toURI().resolve(relativePath));
-						
-						saveFileVersion(lastVersion, versionFile, text, newChecksum, syncPoint);
-						return lastVersion;
-					}
-				}
-			}
-		}
-		
-		// need a new version here
-		File targetFile = allocateNewFile();
-		FileVersion version = FileHistoryFactory.eINSTANCE.createFileVersion();
-		
-		saveFileVersion(version, targetFile, text, newChecksum, syncPoint);
-		
-		file.getVersions().add(version);
+		// TODO syncPoint = -1
+		FileVersion version = historyManager.syncFileVersion(historyProject, basePath, path, 
+				Option.apply(text), Option.apply((Object) syncPoint), monitor);
 		updated();
 		
 		return version;
 	}
 
-	private boolean checkLastSyncMatches(String text, String newChecksum, int lastSyncPoint,
-			String lastSyncChecksum) throws CoreException {
-		
-		if (lastSyncPoint <= text.length()) {
-			// check whether everything up to the last sync point matches
-			String newChecksumAtLastSync = checksumPart(text, lastSyncPoint, newChecksum);
-			
-			if (newChecksumAtLastSync.equals(lastSyncChecksum)) {
-				// everything up to the last sync point matches
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	private FileEntry getHistoryFileEntry(FileHistoryProject historyProject, String path) {
-		for (FileEntry file : historyProject.getFiles()) {
-			if (path.equals(file.getPath())) {
-				return file;
-			}
-		}
-		
-		// no file - create new
-		// TODO synchronize for multiple access?
-		FileEntry file = FileHistoryFactory.eINSTANCE.createFileEntry();
-		file.setPath(path);
-		
-		historyProject.getFiles().add(file);
-		updated();
-		
-		return file;
-	}
-	
 	private void updated() {
 		historyProject.eResource().setModified(true);
 	}
 	
-//	private FileVersion createFileCopyVersion(String copyPath, IProgressMonitor monitor)
-//			throws CoreException {
-//
-//		File targetFile = allocateNewFile();
-//		File sourceFile = getFile(copyPath);
-//
-//		File parent = targetFile.getParentFile();
-//		if (!parent.exists() && !parent.mkdirs()) {
-//			throw new CoreException(FileHistoryCorePlugin.error(
-//					"Failed creating folder at path: " + parent.getPath(), null));
-//		}
-//
-//		FileUtils.copyFile(sourceFile, targetFile);
-//
-//		return createFileVersion(targetFile);
-//	}
-	
 	private static <T> Option<T> none() { 
 		return Option.apply(null);
-	}
-	
-	private static Option<Throwable> noneEx() { 
-		return none();
 	}
 	
 	private static Option<String> noneStr() { 
 		return none();
 	}
 	
-	private File getFile(String basePath, String path) throws CoreException {
-		File sourceFile = new File(basePath, path);
-		if (!sourceFile.exists()) {
-			throw new CoreException(FileHistoryCorePlugin.error(noneEx(),
-					Option.apply("Cannot locate file to copy at path: " + path)));
-		}
-		
-		return sourceFile;
-	}
-	
-	private File allocateNewFile() {
-		File file = null;
-		do {
-			// generate new file ID that does not exist
-			String newFileId = UUID.randomUUID().toString();
-			file = new File(versionsFolderPath, newFileId);
-		} while (file.exists());
-		
-		return file;
-	}
-	
-	private FileVersion saveFileVersion(FileVersion version, File targetFile, String text,
-			String checksum, int syncPoint) throws CoreException {
-		
-		saveFile(targetFile, text);
-		
-		String relativePath = new File(historyProjectPath).getParentFile().toURI().relativize(targetFile.toURI()).getPath();
-		
-		version.setPath(relativePath);
-		version.setTimestamp(System.currentTimeMillis());
-		
-		version.setChecksum(checksum);
-		version.setSyncPoint(syncPoint);
-		version.setSyncChecksum(checksumPart(text, syncPoint, checksum));
-		
-		return version;
-	}
-	
-	private void saveFile(File targetFile, String text) throws CoreException {
-		try {
-			FileUtils.writeStringToFile(targetFile, text, ENCODING);
-		} catch (IOException e) {
-			throw new CoreException(FileHistoryCorePlugin.error(Option.<Throwable>apply(e), noneStr()));
-		}
-	}
-	
-	private String loadFile(File file) throws CoreException {
-		try {
-			return FileUtils.readFileToString(file, ENCODING);
-		} catch (IOException e) {
-			throw new CoreException(FileHistoryCorePlugin.error(Option.<Throwable>apply(e), noneStr()));
-		}
-	}
-
 	public FileHistoryProject getHistoryProject(IProgressMonitor monitor)
 			throws CoreException {
 		
