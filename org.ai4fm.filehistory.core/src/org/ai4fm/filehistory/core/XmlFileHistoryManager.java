@@ -3,7 +3,6 @@ package org.ai4fm.filehistory.core;
 import java.io.File;
 import java.io.IOException;
 
-import org.ai4fm.filehistory.FileHistoryFactory;
 import org.ai4fm.filehistory.FileHistoryProject;
 import org.ai4fm.filehistory.core.internal.FileHistoryCorePlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -109,12 +108,7 @@ public class XmlFileHistoryManager {
 			historyProject = (FileHistoryProject) emfResource.getContents().get(0);
 		}
 		
-		if (historyProject == null) {
-			// unable to load - init a new model file
-			historyProject = FileHistoryFactory.eINSTANCE.createFileHistoryProject();
-			emfResource.getContents().add(historyProject);
-		}
-		
+		// if unable to load, return null
 		return historyProject;
 	}
 	
