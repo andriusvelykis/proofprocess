@@ -1,16 +1,19 @@
 package org.ai4fm.proofprocess.isabelle.core.analysis
 
-import isabelle.Command
-import isabelle.Command.State
-import java.io.IOException
 import java.util.Date
+
+import scala.Option.option2Iterable
+
 import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin._
 import org.ai4fm.proofprocess.log.ProofLog
 import org.ai4fm.proofprocess.log.ProofProcessLogFactory
 import org.ai4fm.proofprocess.log.ProofProcessLogPackage
 import org.ai4fm.proofprocess.project.core.ProofManager
 import org.ai4fm.proofprocess.project.core.util.EmfUtil
+import org.eclipse.core.runtime.NullProgressMonitor
+
+import isabelle.Command
+import isabelle.Command.State
 
 /** Logs the proof activities (e.g. proof events from Isabelle, user actions in the proof
   * assistant, interactions with the proof process). The log is used to keep the time-based
@@ -38,11 +41,7 @@ object ProofActivityLogger {
 
     if (!cmdEntries.isEmpty) {
       // save the logged info
-      try {
-        proofLog.eResource().save(ProofManager.SAVE_OPTIONS);
-      } catch {
-        case e: IOException => log(error(Some(e)));
-      }
+      ProofManager.commitTransaction(proofLog, new NullProgressMonitor)
     }
   }
 

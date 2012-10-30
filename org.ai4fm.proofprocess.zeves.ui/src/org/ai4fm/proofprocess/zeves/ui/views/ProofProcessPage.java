@@ -37,6 +37,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -191,7 +192,7 @@ public class ProofProcessPage extends Page {
 			proofStore = storeProvider.store();
 			
 			// log is only used to update the last activity, not displayed in the view at the moment
-			ProofLog proofLog = ProofManager.getProofLog(projectResource, null);
+			ProofLog proofLog = ProofManager.proofLog(projectResource, new NullProgressMonitor());
 			
 			IEMFListProperty projectActivitiesProp = EMFProperties.list(
 					ProofProcessLogPackage.eINSTANCE.getProofLog_Activities());

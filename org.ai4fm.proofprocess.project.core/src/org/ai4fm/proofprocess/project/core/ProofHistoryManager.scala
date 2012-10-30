@@ -63,7 +63,7 @@ object ProofHistoryManager {
           monitor.beginTask("Initialising manager", IProgressMonitor.UNKNOWN)
 
           // TODO what if the project gets moved?
-          val proofProcessRoot = projectResource.getLocation.append(ProofManager.PROOF_FOLDER)
+          val proofProcessRoot = projectResource.getLocation.append(ProofManager.proofFolder)
           val historyDir = proofProcessRoot.append(historyFileDir)
 
           val historyManager = FileHistoryUtil.historyManager(proofProcessRoot.toFile, historyDir.toFile)
@@ -212,7 +212,7 @@ object ProofHistoryManager {
   private def migrateXmlFileHistory(projectResource: IProject,
       monitor: IProgressMonitor): Option[FileHistoryProject] = {
     
-    val historyPath = projectResource.getLocation.append(ProofManager.PROOF_FOLDER).toOSString
+    val historyPath = projectResource.getLocation.append(ProofManager.proofFolder).toOSString
     Option(XmlFileHistoryManager.getHistoryProject(historyPath, monitor))
   }
   
