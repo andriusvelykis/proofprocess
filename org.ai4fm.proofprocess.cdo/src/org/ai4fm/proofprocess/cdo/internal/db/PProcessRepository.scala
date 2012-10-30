@@ -68,14 +68,15 @@ class PProcessRepository(val name: String) {
     (acceptor, connector, repository, session)
   }
 
-  lazy val transaction = session.openTransaction
-  lazy val resource = transaction.getOrCreateResource("/proofprocess")
+//  lazy val transaction = session.openTransaction
+//  lazy val resource = transaction.getOrCreateResource("/proofprocess")
 
   /** Deactivates all resources opened for the server and client. */
   def deactivate() {
 
-    LifecycleUtil.deactivate(resource)
-    LifecycleUtil.deactivate(transaction)
+    // FIXME deactivate transactions when they are created?
+//    LifecycleUtil.deactivate(resource)
+//    LifecycleUtil.deactivate(transaction)
     LifecycleUtil.deactivate(session)
     LifecycleUtil.deactivate(acceptor)
     LifecycleUtil.deactivate(connector)
