@@ -37,6 +37,7 @@ public interface MarkupTerm extends DisplayTerm {
 	 * @see #setTerm(Tree)
 	 * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getMarkupTerm_Term()
 	 * @model dataType="org.ai4fm.proofprocess.isabelle.IsabelleXML" required="true"
+	 *        annotation="http://www.eclipse.org/CDO/DBStore columnType='CLOB'"
 	 * @generated
 	 */
 	Tree getTerm();

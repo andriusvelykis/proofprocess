@@ -37,6 +37,7 @@ public interface CztTerm extends DisplayTerm {
 	 * @see #setTerm(Term)
 	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getCztTerm_Term()
 	 * @model dataType="org.ai4fm.proofprocess.zeves.ZmlTerm" required="true"
+	 *        annotation="http://www.eclipse.org/CDO/DBStore columnType='CLOB'"
 	 * @generated
 	 */
 	Term getTerm();

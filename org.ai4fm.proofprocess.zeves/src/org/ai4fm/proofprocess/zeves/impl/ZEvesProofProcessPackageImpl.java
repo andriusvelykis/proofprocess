@@ -326,6 +326,26 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 
 		// Create resource
 		createResource(eNS_URI);
+
+		// Create annotations
+		// http://www.eclipse.org/CDO/DBStore
+		createDBStoreAnnotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/CDO/DBStore</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createDBStoreAnnotations() {
+		String source = "http://www.eclipse.org/CDO/DBStore";		
+		addAnnotation
+		  (getCztTerm_Term(), 
+		   source, 
+		   new String[] {
+			 "columnType", "CLOB"
+		   });
 	}
 
 } //ZEvesProofProcessPackageImpl
