@@ -1,5 +1,7 @@
 package org.ai4fm.proofprocess.cdo.internal.db
 
+import java.net.URI
+
 import scala.collection.JavaConversions.mapAsJavaMap
 
 import org.eclipse.emf.cdo.net4j.CDONet4jUtil
@@ -22,9 +24,12 @@ import org.h2.jdbcx.JdbcDataSource
   * A single H2 database is used for server. Client and server are communicating using local
   * JVM messages.
   * 
+  * @param databaseLoc  the physical location of the database that stores repository
+  * @param name  name of the repository within the database
+  * 
   * @author Andrius Velykis
   */
-class PProcessRepository(val name: String) {
+class PProcessRepository(val databaseLoc: URI, val name: String) {
 
   // CDO instance variables
   // adapted from Gastro CDO example and http://wiki.eclipse.org/Run_a_CDO_container_inside_eclipse_runtime
@@ -39,7 +44,7 @@ class PProcessRepository(val name: String) {
     val container = IPluginContainer.INSTANCE
 
     val dataSource = new JdbcDataSource
-    dataSource.setURL("jdbc:h2:database/" + dbName)
+    dataSource.setURL("jdbc:h2:" + databaseLoc.toString() + "/" + dbName)
 
     val mappingStrategy = CDODBUtil.createHorizontalMappingStrategy(true)
     val dbAdapter = new H2Adapter

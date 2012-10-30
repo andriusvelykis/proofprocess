@@ -1,5 +1,7 @@
 package org.ai4fm.proofprocess.cdo
 
+import java.net.URI
+
 import scala.actors.Future
 import scala.actors.Futures.future
 import scala.collection.mutable.HashMap
@@ -46,15 +48,16 @@ class PProcessCDOPlugin extends Plugin {
 
   /** A synchronized lazy map for connected CDO repositories */
   private val repositories =
-    new HashMap[String, Future[PProcessRepository]] with SynchronizedMap[String, Future[PProcessRepository]]
+    new HashMap[RepositoryId, Future[PProcessRepository]]
+      with SynchronizedMap[RepositoryId, Future[PProcessRepository]]
   
   /** Retrieves a Proof Process repository with a given name.
     * Initializes a new one if no such repository exists currently.
     */
-  private def repository(repositoryName: String) = {
+  private def repository(repoId: RepositoryId) = {
     // get the repository future from the map, or create new one if not exists
-    val repoFuture = repositories.getOrElseUpdate(repositoryName, future {
-      new PProcessRepository(repositoryName)
+    val repoFuture = repositories.getOrElseUpdate(repoId, future {
+      new PProcessRepository(repoId.databaseLoc, repoId.name)
     })
     
     // block until the future is resolved (repository is connected initially)
@@ -65,8 +68,10 @@ class PProcessCDOPlugin extends Plugin {
   /** Retrieves an open session for the given repository.
     * Initialises a new repository if one does not exist.
     */
-  def session(repositoryName: String) = repository(repositoryName).session
+  def session(databaseLoc: URI, repositoryName: String) =
+    repository(RepositoryId(databaseLoc, repositoryName)).session
   
+  private case class RepositoryId(val databaseLoc: URI, val name: String)
   
   @throws(classOf[Exception])
   override def stop(context: BundleContext) {
