@@ -2,9 +2,6 @@ package org.ai4fm.filehistory.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +26,9 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
 import scala.Option;
+
+import static org.ai4fm.filehistory.core.internal.FileHistoryManager.checksum;
+import static org.ai4fm.filehistory.core.internal.FileHistoryManager.checksumPart;
 
 public class FileHistoryManager {
 
@@ -93,7 +93,7 @@ public class FileHistoryManager {
 		}
 		
 		// calculate checksum for new content
-		String newChecksum = calculateChecksum(text);
+		String newChecksum = checksum(text);
 		
 		// get the latest version
 		List<FileVersion> versions = file.getVersions();
@@ -162,7 +162,7 @@ public class FileHistoryManager {
 		
 		if (lastSyncPoint <= text.length()) {
 			// check whether everything up to the last sync point matches
-			String newChecksumAtLastSync = calculateChecksum(text, lastSyncPoint, newChecksum);
+			String newChecksumAtLastSync = checksumPart(text, lastSyncPoint, newChecksum);
 			
 			if (newChecksumAtLastSync.equals(lastSyncChecksum)) {
 				// everything up to the last sync point matches
@@ -257,7 +257,7 @@ public class FileHistoryManager {
 		
 		version.setChecksum(checksum);
 		version.setSyncPoint(syncPoint);
-		version.setSyncChecksum(calculateChecksum(text, syncPoint, checksum));
+		version.setSyncChecksum(checksumPart(text, syncPoint, checksum));
 		
 		return version;
 	}
@@ -278,41 +278,6 @@ public class FileHistoryManager {
 		}
 	}
 
-	private String calculateChecksum(String text, int textPoint, String fullChecksum) throws CoreException {
-		
-		if (textPoint == text.length()) {
-			return fullChecksum;
-		}
-		
-		return calculateChecksum(text, textPoint);
-	}
-	
-	private String calculateChecksum(String text, int textPoint) throws CoreException {
-		
-		Assert.isLegal(textPoint <= text.length());
-		
-		return calculateChecksum(text.substring(0, textPoint));
-	}	
-	
-	private String calculateChecksum(String text) throws CoreException {
-		try {
-			return hash(text, "SHA-256");
-		} catch (NoSuchAlgorithmException e) {
-			throw new CoreException(FileHistoryCorePlugin.error(Option.<Throwable>apply(e), noneStr()));
-		}
-	}
-	
-	public static String hash(String text, String algorithm)
-	        throws NoSuchAlgorithmException {
-	    byte[] hash = MessageDigest.getInstance(algorithm).digest(text.getBytes());
-	    BigInteger bi = new BigInteger(1, hash);
-	    String result = bi.toString(16);
-	    if (result.length() % 2 != 0) {
-	        return "0" + result;
-	    }
-	    return result;
-	}
-	
 	public FileHistoryProject getHistoryProject(IProgressMonitor monitor)
 			throws CoreException {
 		
