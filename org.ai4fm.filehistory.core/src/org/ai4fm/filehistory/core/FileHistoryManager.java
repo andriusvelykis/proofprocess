@@ -28,6 +28,8 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
+import scala.Option;
+
 public class FileHistoryManager {
 
 	private static final String FILE_HISTORY_EXT = "filehistory";
@@ -210,11 +212,23 @@ public class FileHistoryManager {
 //		return createFileVersion(targetFile);
 //	}
 	
+	private static <T> Option<T> none() { 
+		return Option.apply(null);
+	}
+	
+	private static Option<Throwable> noneEx() { 
+		return none();
+	}
+	
+	private static Option<String> noneStr() { 
+		return none();
+	}
+	
 	private File getFile(String basePath, String path) throws CoreException {
 		File sourceFile = new File(basePath, path);
 		if (!sourceFile.exists()) {
-			throw new CoreException(FileHistoryCorePlugin.error(
-					"Cannot locate file to copy at path: " + path, null));
+			throw new CoreException(FileHistoryCorePlugin.error(noneEx(),
+					Option.apply("Cannot locate file to copy at path: " + path)));
 		}
 		
 		return sourceFile;
@@ -252,7 +266,7 @@ public class FileHistoryManager {
 		try {
 			FileUtils.writeStringToFile(targetFile, text, ENCODING);
 		} catch (IOException e) {
-			throw new CoreException(FileHistoryCorePlugin.error(e));
+			throw new CoreException(FileHistoryCorePlugin.error(Option.<Throwable>apply(e), noneStr()));
 		}
 	}
 	
@@ -260,7 +274,7 @@ public class FileHistoryManager {
 		try {
 			return FileUtils.readFileToString(file, ENCODING);
 		} catch (IOException e) {
-			throw new CoreException(FileHistoryCorePlugin.error(e));
+			throw new CoreException(FileHistoryCorePlugin.error(Option.<Throwable>apply(e), noneStr()));
 		}
 	}
 
@@ -284,7 +298,7 @@ public class FileHistoryManager {
 		try {
 			return hash(text, "SHA-256");
 		} catch (NoSuchAlgorithmException e) {
-			throw new CoreException(FileHistoryCorePlugin.error(e));
+			throw new CoreException(FileHistoryCorePlugin.error(Option.<Throwable>apply(e), noneStr()));
 		}
 	}
 	
@@ -354,7 +368,7 @@ public class FileHistoryManager {
 			try {
 				emfResource.load(null);
 			} catch (IOException e) {
-				FileHistoryCorePlugin.log(e);
+				FileHistoryCorePlugin.log(FileHistoryCorePlugin.error(Option.<Throwable>apply(e), noneStr()));
 			}
 			historyProject = (FileHistoryProject) emfResource.getContents().get(0);
 		}
