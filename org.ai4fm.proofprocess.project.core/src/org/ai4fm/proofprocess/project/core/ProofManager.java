@@ -48,13 +48,13 @@ public class ProofManager {
 	 * Key for the loaded project reference on resource.
 	 */
 	public final static QualifiedName PROP_PROOF_PROJECT = 
-			new QualifiedName(ProjectProofProcessPlugin.PLUGIN_ID, "proofProject"); //$NON-NLS-1$
+			new QualifiedName(ProjectPProcessCorePlugin.plugin().pluginId(), "proofProject"); //$NON-NLS-1$
 	
 	/**
 	 * Key for the loaded proof log reference on resource.
 	 */
 	public final static QualifiedName PROP_PROOF_LOG = 
-			new QualifiedName(ProjectProofProcessPlugin.PLUGIN_ID, "proofLog"); //$NON-NLS-1$
+			new QualifiedName(ProjectPProcessCorePlugin.plugin().pluginId(), "proofLog"); //$NON-NLS-1$
 	
 	public static Project getProofProject(IProject projectResource, IProgressMonitor monitor)
 			throws CoreException {
@@ -146,7 +146,8 @@ public class ProofManager {
 			try {
 				emfResource.load(null);
 			} catch (IOException e) {
-				ProjectProofProcessPlugin.log(e);
+				ProjectPProcessCorePlugin.log(ProjectPProcessCorePlugin.error(
+						scala.Option.<Throwable>apply(e), scala.Option.<String>apply(null)));
 			}
 			
 			@SuppressWarnings("unchecked")

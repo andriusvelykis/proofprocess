@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.ai4fm.filehistory.FileHistoryProject;
 import org.ai4fm.filehistory.FileVersion;
-import org.ai4fm.filehistory.core.FileHistoryCorePlugin;
 import org.ai4fm.filehistory.core.FileHistoryManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -24,7 +23,7 @@ public class ProofHistoryManager {
 	 * Key for the loaded project reference on resource.
 	 */
 	public final static QualifiedName PROP_FILE_HISTORY = 
-			new QualifiedName(ProjectProofProcessPlugin.PLUGIN_ID, "fileHistory"); //$NON-NLS-1$
+			new QualifiedName(ProjectPProcessCorePlugin.plugin().pluginId(), "fileHistory"); //$NON-NLS-1$
 	
 	public static FileVersion syncFileVersion(IProject project, IPath filePath, String text,
 			int syncPoint, IProgressMonitor monitor) throws CoreException {
@@ -61,8 +60,9 @@ public class ProofHistoryManager {
 			try {
 				historyProject.eResource().save(ProofManager.SAVE_OPTIONS);
 			} catch (IOException e) {
-				throw new CoreException(FileHistoryCorePlugin.error(e));
-			}			
+				throw new CoreException(ProjectPProcessCorePlugin.error(
+						scala.Option.<Throwable>apply(e), scala.Option.<String>apply(null)));
+			}
 		}
 		
 		return version;

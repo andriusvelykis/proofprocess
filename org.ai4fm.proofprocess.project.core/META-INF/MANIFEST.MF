@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.ai4fm.proofprocess.project.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ai4fm.proofprocess.project.core.ProjectProofProcessPlugin
+Bundle-Activator: org.ai4fm.proofprocess.project.core.ProjectPProcessCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
