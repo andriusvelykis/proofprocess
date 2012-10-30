@@ -1,12 +1,15 @@
 package org.ai4fm.proofprocess.project.core
 
 import java.io.IOException
+
 import scala.collection.JavaConversions.asScalaBuffer
+
 import org.ai4fm.filehistory.FileHistoryFactory
 import org.ai4fm.filehistory.FileHistoryProject
 import org.ai4fm.filehistory.FileVersion
 import org.ai4fm.filehistory.core.FileHistoryUtil
 import org.ai4fm.filehistory.core.IFileHistoryManager
+import org.ai4fm.filehistory.core.XmlFileHistoryManager
 import org.ai4fm.proofprocess.cdo.PProcessCDOPlugin
 import org.eclipse.core.filesystem.URIUtil
 import org.eclipse.core.resources.IFile
@@ -20,12 +23,16 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.QualifiedName
 import org.eclipse.core.runtime.SubProgressMonitor
 import org.eclipse.core.runtime.jobs.Job
+import org.eclipse.emf.cdo.CDOObject
+import org.eclipse.emf.cdo.transaction.CDOTransaction
 import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.common.command.BasicCommandStack
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
-import ProjectPProcessCorePlugin._
-import org.ai4fm.filehistory.core.XmlFileHistoryManager
+
+import ProjectPProcessCorePlugin.error
+import ProjectPProcessCorePlugin.log
+import ProjectPProcessCorePlugin.plugin
 
 /**
   * @author Andrius Velykis
@@ -134,11 +141,7 @@ object ProofHistoryManager {
         
         resourceContents.clear
         resourceContents.add(newProject)
-        try {
-          transaction.commit(monitor)
-        } catch {
-          case e: CommitException => log(error(Some(e)))
-        }
+        commitTransaction(transaction, monitor)
 
         newProject
       }
@@ -173,7 +176,9 @@ object ProofHistoryManager {
       val file = versionFile(historyMan.manager, projectResource, syncedVersion)
       file.refreshLocal(IResource.DEPTH_ZERO, null)
     }
-    // TODO transaction
+
+    // commit transaction after each sync
+    commitTransaction(syncedVersion, monitor)
 
     syncedVersion
   }
@@ -185,6 +190,21 @@ object ProofHistoryManager {
     val relativePath = versionPath.makeRelativeTo(projectResource.getLocation)
 
     projectResource.getFile(relativePath)
+  }
+  
+  private def commitTransaction(cdoObj: CDOObject, monitor: IProgressMonitor) {
+    cdoObj.cdoView match {
+      case tr: CDOTransaction => commitTransaction(tr, monitor)
+      case _ => log(error(msg = Some("Cannot commit transaction - object does not belong to one: " + cdoObj)))
+    }
+  }
+
+  private def commitTransaction(transaction: CDOTransaction, monitor: IProgressMonitor) {
+    try {
+      transaction.commit(monitor)
+    } catch {
+      case e: CommitException => log(error(Some(e)))
+    }
   }
 
   private case class ProjectHistoryManager(val manager: IFileHistoryManager, val history: FileHistoryProject)
