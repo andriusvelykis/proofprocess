@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor
   */
 class FileHistoryManager(val historyRoot: File, val historyFileDir: File) {
 
-  def checksumPart(text: String, textPoint: Int, fullChecksum: /*=> */ String): String =
+  private def checksumPart(text: String, textPoint: Int, fullChecksum: /*=> */ String): String =
     if (textPoint == text.length) {
       fullChecksum
     } else {
@@ -39,7 +39,7 @@ class FileHistoryManager(val historyRoot: File, val historyFileDir: File) {
     checksum(text.substring(0, textPoint))
   }
 
-  def checksum(text: String): String = {
+  private def checksum(text: String): String = {
     try {
       hash(text, "SHA-256")
     } catch {
@@ -62,7 +62,7 @@ class FileHistoryManager(val historyRoot: File, val historyFileDir: File) {
   }
 
   /** Checks if the text portion up to the last sync point is unchanged (by checksum) */
-  def lastSyncUnchanged(text: String, newChecksum: /*=> */ String,
+  private def lastSyncUnchanged(text: String, newChecksum: /*=> */ String,
     lastSyncPoint: Int, lastSyncChecksum: String): Boolean =
     if (lastSyncPoint <= text.length) {
       // if text is longer than the last sync, take the part up the the sync point
@@ -194,7 +194,7 @@ class FileHistoryManager(val historyRoot: File, val historyFileDir: File) {
     version
   }
 
-  private def historyFile(version: FileVersion): File = {
+  def historyFile(version: FileVersion): File = {
     val relativePath = version.getPath
     new File(historyRoot.toURI().resolve(relativePath))
   }

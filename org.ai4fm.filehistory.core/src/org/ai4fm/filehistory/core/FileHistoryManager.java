@@ -65,7 +65,7 @@ public class FileHistoryManager {
 	}
 	
 	public String getAbsolutePath(FileVersion version) {
-		return new File(new File(historyProjectPath).getParent(), version.getPath()).getPath();
+		return historyManager.historyFile(version).getAbsolutePath();
 	}
 	
 	public FileVersion syncFileVersion(String basePath, String path, String text, int syncPoint, 
