@@ -12,9 +12,14 @@ import org.eclipse.core.runtime.IProgressMonitor
   */
 trait IFileHistoryManager {
 
+  /**
+   * @return  (syncedFileVersion, changed) a tuple containing the synced file version (either an
+   *          existing (if file not changed) or a new one. `changed` indicates whether the file
+   *          version was changed/created.
+   */
   @throws(classOf[CoreException])
   def syncFileVersion(historyProject: FileHistoryProject, sourceRootPath: String, sourcePath: String,
-    textOpt: Option[String], syncPointOpt: Option[Int], monitor: IProgressMonitor): FileVersion
+    textOpt: Option[String], syncPointOpt: Option[Int], monitor: IProgressMonitor): (FileVersion, Boolean)
   
   def historyFile(version: FileVersion): File
   

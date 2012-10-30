@@ -78,7 +78,7 @@ class FileHistoryManager(val historyRoot: File, val historyFileDir: File) extend
 
   @throws(classOf[CoreException])
   override def syncFileVersion(historyProject: FileHistoryProject, sourceRootPath: String, sourcePath: String,
-    textOpt: Option[String], syncPointOpt: Option[Int], monitor: IProgressMonitor): FileVersion = {
+    textOpt: Option[String], syncPointOpt: Option[Int], monitor: IProgressMonitor): (FileVersion, Boolean) = {
 
     // get the file record for the given path
     val fileEntry = historyEntry(historyProject, sourcePath)
@@ -112,7 +112,7 @@ class FileHistoryManager(val historyRoot: File, val historyFileDir: File) extend
       val targetFile = allocateNewFile()
       saveFileVersion(version, targetFile, text, fileChecksum, syncPoint)
 
-      version
+      (version, true)
     }
   }
 
@@ -135,14 +135,14 @@ class FileHistoryManager(val historyRoot: File, val historyFileDir: File) extend
   }
 
   private def reuseLastVersion(text: String, syncPoint: Int, fileChecksum: String,
-    lastVersion: FileVersion): Option[FileVersion] = {
+    lastVersion: FileVersion): Option[(FileVersion, Boolean)] = {
 
     if (fileChecksum == lastVersion.getChecksum) {
       // assume that the file contents are the same, since we are using SHA-256 hashing,
       // which has very low collision probability
 
       // use the last version as currently synced version
-      Some(lastVersion)
+      Some(lastVersion, false)
     } else {
 
       // different full file contents:
@@ -159,7 +159,7 @@ class FileHistoryManager(val historyRoot: File, val historyFileDir: File) extend
           // The current sync point is before the last one, but everything up to the
           // last sync point is unchanged, so keep the last version (the change happened
           // after the last sync)
-          Some(lastVersion)
+          Some(lastVersion, false)
         } else {
 
           // Everything up to the last sync matches, so replace the last version with the
@@ -167,7 +167,7 @@ class FileHistoryManager(val historyRoot: File, val historyFileDir: File) extend
 
           val versionFile = historyFile(lastVersion)
           saveFileVersion(lastVersion, versionFile, text, fileChecksum, syncPoint)
-          Some(lastVersion)
+          Some(lastVersion, true)
         }
       } else {
         // changed before the last sync - cannot reuse the last version,
