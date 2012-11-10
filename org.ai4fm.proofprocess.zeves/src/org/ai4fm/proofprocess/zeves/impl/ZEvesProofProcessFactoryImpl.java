@@ -7,6 +7,8 @@
 package org.ai4fm.proofprocess.zeves.impl;
 
 import net.sourceforge.czt.base.ast.Term;
+
+import org.ai4fm.proofprocess.parse.StringCompression;
 import org.ai4fm.proofprocess.zeves.*;
 import org.ai4fm.proofprocess.zeves.parse.ZmlTermParser;
 
@@ -140,7 +142,17 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * @generated NOT
 	 */
 	public Term createZmlTermFromString(EDataType eDataType, String initialValue) {
-		return ZmlTermParser.parseZml(initialValue);
+		
+		// check if uncompressed ZML value (backwards compatibility) or a compressed one
+		String zml;
+		if (initialValue.startsWith("<?xml")) {
+			zml = initialValue;
+		} else {
+			// compressed
+			zml = StringCompression.decompress(initialValue);
+		}
+		
+		return ZmlTermParser.parseZml(zml);
 	}
 
 	/**
@@ -149,7 +161,10 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 * @generated NOT
 	 */
 	public String convertZmlTermToString(EDataType eDataType, Object instanceValue) {
-		return ZmlTermParser.convertToZml((Term) instanceValue);
+		String zml = ZmlTermParser.convertToZml((Term) instanceValue);
+		// compress the ZML string, since it tends to occupy the majority of storage space
+		// the compression can be up to 95% efficient on large Strings
+		return StringCompression.compress(zml);
 	}
 
 	/**

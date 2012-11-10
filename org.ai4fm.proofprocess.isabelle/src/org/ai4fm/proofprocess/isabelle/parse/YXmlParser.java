@@ -47,4 +47,8 @@ public class YXmlParser {
 		return yxml.replace(X, YXML.X()).replace(Y, YXML.Y());
 	}
 	
+	public static boolean isYXml(String encoded) {
+		return encoded.charAt(0) == X || encoded.charAt(0) == Y;
+	}
+	
 }

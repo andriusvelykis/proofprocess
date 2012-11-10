@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.ai4fm.proofprocess,
  org.ai4fm.proofprocess.impl,
+ org.ai4fm.proofprocess.parse,
  org.ai4fm.proofprocess.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,

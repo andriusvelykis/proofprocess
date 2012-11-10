@@ -12,6 +12,7 @@ import isabelle.XML.Tree;
 import org.ai4fm.proofprocess.isabelle.*;
 import org.ai4fm.proofprocess.isabelle.parse.IsabelleTermParser;
 import org.ai4fm.proofprocess.isabelle.parse.YXmlParser;
+import org.ai4fm.proofprocess.parse.StringCompression;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -219,7 +220,25 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * @generated NOT
 	 */
 	public Tree createIsabelleXMLFromString(EDataType eDataType, String initialValue) {
-		return YXmlParser.parseYXml(initialValue);
+		String yxml = decompressYXml(initialValue);
+		return YXmlParser.parseYXml(yxml);
+	}
+	
+	/**
+	 * Decompresses YXML String. Does nothing if already uncompressed.
+	 *  
+	 * @param initialValue
+	 * @return
+	 * @generated NOT
+	 */
+	private String decompressYXml(String initialValue) {
+		if (YXmlParser.isYXml(initialValue)) {
+			// already uncompressed
+			return initialValue;
+		} else {
+			// compressed
+			return StringCompression.decompress(initialValue);
+		}
 	}
 
 	/**
@@ -228,7 +247,10 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * @generated NOT
 	 */
 	public String convertIsabelleXMLToString(EDataType eDataType, Object instanceValue) {
-		return YXmlParser.convertToYXml((Tree) instanceValue);
+		String yxml = YXmlParser.convertToYXml((Tree) instanceValue);
+		// compress the YXML string, since it tends to occupy the majority of storage space
+		// the compression can be up to 95% efficient on large Strings
+		return StringCompression.compress(yxml);
 	}
 
 	/**
@@ -237,7 +259,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * @generated NOT
 	 */
 	public Term createIsabelleTermFromString(EDataType eDataType, String initialValue) {
-		return IsabelleTermParser.parseYXml(initialValue);
+		String yxml = decompressYXml(initialValue);
+		return IsabelleTermParser.parseYXml(yxml);
 	}
 
 	/**
@@ -246,7 +269,10 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 * @generated NOT
 	 */
 	public String convertIsabelleTermToString(EDataType eDataType, Object instanceValue) {
-		return IsabelleTermParser.convertToYXml((Term) instanceValue);
+		String yxml = IsabelleTermParser.convertToYXml((Term) instanceValue);
+		// compress the YXML string, since it tends to occupy the majority of storage space
+		// the compression can be up to 95% efficient on large Strings
+		return StringCompression.compress(yxml);
 	}
 
 	/**
