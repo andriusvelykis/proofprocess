@@ -10,6 +10,11 @@
   <name>ProofProcess Parent</name>
 
   <modules>
+    <!-- Cannot build POM-first libraries in the same reactor build with Tycho.
+         This requires a 2-step build of `mvn clean install`, first inside `lib`,
+         and then here at the root.
+    <module>lib</module>
+    -->
     <module>org.ai4fm.filehistory</module>
     <module>org.ai4fm.filehistory.core</module>
     <module>org.ai4fm.proofprocess.cdo</module>
@@ -48,7 +53,18 @@
       <version>${scala.version}</version>
     </dependency>
   </dependencies>
-  
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <!-- Scala Graphs: https://www.assembla.com/spaces/scala-graph/wiki -->
+        <groupId>com.assembla.scala-incubator</groupId>
+        <artifactId>graph-core_2.9.2.osgi</artifactId>
+        <version>1.5.1</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <repositories>
     <repository>
        <id>eclipse-indigo</id>
@@ -104,6 +120,7 @@
         <artifactId>target-platform-configuration</artifactId>
         <version>${tycho.version}</version>
         <configuration>
+          <pomDependencies>consider</pomDependencies>
           <environments>
             <environment>
               <os>linux</os>
