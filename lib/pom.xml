@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+<!--
+  <parent>
+    <groupId>org.ai4fm.proofprocess</groupId>
+    <artifactId>org.ai4fm.proofprocess-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+-->
+  <groupId>org.ai4fm.proofprocess</groupId>
+  <artifactId>org.ai4fm.proofprocess.lib-parent</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>ProofProcess 3rd-party Libraries Parent</name>
+
+  <properties>
+    <!-- Use build timestamp as OSGI qualifier (e.g. 1.6.0.201209062207) -->
+    <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+    <osgi-version-qualifier>${maven.build.timestamp}</osgi-version-qualifier>
+  </properties>
+
+  <modules>
+    <module>graph-core</module>
+  </modules>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+
+        <!-- Generate OSGI bundles for 3rd party libraries. This will add additional information to
+		     their manifest files, which indicate OSGI properties, e.g. name/version/packages/etc.
+			 This way the Maven libraries can be used in OSGI environment, e.g. Eclipse. -->
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>2.3.7</version>
+          <extensions>true</extensions>
+          <configuration>
+            <instructions>
+              <Embed-Transitive>true</Embed-Transitive>
+              <_failok>true</_failok>
+              <_nouses>true</_nouses>
+              <_nodefaultversion>true</_nodefaultversion>
+              <_snapshot>${osgi-version-qualifier}</_snapshot>
+
+              <Bundle-SymbolicName>${maven-symbolicname};singleton:=false</Bundle-SymbolicName>
+              <Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
+              <Bundle-ClassPath>{maven-dependencies}</Bundle-ClassPath>
+              <!-- Export packages with version, otherwise cannot use versioned package imports.
+                   See also http://fusesource.com/docs/esb/4.4/esb_deploy_osgi/BestPractices-BuildBundles.html -->
+              <Export-Package>*;version=${project.version};-noimport:=true</Export-Package>
+            </instructions>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <!-- m2e configuration for maven-bundle-plugin.
+         We use static .qualifier instead of time-generated one in m2e.
+         Also need to use special position for manifest in PDE (ignored in .gitignore)  -->
+    <profile>
+      <id>m2e</id>
+      <activation>
+        <property>
+          <name>m2e.version</name>
+        </property>
+      </activation>
+      <properties>
+        <osgi-version-qualifier>qualifier</osgi-version-qualifier>
+      </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>maven-bundle-plugin</artifactId>
+              <configuration>
+                  <!-- PDE does not honour custom manifest location -->
+                <manifestLocation>META-INF</manifestLocation>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
