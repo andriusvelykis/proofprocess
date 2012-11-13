@@ -1,4 +1,4 @@
-package org.ai4fm.proofprocess.zeves.core
+package org.ai4fm.proofprocess.zeves.core.internal
 
 //import org.ai4fm.proofprocess.zeves.core.parse.SnapshotTracker
 import org.eclipse.core.runtime.IStatus
