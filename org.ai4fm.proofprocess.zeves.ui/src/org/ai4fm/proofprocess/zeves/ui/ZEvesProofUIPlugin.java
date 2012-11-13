@@ -37,6 +37,7 @@ public class ZEvesProofUIPlugin extends AbstractUIPlugin implements IStartup {
 		plugin = this;
 		
 		snapshotTracker = new SnapshotTracker(ZEvesUIPlugin.getZEves().getSnapshot());
+		snapshotTracker.init();
 	}
 
 	/*

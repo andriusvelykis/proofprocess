@@ -77,10 +77,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper;
 import org.eclipse.jface.text.Position;
+
+import static org.ai4fm.proofprocess.core.prefs.PProcessCorePreferences.*;
 
 public class SnapshotTracker {
 
@@ -95,6 +99,28 @@ public class SnapshotTracker {
 	 */
 	private final Queue<SnapshotAnalysisEvent> pendingEvents = 
 			new ConcurrentLinkedQueue<SnapshotAnalysisEvent>();
+	
+	// check core preferences whether proof process tracking is enabled
+	private static boolean trackingPref() {
+		return getBoolean(TRACK_PROOF_PROCESS(), false);
+	}
+	
+	private boolean tracking = trackingPref();
+	
+	// listener for "tracking" preference change
+	private final IPreferenceChangeListener prefsListener = new IPreferenceChangeListener() {
+		public void preferenceChange(PreferenceChangeEvent event) {
+			
+			if (TRACK_PROOF_PROCESS().equals(event.getKey())) {
+				tracking = trackingPref();
+
+				if (!tracking) {
+					// no longer tracking, so discard all pending events
+					pendingEvents.clear();
+				}
+			}
+		}
+	};
 	
 	public SnapshotTracker(final ZEvesSnapshot snapshot) {
 		super();
@@ -130,29 +156,36 @@ public class SnapshotTracker {
 		}
 	}
 	
+	public void init() {
+		preferences().addPreferenceChangeListener(prefsListener);
+	}
+	
 	public void dispose() {
+		preferences().removePreferenceChangeListener(prefsListener);
 		this.snapshot.removeSnapshotChangedListener(snapshotListener);
 	}
 	
 	private void addPendingAnalysis(SectionInfo sectInfo, SnapshotChangedEvent snapshotChange) {
 		
-		Assert.isNotNull(snapshotChange);
-		
-		if (snapshotChange.getType() == SnapshotChangeType.ADD) {
+		if (tracking) {
+			Assert.isNotNull(snapshotChange);
 			
-			for (ISnapshotEntry entry : snapshotChange.getEntries()) {
-				pendingEvents.add(new SnapshotAnalysisEvent(
-						snapshotChange, sectInfo, entry, getProofEntries(entry)));
+			if (snapshotChange.getType() == SnapshotChangeType.ADD) {
+				
+				for (ISnapshotEntry entry : snapshotChange.getEntries()) {
+					pendingEvents.add(new SnapshotAnalysisEvent(
+							snapshotChange, sectInfo, entry, getProofEntries(entry)));
+				}
+				
+			} else if (snapshotChange.getType() == SnapshotChangeType.REMOVE) {
+				
+				// for remove, use the last proof left, if any
+				pendingEvents.add(new SnapshotAnalysisEvent(snapshotChange, null, null, getProofEntries(null)));
 			}
 			
-		} else if (snapshotChange.getType() == SnapshotChangeType.REMOVE) {
-			
-			// for remove, use the last proof left, if any
-			pendingEvents.add(new SnapshotAnalysisEvent(snapshotChange, null, null, getProofEntries(null)));
+			// wake up the analysis job
+			analysisJob.schedule();
 		}
-		
-		// wake up the analysis job
-		analysisJob.schedule();
 	}
 	
 	private IStatus analyse(SnapshotAnalysisEvent event, IProgressMonitor monitor) throws CoreException {
