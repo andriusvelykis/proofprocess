@@ -12,6 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.ai4fm.proofprocess.core.analysis,
+ org.ai4fm.proofprocess.core.parse,
  org.ai4fm.proofprocess.core.prefs,
  org.ai4fm.proofprocess.core.store,
  org.ai4fm.proofprocess.core.util

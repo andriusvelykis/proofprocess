@@ -1,12 +1,10 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
-import isabelle.Command
-import isabelle.Document
-import isabelle.Session
-import isabelle.eclipse.core.IsabelleCorePlugin
-import isabelle.eclipse.core.util.LoggingActor
-import isabelle.eclipse.core.util.SessionEvents
 import java.util.concurrent.ConcurrentLinkedQueue
+
+import scala.actors.Actor._
+
+import org.ai4fm.proofprocess.core.parse.TrackingToggle
 import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin._
 import org.ai4fm.proofprocess.isabelle.core.analysis.ProofAnalyzer
 import org.eclipse.core.runtime.CoreException
@@ -16,9 +14,13 @@ import org.eclipse.core.runtime.Status
 import org.eclipse.core.runtime.jobs.IJobChangeEvent
 import org.eclipse.core.runtime.jobs.Job
 import org.eclipse.core.runtime.jobs.JobChangeAdapter
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent
-import scala.actors.Actor._
+
+import isabelle.Command
+import isabelle.Document
+import isabelle.Session
+import isabelle.eclipse.core.IsabelleCorePlugin
+import isabelle.eclipse.core.util.LoggingActor
+import isabelle.eclipse.core.util.SessionEvents
 
 
 /**
@@ -39,17 +41,10 @@ class SessionTracker extends SessionEvents {
 
   // subscribe to commands change session events
   override protected def sessionEvents(session: Session) = List(session.commands_changed)
-  
-  // check core preferences whether proof process tracking is enabled
-  import org.ai4fm.proofprocess.core.prefs.PProcessCorePreferences._
-  private def trackingPref() = getBoolean(TRACK_PROOF_PROCESS, false)
-  private var tracking = trackingPref()
-  
-  // listener for "tracking" preference change
-  private lazy val prefsListener = prefKeyListener(TRACK_PROOF_PROCESS) {
-    tracking = trackingPref()
-    
-    if (!tracking) {
+
+  /** Reacts to preference changes whether ProofProcess tracking is enabled */
+  val tracking = TrackingToggle { isTracking =>
+    if (!isTracking) {
       // no longer tracking, so discard all pending events
       pendingEvents.clear
     }
@@ -57,10 +52,10 @@ class SessionTracker extends SessionEvents {
 
   def init() {
     initSessionEvents()
-    preferences.addPreferenceChangeListener(prefsListener)
+    tracking.init()
   }
   def dispose() {
-    preferences.removePreferenceChangeListener(prefsListener)
+    tracking.dispose()
     disposeSessionEvents()
   }
 
@@ -78,7 +73,7 @@ class SessionTracker extends SessionEvents {
     }
   })
 
-  private def addPendingAnalysis(changed: Session.Commands_Changed) = if (tracking) {
+  private def addPendingAnalysis(changed: Session.Commands_Changed) = if (tracking.isTracking) {
 
     IsabelleCorePlugin.getIsabelle.session foreach{ session =>
       
@@ -114,15 +109,6 @@ class SessionTracker extends SessionEvents {
   private def jobDoneListener(f: => Unit) =
     new JobChangeAdapter {
       override def done(event: IJobChangeEvent) = f
-    }
-
-  private def prefKeyListener(key: String)(f: => Unit) =
-    new IPreferenceChangeListener {
-      def preferenceChange(event: PreferenceChangeEvent) {
-        if (event.getKey == key) {
-          f
-        }
-      }
     }
 
   @throws(classOf[CoreException])
