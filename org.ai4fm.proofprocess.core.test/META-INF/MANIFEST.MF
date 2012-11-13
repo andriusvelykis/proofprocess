@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-Vendor: %providerName
+Bundle-SymbolicName: org.ai4fm.proofprocess.core.test
+Fragment-Host: org.ai4fm.proofprocess.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.ai4fm.proofprocess;bundle-version="1.0.0",
+ org.scala-ide.scala.library;bundle-version="2.9.2",
+ org.junit4;bundle-version="[4.3.0,5.0.0)"
+Bundle-ActivationPolicy: lazy
+Import-Package: scalax.collection;version="1.5.1",
+ scalax.collection.immutable;version="1.5.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

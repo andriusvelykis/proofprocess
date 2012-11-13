@@ -37,6 +37,8 @@
     <module>org.ai4fm.proofprocess.zeves-feature</module>
     <module>org.ai4fm.proofprocess.mlearning.data</module>
     <module>org.ai4fm.proofprocess-repository</module>
+
+    <module>org.ai4fm.proofprocess.core.test</module>
   </modules>
 
   <properties>
