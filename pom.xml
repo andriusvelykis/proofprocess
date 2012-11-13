@@ -32,6 +32,7 @@
     <module>org.ai4fm.proofprocess.isabelle.ui</module>
     <module>org.ai4fm.proofprocess.isabelle-feature</module>
     <module>org.ai4fm.proofprocess.zeves</module>
+    <module>org.ai4fm.proofprocess.zeves.core</module>
     <module>org.ai4fm.proofprocess.zeves.edit</module>
     <module>org.ai4fm.proofprocess.zeves.ui</module>
     <module>org.ai4fm.proofprocess.zeves-feature</module>
