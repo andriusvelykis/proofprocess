@@ -12,4 +12,11 @@
 
   <name>ProofProcess Framework p2 Repository</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.assembla.scala-incubator</groupId>
+      <artifactId>graph-core_2.9.2.osgi</artifactId>
+    </dependency>
+  </dependencies>
+
 </project>

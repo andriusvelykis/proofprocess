@@ -4,27 +4,31 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.ai4fm.proofprocess</groupId>
-    <artifactId>org.ai4fm.proofprocess-parent</artifactId>
+    <artifactId>org.ai4fm.proofprocess.lib-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>org.ai4fm.proofprocess.isabelle.ui</artifactId>
-  <packaging>eclipse-plugin</packaging>
+  <groupId>com.assembla.scala-incubator</groupId>
+  <artifactId>graph-core_2.9.2.osgi</artifactId>
+  <version>1.5.1</version>
+  <packaging>bundle</packaging>
 
-  <name>Isabelle ProofProcess UI</name>
+  <name>Graph Core</name>
 
   <dependencies>
     <dependency>
       <groupId>com.assembla.scala-incubator</groupId>
-      <artifactId>graph-core_2.9.2.osgi</artifactId>
+      <artifactId>graph-core_2.9.2</artifactId>
+      <version>1.5.1</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
-          <groupId>org.scala-tools</groupId>
-          <artifactId>maven-scala-plugin</artifactId>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
+
 </project>
