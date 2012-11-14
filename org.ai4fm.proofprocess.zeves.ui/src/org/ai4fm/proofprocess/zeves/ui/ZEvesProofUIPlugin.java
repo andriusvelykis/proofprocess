@@ -2,14 +2,13 @@ package org.ai4fm.proofprocess.zeves.ui;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class ZEvesProofUIPlugin extends AbstractUIPlugin implements IStartup {
+public class ZEvesProofUIPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.ai4fm.proofprocess.zeves.ui"; //$NON-NLS-1$
@@ -81,12 +80,6 @@ public class ZEvesProofUIPlugin extends AbstractUIPlugin implements IStartup {
 			message = ""; 
 		}		
 		return new Status(IStatus.ERROR, PLUGIN_ID, 0, message, exception);
-	}
-
-	@Override
-	public void earlyStartup() {
-		// need to startup early, to start tracking
-		getDefault();
 	}
 
 }
