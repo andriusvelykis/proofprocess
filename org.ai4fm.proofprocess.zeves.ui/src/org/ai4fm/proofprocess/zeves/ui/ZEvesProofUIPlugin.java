@@ -1,7 +1,5 @@
 package org.ai4fm.proofprocess.zeves.ui;
 
-import net.sourceforge.czt.eclipse.zeves.ui.ZEvesUIPlugin;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IStartup;
@@ -19,8 +17,6 @@ public class ZEvesProofUIPlugin extends AbstractUIPlugin implements IStartup {
 	// The shared instance
 	private static ZEvesProofUIPlugin plugin;
 	
-	private SnapshotTracker snapshotTracker;
-	
 	/**
 	 * The constructor
 	 */
@@ -35,9 +31,6 @@ public class ZEvesProofUIPlugin extends AbstractUIPlugin implements IStartup {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
-		snapshotTracker = new SnapshotTracker(ZEvesUIPlugin.getZEves().getSnapshot());
-		snapshotTracker.init();
 	}
 
 	/*
@@ -46,12 +39,6 @@ public class ZEvesProofUIPlugin extends AbstractUIPlugin implements IStartup {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		
-		if (snapshotTracker != null) {
-			snapshotTracker.dispose();
-			snapshotTracker = null;
-		}
-		
 		plugin = null;
 		super.stop(context);
 	}

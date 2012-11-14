@@ -1,10 +1,11 @@
 package org.ai4fm.proofprocess.zeves.core.internal
 
-//import org.ai4fm.proofprocess.zeves.core.parse.SnapshotTracker
+import org.ai4fm.proofprocess.zeves.core.parse.SnapshotTracker
 import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.Plugin
 import org.eclipse.core.runtime.Status
 import org.osgi.framework.BundleContext
+import net.sourceforge.czt.eclipse.zeves.ui.ZEvesUIPlugin
 
 
 /**
@@ -37,7 +38,10 @@ class ZEvesPProcessCorePlugin extends Plugin {
 
   ZEvesPProcessCorePlugin.instance = this
   
-//  private var snapshotTracker: Option[SnapshotTracker] = None
+  private lazy val snapshotTracker: SnapshotTracker = {
+    val zevesSnapshot = ZEvesUIPlugin.getZEves.getSnapshot
+    new SnapshotTracker(zevesSnapshot)
+  }
   
   // The plug-in ID
   def pluginId = "org.ai4fm.proofprocess.zeves.core" //$NON-NLS-1$
@@ -45,15 +49,12 @@ class ZEvesPProcessCorePlugin extends Plugin {
   override def start(context: BundleContext) {
     super.start(context)
 
-//    val tracker = new SnapshotTracker
-//    this.snapshotTracker = Some(tracker)
-//
-//    tracker.init
+    snapshotTracker.init
   }
 
   override def stop(context: BundleContext) {
 
-//    snapshotTracker foreach { _.dispose }
+    snapshotTracker.dispose
     super.stop(context)
   }
   

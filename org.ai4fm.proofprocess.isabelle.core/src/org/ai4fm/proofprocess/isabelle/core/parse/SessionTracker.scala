@@ -43,7 +43,7 @@ class SessionTracker extends SessionEvents {
   override protected def sessionEvents(session: Session) = List(session.commands_changed)
 
   /** Reacts to preference changes whether ProofProcess tracking is enabled */
-  val tracking = TrackingToggle { isTracking =>
+  private val tracking = TrackingToggle { isTracking =>
     if (!isTracking) {
       // no longer tracking, so discard all pending events
       pendingEvents.clear
