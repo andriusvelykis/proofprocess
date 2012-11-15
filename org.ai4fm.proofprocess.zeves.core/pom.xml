@@ -7,10 +7,10 @@
     <artifactId>org.ai4fm.proofprocess-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>org.ai4fm.proofprocess.zeves.ui</artifactId>
+  <artifactId>org.ai4fm.proofprocess.zeves.core</artifactId>
   <packaging>eclipse-plugin</packaging>
 
-  <name>Z/EVES ProofProcess UI</name>
+  <name>Z/EVES ProofProcess Core</name>
 
   <dependencies>
     <dependency>
@@ -27,5 +27,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>

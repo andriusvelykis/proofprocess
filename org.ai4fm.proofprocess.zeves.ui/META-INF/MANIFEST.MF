@@ -3,34 +3,19 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.ai4fm.proofprocess.zeves.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ai4fm.proofprocess.zeves.ui.ZEvesProofUIPlugin
+Bundle-Activator: org.ai4fm.proofprocess.zeves.ui.internal.ZEvesPProcessUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.scala-ide.scala.library;bundle-version="2.9.1",
+Require-Bundle: org.eclipse.core.runtime,
+ org.scala-ide.scala.library;bundle-version="2.9.2",
  org.eclipse.core.resources,
  org.ai4fm.proofprocess.zeves;bundle-version="1.0.0",
- org.eclipse.emf.ecore.xmi,
- org.eclipse.jface.text;bundle-version="3.7.0",
- org.eclipse.ui.editors;bundle-version="3.7.0",
- net.sourceforge.czt.eclipse;bundle-version="1.6.0",
- org.apache.commons.io;bundle-version="2.0.1",
  org.eclipse.emf.edit.ui;bundle-version="2.7.0",
  org.ai4fm.filehistory.core;bundle-version="1.0.0",
  org.eclipse.emf.databinding.edit;bundle-version="1.2.0",
  org.eclipse.core.databinding.property;bundle-version="1.4.0",
- org.apache.commons.lang;bundle-version="2.4.0",
  org.ai4fm.proofprocess.edit;bundle-version="1.0.0",
  org.ai4fm.proofprocess.project.core;bundle-version="1.0.0",
- net.sourceforge.czt.eclipse.zeves.ui;bundle-version="1.0.0",
- net.sourceforge.czt.eclipse.ui;bundle-version="1.6.0"
+ net.sourceforge.czt.eclipse.zeves.ui;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: net.sourceforge.czt.base.ast;version="1.6.0",
- net.sourceforge.czt.session;version="1.6.0",
- net.sourceforge.czt.util;version="1.6.0",
- net.sourceforge.czt.z.ast;version="1.6.0",
- net.sourceforge.czt.zeves.ast;version="1.6.0",
- net.sourceforge.czt.zeves.response;version="1.6.0",
- net.sourceforge.czt.zeves.response.form;version="1.6.0"

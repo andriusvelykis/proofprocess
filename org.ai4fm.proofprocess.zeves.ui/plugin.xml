@@ -10,11 +10,5 @@
             restorable="true">
       </view>
    </extension>
-   <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="org.ai4fm.proofprocess.zeves.ui.ZEvesProofUIPlugin">
-      </startup>
-   </extension>
 
 </plugin>
