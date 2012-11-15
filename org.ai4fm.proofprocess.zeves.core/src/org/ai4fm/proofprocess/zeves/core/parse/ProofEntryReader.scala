@@ -153,7 +153,7 @@ trait ProofEntryReader {
 
     trace.setText(commandText)
     // set the proof case if Z/EVES result is available
-    zevesResult foreach (res => trace.setCase(proofCaseStr(res.getProofCase)))
+    zevesResult foreach (res => trace.setCase(ProofEntryReader.proofCaseStr(res.getProofCase)))
 
     // retrieve used lemmas from the proof trace
     val lemmas = snapshotData.getTrace.flatMap(traceResult => usedLemmas(traceResult.getProofTrace))
@@ -161,8 +161,6 @@ trait ProofEntryReader {
 
     trace
   }
-  
-  private def proofCaseStr(proofCase: Iterable[java.lang.Integer]) = proofCase.mkString(".")
   
   import ZEvesProofTrace.TraceType._
   private val lemmaTypes = List(APPLY, REWRITE, FRULE, GRULE, USE)
@@ -179,6 +177,33 @@ trait ProofEntryReader {
 
     // get the trace elements of each lemma type and extract their names
     lemmaTypes.map(trace.getTraceElements(_).flatMap(traceName)).flatten.toSet
+  }
+
+}
+
+object ProofEntryReader {
+
+  def proofCaseStr(proofCase: Iterable[java.lang.Integer]) = proofCase.mkString(".")
+
+  def proofCase(caseStr: String): List[Int] = {
+
+    Option(caseStr)
+    
+    if (caseStr.isEmpty) {
+      List()
+    } else {
+
+      val caseNos = caseStr.split("\\.")
+
+      try {
+
+        caseNos.map(_.toInt).toList
+
+      } catch {
+        // invalid case?
+        case ne: NumberFormatException => List()
+      }
+    }
   }
 
 }
