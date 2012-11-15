@@ -9,12 +9,10 @@ import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofProcessFactory
 import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.Trace
-import org.ai4fm.proofprocess.core.analysis.CacheGoalTreeMatcher
-import org.ai4fm.proofprocess.core.analysis.GoalEntry
-import org.ai4fm.proofprocess.core.analysis.GoalParallel
-import org.ai4fm.proofprocess.core.analysis.GoalSeq
-import org.ai4fm.proofprocess.core.analysis.GoalTree
+import org.ai4fm.proofprocess.core.graph.EmfPProcessTree
+import org.ai4fm.proofprocess.core.graph.PProcessGraph
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory
+import org.ai4fm.proofprocess.zeves.core.analysis.ZEvesGraph
 import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin._
 
 import net.sourceforge.czt.eclipse.ui.CztUI
@@ -78,29 +76,14 @@ trait ProofEntryReader {
   private def readProofSteps(proofSteps: List[(ISnapshotEntry, List[Term])],
                              inGoals: List[Term]): Option[ProofElem] = {
     
-    // try finding a structure of the flat proof steps based on how the goals change
-    val goalTree = CacheGoalTreeMatcher.goalTree(matchTerms)(inGoals, proofSteps)
-    // map the tree structure to corresponding proof process data elements
-    goalTree.map(proofProcessTree)
-  }
+    val proofStepEntries = ZEvesGraph.proofStepEntries(proofEntry)(proofSteps, inGoals)
+    
+    val (proofGraph, proofGraphRoots) = ZEvesGraph.proofStepsGraph(proofStepEntries)
 
-  private def proofProcessTree(tree: GoalTree[ISnapshotEntry, Term]): ProofElem = tree match {
+    val proofTree = PProcessGraph.proofProcessTree(
+      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph, proofGraphRoots)
     
-    case GoalEntry(state, inGoals, outGoals) => proofEntry(state, inGoals, outGoals)
-    
-    case GoalParallel(par) => {
-      val proofPar = factory.createProofParallel
-      proofPar.getEntries.addAll(par.map(proofProcessTree))
-      proofPar.setInfo(factory.createProofInfo)
-      proofPar
-    }
-    
-    case GoalSeq(seq) => {
-      val proofSeq = factory.createProofSeq
-      proofSeq.getEntries.addAll(seq.map(proofProcessTree))
-      proofSeq.setInfo(factory.createProofInfo)
-      proofSeq
-    }
+    Some(proofTree)
   }
 
   private def proofEntry(snapshotEntry: ISnapshotEntry,

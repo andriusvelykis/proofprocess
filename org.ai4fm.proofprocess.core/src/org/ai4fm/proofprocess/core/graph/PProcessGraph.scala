@@ -1,4 +1,5 @@
 package org.ai4fm.proofprocess.core.graph
+
 import scala.collection.JavaConversions._
 
 import scalax.collection.GraphEdge._
