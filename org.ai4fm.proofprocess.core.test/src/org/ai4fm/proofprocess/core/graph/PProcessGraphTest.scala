@@ -138,6 +138,75 @@ class PProcessGraphTest {
     }
   }
   
+  val m4 = Graph(e(1) ~> e(2), e(2) ~> e(3))
+  
+  @Test
+  def lowRootMerge() {
+    // note the 0-th element, for multiple roots
+    val s4 = Seq(List(0,
+                      Par(Set(Seq(List(1, 
+                                       2)))), 
+                      3))
+    val rDouble = List(e(1), e(3))
+    val p4 = proofProcessTree(m4, rDouble)
+    assertEquals(s4, p4)
+    // note that the link 0->3 gets dropped when converting to graph
+    // since we cannot determine whether the parallel is exhaustive,
+    // or the direct merge is necessary
+    assertEquals((m4 + (e(0) ~> e(1)), List(e(0))), graph(p4))
+  }
+  
+  /** One of the branches does not have any steps in it (1 -> 3). This is represented as a
+    * parallel with a single branch and a merge point.
+    *   1
+    *  / \
+    *  2  |
+    *  \ /
+    *   3
+    * 
+    * This is a similar example to `m4`, but with a single explicit root
+    */
+  val m5 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(1) ~> e(3))
+  
+  @Test
+  def directMerge() {
+    val s5 = Seq(List(1,
+                      Par(Set(2)), 
+                      3))
+    val p5 = proofProcessTree(m5, r1)
+    assertEquals(s5, p5)
+    // note that the link 1->3 gets dropped when converting to graph
+    // since we cannot determine whether the parallel is exhaustive,
+    // or whether a direct merge is necessary
+    assertEquals((m5 - (e(1) ~> e(3)), r1), graph(p5))
+  }
+  
+  /** Double merge of branches with no steps in them (1 -> 3 and 1 -> 4). This is represented as a
+    * nested parallel with a single branch and merge points following.
+    *     1
+    *  /  | \
+    *  2  | |
+    *  \ /  |
+    *   3   |
+    *    \ /
+    *     4
+    * 
+    * This is the same example as `m4`, but with a single explicit root
+    */
+  val m6 = m5 + (e(3) ~> e(4), e(1) ~> e(4))
+  
+  @Test
+  def directMerge2() {
+    val s6 = Seq(List(1, 
+                      Par(Set(Seq(List(Par(Set(2)), 
+                                       3)))),
+                      4))
+    val p6 = proofProcessTree(m6, r1)
+    assertEquals(s6, p6)
+    // note that both links 1->3 and 1->4 get dropped when converting to graph
+    assertEquals((m6 - (e(1) ~> e(3), e(1) ~> e(4)), r1), graph(p6))
+  }
+  
   // Int + Case Class based testing data structures (to avoid creating EMF ones)
   
   implicit def e(entry: Int): Entry = Entry(entry)
