@@ -84,29 +84,52 @@ object PProcessGraph {
   }
   
   def proofProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _, _], root: => Entry)
+      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _, _], topRoot: => Entry)
       (graph: Graph[Entry, DiEdge], roots: List[Entry]): Elem = {
-    
-    type MergeMap = Map[Entry, List[Entry]]
-
+   
     assume(!roots.isEmpty)
-    
-    // add the roots to the graph, thus ensuring that the traversal is possible
-    val graphWithRoots = roots.foldLeft(graph)(_ + _)
-    
-    val (singleRoot, rootGraph) = roots match {
-      // already single root
-      case List(root) => (root, graphWithRoots)
-      // for multiple roots, create a special new root element that will be replaced
-      // by a ProofParallel after constructions. This way we indicate that the proof
-      // is parallel from the start
-      case roots => {
-        val newRoot = root
-        val newGraph = roots.foldRight(graphWithRoots)((root, accGraph) => accGraph + (newRoot ~> root))
-        (newRoot, newGraph)
+
+    roots match {
+
+      case single :: Nil => // already single root
+        proofProcessTree(ppTree)(graph, single)
+
+      case multiple => {
+
+        // for multiple roots, create an artificial root that maps to every other root
+        // assume a parallel split for multiple roots
+        val newRoot = topRoot
+        val newGraph = roots.foldRight(graph)((root, accGraph) => accGraph + (newRoot ~> root))
+        
+        val tree = proofProcessTree(ppTree)(newGraph, newRoot)
+        
+        // the new root will always be the top element in the top sequence
+        tree match {
+          
+          case ppTree.seq(rootElem :: elems) if (rootElem == newRoot) =>
+            // if there is only a single element remaining, unpack it from the sequence
+            elems match {
+              case single :: Nil => single
+              case multiple => ppTree.seq(multiple)
+            }
+          
+          case _ => // invalid?
+            throw new IllegalStateException(tree.toString)
+        }
       }
     }
     
+  }
+  
+  private def proofProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
+      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _, _])
+      (graph: Graph[Entry, DiEdge], root: Entry): Elem = {
+    
+    type MergeMap = Map[Entry, List[Entry]]
+    
+    // add the root to the graph to ensure that we can traverse it
+    val rootGraph = graph + root
+
     assert(rootGraph.isAcyclic)
     
     def pullMergeUp(mergeAt: MergeMap, successor: Entry, entry: Entry) = {
@@ -359,11 +382,10 @@ object PProcessGraph {
     val (subGraphs, mergeAt) = rootGraph.foldNodesRight((emptySubGraphs, emptyMergeAt))({
       case ((node, predecessors, successors), (subGraphs, mergeAt)) => 
         handleNode(subGraphs, mergeAt)(node, predecessors, successors)
-    })(List(singleRoot))
+    })(List(root))
     
     // after the down->up traversal, find the subgraph for the root
-    // TODO remove the new merge root at the top?
-    subGraphs(singleRoot)
+    subGraphs(root)
   }
   
   private def isMulti(col: Iterable[_]): Boolean = {

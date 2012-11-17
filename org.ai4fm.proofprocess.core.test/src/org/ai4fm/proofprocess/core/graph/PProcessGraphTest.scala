@@ -142,18 +142,17 @@ class PProcessGraphTest {
   
   @Test
   def lowRootMerge() {
-    // note the 0-th element, for multiple roots
-    val s4 = Seq(List(0,
-                      Par(Set(Seq(List(1, 
+    // note no root element for multiple roots: starts with a parallel
+    val s4 = Seq(List(Par(Set(Seq(List(1, 
                                        2)))), 
                       3))
     val rDouble = List(e(1), e(3))
     val p4 = proofProcessTree(m4, rDouble)
     assertEquals(s4, p4)
-    // note that the link 0->3 gets dropped when converting to graph
+    // note that the root e3 gets dropped when converting to graph
     // since we cannot determine whether the parallel is exhaustive,
-    // or the direct merge is necessary
-    assertEquals((m4 + (e(0) ~> e(1)), List(e(0))), graph(p4))
+    // or whether a direct merge is necessary
+    assertEquals((m4, List(e(1))), graph(p4))
   }
   
   /** One of the branches does not have any steps in it (1 -> 3). This is represented as a
