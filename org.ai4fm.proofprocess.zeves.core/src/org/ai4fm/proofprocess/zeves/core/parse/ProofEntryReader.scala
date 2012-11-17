@@ -80,7 +80,7 @@ trait ProofEntryReader {
     
     val (proofGraph, proofGraphRoots) = ZEvesGraph.proofStepsGraph(proofStepEntries)
 
-    val proofTree = PProcessGraph.proofProcessTree(
+    val proofTree = PProcessGraph.toPProcessTree(
       EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph, proofGraphRoots)
     
     Some(proofTree)

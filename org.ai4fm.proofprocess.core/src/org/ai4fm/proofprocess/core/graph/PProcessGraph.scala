@@ -17,7 +17,7 @@ object PProcessGraph {
     *
     * @return  `(graph, roots)` the pair of created graph and the list of roots to traverse it
     */
-  def graph[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Decor <: Elem]
+  def toGraph[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Decor <: Elem]
       (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, Decor, _],
         // FIXME a workaround for type issues
         empty: => scalax.collection.immutable.Graph[Entry, DiEdge])
@@ -83,7 +83,7 @@ object PProcessGraph {
     graph0(rootElem, emptyGraph)
   }
   
-  def proofProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
+  def toPProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
       (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _, _], topRoot: => Entry)
       (graph: Graph[Entry, DiEdge], roots: List[Entry]): Elem = {
    
@@ -92,7 +92,7 @@ object PProcessGraph {
     roots match {
 
       case single :: Nil => // already single root
-        proofProcessTree(ppTree)(graph, single)
+        toPProcessTree(ppTree)(graph, single)
 
       case multiple => {
 
@@ -101,7 +101,7 @@ object PProcessGraph {
         val newRoot = topRoot
         val newGraph = roots.foldRight(graph)((root, accGraph) => accGraph + (newRoot ~> root))
         
-        val tree = proofProcessTree(ppTree)(newGraph, newRoot)
+        val tree = toPProcessTree(ppTree)(newGraph, newRoot)
         
         // the new root will always be the top element in the top sequence
         tree match {
@@ -121,7 +121,7 @@ object PProcessGraph {
     
   }
   
-  private def proofProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
+  def toPProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
       (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _, _])
       (graph: Graph[Entry, DiEdge], root: Entry): Elem = {
     
