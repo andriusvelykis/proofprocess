@@ -87,7 +87,7 @@ object PProcessGraph {
       (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _, _], topRoot: => Entry)
       (graph: Graph[Entry, DiEdge], roots: List[Entry]): Elem = {
    
-    assume(!roots.isEmpty)
+    require(!roots.isEmpty)
 
     roots match {
 
@@ -198,7 +198,7 @@ object PProcessGraph {
       // there, e.g. group B and C on E merge, then group this merged branch with D on G merge.
       def mergeDeepest(branchMergesDeepestFirst: BranchMerges): Elem = {
 
-        assume(!branchMergesDeepestFirst.isEmpty)
+        require(!branchMergesDeepestFirst.isEmpty)
         
         // get all merge points for this level
         val mergePoints = branchMergesDeepestFirst flatMap { case (root, merges) => merges.headOption } toSet
