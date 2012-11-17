@@ -50,19 +50,24 @@ object ZEvesGraph {
 
     val entryCase = entryProofCase(entry)
     
+    // add the entry to the graph (e.g. if this is a rogue entry, or a single entry, etc.)
+    val graphWithEntry = graph + entry
+    
     // partition branch roots according to their relationship with the entry case
     val rootTypes = partitionRootTypes(entryCase, branchRoots)
     
     // if there are split roots, drop the same roots (since they would represent the merge points)
     // otherwise link to same roots if they exist
     val splitGraph = if (!rootTypes.splitRoots.isEmpty) {
-      addGraphLink(graph, entry, rootTypes.splitRoots)
+      addGraphLink(graphWithEntry, entry, rootTypes.splitRoots)
+    } else if (!rootTypes.sameRoots.isEmpty) {
+      addGraphLink(graphWithEntry, entry, rootTypes.sameRoots)
     } else {
-      addGraphLink(graph, entry, rootTypes.sameRoots)
+      // link to merge roots
+      // we cannot link to merge roots when we have `sameRoots`, since the merge roots would be
+      // already linked by the children of `sameRoots`
+      addGraphLink(graphWithEntry, entry, rootTypes.mergeRoots)
     }
-    
-    // link to merge roots
-    val mergeGraph = addGraphLink(graph, entry, rootTypes.mergeRoots)
     
     // for new roots, drop the splits and the same roots,
     // but keep the merge (for parallel merges) and other roots,
@@ -70,7 +75,7 @@ object ZEvesGraph {
     // (use diff to preserve the order)
     val newRoots = (entry, entryCase) :: branchRoots.diff(rootTypes.splitRoots).diff(rootTypes.sameRoots)
     
-    (mergeGraph, newRoots)
+    (splitGraph, newRoots)
   }
   
   private def entryProofCase(entry: ProofEntry): List[Int] = {
