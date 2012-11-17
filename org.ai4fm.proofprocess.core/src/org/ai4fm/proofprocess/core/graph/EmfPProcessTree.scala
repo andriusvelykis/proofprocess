@@ -1,6 +1,6 @@
 package org.ai4fm.proofprocess.core.graph
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 import org.ai4fm.proofprocess.ProofDecor
 
@@ -47,13 +47,13 @@ object EmfPProcessTree
 
     override def apply(elems: List[ProofElem]): ProofSeq = {
       val seq = factory.createProofSeq
-      seq.getEntries.addAll(elems)
+      seq.getEntries.addAll(elems.asJava)
       seq.setInfo(factory.createProofInfo)
       seq
     }
 
     override def unapply(e: ProofElem): Option[List[ProofElem]] = e match {
-      case seq: ProofSeq => Some(seq.getEntries.toList)
+      case seq: ProofSeq => Some(seq.getEntries.asScala.toList)
       case _ => None
     }
   }
@@ -63,13 +63,13 @@ object EmfPProcessTree
 
     override def apply(elems: Set[ProofElem]): ProofParallel = {
       val par = factory.createProofParallel
-      par.getEntries.addAll(elems)
+      par.getEntries.addAll(elems.asJava)
       par.setInfo(factory.createProofInfo)
       par
     }
 
     override def unapply(e: ProofElem): Option[Set[ProofElem]] = e match {
-      case par: ProofParallel => Some(par.getEntries.toSet)
+      case par: ProofParallel => Some(par.getEntries.asScala.toSet)
       case _ => None
     }
   }
