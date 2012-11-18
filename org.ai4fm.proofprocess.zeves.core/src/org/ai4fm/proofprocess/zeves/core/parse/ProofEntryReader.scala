@@ -9,12 +9,10 @@ import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofProcessFactory
 import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.Trace
-import org.ai4fm.proofprocess.core.analysis.CacheGoalTreeMatcher
-import org.ai4fm.proofprocess.core.analysis.GoalEntry
-import org.ai4fm.proofprocess.core.analysis.GoalParallel
-import org.ai4fm.proofprocess.core.analysis.GoalSeq
-import org.ai4fm.proofprocess.core.analysis.GoalTree
+import org.ai4fm.proofprocess.core.graph.EmfPProcessTree
+import org.ai4fm.proofprocess.core.graph.PProcessGraph
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory
+import org.ai4fm.proofprocess.zeves.core.analysis.ZEvesGraph
 import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin._
 
 import net.sourceforge.czt.eclipse.ui.CztUI
@@ -78,29 +76,14 @@ trait ProofEntryReader {
   private def readProofSteps(proofSteps: List[(ISnapshotEntry, List[Term])],
                              inGoals: List[Term]): Option[ProofElem] = {
     
-    // try finding a structure of the flat proof steps based on how the goals change
-    val goalTree = CacheGoalTreeMatcher.goalTree(matchTerms)(inGoals, proofSteps)
-    // map the tree structure to corresponding proof process data elements
-    goalTree.map(proofProcessTree)
-  }
+    val proofStepEntries = ZEvesGraph.proofStepEntries(proofEntry)(proofSteps, inGoals)
+    
+    val (proofGraph, proofGraphRoots) = ZEvesGraph.proofStepsGraph(proofStepEntries)
 
-  private def proofProcessTree(tree: GoalTree[ISnapshotEntry, Term]): ProofElem = tree match {
+    val proofTree = PProcessGraph.toPProcessTree(
+      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph, proofGraphRoots)
     
-    case GoalEntry(state, inGoals, outGoals) => proofEntry(state, inGoals, outGoals)
-    
-    case GoalParallel(par) => {
-      val proofPar = factory.createProofParallel
-      proofPar.getEntries.addAll(par.map(proofProcessTree))
-      proofPar.setInfo(factory.createProofInfo)
-      proofPar
-    }
-    
-    case GoalSeq(seq) => {
-      val proofSeq = factory.createProofSeq
-      proofSeq.getEntries.addAll(seq.map(proofProcessTree))
-      proofSeq.setInfo(factory.createProofInfo)
-      proofSeq
-    }
+    Some(proofTree)
   }
 
   private def proofEntry(snapshotEntry: ISnapshotEntry,
@@ -153,7 +136,7 @@ trait ProofEntryReader {
 
     trace.setText(commandText)
     // set the proof case if Z/EVES result is available
-    zevesResult foreach (res => trace.setCase(proofCaseStr(res.getProofCase)))
+    zevesResult foreach (res => trace.setCase(ProofEntryReader.proofCaseStr(res.getProofCase)))
 
     // retrieve used lemmas from the proof trace
     val lemmas = snapshotData.getTrace.flatMap(traceResult => usedLemmas(traceResult.getProofTrace))
@@ -161,8 +144,6 @@ trait ProofEntryReader {
 
     trace
   }
-  
-  private def proofCaseStr(proofCase: Iterable[java.lang.Integer]) = proofCase.mkString(".")
   
   import ZEvesProofTrace.TraceType._
   private val lemmaTypes = List(APPLY, REWRITE, FRULE, GRULE, USE)
@@ -179,6 +160,33 @@ trait ProofEntryReader {
 
     // get the trace elements of each lemma type and extract their names
     lemmaTypes.map(trace.getTraceElements(_).flatMap(traceName)).flatten.toSet
+  }
+
+}
+
+object ProofEntryReader {
+
+  def proofCaseStr(proofCase: Iterable[java.lang.Integer]) = proofCase.mkString(".")
+
+  def proofCase(caseStr: String): List[Int] = {
+
+    Option(caseStr)
+    
+    if (caseStr.isEmpty) {
+      List()
+    } else {
+
+      val caseNos = caseStr.split("\\.")
+
+      try {
+
+        caseNos.map(_.toInt).toList
+
+      } catch {
+        // invalid case?
+        case ne: NumberFormatException => List()
+      }
+    }
   }
 
 }

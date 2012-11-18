@@ -25,6 +25,12 @@ Import-Package: net.sourceforge.czt.base.ast;version="1.6.0",
  net.sourceforge.czt.z.ast;version="1.6.0",
  net.sourceforge.czt.zeves;version="1.6.0",
  net.sourceforge.czt.zeves.ast;version="1.6.0",
+ net.sourceforge.czt.zeves.response;version="1.6.0",
+ net.sourceforge.czt.zeves.response.form;version="1.6.0",
  org.eclipse.jface.resource,
  org.eclipse.swt.graphics,
- org.eclipse.ui.plugin
+ org.eclipse.ui.plugin,
+ scalax.collection;version="1.5.1",
+ scalax.collection.generic;version="1.5.1",
+ scalax.collection.immutable;version="1.5.1"
+Export-Package: org.ai4fm.proofprocess.zeves.core

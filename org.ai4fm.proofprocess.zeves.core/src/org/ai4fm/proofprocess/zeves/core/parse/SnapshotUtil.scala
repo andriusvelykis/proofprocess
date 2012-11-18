@@ -77,11 +77,14 @@ object SnapshotUtil {
             case _ => false
           })
           
+          // add the first entry, since the iterator continues from the next one in takeWhile()
+          val allProofEntries = entry :: proofEntries.toList
+          
           // filter out intermediate error entries, which will be ignored
-          val nonErrProofEntries = proofEntries.filterNot(isError);
+          val nonErrProofEntries = allProofEntries.filterNot(isError);
           
           // reverse the proof, since we iterated backwards
-          nonErrProofEntries.toList.reverse
+          nonErrProofEntries.reverse
         }
         case _ => {
           // entry is not part of the proof, so no proof entries

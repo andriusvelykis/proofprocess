@@ -21,15 +21,15 @@ class PProcessGraphTest {
   import PProcessGraph._
   import PProcessTree._
   
-  def proofProcessTree = PProcessGraph.proofProcessTree(intPPTree, Entry(0)) _
-  def graph = PProcessGraph.graph(intPPTree, Graph[Entry, DiEdge]()) _
+  def toPProcessTree = PProcessGraph.toPProcessTree(intPPTree, Entry(0)) _
+  def toGraph = PProcessGraph.toGraph(intPPTree, Graph[Entry, DiEdge]()) _
   
   @Test
   def rootInEmptyGraph() {
     val e1 = e(1)
-    val p1 = proofProcessTree(Graph(), List(e1))
+    val p1 = toPProcessTree(Graph(), List(e1))
     assertEquals(e1, p1)
-    assertEquals((Graph(e1), List(e1)), graph(p1))
+    assertEquals((Graph(e1), List(e1)), toGraph(p1))
   }
   
   def newEntry = factory.createProofEntry
@@ -41,15 +41,15 @@ class PProcessGraphTest {
     
     val g1 = Graph(e(1) ~> e(2))
     val s1 = Seq(List(1, 2))
-    val p1 = proofProcessTree(g1, r1)
+    val p1 = toPProcessTree(g1, r1)
     assertEquals(s1, p1)
-    assertEquals((g1, r1), graph(p1))
+    assertEquals((g1, r1), toGraph(p1))
     
     val g2 = g1 + (e(2) ~> e(3))
     val s2 = Seq(List(1, 2, 3))
-    val p2 = proofProcessTree(g2, r1)
+    val p2 = toPProcessTree(g2, r1)
     assertEquals(s2, p2)
-    assertEquals((g2, r1), graph(p2))
+    assertEquals((g2, r1), toGraph(p2))
   }
   
   @Test
@@ -60,9 +60,9 @@ class PProcessGraphTest {
     val s1 = Seq(List(1, 
                       Par(Set(2,
                               3))))
-    val p1 = proofProcessTree(g1, r1)
+    val p1 = toPProcessTree(g1, r1)
     assertEquals(s1, p1)
-    assertEquals((g1, r1), graph(p1))
+    assertEquals((g1, r1), toGraph(p1))
   }
   
   /** Simple merge:
@@ -80,9 +80,9 @@ class PProcessGraphTest {
                       Par(Set(2, 
                               3)), 
                       4))
-    val p1 = proofProcessTree(m1, r1)
+    val p1 = toPProcessTree(m1, r1)
     assertEquals(s1, p1)
-    assertEquals((m1, r1), graph(p1))
+    assertEquals((m1, r1), toGraph(p1))
   }
   
   
@@ -107,9 +107,9 @@ class PProcessGraphTest {
                               Seq(List(5,
                                        6)))),
                       7))
-    val p2 = proofProcessTree(m2, r1)
+    val p2 = toPProcessTree(m2, r1)
     assertEquals(s2, p2)
-    assertEquals((m2, r1), graph(p2))
+    assertEquals((m2, r1), toGraph(p2))
   }
 
   /** Branch merged twice with two other different branches in parallel (branch 3 is merged with both 2 and 5
@@ -130,12 +130,80 @@ class PProcessGraphTest {
     
     try {
       // cannot convert because e3 has two merges below it (with e4 and e6)
-      proofProcessTree(m3, r1)
+      toPProcessTree(m3, r1)
     } catch {
       case e: IllegalArgumentException => {
         // expected exception - do nothing! 
       }
     }
+  }
+  
+  val m4 = Graph(e(1) ~> e(2), e(2) ~> e(3))
+  
+  @Test
+  def lowRootMerge() {
+    // note no root element for multiple roots: starts with a parallel
+    val s4 = Seq(List(Par(Set(Seq(List(1, 
+                                       2)))), 
+                      3))
+    val rDouble = List(e(1), e(3))
+    val p4 = toPProcessTree(m4, rDouble)
+    assertEquals(s4, p4)
+    // note that the root e3 gets dropped when converting to graph
+    // since we cannot determine whether the parallel is exhaustive,
+    // or whether a direct merge is necessary
+    assertEquals((m4, List(e(1))), toGraph(p4))
+  }
+  
+  /** One of the branches does not have any steps in it (1 -> 3). This is represented as a
+    * parallel with a single branch and a merge point.
+    *   1
+    *  / \
+    *  2  |
+    *  \ /
+    *   3
+    * 
+    * This is a similar example to `m4`, but with a single explicit root
+    */
+  val m5 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(1) ~> e(3))
+  
+  @Test
+  def directMerge() {
+    val s5 = Seq(List(1,
+                      Par(Set(2)), 
+                      3))
+    val p5 = toPProcessTree(m5, r1)
+    assertEquals(s5, p5)
+    // note that the link 1->3 gets dropped when converting to graph
+    // since we cannot determine whether the parallel is exhaustive,
+    // or whether a direct merge is necessary
+    assertEquals((m5 - (e(1) ~> e(3)), r1), toGraph(p5))
+  }
+  
+  /** Double merge of branches with no steps in them (1 -> 3 and 1 -> 4). This is represented as a
+    * nested parallel with a single branch and merge points following.
+    *     1
+    *  /  | \
+    *  2  | |
+    *  \ /  |
+    *   3   |
+    *    \ /
+    *     4
+    * 
+    * This is the same example as `m4`, but with a single explicit root
+    */
+  val m6 = m5 + (e(3) ~> e(4), e(1) ~> e(4))
+  
+  @Test
+  def directMerge2() {
+    val s6 = Seq(List(1, 
+                      Par(Set(Seq(List(Par(Set(2)), 
+                                       3)))),
+                      4))
+    val p6 = toPProcessTree(m6, r1)
+    assertEquals(s6, p6)
+    // note that both links 1->3 and 1->4 get dropped when converting to graph
+    assertEquals((m6 - (e(1) ~> e(3), e(1) ~> e(4)), r1), toGraph(p6))
   }
   
   // Int + Case Class based testing data structures (to avoid creating EMF ones)
