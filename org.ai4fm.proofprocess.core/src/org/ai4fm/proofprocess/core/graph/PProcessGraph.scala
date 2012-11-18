@@ -279,7 +279,7 @@ object PProcessGraph {
         
         // now that we have the merged groups, join them with the leaf branches into a single
         // parallel split
-        val branches = leafSubGraphs.toSet ++ groupRoots.toSet
+        val branches = groupRoots.toSet ++ leafSubGraphs.toSet
         if (isMulti(branches)) {
           // multiple branches, group into parallel
           // this also handles the case of direct merges 
