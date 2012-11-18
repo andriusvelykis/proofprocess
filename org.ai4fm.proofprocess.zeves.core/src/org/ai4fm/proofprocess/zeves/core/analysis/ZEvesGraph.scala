@@ -18,17 +18,6 @@ import scalax.collection.immutable.Graph
   */
 object ZEvesGraph {
 
-  def proofStepEntries(entry: (ISnapshotEntry, List[Term], List[Term]) => ProofEntry)
-                      (proofSteps: List[(ISnapshotEntry, List[Term])],
-                       initialGoals: List[Term]): List[ProofEntry] = {
-
-    // make a list with ingoals-info-outgoals steps
-    val inGoals = initialGoals :: proofSteps.map(_._2)
-    val inOutSteps = inGoals.zip(proofSteps)
-
-    inOutSteps.map { case (inGoals, (info, outGoals)) => entry(info, inGoals, outGoals) }
-  }
-  
   type PPGraph = Graph[ProofEntry, DiEdge]
   type PPGraphRoots = List[ProofEntry]
   private type CaseRoots = List[(ProofEntry, List[Int])]

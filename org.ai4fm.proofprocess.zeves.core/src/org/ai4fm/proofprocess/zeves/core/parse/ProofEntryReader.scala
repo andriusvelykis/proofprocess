@@ -2,26 +2,20 @@ package org.ai4fm.proofprocess.zeves.core.parse
 
 import scala.collection.JavaConversions._
 
-import org.ai4fm.proofprocess.Intent
-import org.ai4fm.proofprocess.Loc
-import org.ai4fm.proofprocess.ProofElem
-import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.ProofProcessFactory
-import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.Trace
-import org.ai4fm.proofprocess.core.graph.EmfPProcessTree
-import org.ai4fm.proofprocess.core.graph.PProcessGraph
+import org.ai4fm.proofprocess.{Intent, Loc, ProofElem, ProofEntry, ProofProcessFactory, Term, Trace}
+import org.ai4fm.proofprocess.core.graph.{EmfPProcessTree, PProcessGraph}
+import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory
 import org.ai4fm.proofprocess.zeves.core.analysis.ZEvesGraph
-import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin._
+import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.{error, log}
 
 import net.sourceforge.czt.eclipse.ui.CztUI
 import net.sourceforge.czt.eclipse.zeves.ui.core.SnapshotData
 import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ISnapshotEntry
 import net.sourceforge.czt.session.SectionInfo
 import net.sourceforge.czt.zeves.ast.ProofCommand
-import net.sourceforge.czt.zeves.response.ZEvesOutput
-import net.sourceforge.czt.zeves.response.ZEvesProofTrace
+import net.sourceforge.czt.zeves.response.{ZEvesOutput, ZEvesProofTrace}
+import net.sourceforge.czt.zeves.response.ZEvesProofTrace.TraceType._
 import net.sourceforge.czt.zeves.response.form.ZEvesName
 
 
@@ -76,7 +70,7 @@ trait ProofEntryReader {
   private def readProofSteps(proofSteps: List[(ISnapshotEntry, List[Term])],
                              inGoals: List[Term]): Option[ProofElem] = {
     
-    val proofStepEntries = ZEvesGraph.proofStepEntries(proofEntry)(proofSteps, inGoals)
+    val proofStepEntries = PProcessUtil.toInOutGoalSteps(proofEntry)(inGoals, proofSteps)
     
     val (proofGraph, proofGraphRoots) = ZEvesGraph.proofStepsGraph(proofStepEntries)
 
@@ -145,7 +139,6 @@ trait ProofEntryReader {
     trace
   }
   
-  import ZEvesProofTrace.TraceType._
   private val lemmaTypes = List(APPLY, REWRITE, FRULE, GRULE, USE)
 
   private def usedLemmas(trace: ZEvesProofTrace): Set[String] = {
