@@ -1,6 +1,6 @@
 package org.ai4fm.proofprocess.zeves.core.parse
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 import org.ai4fm.proofprocess.{Intent, Loc, ProofElem, ProofEntry, ProofProcessFactory, Term, Trace}
 import org.ai4fm.proofprocess.core.graph.{EmfPProcessTree, PProcessGraph}
@@ -112,8 +112,8 @@ trait ProofEntryReader {
     step.setSource(textLoc(snapshotEntry))
 
     // copy the goals defensively because inGoals is a containment ref
-    step.getInGoals.addAll(inGoals.map(cloneTerm))
-    step.getOutGoals.addAll(outGoals)
+    step.getInGoals.addAll(inGoals.map(cloneTerm).asJava)
+    step.getOutGoals.addAll(outGoals.asJava)
 
     // create tactic application attempt
     val entry = factory.createProofEntry
@@ -130,11 +130,11 @@ trait ProofEntryReader {
 
     trace.setText(commandText)
     // set the proof case if Z/EVES result is available
-    zevesResult foreach (res => trace.setCase(ProofEntryReader.proofCaseStr(res.getProofCase)))
+    zevesResult foreach (res => trace.setCase(ProofEntryReader.proofCaseStr(res.getProofCase.asScala)))
 
     // retrieve used lemmas from the proof trace
-    val lemmas = snapshotData.getTrace.flatMap(traceResult => usedLemmas(traceResult.getProofTrace))
-    trace.getUsedLemmas.addAll(lemmas)
+    val lemmas = snapshotData.getTrace.asScala.flatMap(traceResult => usedLemmas(traceResult.getProofTrace))
+    trace.getUsedLemmas.addAll(lemmas.asJava)
 
     trace
   }
@@ -152,7 +152,7 @@ trait ProofEntryReader {
     }
 
     // get the trace elements of each lemma type and extract their names
-    lemmaTypes.map(trace.getTraceElements(_).flatMap(traceName)).flatten.toSet
+    lemmaTypes.map(trace.getTraceElements(_).asScala.flatMap(traceName)).flatten.toSet
   }
 
 }
