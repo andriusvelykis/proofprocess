@@ -52,7 +52,7 @@ trait ProofEntryReader {
 
         val proofSteps = readProofSteps(restGoals, initialGoals)
 
-        proofSteps.map(steps => ProofEntryData(initialGoals, Option(goalEntry.getData.getGoalName), steps))
+        Some(ProofEntryData(initialGoals, Option(goalEntry.getData.getGoalName), proofSteps))
       }
 
       // empty/short proof state - nothing to parse
@@ -68,7 +68,7 @@ trait ProofEntryReader {
     SnapshotUtil.zEvesProofResult(snapshotEntry).get
 
   private def readProofSteps(proofSteps: List[(ISnapshotEntry, List[Term])],
-                             inGoals: List[Term]): Option[ProofElem] = {
+                             inGoals: List[Term]): ProofElem = {
     
     val proofStepEntries = PProcessUtil.toInOutGoalSteps(proofEntry)(inGoals, proofSteps)
     
@@ -77,7 +77,7 @@ trait ProofEntryReader {
     val proofTree = PProcessGraph.toPProcessTree(
       EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph, proofGraphRoots)
     
-    Some(proofTree)
+    proofTree
   }
 
   private def proofEntry(snapshotEntry: ISnapshotEntry,
