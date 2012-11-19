@@ -1,25 +1,18 @@
 package org.ai4fm.proofprocess.core.graph
 
-import scala.collection.JavaConversions._
-
-import org.ai4fm.proofprocess.ProofProcessFactory
 import org.junit.Assert._
-
 import org.junit.Test
 
-import scalax.collection.immutable.Graph
+import PProcessTree._
+import scalax.collection.GraphEdge.DiEdge
 import scalax.collection.GraphPredef._
-import scalax.collection.GraphEdge._
+import scalax.collection.immutable.Graph
+
 
 /**
   * @author Andrius Velykis 
   */
 class PProcessGraphTest {
-
-  private val factory = ProofProcessFactory.eINSTANCE
-  
-  import PProcessGraph._
-  import PProcessTree._
   
   def toPProcessTree = PProcessGraph.toPProcessTree(intPPTree, Entry(0)) _
   def toGraph = PProcessGraph.toGraph(intPPTree) _
@@ -31,8 +24,6 @@ class PProcessGraphTest {
     assertEquals(e1, p1)
     assertEquals((Graph(e1), List(e1)), toGraph(p1))
   }
-  
-  def newEntry = factory.createProofEntry
   
   val r1 = List(e(1))
   
