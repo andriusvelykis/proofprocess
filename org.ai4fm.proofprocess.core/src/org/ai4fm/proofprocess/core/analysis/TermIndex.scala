@@ -26,7 +26,7 @@ object TermIndex {
 
       val (g, inGoals, outGoals) = goal
       val (c1, inGoalIds) = indexed(matches)(inGoals, cache)
-      val (c2, outGoalIds) = indexed(matches)(outGoals, cache)
+      val (c2, outGoalIds) = indexed(matches)(outGoals, c1)
       (c2, (g, inGoalIds, outGoalIds))
     }
 
