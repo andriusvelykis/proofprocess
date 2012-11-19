@@ -47,7 +47,6 @@ class PProcessGraphTest {
   def parallel() {
     
     val g1 = Graph(e(1) ~> e(2), e(1) ~> e(3))
-    // TODO parallel permutations?
     val s1 = Seq(List(1, 
                       Par(Set(2,
                               3))))
