@@ -61,8 +61,12 @@ object GoalGraphMatcher {
     
     val (unchanged, changedIn, changedOut) = diffs(inGoals, outGoals)
     
-    // TODO create new node type with in/out goals only!
+    // create new node with changed in/out goals only, so indicating that proof step affected part
+    // of the goal, and the rest may be changed in parallel
     val nodeEntry = node(nodeInfo, changedIn, changedOut)
+    
+    // add the entry itself to the graph
+    val entryGraph = context.graph + nodeEntry
     
     // diff the goals with the branches: find which branches satisfy which goals
     // note: only `changedIn` goals are checked, since only they were actually affected by the step
@@ -78,7 +82,7 @@ object GoalGraphMatcher {
                       else Branch(nodeEntry, changedOut) :: remainingBranches
     
     // link matched nodes to the current node in the graph
-    val newGraph = (matchedNodes foldLeft context.graph)( (g, m) => g + (m ~> nodeEntry) )
+    val newGraph = (matchedNodes foldLeft entryGraph)( (g, m) => g + (m ~> nodeEntry) )
     
     LinkContext(newGraph, newRoots, newBranches)
   }
