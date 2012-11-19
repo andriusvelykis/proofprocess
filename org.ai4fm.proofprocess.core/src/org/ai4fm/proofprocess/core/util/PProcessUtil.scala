@@ -2,7 +2,7 @@ package org.ai4fm.proofprocess.core.util
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.{Intent, ProofProcessFactory, ProofStore, Term}
+import org.ai4fm.proofprocess.{Intent, ProofProcessFactory, ProofStore}
 
 
 object PProcessUtil {
@@ -25,9 +25,9 @@ object PProcessUtil {
    * initial goals (e.g. from the conjecture) to a list that has both incoming and outgoing goals
    * for each proof step.
    */
-  def toInOutGoalSteps[A, B](entry: (A, List[Term], List[Term]) => B)
-                        (initialGoals: List[Term], 
-                         proofSteps: List[(A, List[Term])]): List[B] = {
+  def toInOutGoalSteps[A, T, B](entry: (A, List[T], List[T]) => B)
+                               (initialGoals: List[T], 
+                                proofSteps: List[(A, List[T])]): List[B] = {
 
     // make a list with ingoals-info-outgoals steps
     val inGoals = initialGoals :: proofSteps.map(_._2)
