@@ -50,7 +50,8 @@ object GoalGraphMatcher {
     val emptyContext = LinkContext[N, T](Graph(), List(), List())
     val LinkContext(graph, roots, _) = (proofSteps foldLeft emptyContext)(linkStep(node) _)
     
-    (graph, roots)
+    // reverse the roots, since branches are constructed with prepend
+    (graph, roots.reverse)
   }
 
   private def linkStep[A, N, T](node: GoalStep[A, T] => N)
