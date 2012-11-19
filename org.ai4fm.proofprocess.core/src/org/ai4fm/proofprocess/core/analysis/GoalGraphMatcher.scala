@@ -75,11 +75,10 @@ object GoalGraphMatcher {
 
     // if there are unmatched "in" goals, it means they came from the root goal
     // so mark the node as one of the roots
-    val newRoots = if (remainingGoals.isEmpty) context.roots else nodeEntry :: context.roots
+    val newRoots = prependIfNotEmpty(remainingGoals, context.roots)(_ => nodeEntry)
 
     // create a new branch for the node with its "out" goals (if there are outstanding goals)
-    val newBranches = if (changedOut.isEmpty) remainingBranches
-                      else Branch(nodeEntry, changedOut) :: remainingBranches
+    val newBranches = prependIfNotEmpty(changedOut, remainingBranches)(Branch(nodeEntry, _))
     
     // link matched nodes to the current node in the graph
     val newGraph = (matchedNodes foldLeft entryGraph)( (g, m) => g + (m ~> nodeEntry) )
@@ -111,14 +110,14 @@ object GoalGraphMatcher {
 
         // continue recursively with remaining branches and remaining goals
         val (finalNodes, finalGoals, finalBranches) = branchesWithGoals(bs, remainingGoals)
-
-        if (remainingBranch.isEmpty) {
-          // no more goals left for the branch, drop it altogether
-          (finalNodes, finalGoals, finalBranches)
-        } else {
-          // keep a branch with remaining goals
-          (finalNodes, finalGoals, Branch(b.end, remainingBranch) :: finalBranches)
-        }
+        
+        // if there are matching goals, mark the branch node as matching
+        val newNodes = prependIfNotEmpty(matching, finalNodes)(_ => b.end)
+        
+        // if there are remaining branch goals, keep the branch with them
+        val newBranches = prependIfNotEmpty(remainingBranch, finalBranches)(Branch(b.end, _))
+        
+        (newNodes, finalGoals, newBranches)
       }
     }
 
@@ -129,5 +128,8 @@ object GoalGraphMatcher {
 
     (same, diffL1, diffL2)
   }
+  
+  private def prependIfNotEmpty[A, B](consider: List[A], main: List[B])(f: List[A] => B): List[B] =
+    if (consider.isEmpty) main else f(consider) :: main
   
 }
