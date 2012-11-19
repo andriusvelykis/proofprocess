@@ -22,7 +22,7 @@ class PProcessGraphTest {
   import PProcessTree._
   
   def toPProcessTree = PProcessGraph.toPProcessTree(intPPTree, Entry(0)) _
-  def toGraph = PProcessGraph.toGraph(intPPTree, Graph[Entry, DiEdge]()) _
+  def toGraph = PProcessGraph.toGraph(intPPTree) _
   
   @Test
   def rootInEmptyGraph() {

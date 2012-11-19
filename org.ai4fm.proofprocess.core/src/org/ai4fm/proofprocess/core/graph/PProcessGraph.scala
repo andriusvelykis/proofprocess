@@ -18,15 +18,14 @@ object PProcessGraph {
     * @return  `(graph, roots)` the pair of created graph and the list of roots to traverse it
     */
   def toGraph[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Decor <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, Decor, _],
-        // FIXME a workaround for type issues
-        empty: => scalax.collection.immutable.Graph[Entry, DiEdge])
-      (rootElem: Elem): (Graph[Entry, DiEdge], List[Entry]) = {
+      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, Decor, _])
+      (rootElem: Elem)
+      (implicit entryManifest: Manifest[Entry]): (Graph[Entry, DiEdge], List[Entry]) = {
     
     type PPGraph = Graph[Entry, DiEdge]
     type PPGraphRoots = List[Entry]
     
-    val emptyGraph = (empty, List(): PPGraphRoots)
+    val emptyGraph = (Graph(): PPGraph, List(): PPGraphRoots)
 
     // a method that collects the graph with an accumulator (necessary for Seq implementation)
     def graph0(rootElem: Elem, acc: (PPGraph, PPGraphRoots)): (PPGraph, PPGraphRoots) = rootElem match {
