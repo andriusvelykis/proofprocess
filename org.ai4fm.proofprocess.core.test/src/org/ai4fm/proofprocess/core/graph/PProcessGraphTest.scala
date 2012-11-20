@@ -1,28 +1,21 @@
 package org.ai4fm.proofprocess.core.graph
 
-import scala.collection.JavaConversions._
-
-import org.ai4fm.proofprocess.ProofProcessFactory
 import org.junit.Assert._
-
 import org.junit.Test
 
-import scalax.collection.immutable.Graph
+import PProcessTree._
+import scalax.collection.GraphEdge.DiEdge
 import scalax.collection.GraphPredef._
-import scalax.collection.GraphEdge._
+import scalax.collection.immutable.Graph
+
 
 /**
   * @author Andrius Velykis 
   */
 class PProcessGraphTest {
-
-  private val factory = ProofProcessFactory.eINSTANCE
-  
-  import PProcessGraph._
-  import PProcessTree._
   
   def toPProcessTree = PProcessGraph.toPProcessTree(intPPTree, Entry(0)) _
-  def toGraph = PProcessGraph.toGraph(intPPTree, Graph[Entry, DiEdge]()) _
+  def toGraph = PProcessGraph.toGraph(intPPTree) _
   
   @Test
   def rootInEmptyGraph() {
@@ -31,8 +24,6 @@ class PProcessGraphTest {
     assertEquals(e1, p1)
     assertEquals((Graph(e1), List(e1)), toGraph(p1))
   }
-  
-  def newEntry = factory.createProofEntry
   
   val r1 = List(e(1))
   
@@ -56,7 +47,6 @@ class PProcessGraphTest {
   def parallel() {
     
     val g1 = Graph(e(1) ~> e(2), e(1) ~> e(3))
-    // TODO parallel permutations?
     val s1 = Seq(List(1, 
                       Par(Set(2,
                               3))))
@@ -204,6 +194,67 @@ class PProcessGraphTest {
     assertEquals(s6, p6)
     // note that both links 1->3 and 1->4 get dropped when converting to graph
     assertEquals((m6 - (e(1) ~> e(3), e(1) ~> e(4)), r1), toGraph(p6))
+  }
+  
+  /**
+   * A complex double-merge at points 4 and 5:
+   *    1
+   *   / \
+   *  2   3
+   *  |\ /
+   *  | 4
+   *  |/
+   *  5
+   * 
+   * When converting to ProofProcess tree, we get a nice split+merge with 1, 2, 3, 4. Then,
+   * however, this branch is merged at 2 points into 5, which is lost - we assume there is
+   * only one link, thus adding 5 sequentially. Link 2->5 is lost when converting back to a graph.
+   */
+  val m7 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(2) ~> e(5), 
+                 e(3) ~> e(4), e(4) ~> e(5))
+  
+  @Test
+  def complexMerge1() {
+    val s7 = Seq(List(1, 
+                      Par(Set(3,
+                                       2)),
+                      4,
+                      5))
+    
+    val p7 = toPProcessTree(m7, r1)
+    assertEquals(s7, p7)
+    assertEquals((m7 - (e(2) ~> e(5)), r1), toGraph(p7))
+  }
+  
+  /**
+   * A further complex triple-merge extending m7:
+   *    1
+   *   / \
+   *  2   3
+   *  |\ /|
+   *  | 4 |
+   *  |/  |
+   *  5   |
+   *   \ /
+   *    6 
+   * 
+   * Just like with m7, we lose the double merges (now also at point 6) when converting to
+   * ProofProcess tree.
+   */
+  val m8 = m7 + (e(3) ~> e(6), e(5) ~> e(6))
+  
+  @Test
+  def complexMerge2() {
+    val s8 = Seq(List(1, 
+                      Par(Set(3,
+                              2)),
+                      4,
+                      5,
+                      6))
+
+    val p8 = toPProcessTree(m8, r1)
+    assertEquals(s8, p8)
+    assertEquals((m8 - (e(2) ~> e(5), e(3) ~> e(6)), r1), toGraph(p8))
   }
   
   // Int + Case Class based testing data structures (to avoid creating EMF ones)

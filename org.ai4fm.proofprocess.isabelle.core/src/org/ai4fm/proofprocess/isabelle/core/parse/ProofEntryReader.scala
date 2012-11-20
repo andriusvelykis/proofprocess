@@ -1,23 +1,15 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
-import isabelle.Command.State
-import isabelle.Text
-import org.ai4fm.filehistory.FileVersion
-import org.ai4fm.proofprocess.Intent
-import org.ai4fm.proofprocess.Loc
-import org.ai4fm.proofprocess.ProofElem
-import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.ProofProcessFactory
-import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.Trace
-import org.ai4fm.proofprocess.core.analysis.CacheGoalTreeMatcher
-import org.ai4fm.proofprocess.core.analysis.GoalEntry
-import org.ai4fm.proofprocess.core.analysis.GoalParallel
-import org.ai4fm.proofprocess.core.analysis.GoalSeq
-import org.ai4fm.proofprocess.core.analysis.GoalTree
-import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
-import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil
 import scala.collection.JavaConversions._
+
+import org.ai4fm.proofprocess.{Intent, Loc, ProofElem, ProofEntry, ProofProcessFactory, Term, Trace}
+import org.ai4fm.proofprocess.core.analysis.GoalGraphMatcher
+import org.ai4fm.proofprocess.core.analysis.TermIndex._
+import org.ai4fm.proofprocess.core.graph.{EmfPProcessTree, PProcessGraph}
+import org.ai4fm.proofprocess.core.util.PProcessUtil
+import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
+
+import isabelle.Command.State
 
 
 /**
@@ -46,35 +38,43 @@ trait ProofEntryReader {
       // Also check that proof steps are available
       val proofSteps = readProofSteps(restCmds, initialGoals)
       
-      proofSteps.map(steps => ProofEntryData(initialGoals, CommandParser.commandId(firstCmd.command), steps))
+      Some(ProofEntryData(initialGoals, CommandParser.commandId(firstCmd.command), proofSteps))
     }
     // empty/short proof state - nothing to parse
     case _ => None
   }
 
-  private def readProofSteps(proofSteps: List[(State, List[Term])], inGoals: List[Term]): Option[ProofElem] = {
+  private def readProofSteps(proofSteps: List[(State, List[Term])], inGoals: List[Term]): ProofElem = {
+    
+    def stepTriple(cmdState: State, inGoals: List[Term], outGoals: List[Term]) =
+      (cmdState, inGoals, outGoals)
+      
+    // create steps with in-out goals
+    val proofStepTriples = PProcessUtil.toInOutGoalSteps(stepTriple)(inGoals, proofSteps)
+    
+    val (termIndex, indexedSteps) = indexedGoalSteps(matchTerms)(proofStepTriples)
+    
+    /** Create proof entry out of indexed goals */
+    def proofEntryIndexed(entryData: (State, List[Int], List[Int])): ProofEntry = {
+      val (cmdState, inGoalsIndexed, outGoalsIndexed) = entryData
+      
+      val inGoals = inGoalsIndexed map termIndex
+      val outGoals = outGoalsIndexed map termIndex
+      
+      proofEntry(cmdState, inGoals, outGoals)
+    }
+    
     // try finding a structure of the flat proof steps based on how the goals change
-    val goalTree = CacheGoalTreeMatcher.goalTree(matchTerms)(inGoals, proofSteps)
-    // map the tree structure to corresponding proof process data elements
-    goalTree.map(proofProcessTree)
+    val (proofGraph, proofGraphRoots) = 
+      GoalGraphMatcher.goalGraph[State, ProofEntry, Int](proofEntryIndexed)(indexedSteps)
+
+    // convert the graph to the Proof Process tree
+    val proofTree = PProcessGraph.toPProcessTree(
+      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph, proofGraphRoots)
+    
+    proofTree
   }
   
-  private def proofProcessTree(tree: GoalTree[State, Term]): ProofElem = tree match {
-    case GoalEntry(state, inGoals, outGoals) => proofEntry(state, inGoals, outGoals)
-    case GoalParallel(par) => {
-      val proofPar = factory.createProofParallel
-      proofPar.getEntries.addAll(par.map(proofProcessTree))
-      proofPar.setInfo(factory.createProofInfo)
-      proofPar
-    }
-    case GoalSeq(seq) => {
-      val proofSeq = factory.createProofSeq
-      proofSeq.getEntries.addAll(seq.map(proofProcessTree))
-      proofSeq.setInfo(factory.createProofInfo)
-      proofSeq
-    }
-  }
-
   private def proofEntry(cmdState: State, inGoals: List[Term], outGoals: List[Term]): ProofEntry = {
 
     val info = factory.createProofInfo

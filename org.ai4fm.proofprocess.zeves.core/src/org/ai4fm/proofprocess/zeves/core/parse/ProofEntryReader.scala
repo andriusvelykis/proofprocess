@@ -1,27 +1,21 @@
 package org.ai4fm.proofprocess.zeves.core.parse
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.Intent
-import org.ai4fm.proofprocess.Loc
-import org.ai4fm.proofprocess.ProofElem
-import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.ProofProcessFactory
-import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.Trace
-import org.ai4fm.proofprocess.core.graph.EmfPProcessTree
-import org.ai4fm.proofprocess.core.graph.PProcessGraph
+import org.ai4fm.proofprocess.{Intent, Loc, ProofElem, ProofEntry, ProofProcessFactory, Term, Trace}
+import org.ai4fm.proofprocess.core.graph.{EmfPProcessTree, PProcessGraph}
+import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory
 import org.ai4fm.proofprocess.zeves.core.analysis.ZEvesGraph
-import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin._
+import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.{error, log}
 
 import net.sourceforge.czt.eclipse.ui.CztUI
 import net.sourceforge.czt.eclipse.zeves.ui.core.SnapshotData
 import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ISnapshotEntry
 import net.sourceforge.czt.session.SectionInfo
 import net.sourceforge.czt.zeves.ast.ProofCommand
-import net.sourceforge.czt.zeves.response.ZEvesOutput
-import net.sourceforge.czt.zeves.response.ZEvesProofTrace
+import net.sourceforge.czt.zeves.response.{ZEvesOutput, ZEvesProofTrace}
+import net.sourceforge.czt.zeves.response.ZEvesProofTrace.TraceType._
 import net.sourceforge.czt.zeves.response.form.ZEvesName
 
 
@@ -58,7 +52,7 @@ trait ProofEntryReader {
 
         val proofSteps = readProofSteps(restGoals, initialGoals)
 
-        proofSteps.map(steps => ProofEntryData(initialGoals, Option(goalEntry.getData.getGoalName), steps))
+        Some(ProofEntryData(initialGoals, Option(goalEntry.getData.getGoalName), proofSteps))
       }
 
       // empty/short proof state - nothing to parse
@@ -74,16 +68,16 @@ trait ProofEntryReader {
     SnapshotUtil.zEvesProofResult(snapshotEntry).get
 
   private def readProofSteps(proofSteps: List[(ISnapshotEntry, List[Term])],
-                             inGoals: List[Term]): Option[ProofElem] = {
+                             inGoals: List[Term]): ProofElem = {
     
-    val proofStepEntries = ZEvesGraph.proofStepEntries(proofEntry)(proofSteps, inGoals)
+    val proofStepEntries = PProcessUtil.toInOutGoalSteps(proofEntry)(inGoals, proofSteps)
     
     val (proofGraph, proofGraphRoots) = ZEvesGraph.proofStepsGraph(proofStepEntries)
 
     val proofTree = PProcessGraph.toPProcessTree(
       EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph, proofGraphRoots)
     
-    Some(proofTree)
+    proofTree
   }
 
   private def proofEntry(snapshotEntry: ISnapshotEntry,
@@ -118,8 +112,8 @@ trait ProofEntryReader {
     step.setSource(textLoc(snapshotEntry))
 
     // copy the goals defensively because inGoals is a containment ref
-    step.getInGoals.addAll(inGoals.map(cloneTerm))
-    step.getOutGoals.addAll(outGoals)
+    step.getInGoals.addAll(inGoals.map(cloneTerm).asJava)
+    step.getOutGoals.addAll(outGoals.asJava)
 
     // create tactic application attempt
     val entry = factory.createProofEntry
@@ -136,16 +130,15 @@ trait ProofEntryReader {
 
     trace.setText(commandText)
     // set the proof case if Z/EVES result is available
-    zevesResult foreach (res => trace.setCase(ProofEntryReader.proofCaseStr(res.getProofCase)))
+    zevesResult foreach (res => trace.setCase(ProofEntryReader.proofCaseStr(res.getProofCase.asScala)))
 
     // retrieve used lemmas from the proof trace
-    val lemmas = snapshotData.getTrace.flatMap(traceResult => usedLemmas(traceResult.getProofTrace))
-    trace.getUsedLemmas.addAll(lemmas)
+    val lemmas = snapshotData.getTrace.asScala.flatMap(traceResult => usedLemmas(traceResult.getProofTrace))
+    trace.getUsedLemmas.addAll(lemmas.asJava)
 
     trace
   }
   
-  import ZEvesProofTrace.TraceType._
   private val lemmaTypes = List(APPLY, REWRITE, FRULE, GRULE, USE)
 
   private def usedLemmas(trace: ZEvesProofTrace): Set[String] = {
@@ -159,7 +152,7 @@ trait ProofEntryReader {
     }
 
     // get the trace elements of each lemma type and extract their names
-    lemmaTypes.map(trace.getTraceElements(_).flatMap(traceName)).flatten.toSet
+    lemmaTypes.map(trace.getTraceElements(_).asScala.flatMap(traceName)).flatten.toSet
   }
 
 }

@@ -18,15 +18,14 @@ object PProcessGraph {
     * @return  `(graph, roots)` the pair of created graph and the list of roots to traverse it
     */
   def toGraph[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Decor <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, Decor, _],
-        // FIXME a workaround for type issues
-        empty: => scalax.collection.immutable.Graph[Entry, DiEdge])
-      (rootElem: Elem): (Graph[Entry, DiEdge], List[Entry]) = {
+      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, Decor, _])
+      (rootElem: Elem)
+      (implicit entryManifest: Manifest[Entry]): (Graph[Entry, DiEdge], List[Entry]) = {
     
     type PPGraph = Graph[Entry, DiEdge]
     type PPGraphRoots = List[Entry]
     
-    val emptyGraph = (empty, List(): PPGraphRoots)
+    val emptyGraph = (Graph(): PPGraph, List(): PPGraphRoots)
 
     // a method that collects the graph with an accumulator (necessary for Seq implementation)
     def graph0(rootElem: Elem, acc: (PPGraph, PPGraphRoots)): (PPGraph, PPGraphRoots) = rootElem match {
@@ -143,11 +142,20 @@ object PProcessGraph {
 
     def toSeq(entry: Elem, following: Elem): Elem = {
       // either prepend to the existing sequence, or create a new one with the entry and the subgraph
-      val entrySeq = following match {
-        case ppTree.seq(entries) => {
-          ppTree.seq(entry :: entries)
-        }
-        case _ => ppTree.seq(List(entry, following))
+      val seq = ppTree.seq
+      val entrySeq = (entry, following) match {
+        
+        // both sequences - merge them together
+        case (seq(entries1), seq(entries2)) => seq(entries1 ::: entries2)
+        
+        // following sequence 
+        case (e, seq(entries)) => seq(e :: entries)
+        
+        // preceding sequence 
+        case (seq(entries), e) => seq(entries ::: List(e))
+        
+        // both non-sequences, just merge together
+        case _ => seq(List(entry, following))
       }
       entrySeq
     }
