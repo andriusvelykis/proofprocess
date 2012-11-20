@@ -11,7 +11,7 @@ import org.ai4fm.proofprocess.project.core.util.EmfUtil
 import org.ai4fm.proofprocess.zeves.core.parse.SnapshotUtil.ProofSnapshotEntry
 import org.eclipse.core.runtime.IProgressMonitor
 
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ISnapshotEntry
+import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
 
 
 /** Logs the proof activities (e.g. proof events from Z/EVES, user actions in the proof

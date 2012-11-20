@@ -4,9 +4,9 @@ import scala.collection.JavaConversions._
 
 import org.ai4fm.proofprocess.Term
 
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ISnapshotEntry
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ResultType
+import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
+import net.sourceforge.czt.zeves.snapshot.ZEvesSnapshot
+import net.sourceforge.czt.zeves.snapshot.ZEvesSnapshot.ResultType
 import net.sourceforge.czt.session.SectionInfo
 import net.sourceforge.czt.zeves.response.ZEvesOutput
 

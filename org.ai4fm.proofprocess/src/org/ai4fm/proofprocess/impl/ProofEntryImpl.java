@@ -9,6 +9,7 @@ package org.ai4fm.proofprocess.impl;
 import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.ProofStep;
+import org.ai4fm.proofprocess.Trace;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -148,6 +149,27 @@ public class ProofEntryImpl extends ProofElemImpl implements ProofEntry {
 				return getProofStep() != null;
 		}
 		return super.eIsSet(featureID);
+	}
+	
+	@Override
+	public String toString() {
+		
+		String str = super.toString();
+		
+		String add = "";
+		ProofStep step = getProofStep();
+		if (step != null) {
+			Trace trace = step.getTrace();
+			if (trace != null) {
+				try {
+					add = String.valueOf(trace.getClass().getMethod("getText").invoke(trace));
+				} catch (Exception ex) {
+					add = ex.getMessage();
+				}
+			}
+		}
+		
+		return str + " -- " + add;
 	}
 
 } //ProofEntryImpl

@@ -5,7 +5,7 @@ import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.zeves.ZEvesTrace
 import org.ai4fm.proofprocess.zeves.core.parse.ProofEntryReader
 
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ISnapshotEntry
+import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
 import scalax.collection.GraphEdge._
 import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph

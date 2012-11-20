@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.Status
 import org.eclipse.emf.ecore.util.EcoreUtil
 
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ISnapshotEntry
+import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
 import net.sourceforge.czt.session.Key
 import net.sourceforge.czt.session.SectionInfo
 import net.sourceforge.czt.session.Source

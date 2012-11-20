@@ -10,13 +10,13 @@ import org.ai4fm.proofprocess.zeves.core.analysis.ZEvesGraph
 import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.{error, log}
 
 import net.sourceforge.czt.eclipse.ui.CztUI
-import net.sourceforge.czt.eclipse.zeves.ui.core.SnapshotData
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ISnapshotEntry
 import net.sourceforge.czt.session.SectionInfo
 import net.sourceforge.czt.zeves.ast.ProofCommand
 import net.sourceforge.czt.zeves.response.{ZEvesOutput, ZEvesProofTrace}
 import net.sourceforge.czt.zeves.response.ZEvesProofTrace.TraceType._
 import net.sourceforge.czt.zeves.response.form.ZEvesName
+import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
+import net.sourceforge.czt.zeves.snapshot.SnapshotData
 
 
 /** @author Andrius Velykis

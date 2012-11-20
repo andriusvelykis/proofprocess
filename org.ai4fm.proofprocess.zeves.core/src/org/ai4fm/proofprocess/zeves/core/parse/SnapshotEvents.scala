@@ -1,8 +1,7 @@
 package org.ai4fm.proofprocess.zeves.core.parse
 
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot
-import net.sourceforge.czt.eclipse.zeves.ui.core.ISnapshotChangedListener
-import net.sourceforge.czt.eclipse.zeves.ui.core.SnapshotChangedEvent
+import net.sourceforge.czt.zeves.snapshot.{ISnapshotChangedListener, SnapshotChangedEvent, ZEvesSnapshot}
+
 
 /** @author Andrius Velykis
   */
