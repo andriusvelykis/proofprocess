@@ -142,11 +142,20 @@ object PProcessGraph {
 
     def toSeq(entry: Elem, following: Elem): Elem = {
       // either prepend to the existing sequence, or create a new one with the entry and the subgraph
-      val entrySeq = following match {
-        case ppTree.seq(entries) => {
-          ppTree.seq(entry :: entries)
-        }
-        case _ => ppTree.seq(List(entry, following))
+      val seq = ppTree.seq
+      val entrySeq = (entry, following) match {
+        
+        // both sequences - merge them together
+        case (seq(entries1), seq(entries2)) => seq(entries1 ::: entries2)
+        
+        // following sequence 
+        case (e, seq(entries)) => seq(e :: entries)
+        
+        // preceding sequence 
+        case (seq(entries), e) => seq(entries ::: List(e))
+        
+        // both non-sequences, just merge together
+        case _ => seq(List(entry, following))
       }
       entrySeq
     }
