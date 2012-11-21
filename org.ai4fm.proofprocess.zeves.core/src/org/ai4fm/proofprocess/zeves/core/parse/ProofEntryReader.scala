@@ -9,7 +9,6 @@ import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory
 import org.ai4fm.proofprocess.zeves.core.analysis.ZEvesGraph
 import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.{error, log}
 
-import net.sourceforge.czt.eclipse.ui.CztUI
 import net.sourceforge.czt.session.SectionInfo
 import net.sourceforge.czt.zeves.ast.ProofCommand
 import net.sourceforge.czt.zeves.response.{ZEvesOutput, ZEvesProofTrace}
@@ -95,7 +94,7 @@ trait ProofEntryReader {
     val entryCmd = snapshotData.getTerm
     val commandText = entryCmd match {
 
-      case proofCmd: ProofCommand => CztUI.getTermLabel(proofCmd)
+      case proofCmd: ProofCommand => ProofCommandPrinter.print(proofCmd)
 
       case _ => zevesResult.map(_.getCommand.toString) getOrElse ""
     }
