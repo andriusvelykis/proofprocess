@@ -3,8 +3,6 @@ package org.ai4fm.proofprocess.zeves.ui.internal
 import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.Status
 import org.eclipse.ui.plugin.AbstractUIPlugin
-import org.eclipse.ui.IStartup
-import org.ai4fm.proofprocess.zeves.core.TrackerComponent
 
 
 /** @author Andrius Velykis
@@ -32,17 +30,11 @@ object ZEvesPProcessUIPlugin {
   }
 }
 
-class ZEvesPProcessUIPlugin extends AbstractUIPlugin with IStartup {
+class ZEvesPProcessUIPlugin extends AbstractUIPlugin {
 
   ZEvesPProcessUIPlugin.instance = this
   
   // The plug-in ID
   def pluginId = "org.ai4fm.proofprocess.zeves.ui" //$NON-NLS-1$
   
-  override def earlyStartup() {
-    // need to startup early, to start tracking
-    // (this is a bit of workaround, since pp.zeves.core currently depends on UI, and thus requires
-    // UI thread execution. So start the pp.zeves.core plug-in)
-    new TrackerComponent
-  }
 }

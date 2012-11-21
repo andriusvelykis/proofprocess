@@ -29,4 +29,3 @@ Import-Package: net.sourceforge.czt.base.ast;version="1.6.0",
  scalax.collection;version="1.5.1",
  scalax.collection.generic;version="1.5.1",
  scalax.collection.immutable;version="1.5.1"
-Export-Package: org.ai4fm.proofprocess.zeves.core
