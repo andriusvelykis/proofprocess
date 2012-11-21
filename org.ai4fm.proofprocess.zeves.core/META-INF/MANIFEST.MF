@@ -19,8 +19,7 @@ Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/tracker.xml
 Import-Package: net.sourceforge.czt.base.ast;version="1.6.0",
  net.sourceforge.czt.eclipse.ui,
- net.sourceforge.czt.eclipse.zeves.ui,
- net.sourceforge.czt.eclipse.zeves.ui.core,
+ net.sourceforge.czt.eclipse.zeves.core,
  net.sourceforge.czt.session;version="1.6.0",
  net.sourceforge.czt.z.ast;version="1.6.0",
  net.sourceforge.czt.zeves;version="1.6.0",
