@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sourceforge.czt.eclipse.zeves.ui.ZEvesImages;
-
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofEntry;
@@ -54,9 +52,6 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -65,7 +60,6 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -125,25 +119,25 @@ public class ProofProcessPage extends Page {
         final MenuManager mgr = new MenuManager();
         mgr.add(groupAttemptsAction);
         Control tree = treeViewer.getTree();
-        final ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), tree);
+//        final ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), tree);
         tree.setMenu(mgr.createContextMenu(tree));
 		
 		treeViewer.setContentProvider(new CustomizedAdapterContentProvider(adapterFactory));
 //		treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
 		treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory) {
 
-			@Override
-			public Image getImage(Object object) {
-				// FIXME quite a hack here
-				if (object instanceof ProofEntry) {
-					ProofEntry entry = (ProofEntry) object;
-					if (entry.getProofStep().getOutGoals().isEmpty()) {
-						// no outstanding goals - proved
-						return resourceManager.createImageWithDefault(ZEvesImages.THEOREM_PROVED);
- 					}
-				}
-				return super.getImage(object);
-			}
+//			@Override
+//			public Image getImage(Object object) {
+//				// FIXME quite a hack here
+//				if (object instanceof ProofEntry) {
+//					ProofEntry entry = (ProofEntry) object;
+//					if (entry.getProofStep().getOutGoals().isEmpty()) {
+//						// no outstanding goals - proved
+//						return resourceManager.createImageWithDefault(ZEvesImages.THEOREM_PROVED);
+// 					}
+//				}
+//				return super.getImage(object);
+//			}
 			
 		});
 		

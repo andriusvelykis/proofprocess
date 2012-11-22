@@ -5,7 +5,7 @@ import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.Plugin
 import org.eclipse.core.runtime.Status
 import org.osgi.framework.BundleContext
-import net.sourceforge.czt.eclipse.zeves.ui.ZEvesUIPlugin
+import net.sourceforge.czt.eclipse.zeves.core.ZEvesCore
 
 
 /**
@@ -39,7 +39,7 @@ class ZEvesPProcessCorePlugin extends Plugin {
   ZEvesPProcessCorePlugin.instance = this
   
   private lazy val snapshotTracker: SnapshotTracker = {
-    val zevesSnapshot = ZEvesUIPlugin.getZEves.getSnapshot
+    val zevesSnapshot = ZEvesCore.getSnapshot
     new SnapshotTracker(zevesSnapshot)
   }
   

@@ -7,7 +7,7 @@ import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory
 import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin._
 
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesResultConverter
+import net.sourceforge.czt.eclipse.zeves.core.ZEvesResultConverter
 import net.sourceforge.czt.session.CommandException
 import net.sourceforge.czt.session.Markup
 import net.sourceforge.czt.session.SectionInfo

@@ -6,20 +6,16 @@ import scala.collection.JavaConversions._
 
 import org.ai4fm.proofprocess.core.parse.TrackingToggle
 import org.ai4fm.proofprocess.zeves.core.analysis.ProofAnalyzer
-import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin._
-import org.eclipse.core.runtime.CoreException
-import org.eclipse.core.runtime.IProgressMonitor
-import org.eclipse.core.runtime.IStatus
-import org.eclipse.core.runtime.Status
-import org.eclipse.core.runtime.jobs.IJobChangeEvent
-import org.eclipse.core.runtime.jobs.Job
-import org.eclipse.core.runtime.jobs.JobChangeAdapter
+import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.error
+import org.eclipse.core.runtime.{CoreException, IProgressMonitor, IStatus, Status}
+import org.eclipse.core.runtime.jobs.{IJobChangeEvent, Job, JobChangeAdapter}
 
-import net.sourceforge.czt.eclipse.zeves.ui.core.SnapshotChangedEvent
-import net.sourceforge.czt.eclipse.zeves.ui.core.SnapshotChangedEvent.SnapshotChangeType
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot
-import net.sourceforge.czt.eclipse.zeves.ui.core.ZEvesSnapshot.ISnapshotEntry
+import SnapshotUtil._
 import net.sourceforge.czt.session.SectionInfo
+import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
+import net.sourceforge.czt.zeves.snapshot.SnapshotChangedEvent
+import net.sourceforge.czt.zeves.snapshot.SnapshotChangedEvent.SnapshotChangeType._
+import net.sourceforge.czt.zeves.snapshot.ZEvesSnapshot
 
 /** @author Andrius Velykis
   */
@@ -62,9 +58,6 @@ class SnapshotTracker(snapshot: ZEvesSnapshot) {
   })
 
   private def addPendingAnalysis(changed: SnapshotChangedEvent) = if (tracking.isTracking) {
-
-    import SnapshotChangeType._
-    import SnapshotUtil._
 
     changed.getType match {
       case ADD => {
@@ -118,7 +111,6 @@ class SnapshotTracker(snapshot: ZEvesSnapshot) {
 
     val start = System.currentTimeMillis
 
-    import SnapshotChangeType._
     val resultStatus = event.event.getType match {
       case ADD => {
         // delegate to the proof analyzer
