@@ -24,49 +24,6 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   
   def matchEdge(nEdge: g1.EdgeT, mEdge: g2.EdgeT): Boolean = true
 
-  def predsMatch(mapping: Map[Node2, Node1], n: Node1, m: Node2): Boolean = {
-    
-    // TODO check if the algorithm is correct
-    // all n predecessors that have mappings
-    val nPreds = n.diPredecessors intersect mapping.values.toSet
-    
-    // all mappings of m predecessors
-    val mappedPreds = m.diPredecessors flatMap mapping.get
-    
-    // require the sets to be the same
-    nPreds == mappedPreds
-  }
-  
-  def succsMatch(mapping: Map[Node2, Node1], n: Node1, m: Node2): Boolean = {
-    
-    // all n successors that have mappings
-    val nSuccs = n.diSuccessors intersect mapping.values.toSet
-    
-    // all mappings of m successors
-    val mappedSuccs = m.diSuccessors flatMap mapping.get
-    
-    // require the sets to be the same
-    nSuccs == mappedSuccs
-  }
-  
-  def syntaxMatch(mapping: Map[Node2, Node1], n: Node1, m: Node2): Boolean = {
-    // TODO 1- and 2-lookahead
-    predsMatch(mapping, n, m) && succsMatch(mapping, n, m)
-  }
-  
-  def semanticMatch(mapping: Map[Node2, Node1], n: Node1, m: Node2): Boolean = {
-    // FIXME
-    true
-  }
-  
-  def isMatchFeasible(mapping0: Map[Node2, Node1], n: Node1, m: Node2): Boolean = {
-    
-    // TODO reuse mapping?
-    val mapping = mapping0 + (m -> n)
-    val result = syntaxMatch(mapping, n, m) && semanticMatch(mapping, n, m)
-    result
-  }
-
   def depthFirstTraversal2(): List[Node2] =
     if (g2.isEmpty) {
       List()
@@ -142,7 +99,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
       case (n, m) => {
         val nextS = State(s.mapping + (m -> n), s.ord)
         
-        if (isMatchFeasible(nextS.mapping, n, m)) {
+        if (nextS.isFeasiblePair(n, m)) {
           Some(from(nextS))
         } else {
           None
@@ -196,11 +153,11 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
 
     lazy val terminals1Out = terminals[Node1](mapped1, n => n.diSuccessors)
     lazy val terminals1In = terminals[Node1](mapped1, n => n.diPredecessors)
-    lazy val lookahead1 = g1.nodes diff ( mapped1 ++ terminals1In ++ terminals1Out )
+    lazy val lookaheadNew1 = g1.nodes diff ( mapped1 ++ terminals1In ++ terminals1Out )
 
     lazy val terminals2Out = terminals[Node2](mapped2, n => n.diSuccessors)
     lazy val terminals2In = terminals[Node2](mapped2, m => m.diPredecessors)
-    lazy val lookahead2 = g2.nodes diff ( mapped2 ++ terminals2In ++ terminals2Out )
+    lazy val lookaheadNew2 = g2.nodes diff ( mapped2 ++ terminals2In ++ terminals2Out )
     
     def min(nodes: Set[Node2]): Node2 = nodes min ord
     
@@ -224,9 +181,69 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
 
       pairs(terminals1Out, terminals2Out) getOrElse
         (pairs(terminals1In, terminals2In) getOrElse
-          (pairs(lookahead1, lookahead2) getOrElse
+          (pairs(lookaheadNew1, lookaheadNew2) getOrElse
             List()))
     }
+
+    def isFeasiblePair(n: Node1, m: Node2): Boolean = 
+      isFeasibleSyntax(n, m) && isFeasibleSemantic(n, m)
+    
+    def isFeasibleMapped(nLinked: Set[Node1], mLinked: Set[Node2]): Boolean = {
+      // TODO check if the algorithm is correct
+      // all n linked nodes that have mappings
+      val nMapped = nLinked intersect mapped1
+
+      // all mappings of m linked nodes
+      val mMappedTo = mLinked flatMap mapping.get
+
+      // require the sets to be the same
+      nMapped == mMappedTo
+    }
+
+    def isFeasiblePreds(n: Node1, m: Node2): Boolean = 
+      isFeasibleMapped(n.diPredecessors, m.diPredecessors)
+
+    def isFeasibleSuccs(n: Node1, m: Node2): Boolean = 
+      isFeasibleMapped(n.diSuccessors, m.diSuccessors)
+
+    def isFeasibleLookahead(n: Node1, m: Node2, terminals1: Set[Node1], terminals2: Set[Node2]): Boolean = {
+
+      def checkTerminalSizes(ns1: Set[Node1], ns2: Set[Node2]): Boolean = {
+        val size1 = (ns1 intersect terminals1).size
+        val size2 = (ns2 intersect terminals2).size
+
+        size1 >= size2
+      }
+
+      checkTerminalSizes(n.diSuccessors, m.diSuccessors) &&
+        checkTerminalSizes(n.diPredecessors, m.diPredecessors)
+    }
+    
+    def isFeasibleIn(n: Node1, m: Node2): Boolean =
+      isFeasibleLookahead(n, m, terminals1In, terminals2In)
+      
+    def isFeasibleOut(n: Node1, m: Node2): Boolean =
+      isFeasibleLookahead(n, m, terminals1Out, terminals2Out)
+      
+    def isFeasibleNew(n: Node1, m: Node2): Boolean = {
+      
+      def checkLookaheadNewSizes(ns1: Set[Node1], ns2: Set[Node2]): Boolean = {
+        val size1 = (ns1 intersect lookaheadNew1).size
+        val size2 = (ns2 intersect lookaheadNew2).size
+
+        size1 >= size2
+      }
+
+      checkLookaheadNewSizes(n.diPredecessors, m.diPredecessors) &&
+        checkLookaheadNewSizes(n.diSuccessors, m.diSuccessors)
+    }
+    
+    def isFeasibleSyntax(n: Node1, m: Node2): Boolean =
+      isFeasiblePreds(n, m) && isFeasibleSuccs(n, m) && 
+        isFeasibleIn(n, m) && isFeasibleOut(n, m) && isFeasibleNew(n, m)
+        
+    // FIXME (nodes + edges)
+    def isFeasibleSemantic(n: Node1, m: Node2): Boolean = true
   }
   
 }
