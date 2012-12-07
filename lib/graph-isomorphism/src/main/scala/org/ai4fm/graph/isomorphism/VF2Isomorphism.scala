@@ -67,13 +67,12 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     result
   }
 
-  def depthFirstTraversal2(): List[Node2] = {
+  def depthFirstTraversal2(): List[Node2] =
     if (g2.isEmpty) {
       List()
     } else {
       depthFirstTraversalM(g2.nodes.head)
     }
-  }
   
 //  def depthFirstTraversal2[](rootVal: Node2): List[Node2] = depthFirstTraversalN(g2 get rootVal)
   
@@ -137,31 +136,42 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   
   def from(s: State): Stream[Map[Node2, Node1]] = {
     
-    val mappedM = s.mapping.keySet
-    // drop pending nodes that have already been mapped from the start
-    val pendingM = s.pendingNodes dropWhile mappedM.contains
+    val candidates = s.nextCandidates
     
-    if (pendingM.isEmpty) {
-      Stream(s.mapping)
-    } else {
-      
-      val m = pendingM.head
-      
-      // replace the node with its neighbors in the pending list
-      // TODO review ordering, e.g. order the neighbors in the order they are in pendingM?
-      lazy val newPendingM = m.neighbors.toList ++ pendingM.tail
-      
-      val candidateNs = nodeCandidates(s.mapping, m)
-      
-      val feasibleMatches = candidateNs.toStream filter (isMatchFeasible(s.mapping, _, m))
-      
-      val newMappings = feasibleMatches map ( n => from(State(s.mapping + (m -> n), newPendingM)) )
-      
-      s.mapping #:: newMappings.flatten
+    val candidateBranches = candidates.toStream flatMap { 
+      case (n, m) => {
+        val nextS = State(s.mapping + (m -> n), s.ord)
+        
+        if (isMatchFeasible(nextS.mapping, n, m)) {
+          Some(from(nextS))
+        } else {
+          None
+        }
+      }
     }
+    
+    // flatten into a single stream
+    s.mapping #:: candidateBranches.flatten
   }
   
-  lazy val mappings: Stream[Map[Node2, Node1]] = from(State(Map(), depthFirstTraversal2))
+  def predefOrdering(ordered: List[Node2]): g2.NodeOrdering = {
+    
+    val orderIndexes = ordered.zipWithIndex.toMap
+
+    def compare(n1: Node2, n2: Node2): Int =
+      (orderIndexes get n1, orderIndexes get n2) match {
+        case (Some(i1), Some(i2)) => i1 - i2
+        case (Some(_), _) => -1
+        case (_, Some(_)) => 1
+        case _ => 0
+      }
+    
+    g2.NodeOrdering( compare )
+  }
+  
+  lazy val depthFirstOrdering: g2.NodeOrdering = predefOrdering(depthFirstTraversal2)
+  
+  lazy val mappings: Stream[Map[Node2, Node1]] = from(State(Map(), depthFirstOrdering))
   
   lazy val isomorphisms: Stream[Map[Node2, Node1]] = {
     val allNodes = g2.nodes.size
@@ -172,7 +182,52 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   
   def isIsomorphism: Boolean = isomorphism.isDefined
   
-  case class State(mapping: Map[Node2, Node1], pendingNodes: List[Node2])
+  case class State(mapping: Map[Node2, Node1], ord: g2.NodeOrdering) {
+
+    lazy val mapped1 = mapping.values.toSet
+    lazy val mapped2 = mapping.keySet
+    
+    def terminals[Node](mapped: Set[Node], direction: Node => Set[Node]): Set[Node] = {
+      val linked = (mapped map direction) flatten
+      val unmapped = linked diff mapped
+      
+      unmapped
+    }
+
+    lazy val terminals1Out = terminals[Node1](mapped1, n => n.diSuccessors)
+    lazy val terminals1In = terminals[Node1](mapped1, n => n.diPredecessors)
+    lazy val lookahead1 = g1.nodes diff ( mapped1 ++ terminals1In ++ terminals1Out )
+
+    lazy val terminals2Out = terminals[Node2](mapped2, n => n.diSuccessors)
+    lazy val terminals2In = terminals[Node2](mapped2, m => m.diPredecessors)
+    lazy val lookahead2 = g2.nodes diff ( mapped2 ++ terminals2In ++ terminals2Out )
+    
+    def min(nodes: Set[Node2]): Node2 = nodes min ord
+    
+    def nextCandidates: List[(Node1, Node2)] = {
+      
+      def pairs(t1: Set[Node1], t2: Set[Node2]): Option[List[(Node1, Node2)]] =
+        if (t1.isEmpty && t2.isEmpty) {
+          // both are empty, so check the next terminals
+          None
+        } else if (t1.isEmpty || t2.isEmpty) {
+          // one is empty (paper says that this does not lead anywhere)
+          // return empty list
+          Some(List())
+        } else {
+          // get the next node to visit according to ordering
+          val m = min(t2)
+          // create the pairs
+          val ps = t1.toList map ( n => (n, m) )
+          Some(ps)
+        }
+
+      pairs(terminals1Out, terminals2Out) getOrElse
+        (pairs(terminals1In, terminals2In) getOrElse
+          (pairs(lookahead1, lookahead2) getOrElse
+            List()))
+    }
+  }
   
 }
 
