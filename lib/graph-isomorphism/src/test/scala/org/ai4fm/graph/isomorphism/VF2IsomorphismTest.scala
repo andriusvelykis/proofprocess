@@ -81,7 +81,8 @@ class VF2IsomorphismTest {
     val subgraph1 = Graph("A" ~> "B", "B" ~> "D", "A" ~> "C", "C" ~> "D", "D" ~> "E")
     val isom = VF2Isomorphism(graph1, subgraph1).default
     assertFalse(isom.isIsomorphism)
-    assertEquals(0, isom.mappings.size)
+    // only a single empty mapping
+    assertEquals(1, isom.mappings.size)
   }
   
   @Test

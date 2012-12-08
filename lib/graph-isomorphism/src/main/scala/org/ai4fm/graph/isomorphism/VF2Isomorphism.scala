@@ -90,7 +90,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   }
   
   def fromState0(s: State): Stream[Map[Node2, Node1]] =
-    if (g2.order > g1.order) Stream.empty else fromState(s)
+    if (g2.order > g1.order) Stream(Map()) else fromState(s)
   
   def fromState(s: State): Stream[Map[Node2, Node1]] = {
     
@@ -151,7 +151,9 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     }
 
     state match {
-      case None => empty
+      // for invalid state, return an empty stream instead of `empty`, which is an empty mapping
+      case None => new MatchResult(Stream.empty)
+      
       case Some(s) => new MatchResult(fromState0(s))
     }
   }
@@ -303,7 +305,8 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     def isIsomorphism: Boolean = isomorphism.isDefined
   }
   
-  lazy val empty = new MatchResult(Stream.empty)
+  // empty match - result with only the single empty map (e.g. indicating that nothing matches)
+  lazy val empty = new MatchResult(Stream(Map()))
   
 }
 
