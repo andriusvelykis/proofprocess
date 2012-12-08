@@ -24,13 +24,6 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   
   def matchEdge(nEdge: g1.EdgeT, mEdge: g2.EdgeT): Boolean = true
 
-  def depthFirstTraversal2(): List[Node2] =
-    if (g2.isEmpty) {
-      List()
-    } else {
-      depthFirstTraversalM(g2.nodes.head)
-    }
-  
   def depthFirstTraversalM(root: Node2): List[Node2] = {
 
     def traverseConnected(root: Node2, all: Set[Node2], acc: List[Node2]): List[Node2] = {
@@ -60,33 +53,6 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
 
     // reverse after traversal to start with root
     traverseConnected(root, g2.nodes, List()).reverse.distinct
-  }
-  
-  def nodeCandidates(mapping: Map[Node2, Node1], m: Node2): Set[Node1] = {
-    
-    val mappedCandidates = mapping.values.toSet
-    
-    def candidatesVia(mNeighbors: Node2 => Set[Node2], 
-                      nNeighbors: Node1 => Set[Node1]): Set[Node1] = {
-      
-      val mapped = mNeighbors(m) flatMap mapping.get
-      val candidates = mapped map nNeighbors flatten
-      
-      candidates diff mappedCandidates
-    }
-
-    // check for candidates via successor ( node predecessors -> mapped -> node successors ) 
-    lazy val candidatesPredSucc = candidatesVia( m => m.diPredecessors, n => n.diSuccessors )
-    
-    // try for candidates via predecessor ( node successors -> mapped -> node predecessors )
-    lazy val candidatesSuccPred = candidatesVia( m => m.diSuccessors, n => n.diPredecessors )
-
-    // finally, there are no hints to the candidates, so just take all unmapped nodes
-    lazy val candidatesAllUnmapped = g1.nodes diff mappedCandidates
-    
-    if (!candidatesPredSucc.isEmpty) candidatesPredSucc
-    else if (!candidatesSuccPred.isEmpty) candidatesSuccPred
-    else candidatesAllUnmapped
   }
   
   def fromState0(s: State): Stream[Map[Node2, Node1]] =
