@@ -78,21 +78,6 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     s.mapping #:: candidateBranches.flatten
   }
   
-  def predefOrdering(ordered: List[Node2]): g2.NodeOrdering = {
-    
-    val orderIndexes = ordered.zipWithIndex.toMap
-
-    def compare(n1: Node2, n2: Node2): Int =
-      (orderIndexes get n1, orderIndexes get n2) match {
-        case (Some(i1), Some(i2)) => i1 - i2
-        case (Some(_), _) => -1
-        case (_, Some(_)) => 1
-        case _ => 0
-      }
-    
-    g2.NodeOrdering( compare )
-  }
-  
   /** default isomorphism matching (depth-first ordering from the first node) */
   def default: MatchResult = 
     if (g2.isEmpty) empty else fromNode(g2.nodes.head)
@@ -107,7 +92,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   def fromInitial(initialMappings: Map[N2, N1], root: Node2): MatchResult = {
 
     val dfsNodes = depthFirstTraversalM(root)
-    val nodeOrder = predefOrdering(dfsNodes)
+    val nodeOrder = NodeOrderings.predefOrdering(dfsNodes)
     val initState = new State(Map(), nodeOrder)
 
     val state = if (initialMappings.isEmpty) {
@@ -150,7 +135,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
 
   }
   
-  class State(val mapping: Map[Node2, Node1], val ord: g2.NodeOrdering) {
+  class State(val mapping: Map[Node2, Node1], val ord: Ordering[Node2]) {
     
     def nextState(n: Node1, m: Node2): State = new State(mapping + (m -> n), ord)
 
