@@ -73,5 +73,16 @@ class VF2IsomorphismTest {
     assertTrue(isom.isIsomorphism)
   }
   
+  @Test
+  def dead() {
+    
+    // subgraph is larger than graph - should not even try calculating
+    val graph1 = Graph(1 ~> 2, 2 ~> 3, 2 ~> 4)
+    val subgraph1 = Graph("A" ~> "B", "B" ~> "D", "A" ~> "C", "C" ~> "D", "D" ~> "E")
+    val isom = VF2Isomorphism(graph1, subgraph1)
+    assertFalse(isom.isIsomorphism)
+    assertEquals(0, isom.mappings.size)
+  }
+  
   
 }

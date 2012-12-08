@@ -91,6 +91,9 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     else candidatesAllUnmapped
   }
   
+  def from0(s: State): Stream[Map[Node2, Node1]] =
+    if (g2.order > g1.order) Stream.empty else from(s)
+  
   def from(s: State): Stream[Map[Node2, Node1]] = {
     
     val candidates = s.nextCandidates
@@ -128,10 +131,10 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   
   lazy val depthFirstOrdering: g2.NodeOrdering = predefOrdering(depthFirstTraversal2)
   
-  lazy val mappings: Stream[Map[Node2, Node1]] = from(State(Map(), depthFirstOrdering))
+  lazy val mappings: Stream[Map[Node2, Node1]] = from0(State(Map(), depthFirstOrdering))
   
   lazy val isomorphisms: Stream[Map[Node2, Node1]] = {
-    val allNodes = g2.nodes.size
+    val allNodes = g2.order
     mappings filter (_.size == allNodes)
   }
   
