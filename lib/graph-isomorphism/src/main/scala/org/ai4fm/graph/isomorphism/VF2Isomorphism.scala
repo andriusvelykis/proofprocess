@@ -31,8 +31,6 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
       depthFirstTraversalM(g2.nodes.head)
     }
   
-//  def depthFirstTraversal2[](rootVal: Node2): List[Node2] = depthFirstTraversalN(g2 get rootVal)
-  
   def depthFirstTraversalM(root: Node2): List[Node2] = {
 
     def traverseConnected(root: Node2, all: Set[Node2], acc: List[Node2]): List[Node2] = {
@@ -100,7 +98,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     
     val candidateBranches = candidates.toStream flatMap { 
       case (n, m) => {
-        val nextS = new State(s.mapping + (m -> n), s.ord)
+        val nextS = s.nextState(n, m)
         
         if (nextS.isFeasiblePair(n, m)) {
           Some(fromState(nextS))
@@ -133,18 +131,60 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   def default: MatchResult = 
     if (g2.isEmpty) empty else fromNode(g2.nodes.head)
   
-  def from(rootVal: N2): MatchResult = (g2 find rootVal) match {
-      case None => empty
-      case Some(root) => fromNode(root)
+  def from(rootVal: N2): MatchResult = fromNode(g2 get rootVal)
+
+  private def fromNode(root: Node2): MatchResult = fromInitial(Map(), root)
+
+  def fromInitial(initialMappings: Map[N2, N1]): MatchResult =
+    if (g2.isEmpty) empty else fromInitial(initialMappings, g2.nodes.head)
+  
+  def fromInitial(initialMappings: Map[N2, N1], root: Node2): MatchResult = {
+
+    val dfsNodes = depthFirstTraversalM(root)
+    val nodeOrder = predefOrdering(dfsNodes)
+    val initState = new State(Map(), nodeOrder)
+
+    val state = if (initialMappings.isEmpty) {
+      Some(initState)
+    } else {
+      checkMappings(initialMappings, initState)
     }
 
-  private def fromNode(root: Node2): MatchResult = {
-    val dfsNodes = depthFirstTraversalM(root)
-    val mappings = fromState0(new State(Map(), predefOrdering(dfsNodes)))
-    new MatchResult(mappings)
+    state match {
+      case None => empty
+      case Some(s) => new MatchResult(fromState0(s))
+    }
+  }
+
+  private def checkMappings(mappings: Map[N2, N1], initState: State): Option[State] = {
+
+    val initStateOpt: Option[State] = Some(initState)
+    
+    // check each mapping whether it is feasible and incrementally build up the state
+    // if an illegal mapping is found, the state becomes None
+    (mappings foldLeft initStateOpt) {
+      
+      case (Some(s), (mVal, nVal)) => {
+        
+        val n = g1 get nVal
+        val m = g2 get mVal
+        
+        val nextState = s.nextState(n, m)
+        if (nextState.isFeasiblePair(n, m)) {
+          Some(nextState)
+        } else {
+          None
+        }
+      }
+
+      case (None, _) => None
+    }
+
   }
   
   class State(val mapping: Map[Node2, Node1], val ord: g2.NodeOrdering) {
+    
+    def nextState(n: Node1, m: Node2): State = new State(mapping + (m -> n), ord)
 
     lazy val mapped1 = mapping.values.toSet
     lazy val mapped2 = mapping.keySet

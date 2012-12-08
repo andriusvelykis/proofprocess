@@ -95,5 +95,44 @@ class VF2IsomorphismTest {
     assertEquals(8, isom.mappings.size)
   }
   
+  @Test
+  def fromInitialItself1() {
+    
+    val graph1 = Graph(1 ~> 2, 2 ~> 3, 2 ~> 4)
+    val isom = VF2Isomorphism(graph1, graph1).fromInitial(Map(1 -> 1))
+    assertTrue(isom.isIsomorphism)
+    assertEquals(2, isom.isomorphisms.size)
+  }
+  
+  @Test
+  def fromInitialItself2() {
+    
+    val graph1 = Graph(1 ~> 2, 2 ~> 3, 2 ~> 4)
+    val isom = VF2Isomorphism(graph1, graph1).fromInitial(Map(3 -> 3))
+    assertTrue(isom.isIsomorphism)
+    // only one isomorphism, since we predefine 3->3 mapping!
+    assertEquals(1, isom.isomorphisms.size)
+  }
+  
+  @Test
+  def fromInitialItselfBad1() {
+    
+    val graph1 = Graph(1 ~> 2, 2 ~> 3, 2 ~> 4)
+    val isom = VF2Isomorphism(graph1, graph1).fromInitial(Map(1 -> 2))
+    // cannot find isomorphism with the predefined partial mapping
+    assertFalse(isom.isIsomorphism)
+    assert(isom.mappings.size > 0)
+  }
+  
+  @Test
+  def fromInitialItselfBad2() {
+    
+    val graph1 = Graph(1 ~> 2, 2 ~> 3, 2 ~> 4)
+    val isom = VF2Isomorphism(graph1, graph1).fromInitial(Map(2 -> 3))
+    // invalid mapping
+    assertFalse(isom.isIsomorphism)
+    // no mappings at all since the initial one is invalid
+    assertEquals(0, isom.mappings.size)
+  }
   
 }
