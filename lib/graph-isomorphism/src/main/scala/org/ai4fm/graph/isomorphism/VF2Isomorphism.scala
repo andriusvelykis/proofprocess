@@ -100,7 +100,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     
     val candidateBranches = candidates.toStream flatMap { 
       case (n, m) => {
-        val nextS = State(s.mapping + (m -> n), s.ord)
+        val nextS = new State(s.mapping + (m -> n), s.ord)
         
         if (nextS.isFeasiblePair(n, m)) {
           Some(from(nextS))
@@ -131,7 +131,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   
   lazy val depthFirstOrdering: g2.NodeOrdering = predefOrdering(depthFirstTraversal2)
   
-  lazy val mappings: Stream[Map[Node2, Node1]] = from0(State(Map(), depthFirstOrdering))
+  lazy val mappings: Stream[Map[Node2, Node1]] = from0(new State(Map(), depthFirstOrdering))
   
   lazy val isomorphisms: Stream[Map[Node2, Node1]] = {
     val allNodes = g2.order
@@ -142,7 +142,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   
   def isIsomorphism: Boolean = isomorphism.isDefined
   
-  case class State(mapping: Map[Node2, Node1], ord: g2.NodeOrdering) {
+  class State(val mapping: Map[Node2, Node1], val ord: g2.NodeOrdering) {
 
     lazy val mapped1 = mapping.values.toSet
     lazy val mapped2 = mapping.keySet
