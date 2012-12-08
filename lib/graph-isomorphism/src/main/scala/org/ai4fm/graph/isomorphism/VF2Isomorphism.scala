@@ -91,10 +91,10 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     else candidatesAllUnmapped
   }
   
-  def from0(s: State): Stream[Map[Node2, Node1]] =
-    if (g2.order > g1.order) Stream.empty else from(s)
+  def fromState0(s: State): Stream[Map[Node2, Node1]] =
+    if (g2.order > g1.order) Stream.empty else fromState(s)
   
-  def from(s: State): Stream[Map[Node2, Node1]] = {
+  def fromState(s: State): Stream[Map[Node2, Node1]] = {
     
     val candidates = s.nextCandidates
     
@@ -103,7 +103,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
         val nextS = new State(s.mapping + (m -> n), s.ord)
         
         if (nextS.isFeasiblePair(n, m)) {
-          Some(from(nextS))
+          Some(fromState(nextS))
         } else {
           None
         }
@@ -130,17 +130,17 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   }
   
   /** default isomorphism matching (depth-first ordering from the first node) */
-  def matchDefault(): MatchResult = 
-    if (g2.isEmpty) empty else matchFromNode(g2.nodes.head)
+  def default: MatchResult = 
+    if (g2.isEmpty) empty else fromNode(g2.nodes.head)
   
-  def matchFrom(rootVal: N2): MatchResult = (g2 find rootVal) match {
+  def from(rootVal: N2): MatchResult = (g2 find rootVal) match {
       case None => empty
-      case Some(root) => matchFromNode(root)
+      case Some(root) => fromNode(root)
     }
 
-  private def matchFromNode(root: Node2): MatchResult = {
+  private def fromNode(root: Node2): MatchResult = {
     val dfsNodes = depthFirstTraversalM(root)
-    val mappings = from0(new State(Map(), predefOrdering(dfsNodes)))
+    val mappings = fromState0(new State(Map(), predefOrdering(dfsNodes)))
     new MatchResult(mappings)
   }
   
