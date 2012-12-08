@@ -130,17 +130,9 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   }
   
   lazy val depthFirstOrdering: g2.NodeOrdering = predefOrdering(depthFirstTraversal2)
-  
-  lazy val mappings: Stream[Map[Node2, Node1]] = from0(new State(Map(), depthFirstOrdering))
-  
-  lazy val isomorphisms: Stream[Map[Node2, Node1]] = {
-    val allNodes = g2.order
-    mappings filter (_.size == allNodes)
-  }
-  
-  def isomorphism: Option[Map[Node2, Node1]] = isomorphisms.headOption
-  
-  def isIsomorphism: Boolean = isomorphism.isDefined
+
+  // default isomorphism matching (depth-first ordering from the first node)
+  lazy val default: MatchResult = new MatchResult(from0(new State(Map(), depthFirstOrdering)))
   
   class State(val mapping: Map[Node2, Node1], val ord: g2.NodeOrdering) {
 
@@ -247,6 +239,18 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
         
     // FIXME (nodes + edges)
     def isFeasibleSemantic(n: Node1, m: Node2): Boolean = true
+  }
+
+  class MatchResult(val mappings: Stream[Map[Node2, Node1]]) {
+    
+    lazy val isomorphisms: Stream[Map[Node2, Node1]] = {
+      val allNodes = g2.order
+      mappings filter (_.size == allNodes)
+    }
+
+    def isomorphism: Option[Map[Node2, Node1]] = isomorphisms.headOption
+
+    def isIsomorphism: Boolean = isomorphism.isDefined
   }
   
 }
