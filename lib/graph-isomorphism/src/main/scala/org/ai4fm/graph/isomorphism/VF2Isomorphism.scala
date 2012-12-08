@@ -129,10 +129,20 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     g2.NodeOrdering( compare )
   }
   
-  lazy val depthFirstOrdering: g2.NodeOrdering = predefOrdering(depthFirstTraversal2)
+  /** default isomorphism matching (depth-first ordering from the first node) */
+  def matchDefault(): MatchResult = 
+    if (g2.isEmpty) empty else matchFromNode(g2.nodes.head)
+  
+  def matchFrom(rootVal: N2): MatchResult = (g2 find rootVal) match {
+      case None => empty
+      case Some(root) => matchFromNode(root)
+    }
 
-  // default isomorphism matching (depth-first ordering from the first node)
-  lazy val default: MatchResult = new MatchResult(from0(new State(Map(), depthFirstOrdering)))
+  private def matchFromNode(root: Node2): MatchResult = {
+    val dfsNodes = depthFirstTraversalM(root)
+    val mappings = from0(new State(Map(), predefOrdering(dfsNodes)))
+    new MatchResult(mappings)
+  }
   
   class State(val mapping: Map[Node2, Node1], val ord: g2.NodeOrdering) {
 
@@ -252,6 +262,8 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
 
     def isIsomorphism: Boolean = isomorphism.isDefined
   }
+  
+  lazy val empty = new MatchResult(Stream.empty)
   
 }
 
