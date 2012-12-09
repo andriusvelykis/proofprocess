@@ -136,4 +136,17 @@ class VF2IsomorphismTest {
     assertEquals(0, isom.mappings.size)
   }
   
+  @Test
+  def nodeMatcherItself() {
+    
+    def nodeMatcher(n: Int, m: Int): Boolean = n == m 
+    
+    val graph1 = Graph(1 ~> 2, 2 ~> 3, 2 ~> 4)
+    val isom = VF2Isomorphism(graph1, graph1, Some(nodeMatcher _)).default
+    
+    assertTrue(isom.isIsomorphism)
+    // only one isomorphism, since we require nodes to be exactly the same
+    assertEquals(1, isom.isomorphisms.size)
+  }
+  
 }

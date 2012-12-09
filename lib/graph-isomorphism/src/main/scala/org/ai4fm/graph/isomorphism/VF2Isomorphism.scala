@@ -19,9 +19,13 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   private type Node1 = g1.NodeT
   private type Node2 = g2.NodeT
   
-  def matchNode(n: Node1, m: Node2): Boolean = true //n == m
+  private type Edge1 = g1.EdgeT
+  private type Edge2 = g2.EdgeT
   
-  def matchEdge(nEdge: g1.EdgeT, mEdge: g2.EdgeT): Boolean = true
+  
+  val isFeasibleNode: (Node1, Node2) => Boolean
+  
+  val isFeasibleEdge: Option[(Edge1, Edge2) => Boolean]
   
   
   def fromState0(s: State): Stream[Map[Node2, Node1]] =
@@ -209,7 +213,26 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
         isFeasibleIn(n, m) && isFeasibleOut(n, m) && isFeasibleNew(n, m)
         
     // FIXME (nodes + edges)
-    def isFeasibleSemantic(n: Node1, m: Node2): Boolean = true
+    def isFeasibleSemantic(n: Node1, m: Node2): Boolean =
+      isFeasibleNode(n, m) && 
+        // only check edges if the feasibility function is defined
+        // (computation required to find edges)
+        (isFeasibleEdge forall (isFeasibleEdges(_, n, m)))
+    
+    def isFeasibleEdges(feas: (Edge1, Edge2) => Boolean, n: Node1, m: Node2): Boolean = {
+      
+      def checkEdges(linked: Set[Node2], 
+          findEdge1: Node1 => Option[Edge1], 
+          findEdge2: Node2 => Option[Edge2]): Boolean = {
+        
+        val neighborPairs = linked flatMap (m2 => (mapping get m2) map ((m2, _)))
+        neighborPairs forall { case (m2, n2) => feas(findEdge1(n2).get, findEdge2(m2).get) }
+      }
+      
+      checkEdges(m.diSuccessors, n2 => n.findOutgoingTo(n2), m2 => m.findOutgoingTo(m2)) &&
+        checkEdges(m.diPredecessors, n2 => n.findIncomingFrom(n2), m2 => m.findIncomingFrom(m2))
+    }
+    
   }
 
   class MatchResult(val mappings: Stream[Map[Node2, Node1]]) {
@@ -232,10 +255,24 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
 object VF2Isomorphism {
 
   def apply[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]](
-            graph1: Graph[N1, E1], graph2: Graph[N2, E2]) =
+            graph1: Graph[N1, E1],
+            graph2: Graph[N2, E2],
+            matchNode: Option[(N1, N2) => Boolean] = None,
+            matchEdge: Option[(E1[_], E2[_]) => Boolean] = None) =
     new VF2Isomorphism[N1, E1, N2, E2] {
-      val g1 = graph1
-      val g2 = graph2
+      override val g1 = graph1
+      override val g2 = graph2
+      
+      override val isFeasibleNode: (Node1, Node2) => Boolean = matchNode match {
+        case Some(matcher) => ( (n, m) => matcher(n.value, m.value) )
+        case None => ( (_, _) => true )
+      }
+      
+      override val isFeasibleEdge: Option[(Edge1, Edge2) => Boolean] = matchEdge match {
+        case Some(matcher) => Some( (e1, e2) => matcher(e1.value, e2.value) )
+        case None => None
+      }
+      
     }
 
 }
