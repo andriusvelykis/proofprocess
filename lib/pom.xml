@@ -24,6 +24,7 @@
 
   <modules>
     <module>graph-core</module>
+    <module>graph-isomorphism</module>
   </modules>
 
   <build>

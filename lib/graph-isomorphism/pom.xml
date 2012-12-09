@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.ai4fm.proofprocess</groupId>
+    <artifactId>org.ai4fm.proofprocess.lib-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <groupId>org.ai4fm.graph</groupId>
+  <artifactId>graph-isomorphism</artifactId>
+  <packaging>bundle</packaging>
+
+  <name>Graph Isomorphism</name>
+  
+  <properties>
+    <scala.version>2.9.2</scala.version>
+    <graph-core.version>1.5.1</graph-core.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.assembla.scala-incubator</groupId>
+      <artifactId>graph-core_2.9.2</artifactId>
+      <version>${graph-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.10</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <sourceDirectory>${basedir}/src/main/scala</sourceDirectory>
+    <testSourceDirectory>${basedir}/src/test/scala</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.scala-tools</groupId>
+        <artifactId>maven-scala-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <!-- Bundle export/import is not working for some reason, specify the packages explicitly -->
+            <Export-Package>org.ai4fm.graph.isomorphism;version=${project.version}</Export-Package>
+            <Import-Package>scalax.collection;version=${graph-core.version},scalax.collection.generic;version=${graph-core.version},scala,scala.collection,scala.collection.generic,scala.collection.immutable,scala.compat,scala.math,scala.reflect,scala.runtime</Import-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+    
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.scala-tools</groupId>
+          <artifactId>maven-scala-plugin</artifactId>
+          <version>2.15.2</version>
+          <executions>
+            <execution>
+              <id>scala-compile-first</id>
+              <phase>process-resources</phase>
+              <goals>
+                <goal>add-source</goal>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>scala-test-compile</id>
+              <phase>process-test-resources</phase>
+              <goals>
+                <goal>testCompile</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+  
+  <organization>
+    <name>AI4FM</name>
+    <url>http://www.ai4fm.org</url>
+  </organization>
+
+</project>
