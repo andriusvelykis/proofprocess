@@ -15,6 +15,7 @@
   
   <properties>
     <scala.version>2.9.2</scala.version>
+    <graph-core.version>1.5.1</graph-core.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -28,7 +29,7 @@
     <dependency>
       <groupId>com.assembla.scala-incubator</groupId>
       <artifactId>graph-core_2.9.2</artifactId>
-      <version>1.5.1</version>
+      <version>${graph-core.version}</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -49,6 +50,13 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <!-- Bundle export/import is not working for some reason, specify the packages explicitly -->
+            <Export-Package>org.ai4fm.graph.isomorphism;version=${project.version}</Export-Package>
+            <Import-Package>scalax.collection;version=${graph-core.version},scalax.collection.generic;version=${graph-core.version},scala,scala.collection,scala.collection.generic,scala.collection.immutable,scala.compat,scala.math,scala.reflect,scala.runtime</Import-Package>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
     
@@ -79,5 +87,10 @@
       </plugins>
     </pluginManagement>
   </build>
+  
+  <organization>
+    <name>AI4FM</name>
+    <url>http://www.ai4fm.org</url>
+  </organization>
 
 </project>
