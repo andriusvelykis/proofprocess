@@ -218,5 +218,10 @@
      </plugins>
     </pluginManagement>
   </build>
+  
+  <organization>
+    <name>AI4FM</name>
+    <url>http://www.ai4fm.org</url>
+  </organization>
 
 </project>
