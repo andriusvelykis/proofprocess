@@ -1,10 +1,9 @@
 package org.ai4fm.graph.isomorphism
 
 import scala.collection.Set
+
 import scalax.collection.Graph
 import scalax.collection.GraphPredef._
-import scalax.collection.GraphTraversal.AnyConnected
-import scalax.collection.GraphTraversal.VisitorReturn._
 
 
 /**
@@ -23,37 +22,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   def matchNode(n: Node1, m: Node2): Boolean = true //n == m
   
   def matchEdge(nEdge: g1.EdgeT, mEdge: g2.EdgeT): Boolean = true
-
-  def depthFirstTraversalM(root: Node2): List[Node2] = {
-
-    def traverseConnected(root: Node2, all: Set[Node2], acc: List[Node2]): List[Node2] = {
-      // collected in reverse
-      var dfsNodes = acc
-      var size = 0;
-      root.traverseNodes(direction = AnyConnected, breadthFirst = false) {
-        node =>
-          {
-            dfsNodes = node :: dfsNodes
-            size = size + 1
-            Continue
-          }
-      }
-
-      if (all.size > size) {
-        // disconnected graph - recurse with remaining nodes
-        val unvisitedNodes = all diff dfsNodes.toSet
-        val nextRoot = unvisitedNodes.head
-
-        traverseConnected(nextRoot, unvisitedNodes, dfsNodes)
-
-      } else {
-        dfsNodes
-      }
-    }
-
-    // reverse after traversal to start with root
-    traverseConnected(root, g2.nodes, List()).reverse.distinct
-  }
+  
   
   def fromState0(s: State): Stream[Map[Node2, Node1]] =
     if (g2.order > g1.order) Stream(Map()) else fromState(s)
@@ -91,9 +60,8 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   
   def fromInitial(initialMappings: Map[N2, N1], root: Node2): MatchResult = {
 
-    val dfsNodes = depthFirstTraversalM(root)
-    val nodeOrder = NodeOrderings.predefOrdering(dfsNodes)
-    val initState = new State(Map(), nodeOrder)
+    val dfsOrder = NodeOrderings.depthFirstOrdering(g2, root)
+    val initState = new State(Map(), dfsOrder)
 
     val state = if (initialMappings.isEmpty) {
       Some(initState)
@@ -135,7 +103,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
 
   }
   
-  class State(val mapping: Map[Node2, Node1], val ord: Ordering[Node2]) {
+  class State(val mapping: Map[Node2, Node1], val ord: Ordering[_ >: Node2]) {
     
     def nextState(n: Node1, m: Node2): State = new State(mapping + (m -> n), ord)
 

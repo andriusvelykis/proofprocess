@@ -26,5 +26,44 @@ object NodeOrderings {
         }
     }
   }
+  
+  def depthFirstOrdering[N, E[X] <: EdgeLikeIn[X]](g: Graph[N, E], 
+                                                   root: Node[N, E]): Ordering[Node[N, E]] = {
+
+    // typecast because cannot use dependent types in parameters
+    val r = root.asInstanceOf[g.NodeT]
+    
+    def traverseConnected(root: g.NodeT, all: scala.collection.Set[g.NodeT], 
+                          acc: List[g.NodeT]): List[g.NodeT] = {
+      
+      // collected in reverse
+      var dfsNodes = acc
+      var size = 0;
+      root.traverseNodes(direction = AnyConnected, breadthFirst = false) {
+        node =>
+          {
+            dfsNodes = node :: dfsNodes
+            size = size + 1
+            Continue
+          }
+      }
+
+      if (all.size > size) {
+        // disconnected graph - recurse with remaining nodes
+        val unvisitedNodes = all diff dfsNodes.toSet
+        val nextRoot = unvisitedNodes.head
+
+        traverseConnected(nextRoot, unvisitedNodes, dfsNodes)
+
+      } else {
+        dfsNodes
+      }
+    }
+
+    // reverse after traversal to start with root
+    val ordered = traverseConnected(r, g.nodes, List()).reverse.distinct
+    
+    predefOrdering(ordered)
+  }
 
 }
