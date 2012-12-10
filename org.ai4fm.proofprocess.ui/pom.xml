@@ -17,6 +17,10 @@
       <groupId>com.assembla.scala-incubator</groupId>
       <artifactId>graph-core_2.9.2.osgi</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.ai4fm.graph</groupId>
+      <artifactId>graph-isomorphism</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
