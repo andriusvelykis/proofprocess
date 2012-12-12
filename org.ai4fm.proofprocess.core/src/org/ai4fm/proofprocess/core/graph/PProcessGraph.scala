@@ -47,21 +47,20 @@ object PProcessGraph {
       // happen, e.g., when we have 2 parallels in a row in a sequence: Seq(Entry, Parallel, Parallel, Entry).
       // This way there should be a merge between parallels, but it is not represented as entry
 
-      // see the double-match here, since the extractors cannot set the subtype correctly,
-      // we perform this pattern matching, then casting
-      case entry @ ppTree.entry(_) => entry match {
-        case entry: Entry => {
-          val PPRootGraph(accGraph, accRoots) = acc
+      // see that we typecast manually here, since the extractors cannot set the subtype correctly.
+      // We perform this pattern matching, then casting
+      case e @ ppTree.entry(_) => {
+        val entry = e.asInstanceOf[Entry]
+        val PPRootGraph(accGraph, accRoots) = acc
 
-          // add the entry to the graph
-          val withEntryEdges = accRoots.foldLeft(accGraph + entry) {
-            // for each root, add an edge from entry to root
-            (accGraph, root) => accGraph + (entry ~> root)
-          }
-
-          // only the entry is a root now
-          PPRootGraph(withEntryEdges, List(entry))
+        // add the entry to the graph
+        val withEntryEdges = accRoots.foldLeft(accGraph + entry) {
+          // for each root, add an edge from entry to root
+          (accGraph, root) => accGraph + (entry ~> root)
         }
+
+        // only the entry is a root now
+        PPRootGraph(withEntryEdges, List(entry))
       }
 
       // for decorator, just extract the underlying entry
