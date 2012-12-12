@@ -12,6 +12,19 @@ import scalax.collection.immutable.Graph
   */
 object PProcessGraph {
 
+  type PPGraph[E] = Graph[E, DiEdge]
+  type PPGraphRoots[E] = List[E]
+  
+  case class PPRootGraph[E](graph: PPGraph[E], roots: PPGraphRoots[E])
+  
+  object PPRootGraph {
+    /** Empty graph */
+    def apply[E]()(implicit entryManifest: Manifest[E]): PPRootGraph[E] = 
+      PPRootGraph(Graph[E, DiEdge](), List())
+  }
+  
+  
+
   /** Converts ProofProcess graph represented as tree with the given root element to
     * a Scala DAG of just the ProofEntry elements, and the list of root entries.
     *
@@ -20,15 +33,12 @@ object PProcessGraph {
   def toGraph[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Decor <: Elem]
       (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, Decor, _])
       (rootElem: Elem)
-      (implicit entryManifest: Manifest[Entry]): (Graph[Entry, DiEdge], List[Entry]) = {
+      (implicit entryManifest: Manifest[Entry]): PPRootGraph[Entry] = {
     
-    type PPGraph = Graph[Entry, DiEdge]
-    type PPGraphRoots = List[Entry]
-    
-    val emptyGraph = (Graph(): PPGraph, List(): PPGraphRoots)
+    val emptyGraph = PPRootGraph()
 
     // a method that collects the graph with an accumulator (necessary for Seq implementation)
-    def graph0(rootElem: Elem, acc: (PPGraph, PPGraphRoots)): (PPGraph, PPGraphRoots) = rootElem match {
+    def graph0(rootElem: Elem, acc: PPRootGraph[Entry]): PPRootGraph[Entry] = rootElem match {
 
       // for proof entry, add it to the graph and connect to all outstanding roots
       // (this means that this entry step is followed by all outstanding entry steps)
@@ -41,7 +51,7 @@ object PProcessGraph {
       // we perform this pattern matching, then casting
       case entry @ ppTree.entry(_) => entry match {
         case entry: Entry => {
-          val (accGraph, accRoots) = acc
+          val PPRootGraph(accGraph, accRoots) = acc
 
           // add the entry to the graph
           val withEntryEdges = accRoots.foldLeft(accGraph + entry) {
@@ -50,7 +60,7 @@ object PProcessGraph {
           }
 
           // only the entry is a root now
-          (withEntryEdges, List(entry))
+          PPRootGraph(withEntryEdges, List(entry))
         }
       }
 
@@ -65,7 +75,8 @@ object PProcessGraph {
         val subGraphs = elems map (e => graph0(e, acc))
 
         val merged = subGraphs.foldRight(emptyGraph) {
-          case ((subGraph, subRoots), (foldGraph, foldRoots)) => (subGraph ++ foldGraph, subRoots ++ foldRoots)
+          case (PPRootGraph(subGraph, subRoots), PPRootGraph(foldGraph, foldRoots)) => 
+            PPRootGraph(subGraph ++ foldGraph, subRoots ++ foldRoots)
         }
 
         merged
@@ -84,8 +95,10 @@ object PProcessGraph {
   
   def toPProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
       (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _, _], topRoot: => Entry)
-      (graph: Graph[Entry, DiEdge], roots: List[Entry]): Elem = {
+      (rootGraph: PPRootGraph[Entry]): Elem = {
    
+    val PPRootGraph(graph, roots) = rootGraph
+    
     require(!roots.isEmpty)
 
     roots match {
@@ -122,7 +135,7 @@ object PProcessGraph {
   
   def toPProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
       (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _, _])
-      (graph: Graph[Entry, DiEdge], root: Entry): Elem = {
+      (graph: PPGraph[Entry], root: Entry): Elem = {
     
     type MergeMap = Map[Entry, List[Entry]]
     

@@ -65,12 +65,12 @@ trait ProofEntryReader {
     }
     
     // try finding a structure of the flat proof steps based on how the goals change
-    val (proofGraph, proofGraphRoots) = 
+    val proofGraph = 
       GoalGraphMatcher.goalGraph[State, ProofEntry, Int](proofEntryIndexed)(indexedSteps)
 
     // convert the graph to the Proof Process tree
     val proofTree = PProcessGraph.toPProcessTree(
-      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph, proofGraphRoots)
+      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph)
     
     proofTree
   }

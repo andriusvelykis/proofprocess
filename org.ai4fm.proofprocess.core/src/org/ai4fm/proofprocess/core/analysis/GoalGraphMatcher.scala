@@ -1,8 +1,9 @@
 package org.ai4fm.proofprocess.core.analysis
 
-import scalax.collection.GraphEdge.DiEdge
 import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph
+
+import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 
 
 /**
@@ -13,9 +14,6 @@ import scalax.collection.immutable.Graph
  */
 object GoalGraphMatcher {
 
-  type PPGraph[N] = Graph[N, DiEdge]
-  type PPGraphRoots[N] = List[N]
-  
   /**
    * Encapsulates a goal step: the node contents N, two lists of goals T: 
    * incoming and outgoing (before step, and step results)
@@ -43,7 +41,7 @@ object GoalGraphMatcher {
    */
   def goalGraph[A, N, T](node: GoalStep[A, T] => N)
                         (proofSteps: List[GoalStep[A, T]])
-                        (implicit nodeManifest: Manifest[N]): (PPGraph[N], PPGraphRoots[N]) = {
+                        (implicit nodeManifest: Manifest[N]): PPRootGraph[N] = {
     
     // now go through the proof steps from the start
     // and link each proof step with its calculated parent (based on their goals) into a graph
@@ -51,7 +49,7 @@ object GoalGraphMatcher {
     val LinkContext(graph, roots, _) = (proofSteps foldLeft emptyContext)(linkStep(node) _)
     
     // reverse the roots, since branches are constructed with prepend
-    (graph, roots.reverse)
+    PPRootGraph(graph, roots.reverse)
   }
 
   private def linkStep[A, N, T](node: GoalStep[A, T] => N)

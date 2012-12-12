@@ -1,12 +1,13 @@
 package org.ai4fm.proofprocess.core.graph
 
-import org.junit.Assert._
-import org.junit.Test
-
-import PProcessTree._
 import scalax.collection.GraphEdge.DiEdge
 import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph
+
+import org.ai4fm.proofprocess.core.graph.PProcessGraph._
+import org.ai4fm.proofprocess.core.graph.PProcessTree._
+import org.junit.Assert._
+import org.junit.Test
 
 
 /**
@@ -14,7 +15,8 @@ import scalax.collection.immutable.Graph
   */
 class PProcessGraphTest {
   
-  def toPProcessTree = PProcessGraph.toPProcessTree(intPPTree, Entry(0)) _
+  def toPProcessTree(g: PPGraph[Entry], rs: PPGraphRoots[Entry]) = 
+    PProcessGraph.toPProcessTree(intPPTree, Entry(0))(PPRootGraph(g, rs))
   def toGraph = PProcessGraph.toGraph(intPPTree) _
   
   @Test

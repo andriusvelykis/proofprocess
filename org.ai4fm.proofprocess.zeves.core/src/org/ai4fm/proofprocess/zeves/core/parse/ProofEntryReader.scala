@@ -71,10 +71,10 @@ trait ProofEntryReader {
     
     val proofStepEntries = PProcessUtil.toInOutGoalSteps(proofEntry)(inGoals, proofSteps)
     
-    val (proofGraph, proofGraphRoots) = ZEvesGraph.proofStepsGraph(proofStepEntries)
+    val proofGraph = ZEvesGraph.proofStepsGraph(proofStepEntries)
 
     val proofTree = PProcessGraph.toPProcessTree(
-      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph, proofGraphRoots)
+      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph)
     
     proofTree
   }
