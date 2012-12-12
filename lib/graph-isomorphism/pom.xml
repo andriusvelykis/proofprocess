@@ -52,9 +52,11 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <!-- Bundle export/import is not working for some reason, specify the packages explicitly -->
-            <Export-Package>org.ai4fm.graph.isomorphism;version=${project.version}</Export-Package>
-            <Import-Package>scalax.collection;version=${graph-core.version},scalax.collection.generic;version=${graph-core.version},scala,scala.collection,scala.collection.generic,scala.collection.immutable,scala.compat,scala.math,scala.reflect,scala.runtime</Import-Package>
+            <!-- Explicitly indicate only AI4FM package to be exported, otherwise it embeds
+                 the whole of Scala library. -->
+            <!-- Export packages with version, otherwise cannot use versioned package imports.
+                 See also http://fusesource.com/docs/esb/4.4/esb_deploy_osgi/BestPractices-BuildBundles.html -->
+            <Export-Package>org.ai4fm.*;version=${project.version};-noimport:=true</Export-Package>
           </instructions>
         </configuration>
       </plugin>

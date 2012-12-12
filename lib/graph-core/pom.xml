@@ -27,6 +27,15 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <!-- Only embed the graph-core dependency (otherwise it also embeds scala library) -->
+            <Embed-Dependency>graph-core_2.9.2</Embed-Dependency>
+            <!-- Export packages with version, otherwise cannot use versioned package imports.
+                 See also http://fusesource.com/docs/esb/4.4/esb_deploy_osgi/BestPractices-BuildBundles.html -->
+            <_exportcontents>*;version=${project.version}</_exportcontents>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
   </build>
