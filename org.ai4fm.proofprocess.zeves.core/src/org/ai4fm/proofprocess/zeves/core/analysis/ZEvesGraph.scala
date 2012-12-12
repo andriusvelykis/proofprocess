@@ -1,14 +1,12 @@
 package org.ai4fm.proofprocess.zeves.core.analysis
 
-import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.zeves.ZEvesTrace
-import org.ai4fm.proofprocess.zeves.core.parse.ProofEntryReader
-
-import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
-import scalax.collection.GraphEdge._
 import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph
+
+import org.ai4fm.proofprocess.ProofEntry
+import org.ai4fm.proofprocess.core.graph.PProcessGraph._
+import org.ai4fm.proofprocess.zeves.ZEvesTrace
+import org.ai4fm.proofprocess.zeves.core.parse.ProofEntryReader
 
 
 /** Retrieves the proof structure from a list of proof steps: creates a graph based on
@@ -18,24 +16,22 @@ import scalax.collection.immutable.Graph
   */
 object ZEvesGraph {
 
-  type PPGraph = Graph[ProofEntry, DiEdge]
-  type PPGraphRoots = List[ProofEntry]
   private type CaseRoots = List[(ProofEntry, List[Int])]
   
-  def proofStepsGraph(proofSteps: List[ProofEntry]): (PPGraph, PPGraphRoots) = {  
+  def proofStepsGraph(proofSteps: List[ProofEntry]): PPRootGraph[ProofEntry] = {  
 
     // go backwards through the steps and build up the graph
-    val (graph, caseRoots) = proofSteps.foldRight(Graph(): PPGraph, List(): CaseRoots) {
+    val (graph, caseRoots) = proofSteps.foldRight(Graph(): PPGraph[ProofEntry], List(): CaseRoots) {
       case (entry, (graph, roots)) => handleProofEntry(entry, graph, roots)
     }
     
     // drop the cases from the roots now
-    (graph, caseRoots.map(_._1))
+    PPRootGraph(graph, caseRoots.map(_._1))
   }
 
   private def handleProofEntry(entry: ProofEntry,
-                               graph: PPGraph,
-                               branchRoots: CaseRoots): (PPGraph, CaseRoots) = {
+                               graph: PPGraph[ProofEntry],
+                               branchRoots: CaseRoots): (PPGraph[ProofEntry], CaseRoots) = {
 
     val entryCase = entryProofCase(entry)
     
@@ -143,9 +139,11 @@ object ZEvesGraph {
       // source list does not start with target list
       case _ => None
     }
-  
-  private def addGraphLink(graph: PPGraph, from: ProofEntry, to: CaseRoots): PPGraph =
-    to.foldRight(graph)( (t, g) => (g + (from ~> t._1)) )
+
+  private def addGraphLink(graph: PPGraph[ProofEntry],
+                           from: ProofEntry,
+                           to: CaseRoots): PPGraph[ProofEntry] =
+    to.foldRight(graph)((t, g) => (g + (from ~> t._1)))
   
   
 }

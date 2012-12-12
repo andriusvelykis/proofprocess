@@ -41,7 +41,6 @@
           <extensions>true</extensions>
           <configuration>
             <instructions>
-              <Embed-Transitive>true</Embed-Transitive>
               <_failok>true</_failok>
               <_nouses>true</_nouses>
               <_nodefaultversion>true</_nodefaultversion>
@@ -49,10 +48,6 @@
 
               <Bundle-SymbolicName>${maven-symbolicname};singleton:=false</Bundle-SymbolicName>
               <Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-              <Bundle-ClassPath>{maven-dependencies}</Bundle-ClassPath>
-              <!-- Export packages with version, otherwise cannot use versioned package imports.
-                   See also http://fusesource.com/docs/esb/4.4/esb_deploy_osgi/BestPractices-BuildBundles.html -->
-              <Export-Package>*;version=${project.version};-noimport:=true</Export-Package>
             </instructions>
           </configuration>
         </plugin>

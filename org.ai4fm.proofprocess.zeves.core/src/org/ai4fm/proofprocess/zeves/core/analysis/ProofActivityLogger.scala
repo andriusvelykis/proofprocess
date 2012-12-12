@@ -3,9 +3,7 @@ package org.ai4fm.proofprocess.zeves.core.analysis
 import java.util.Date
 
 import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.log.ProofLog
-import org.ai4fm.proofprocess.log.ProofProcessLogFactory
-import org.ai4fm.proofprocess.log.ProofProcessLogPackage
+import org.ai4fm.proofprocess.log.{ProofLog, ProofProcessLogFactory, ProofProcessLogPackage}
 import org.ai4fm.proofprocess.project.core.ProofManager
 import org.ai4fm.proofprocess.project.core.util.EmfUtil
 import org.ai4fm.proofprocess.zeves.core.parse.SnapshotUtil.ProofSnapshotEntry
@@ -24,19 +22,16 @@ import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
   */
 object ProofActivityLogger {
 
-  def logProof(proofLog: ProofLog, proofEntries: Map[ISnapshotEntry, ProofEntry],
+  def logProof(proofLog: ProofLog, proofEntry: ISnapshotEntry => Option[ProofEntry],
                snapshotEntries: Iterable[ISnapshotEntry])
                (implicit monitor: IProgressMonitor) {
 
-    // get proof entries for each snapshot entry if available
-    val entries = snapshotEntries.map(se => (se, proofEntries.get(se)))
-
     // the entry logging function
-    val logEntryF = Function.tupled(logEntry(proofLog) _)
+    val logEntryF = logEntry(proofLog, proofEntry) _
 
-    entries foreach logEntryF
+    snapshotEntries foreach logEntryF
 
-    if (!entries.isEmpty) {
+    if (!snapshotEntries.isEmpty) {
       // save the logged info
       ProofManager.commitTransaction(proofLog, monitor)
     }
@@ -44,13 +39,18 @@ object ProofActivityLogger {
 
   private val factory = ProofProcessLogFactory.eINSTANCE
   
-  private def logEntry(proofLog: ProofLog)(snapshotEntry: ISnapshotEntry, proofEntry: Option[ProofEntry]) {
+  private def logEntry(proofLog: ProofLog, proofEntry: ISnapshotEntry => Option[ProofEntry])
+                      (snapshotEntry: ISnapshotEntry) {
 
     val activity = snapshotEntry match {
       
       case ProofSnapshotEntry(_) => {
         val proofActivity = factory.createProofActivity
-        proofEntry foreach proofActivity.setProofRef
+        
+        // if proof entry is available, set it as activity reference
+        val entry = proofEntry(snapshotEntry)
+        entry foreach proofActivity.setProofRef
+        
         proofActivity
       }
       

@@ -3,7 +3,7 @@ package org.ai4fm.proofprocess.zeves.core.parse
 import scala.collection.JavaConverters._
 
 import org.ai4fm.proofprocess.{Intent, Loc, ProofElem, ProofEntry, ProofProcessFactory, Term, Trace}
-import org.ai4fm.proofprocess.core.graph.{EmfPProcessTree, PProcessGraph}
+import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory
 import org.ai4fm.proofprocess.zeves.core.analysis.ZEvesGraph
@@ -49,9 +49,12 @@ trait ProofEntryReader {
 
         val restGoals = restEntries.map(entry => (entry, parseGoals(sectInfo, entry)))
 
-        val proofSteps = readProofSteps(restGoals, initialGoals)
+        val (proofGraph, entryMapping) = readProofSteps(restGoals, initialGoals)
 
-        Some(ProofEntryData(initialGoals, Option(goalEntry.getData.getGoalName), proofSteps))
+        Some(ProofEntryData(initialGoals,
+          Option(goalEntry.getData.getGoalName),
+          proofGraph,
+          entryMapping))
       }
 
       // empty/short proof state - nothing to parse
@@ -67,16 +70,15 @@ trait ProofEntryReader {
     SnapshotUtil.zEvesProofResult(snapshotEntry).get
 
   private def readProofSteps(proofSteps: List[(ISnapshotEntry, List[Term])],
-                             inGoals: List[Term]): ProofElem = {
-    
-    val proofStepEntries = PProcessUtil.toInOutGoalSteps(proofEntry)(inGoals, proofSteps)
-    
-    val (proofGraph, proofGraphRoots) = ZEvesGraph.proofStepsGraph(proofStepEntries)
+                             inGoals: List[Term]): (PPRootGraph[ProofEntry], Map[ISnapshotEntry, ProofEntry]) = {
 
-    val proofTree = PProcessGraph.toPProcessTree(
-      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph, proofGraphRoots)
-    
-    proofTree
+    val proofStepEntries = PProcessUtil.toInOutGoalSteps(proofEntry)(inGoals, proofSteps)
+    // link snapshot entries with respective proof step entries (for activity logging)
+    val stepEntryMapping = ((proofSteps map (_._1)) zip proofStepEntries).toMap
+
+    val proofGraph = ZEvesGraph.proofStepsGraph(proofStepEntries)
+
+    (proofGraph, stepEntryMapping)
   }
 
   private def proofEntry(snapshotEntry: ISnapshotEntry,
@@ -183,5 +185,8 @@ object ProofEntryReader {
 
 }
 
-case class ProofEntryData(val goals: List[Term], val label: Option[String], val rootEntry: ProofElem)
+case class ProofEntryData(goals: List[Term],
+                          label: Option[String],
+                          proofGraph: PPRootGraph[ProofEntry],
+                          entryMap: Map[ISnapshotEntry, ProofEntry])
 

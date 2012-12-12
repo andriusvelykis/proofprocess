@@ -65,14 +65,21 @@
         <artifactId>graph-core_2.9.2.osgi</artifactId>
         <version>1.5.1</version>
       </dependency>
+      <dependency>
+        <!-- Scala Graph Isomorphism by AI4FM -->
+        <groupId>org.ai4fm.graph</groupId>
+        <artifactId>graph-isomorphism</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <repositories>
     <repository>
-       <id>eclipse-indigo</id>
+       <!-- Need Juno for CDO 4.1 -->
+       <id>eclipse-juno</id>
        <layout>p2</layout>
-       <url>http://download.eclipse.org/releases/indigo</url>
+       <url>http://download.eclipse.org/releases/juno</url>
     </repository>
 
     <repository>
@@ -99,12 +106,6 @@
        <url>http://czt.sourceforge.net/eclipse/updates/latest/</url>
     </repository>
     
-    <repository>
-       <!-- Need Juno for CDO 4.1 -->
-       <id>eclipse-juno</id>
-       <layout>p2</layout>
-       <url>http://download.eclipse.org/releases/juno</url>
-    </repository>
   </repositories>
 
   <build>
@@ -223,5 +224,27 @@
     <name>AI4FM</name>
     <url>http://www.ai4fm.org</url>
   </organization>
+
+  <profiles>
+    <!--
+      Special profile for 3rd party libs module, which builds Maven-based libraries required
+      for ProofProcess. The main plug-ins use Tycho to build and require a 2nd reactor build
+      (i.e. after the `lib` module is built and OSGI-fied).
+      For this reason the `lib` module is separated to separate the Eclipse and non-Eclipse
+      builds.
+      
+      The module is included here so that m2e can discover it from the top level, even if
+      the non-Tycho build would be run on `lib/pom.xml` directly.
+     -->
+    <profile>
+      <id>eclipse-lib</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>lib</module>
+      </modules>
+    </profile>
+  </profiles>
 
 </project>
