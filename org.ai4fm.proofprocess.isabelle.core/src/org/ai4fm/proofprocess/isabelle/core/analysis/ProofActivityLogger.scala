@@ -2,12 +2,8 @@ package org.ai4fm.proofprocess.isabelle.core.analysis
 
 import java.util.Date
 
-import scala.Option.option2Iterable
-
 import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.log.ProofLog
-import org.ai4fm.proofprocess.log.ProofProcessLogFactory
-import org.ai4fm.proofprocess.log.ProofProcessLogPackage
+import org.ai4fm.proofprocess.log.{ProofLog, ProofProcessLogFactory, ProofProcessLogPackage}
 import org.ai4fm.proofprocess.project.core.ProofManager
 import org.ai4fm.proofprocess.project.core.util.EmfUtil
 import org.eclipse.core.runtime.NullProgressMonitor
@@ -25,39 +21,42 @@ import isabelle.Command.State
   */
 object ProofActivityLogger {
 
-  def logProof(proofLog: ProofLog, proofEntries: Map[State, ProofEntry],
+  def logProof(proofLog: ProofLog, proofEntry: PartialFunction[State, ProofEntry],
       changedCommands: Set[Command], proofState: List[State]) {
 
     // get changed states within the proof state
     val changedStates = proofState.filter(state => changedCommands.contains(state.command))
 
-    // get proof entries for each state if available
-    val cmdEntries = changedStates.flatMap(state => proofEntries.get(state).map((state, _)))
-
     // the entry logging function
-    val logEntry = Function.tupled(logProofEntry(proofLog) _)
+    val logEntry = logProofEntry(proofLog, proofEntry) _
 
-    cmdEntries foreach logEntry
+    changedStates foreach logEntry
 
-    if (!cmdEntries.isEmpty) {
+    if (!changedStates.isEmpty) {
       // save the logged info
       ProofManager.commitTransaction(proofLog, new NullProgressMonitor)
     }
   }
 
-  private def logProofEntry(proofLog: ProofLog)(cmdState: State, proofEntry: ProofEntry) {
+  private def logProofEntry(proofLog: ProofLog,
+                            proofEntry: PartialFunction[State, ProofEntry])
+                           (cmdState: State) {
 
     // TODO add non-proof commands to activity logger?
-    val proofActivity = ProofProcessLogFactory.eINSTANCE.createProofActivity()
-    proofActivity.setProofRef(proofEntry)
+    val proofActivity = ProofProcessLogFactory.eINSTANCE.createProofActivity
 
+    // if proof entry is available, set it as activity reference
+    if (proofEntry.isDefinedAt(cmdState)) {
+      proofActivity.setProofRef(proofEntry(cmdState))
+    }
+    
     proofActivity.setTimestamp(new Date(System.currentTimeMillis()))
-    proofActivity.setDescription(entryDescription(cmdState, proofEntry))
+    proofActivity.setDescription(entryDescription(cmdState))
 
     EmfUtil.addValue(proofLog, ProofProcessLogPackage.PROOF_LOG__ACTIVITIES, proofActivity);
   }
 
-  private def entryDescription(cmdState: State, proofEntry: ProofEntry) =
+  private def entryDescription(cmdState: State) =
     "Proof: " + cmdState.command.name
 
 }

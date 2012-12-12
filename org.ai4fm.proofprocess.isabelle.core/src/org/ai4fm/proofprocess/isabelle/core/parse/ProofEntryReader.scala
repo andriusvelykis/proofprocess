@@ -5,7 +5,7 @@ import scala.collection.JavaConversions._
 import org.ai4fm.proofprocess.{Intent, Loc, ProofElem, ProofEntry, ProofProcessFactory, Term, Trace}
 import org.ai4fm.proofprocess.core.analysis.GoalGraphMatcher
 import org.ai4fm.proofprocess.core.analysis.TermIndex._
-import org.ai4fm.proofprocess.core.graph.{EmfPProcessTree, PProcessGraph}
+import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 
@@ -36,21 +36,28 @@ trait ProofEntryReader {
       // Assume that the first step in any proof is the "declaration" command, e.g. "lemma ..."
       // Also check that initial goals are not empty - don't allow proofs with empty goals
       // Also check that proof steps are available
-      val proofSteps = readProofSteps(restCmds, initialGoals)
-      
-      Some(ProofEntryData(initialGoals, CommandParser.commandId(firstCmd.command), proofSteps))
+      val (proofGraph, entryMapping) = readProofSteps(restCmds, initialGoals)
+
+      Some(ProofEntryData(initialGoals,
+        CommandParser.commandId(firstCmd.command),
+        proofGraph,
+        entryMapping))
     }
     // empty/short proof state - nothing to parse
     case _ => None
   }
 
-  private def readProofSteps(proofSteps: List[(State, List[Term])], inGoals: List[Term]): ProofElem = {
+  private def readProofSteps(proofSteps: List[(State, List[Term])],
+                             inGoals: List[Term]): (PPRootGraph[ProofEntry], Map[State, ProofEntry]) = {
     
     def stepTriple(cmdState: State, inGoals: List[Term], outGoals: List[Term]) =
       (cmdState, inGoals, outGoals)
       
     // create steps with in-out goals
     val proofStepTriples = PProcessUtil.toInOutGoalSteps(stepTriple)(inGoals, proofSteps)
+    
+    // link command states with respective proof step entries (for activity logging)
+    var stateEntryMapping = Map[State, ProofEntry]()
     
     val (termIndex, indexedSteps) = indexedGoalSteps(matchTerms)(proofStepTriples)
     
@@ -61,18 +68,19 @@ trait ProofEntryReader {
       val inGoals = inGoalsIndexed map termIndex
       val outGoals = outGoalsIndexed map termIndex
       
-      proofEntry(cmdState, inGoals, outGoals)
+      val entry = proofEntry(cmdState, inGoals, outGoals)
+      
+      // mark mapping
+      stateEntryMapping += (cmdState -> entry)
+      
+      entry
     }
     
     // try finding a structure of the flat proof steps based on how the goals change
     val proofGraph = 
       GoalGraphMatcher.goalGraph[State, ProofEntry, Int](proofEntryIndexed)(indexedSteps)
-
-    // convert the graph to the Proof Process tree
-    val proofTree = PProcessGraph.toPProcessTree(
-      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(proofGraph)
     
-    proofTree
+    (proofGraph, stateEntryMapping)
   }
   
   private def proofEntry(cmdState: State, inGoals: List[Term], outGoals: List[Term]): ProofEntry = {
@@ -118,5 +126,8 @@ trait ProofEntryReader {
 
 }
 
-case class ProofEntryData(val goals: List[Term], val label: Option[String], val rootEntry: ProofElem)
+case class ProofEntryData(goals: List[Term],
+                          label: Option[String],
+                          proofGraph: PPRootGraph[ProofEntry],
+                          entryMap: Map[State, ProofEntry])
 
