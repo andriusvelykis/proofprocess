@@ -2,36 +2,20 @@ package org.ai4fm.proofprocess.zeves.core.analysis
 
 import java.util.Scanner
 
-import scala.collection.JavaConversions.seqAsJavaList
-
 import org.ai4fm.filehistory.FileVersion
-import org.ai4fm.proofprocess.Loc
-import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.ProofStore
-import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.core.analysis.ProofMatcher
+import org.ai4fm.proofprocess.{Attempt, Loc, ProofEntry, ProofStore, Term}
+import org.ai4fm.proofprocess.core.analysis.ProofAttemptMatcher._
 import org.ai4fm.proofprocess.core.util.PProcessUtil
-import org.ai4fm.proofprocess.project.core.ProofHistoryManager
-import org.ai4fm.proofprocess.project.core.ProofManager
-import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil
-import org.ai4fm.proofprocess.project.core.util.ResourceUtil
+import org.ai4fm.proofprocess.project.core.{ProofHistoryManager, ProofManager}
+import org.ai4fm.proofprocess.project.core.util.{ProofProcessUtil, ResourceUtil}
 import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin._
-import org.ai4fm.proofprocess.zeves.core.parse.ProofEntryData
-import org.ai4fm.proofprocess.zeves.core.parse.ProofEntryReader
+import org.ai4fm.proofprocess.zeves.core.parse.{ProofEntryData, ProofEntryReader}
 import org.eclipse.core.resources.IProject
-import org.eclipse.core.runtime.CoreException
-import org.eclipse.core.runtime.IPath
-import org.eclipse.core.runtime.IProgressMonitor
-import org.eclipse.core.runtime.IStatus
-import org.eclipse.core.runtime.NullProgressMonitor
-import org.eclipse.core.runtime.Path
-import org.eclipse.core.runtime.Status
+import org.eclipse.core.runtime.{CoreException, IPath, IProgressMonitor, IStatus, NullProgressMonitor, Path, Status}
 import org.eclipse.emf.ecore.util.EcoreUtil
 
+import net.sourceforge.czt.session.{Key, SectionInfo, Source}
 import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
-import net.sourceforge.czt.session.Key
-import net.sourceforge.czt.session.SectionInfo
-import net.sourceforge.czt.session.Source
 
 
 /** @author Andrius Velykis
@@ -47,10 +31,11 @@ object ProofAnalyzer {
     proofEntriesOpt foreach {
       case (project, proofStore, proofEntryData) => {
 
-        analyzeEntries(proofStore, proofEntryData)
+        val (_, matchMapping) = analyzeEntries(proofStore, proofEntryData)
 
-        // FIXME retrieve proof entries from the analysis
-        logActivity(project, Map(), activeEntry);
+        // map snapshot entries to actually matched proof entries for logging
+        val entryMatchMap = proofEntryData.entryMap andThen matchMapping
+        logActivity(project, entryMatchMap, activeEntry);
 
         // FIXME commit here or after all analysis? or somewhere else altogether?
         commit(proofStore)
@@ -171,7 +156,7 @@ object ProofAnalyzer {
   }
   
   @throws(classOf[CoreException])
-  private def logActivity(project: IProject, proofEntries: Map[ISnapshotEntry, ProofEntry],
+  private def logActivity(project: IProject, proofEntries: PartialFunction[ISnapshotEntry, ProofEntry],
       activeEntry: ISnapshotEntry)(implicit monitor: IProgressMonitor) {
 
     val proofLog = ProofManager.proofLog(project, monitor)
@@ -182,16 +167,18 @@ object ProofAnalyzer {
     ProofManager.commitTransaction(proofStore, new NullProgressMonitor)
   }
 
-  private def analyzeEntries(proofStore: ProofStore, entryData: ProofEntryData) {
-    // FIXME
+  private def analyzeEntries(proofStore: ProofStore,
+                             entryData: ProofEntryData): (Attempt, Map[ProofEntry, ProofEntry]) = {
 
-    // find the proof for this
-    val proofMatcher = new ProofMatcher
+    val entryMatcher = ZEvesProofEntryMatcher
 
-    val proof = proofMatcher.findCreateProof(proofStore, entryData.label.orNull, entryData.goals);
+    val targetProof =
+      findCreateProof(entryMatcher)(proofStore, entryData.label, entryData.goals)
 
-    // TODO export State-Entry matchings for Activities
-    proofMatcher.findCreateProofTree(proofStore, proof, entryData.rootEntry);
+    val attemptMapping =
+      findCreateAttempt(entryMatcher)(entryData.proofGraph, targetProof)
+
+    attemptMapping
   }
 
 }
