@@ -44,3 +44,7 @@ trait ProofEntryMatcher {
   def copyTerm(t: Term): Term = EcoreUtil.copy(t)
 
 }
+
+object ProofEntryMatcher {
+  def apply(): ProofEntryMatcher = new ProofEntryMatcher {}
+}
