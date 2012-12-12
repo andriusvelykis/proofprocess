@@ -7,13 +7,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ai4fm.proofprocess.Intent;
+import org.ai4fm.proofprocess.ProofDecor;
 import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofInfo;
+import org.ai4fm.proofprocess.ProofParallel;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStore;
-import org.ai4fm.proofprocess.core.analysis.ProofMatcher;
 import org.ai4fm.proofprocess.core.store.IProofStoreProvider;
 import org.ai4fm.proofprocess.core.util.PProcessUtil;
 import org.ai4fm.proofprocess.log.ProofActivity;
@@ -356,7 +357,7 @@ public class ProofProcessPage extends Page {
 			}
 			
 			ProofElem parentGroup = (ProofElem) parentContainer;
-			List<ProofElem> siblings = ProofMatcher.getProofChildren(parentGroup);
+			List<ProofElem> siblings = getProofChildren(parentGroup);
 			
 			int sublistIndex = Collections.indexOfSubList(siblings, attempts);
 			if (sublistIndex < 0) {
@@ -419,7 +420,7 @@ public class ProofProcessPage extends Page {
 //			siblings.move(sublistIndex, group);
 			
 			for (ProofElem attempt : attempts) {
-				ProofMatcher.addToGroup(group, attempt);
+				addToGroup(group, attempt);
 				siblings.remove(attempt);
 			}
 			
@@ -469,5 +470,46 @@ public class ProofProcessPage extends Page {
 		}
 		
 	};
+	
+	private static List<ProofElem> getProofChildren(ProofElem proofElem) {
+		if (proofElem instanceof ProofSeq) {
+			return ((ProofSeq) proofElem).getEntries();
+		}
+		
+		if (proofElem instanceof ProofParallel) {
+			return ((ProofParallel) proofElem).getEntries();
+		}
+		
+		if (proofElem instanceof ProofDecor) {
+			return Collections.singletonList(((ProofDecor) proofElem).getEntry());
+		}
+		
+		return Collections.emptyList();
+	}
+	
+	private static void addToGroup(ProofElem group, ProofElem proofElem) {
+		if (group instanceof ProofSeq) {
+			((ProofSeq) group).getEntries().add(proofElem);
+//			group.getContained().add(proofElem);
+			return;
+		}
+		
+		if (group instanceof ProofParallel) {
+			((ProofParallel) group).getEntries().add(proofElem);
+			return;
+		}
+		
+		if (group instanceof ProofDecor) {
+			ProofDecor decor = (ProofDecor) group;
+			if (decor.getEntry() != null) {
+				throw new IllegalArgumentException("Cannot add to non-empty ProofDecor!");
+			}
+			
+			decor.setEntry(proofElem);
+			return;
+		}
+		
+		throw new IllegalArgumentException("Cannot add to " + group.getClass().getSimpleName());
+	}
 
 }
