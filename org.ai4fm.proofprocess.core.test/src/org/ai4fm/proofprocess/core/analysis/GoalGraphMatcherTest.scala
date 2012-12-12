@@ -5,6 +5,7 @@ import org.junit.Test
 import scalax.collection.immutable.Graph
 import scalax.collection.GraphPredef._
 import scalax.collection.GraphEdge._
+import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 
 
@@ -24,10 +25,10 @@ class GoalGraphMatcherTest {
       ("A", List())
     ))
     
-    val g1 = Graph(GoalStep("A", List(1), List()))
+    val g1: PPGraph[GoalStep] = Graph(GoalStep("A", List(1), List()))
     val r1 = List(GoalStep("A", List(1), List()))
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -44,7 +45,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(GoalStep("A", List(1), List(2)) ~> GoalStep("B", List(2), List()))
     val r1 = List(GoalStep("A", List(1), List(2)))
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -59,10 +60,10 @@ class GoalGraphMatcherTest {
     ))
     
     // no links in the graph, both steps are root ones
-    val g1 = Graph(GoalStep("A", List(1), List()), GoalStep("B", List(2), List()))
+    val g1: PPGraph[GoalStep] = Graph(GoalStep("A", List(1), List()), GoalStep("B", List(2), List()))
     val r1 = List(GoalStep("A", List(1), List()), GoalStep("B", List(2), List()))
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -81,7 +82,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> GoalStep("B", List(2), List()), tA ~> GoalStep("C", List(3), List()))
     val r1 = List(tA)
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -105,7 +106,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tB ~> GoalStep("C", List(4), List()), tA ~> tD, tD ~> GoalStep("E", List(5), List()))
     val r1 = List(tA)
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
     
     // also check that the goal order does not matter (e.g. in "B")
     val s2 = inOutGoals(List(1), List(
@@ -116,7 +117,7 @@ class GoalGraphMatcherTest {
       ("E", List())
     ))
     
-    assertEquals((g1, r1), goalGraph(s2))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s2))
   }
   
  /**
@@ -140,7 +141,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tB ~> tD, tA ~> tC, tC ~> tD)
     val r1 = List(tA)
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -164,7 +165,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tC, tB ~> tC)
     val r1 = List(tA, tB)
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -190,7 +191,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tC)
     val r1 = List(tA, tB, tC)
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -213,7 +214,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB)
     val r1 = List(tA, tB)
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -240,7 +241,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tB ~> tD, tC ~> tD)
     val r1 = List(tA, tB, tC)
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -264,7 +265,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tB ~> tC, tA ~> tC)
     val r1 = List(tA)
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -293,7 +294,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tA ~> tC, tB ~> tD, tB ~> tE, tC ~> tD, tC ~> tF, tD ~> tE, tE ~> tF)
     val r1 = List(tA)
     
-    assertEquals((g1, r1), goalGraph(s1))
+    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
   }
   
   // Int + Case Class based testing data structures (to avoid creating EMF ones)
