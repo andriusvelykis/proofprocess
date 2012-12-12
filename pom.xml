@@ -230,4 +230,26 @@
     <url>http://www.ai4fm.org</url>
   </organization>
 
+  <profiles>
+    <!--
+      Special profile for 3rd party libs module, which builds Maven-based libraries required
+      for ProofProcess. The main plug-ins use Tycho to build and require a 2nd reactor build
+      (i.e. after the `lib` module is built and OSGI-fied).
+      For this reason the `lib` module is separated to separate the Eclipse and non-Eclipse
+      builds.
+      
+      The module is included here so that m2e can discover it from the top level, even if
+      the non-Tycho build would be run on `lib/pom.xml` directly.
+     -->
+    <profile>
+      <id>eclipse-lib</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>lib</module>
+      </modules>
+    </profile>
+  </profiles>
+
 </project>
