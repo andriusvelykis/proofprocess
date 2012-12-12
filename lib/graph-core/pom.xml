@@ -39,5 +39,9 @@
       </plugin>
     </plugins>
   </build>
+  
+  <organization>
+    <name>com.assembla.scala-incubator</name>
+  </organization>
 
 </project>
