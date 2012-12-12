@@ -245,6 +245,9 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     def isomorphism: Option[Map[Node2, Node1]] = isomorphisms.headOption
 
     def isIsomorphism: Boolean = isomorphism.isDefined
+
+    lazy val unmappedNodes: Option[Set[Node1]] =
+      isomorphism map (mapping => g1.nodes diff mapping.values.toSet)
   }
   
   // empty match - result with only the single empty map (e.g. indicating that nothing matches)
