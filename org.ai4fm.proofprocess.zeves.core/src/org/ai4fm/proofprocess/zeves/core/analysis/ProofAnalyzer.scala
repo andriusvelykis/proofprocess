@@ -34,7 +34,10 @@ object ProofAnalyzer {
         val (_, matchMapping) = analyzeEntries(proofStore, proofEntryData)
 
         // map snapshot entries to actually matched proof entries for logging
-        val entryMatchMap = proofEntryData.entryMap andThen matchMapping
+        
+        // as a workaround for missing mappings, use identity function to make
+        // the matchMapping total
+        val entryMatchMap = proofEntryData.entryMap andThen (matchMapping.withDefault(identity))
         logActivity(project, entryMatchMap, activeEntry);
 
         // FIXME commit here or after all analysis? or somewhere else altogether?
