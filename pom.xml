@@ -76,9 +76,10 @@
 
   <repositories>
     <repository>
-       <id>eclipse-indigo</id>
+       <!-- Need Juno for CDO 4.1 -->
+       <id>eclipse-juno</id>
        <layout>p2</layout>
-       <url>http://download.eclipse.org/releases/indigo</url>
+       <url>http://download.eclipse.org/releases/juno</url>
     </repository>
 
     <repository>
@@ -105,12 +106,6 @@
        <url>http://czt.sourceforge.net/eclipse/updates/latest/</url>
     </repository>
     
-    <repository>
-       <!-- Need Juno for CDO 4.1 -->
-       <id>eclipse-juno</id>
-       <layout>p2</layout>
-       <url>http://download.eclipse.org/releases/juno</url>
-    </repository>
   </repositories>
 
   <build>
