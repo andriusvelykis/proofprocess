@@ -242,21 +242,24 @@ object ProofAttemptMatcher {
 
   private def extendAttempt(originalGraph: PPGraph[ProofEntry],
                             extensionGraph: PPRootGraph[ProofEntry],
-                            mapping: Map[ProofEntry, ProofEntry],
+                            originalToExt: Map[ProofEntry, ProofEntry],
                             unmapped: Set[ProofEntry]): ProofElem = {
 
+    // note that we need to reverse the mapping here, since it is from original to extension
+    val extToOriginal = originalToExt map (_.swap)
+    
     // extend the original graph with unmapped values
-    val extendedGraph = extendPPGraph(originalGraph, extensionGraph.graph, mapping, unmapped)
+    val extendedGraph = extendPPGraph(originalGraph, extensionGraph.graph, extToOriginal, unmapped)
     
     // use extension roots, but replace with originals where mappings are available
-    val extendedRoots = extensionGraph.roots map ( root => (mapping.get(root) getOrElse root) )
+    val extendedRoots = extensionGraph.roots map ( root => (extToOriginal.get(root) getOrElse root) )
 
     toPProcessTree(PPRootGraph(extendedGraph, extendedRoots))
   }
 
   private def extendPPGraph(originalGraph: PPGraph[ProofEntry],
                             extensionGraph: PPGraph[ProofEntry],
-                            mapping: Map[ProofEntry, ProofEntry],
+                            extToOriginal: Map[ProofEntry, ProofEntry],
                             unmapped: Set[ProofEntry]): PPGraph[ProofEntry] = {
 
     def addNeighbors(graph: PPGraph[ProofEntry], unmappedEntry: ProofEntry): PPGraph[ProofEntry] = {
@@ -284,7 +287,7 @@ object ProofAttemptMatcher {
       // go through each node and add its links to the graph
       val edgeGraph = (linkedNodes foldLeft nodeGraph)( (graph, linked) => {
 
-        val mapped = mapping get linked.value
+        val mapped = extToOriginal get linked.value
         // target value - either the mapped one, or linked from original graph
         val targetValue = mapped getOrElse linked.value
 
