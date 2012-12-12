@@ -21,7 +21,7 @@ import isabelle.Command.State
   */
 object ProofActivityLogger {
 
-  def logProof(proofLog: ProofLog, proofEntry: PartialFunction[State, ProofEntry],
+  def logProof(proofLog: ProofLog, proofEntry: State => Option[ProofEntry],
       changedCommands: Set[Command], proofState: List[State]) {
 
     // get changed states within the proof state
@@ -39,16 +39,15 @@ object ProofActivityLogger {
   }
 
   private def logProofEntry(proofLog: ProofLog,
-                            proofEntry: PartialFunction[State, ProofEntry])
+                            proofEntry: State => Option[ProofEntry])
                            (cmdState: State) {
 
     // TODO add non-proof commands to activity logger?
     val proofActivity = ProofProcessLogFactory.eINSTANCE.createProofActivity
 
     // if proof entry is available, set it as activity reference
-    if (proofEntry.isDefinedAt(cmdState)) {
-      proofActivity.setProofRef(proofEntry(cmdState))
-    }
+    val entry = proofEntry(cmdState)
+    entry foreach proofActivity.setProofRef
     
     proofActivity.setTimestamp(new Date(System.currentTimeMillis()))
     proofActivity.setDescription(entryDescription(cmdState))

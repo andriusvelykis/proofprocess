@@ -36,4 +36,11 @@ object PProcessUtil {
     inOutSteps map { case (inGoals, (info, outGoals)) => entry(info, inGoals, outGoals) }
   }
   
+  def chainMaps[A, B, C](m1: Map[A, B], m2: Map[B, C]): A => Option[C] = {
+    val chained = (m1 andThen m2.lift).lift
+    
+    // unpack the nested option
+    chained andThen (_ getOrElse None)
+  }
+  
 }

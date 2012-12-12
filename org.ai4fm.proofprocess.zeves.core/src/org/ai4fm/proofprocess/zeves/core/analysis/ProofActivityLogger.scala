@@ -22,7 +22,7 @@ import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
   */
 object ProofActivityLogger {
 
-  def logProof(proofLog: ProofLog, proofEntry: PartialFunction[ISnapshotEntry, ProofEntry],
+  def logProof(proofLog: ProofLog, proofEntry: ISnapshotEntry => Option[ProofEntry],
                snapshotEntries: Iterable[ISnapshotEntry])
                (implicit monitor: IProgressMonitor) {
 
@@ -39,7 +39,7 @@ object ProofActivityLogger {
 
   private val factory = ProofProcessLogFactory.eINSTANCE
   
-  private def logEntry(proofLog: ProofLog, proofEntry: PartialFunction[ISnapshotEntry, ProofEntry])
+  private def logEntry(proofLog: ProofLog, proofEntry: ISnapshotEntry => Option[ProofEntry])
                       (snapshotEntry: ISnapshotEntry) {
 
     val activity = snapshotEntry match {
@@ -48,9 +48,8 @@ object ProofActivityLogger {
         val proofActivity = factory.createProofActivity
         
         // if proof entry is available, set it as activity reference
-        if (proofEntry.isDefinedAt(snapshotEntry)) {
-          proofActivity.setProofRef(proofEntry(snapshotEntry))
-        }
+        val entry = proofEntry(snapshotEntry)
+        entry foreach proofActivity.setProofRef
         
         proofActivity
       }

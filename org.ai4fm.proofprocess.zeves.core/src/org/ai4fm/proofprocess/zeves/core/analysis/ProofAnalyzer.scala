@@ -34,10 +34,7 @@ object ProofAnalyzer {
         val (_, matchMapping) = analyzeEntries(proofStore, proofEntryData)
 
         // map snapshot entries to actually matched proof entries for logging
-        
-        // as a workaround for missing mappings, use identity function to make
-        // the matchMapping total
-        val entryMatchMap = proofEntryData.entryMap andThen (matchMapping.withDefault(identity))
+        val entryMatchMap = PProcessUtil.chainMaps(proofEntryData.entryMap, matchMapping)
         logActivity(project, entryMatchMap, activeEntry);
 
         // FIXME commit here or after all analysis? or somewhere else altogether?
@@ -46,6 +43,13 @@ object ProofAnalyzer {
     }
 
     Status.OK_STATUS;
+  }
+  
+  private def chainMaps[A, B, C](m1: Map[A, B], m2: Map[B, C]): A => Option[C] = {
+    val chained = (m1 andThen m2.lift).lift
+    
+    // unpack the nested option
+    chained andThen (_ getOrElse None)
   }
   
   @throws(classOf[CoreException])
@@ -159,8 +163,10 @@ object ProofAnalyzer {
   }
   
   @throws(classOf[CoreException])
-  private def logActivity(project: IProject, proofEntries: PartialFunction[ISnapshotEntry, ProofEntry],
-      activeEntry: ISnapshotEntry)(implicit monitor: IProgressMonitor) {
+  private def logActivity(project: IProject,
+                          proofEntries: ISnapshotEntry => Option[ProofEntry],
+                          activeEntry: ISnapshotEntry)
+                         (implicit monitor: IProgressMonitor) {
 
     val proofLog = ProofManager.proofLog(project, monitor)
     ProofActivityLogger.logProof(proofLog, proofEntries, List(activeEntry))
