@@ -3,7 +3,9 @@ package org.ai4fm.proofprocess.ui.views
 import scala.annotation.tailrec
 
 import org.ai4fm.proofprocess.ProofEntry
+import org.ai4fm.proofprocess.core.prefs.PreferenceTracker
 import org.ai4fm.proofprocess.core.store.{IProofEntryTracker, IProofStoreProvider}
+import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences._
 import org.eclipse.core.runtime.{IProgressMonitor, IStatus, Status}
 import org.eclipse.core.runtime.jobs.Job
 import org.eclipse.emf.ecore.EObject
@@ -27,6 +29,8 @@ class PProcessPage(viewPart: IViewPart,
   
   private var main: Composite = _
   private var treeViewer: TreeViewer = _
+  
+  private var latestProofEntry: Option[ProofEntry] = None
 
   override def createControl(parent: Composite) {
 
@@ -80,13 +84,20 @@ class PProcessPage(viewPart: IViewPart,
     loadJob.setPriority(Job.DECORATE);
     loadJob.schedule();
   }
-  
+
   private def latestEntryChanged(entry: ProofEntry) {
-    // ensure running in UI thread
-    main.getDisplay asyncExec { () => highlightLatestEntry(entry) }
+
+    if (isTrackLatestEntry) {
+      // ensure running in UI thread
+      main.getDisplay asyncExec { () => highlightEntry(entry) }
+      latestProofEntry = None
+    } else {
+      // mark for later - not tracking at the moment
+      latestProofEntry = Some(entry)
+    }
   }
 
-  private def highlightLatestEntry(entry: ProofEntry) {
+  private def highlightEntry(entry: ProofEntry) {
     val parents = collectParents(entry)
 
     val path = new TreePath(parents.toArray)
@@ -100,13 +111,22 @@ class PProcessPage(viewPart: IViewPart,
     def collect0(eobj: EObject, acc: List[EObject]): List[EObject] =
       Option(eobj) match {
         case None => acc
-        case Some(eobj) => collect0(eobj.eContainer, eobj :: acc)
+        case Some(eobj) => collect0(eobj.eContainer, eobj :: eobj :: acc)
       }
 
     collect0(eobj, List())
   }
+
+  private val trackEntryPref = new PreferenceTracker(prefs, TRACK_LATEST_PROOF_ENTRY)(() => {
+    
+    if (isTrackLatestEntry) {
+      // tracking! select the last entry if available
+      latestProofEntry foreach highlightEntry
+    }
+  })
   
-  
+  private def isTrackLatestEntry: Boolean = prefs.getBoolean(TRACK_LATEST_PROOF_ENTRY, true)
+
   implicit private def runnable(f: () => Unit): Runnable =
     new Runnable() { def run() = f() }
 
@@ -115,6 +135,7 @@ class PProcessPage(viewPart: IViewPart,
   override def setFocus = treeViewer.getControl.setFocus
   
   override def dispose {
+    trackEntryPref.dispose()
     proofEntryTracker foreach (_.dispose())
     adapterFactory.dispose
 	super.dispose
