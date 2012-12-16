@@ -1,29 +1,27 @@
 package org.ai4fm.proofprocess.ui.views
 
-import org.ai4fm.proofprocess.ProofStore
-import org.ai4fm.proofprocess.core.store.IProofStoreProvider
-import org.eclipse.core.runtime.IProgressMonitor
-import org.eclipse.core.runtime.IStatus
-import org.eclipse.core.runtime.Status
+import scala.annotation.tailrec
+
+import org.ai4fm.proofprocess.ProofEntry
+import org.ai4fm.proofprocess.core.store.{IProofEntryTracker, IProofStoreProvider}
+import org.eclipse.core.runtime.{IProgressMonitor, IStatus, Status}
 import org.eclipse.core.runtime.jobs.Job
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
-import org.eclipse.jface.action.GroupMarker
-import org.eclipse.jface.action.MenuManager
-import org.eclipse.jface.layout.GridDataFactory
-import org.eclipse.jface.layout.GridLayoutFactory
-import org.eclipse.jface.viewers.TreeViewer
+import org.eclipse.emf.edit.ui.provider.{AdapterFactoryContentProvider, AdapterFactoryLabelProvider}
+import org.eclipse.jface.action.{GroupMarker, MenuManager}
+import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
+import org.eclipse.jface.viewers.{StructuredSelection, TreePath, TreeViewer}
 import org.eclipse.swt.SWT
-import org.eclipse.swt.widgets.Control
 import org.eclipse.swt.widgets.Composite
-import org.eclipse.swt.widgets.Label
-import org.eclipse.ui.IViewPart
-import org.eclipse.ui.IWorkbenchActionConstants
+import org.eclipse.ui.{IViewPart, IWorkbenchActionConstants}
 import org.eclipse.ui.part.Page
 
 
-class PProcessPage(private val viewPart: IViewPart, private val proofStoreProvider: IProofStoreProvider) extends Page {
+class PProcessPage(viewPart: IViewPart,
+                   proofStoreProvider: IProofStoreProvider,
+                   proofEntryTracker: Option[IProofEntryTracker])
+    extends Page {
 
   private val adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
   
@@ -55,7 +53,7 @@ class PProcessPage(private val viewPart: IViewPart, private val proofStoreProvid
 
     // register as global selection provider
     getSite().setSelectionProvider(treeViewer);
-
+    
     // load the proof process in a separate job, otherwise it delays the startup
     val loadJob = new Job("Loading proof process") {
 
@@ -65,7 +63,16 @@ class PProcessPage(private val viewPart: IViewPart, private val proofStoreProvid
         val proofStore = proofStoreProvider.store
 
         // set tree input back in the UI thread
-        main.getDisplay asyncExec {() => treeViewer.setInput(proofStore)}
+        main.getDisplay asyncExec { () =>
+          {
+            treeViewer.setInput(proofStore)
+
+            // init latest entry tracker if available
+            // note that it needs to be set up in UI thread, otherwise 
+            // databinding does not work correctly
+            proofEntryTracker foreach (_.initTrackLatestEntry(latestEntryChanged))
+          }
+        }
 
         Status.OK_STATUS
       }
@@ -73,6 +80,32 @@ class PProcessPage(private val viewPart: IViewPart, private val proofStoreProvid
     loadJob.setPriority(Job.DECORATE);
     loadJob.schedule();
   }
+  
+  private def latestEntryChanged(entry: ProofEntry) {
+    // ensure running in UI thread
+    main.getDisplay asyncExec { () => highlightLatestEntry(entry) }
+  }
+
+  private def highlightLatestEntry(entry: ProofEntry) {
+    val parents = collectParents(entry)
+
+    val path = new TreePath(parents.toArray)
+
+    treeViewer.expandToLevel(path, path.getSegmentCount)
+    treeViewer.setSelection(new StructuredSelection(entry), true)
+  }
+
+  private def collectParents(eobj: EObject): List[EObject] = {
+    @tailrec
+    def collect0(eobj: EObject, acc: List[EObject]): List[EObject] =
+      Option(eobj) match {
+        case None => acc
+        case Some(eobj) => collect0(eobj.eContainer, eobj :: acc)
+      }
+
+    collect0(eobj, List())
+  }
+  
   
   implicit private def runnable(f: () => Unit): Runnable =
     new Runnable() { def run() = f() }
@@ -82,6 +115,7 @@ class PProcessPage(private val viewPart: IViewPart, private val proofStoreProvid
   override def setFocus = treeViewer.getControl.setFocus
   
   override def dispose {
+    proofEntryTracker foreach (_.dispose())
     adapterFactory.dispose
 	super.dispose
   }
