@@ -1,14 +1,10 @@
 package org.ai4fm.proofprocess.ui.views
 
-import org.ai4fm.proofprocess.core.store.IProofStoreProvider
-
+import org.ai4fm.proofprocess.core.store.{IProofEntryTracker, IProofStoreProvider}
 import org.eclipse.core.resources.IResource
-import org.eclipse.ui.IEditorPart
-import org.eclipse.ui.IWorkbenchPart
+import org.eclipse.ui.{IEditorPart, IWorkbenchPart}
 import org.eclipse.ui.ide.ResourceUtil
-import org.eclipse.ui.part.IPage
-import org.eclipse.ui.part.MessagePage
-import org.eclipse.ui.part.PageBook
+import org.eclipse.ui.part.{IPage, MessagePage, PageBook}
 
 
 class PProcessView extends ScalaPageBookView {
@@ -25,9 +21,10 @@ class PProcessView extends ScalaPageBookView {
   override protected def doCreatePage0(part: IWorkbenchPart): IPage = {
     // must resolve without None
     val proofStoreProvider = getProofStore(part).get
+    val proofEntryTracker = getProofEntryTracker(part)
 
     // create a page with the proof store provider
-    val proofProcessPage = new PProcessPage(this, proofStoreProvider)
+    val proofProcessPage = new PProcessPage(this, proofStoreProvider, proofEntryTracker)
     initPage(proofProcessPage)
     proofProcessPage.createControl(getPageBook())
 
@@ -45,10 +42,15 @@ class PProcessView extends ScalaPageBookView {
   override protected def isImportant(part: IWorkbenchPart) = getProofStore(part).isDefined
 
   private def getProofStore(part: IWorkbenchPart): Option[IProofStoreProvider] =
-    // get the resource and try to resolve the proof store via adapter
+    getResourceAdapter(part, classOf[IProofStoreProvider])
+  
+  private def getProofEntryTracker(part: IWorkbenchPart): Option[IProofEntryTracker] =
+    getResourceAdapter(part, classOf[IProofEntryTracker])
+  
+  private def getResourceAdapter[A](part: IWorkbenchPart, adapterClass: Class[A]): Option[A] =
     getResource(part) flatMap { resource =>
       // force load adapters (likely in different plugins, which may be not loaded yet)
-      Option(ResourceUtil.getAdapter(resource, classOf[IProofStoreProvider], true).asInstanceOf[IProofStoreProvider])
+      Option(ResourceUtil.getAdapter(resource, adapterClass, true).asInstanceOf[A])
     }
   
   private def getResource(part: IWorkbenchPart): Option[IResource] =

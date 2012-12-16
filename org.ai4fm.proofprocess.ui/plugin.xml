@@ -32,7 +32,7 @@
             id="org.ai4fm.proofprocess.ui.trackProofProcessToggle"
             name="Toggle Proof Process Tracking">
          <state
-               class="org.ai4fm.proofprocess.ui.actions.TrackProofProcessState"
+               class="org.ai4fm.proofprocess.ui.actions.TrackPProcessState"
                id="toggleState">
          </state>
          <defaultHandler
@@ -40,6 +40,21 @@
             <parameter
                   name="org.ai4fm.proofprocess.ui.toggleHandler.commandId"
                   value="org.ai4fm.proofprocess.ui.trackProofProcessToggle">
+            </parameter>
+         </defaultHandler>
+      </command>
+      <command
+            id="org.ai4fm.proofprocess.ui.trackLatestProofEntryToggle"
+            name="Toggle Latest Proof Entry Tracking">
+         <state
+               class="org.ai4fm.proofprocess.ui.actions.TrackLatestProofEntryState"
+               id="toggleState">
+         </state>
+         <defaultHandler
+               class="org.ai4fm.proofprocess.ui.actions.ToggleHandler">
+            <parameter
+                  name="org.ai4fm.proofprocess.ui.toggleHandler.commandId"
+                  value="org.ai4fm.proofprocess.ui.trackLatestProofEntryToggle">
             </parameter>
          </defaultHandler>
       </command>
@@ -58,6 +73,21 @@
             </command>
          </toolbar>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.ai4fm.proofprocess.ui.PProcessView">
+         <command
+               commandId="org.ai4fm.proofprocess.ui.trackLatestProofEntryToggle"
+               icon="icons/synced.gif"
+               style="toggle">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferenceInitializer">
+      </initializer>
    </extension>
 
 </plugin>

@@ -9,6 +9,9 @@
          <adapter
                type="org.ai4fm.proofprocess.core.store.IProofStoreProvider">
          </adapter>
+         <adapter
+               type="org.ai4fm.proofprocess.core.store.IProofEntryTracker">
+         </adapter>
       </factory>
    </extension>
 
