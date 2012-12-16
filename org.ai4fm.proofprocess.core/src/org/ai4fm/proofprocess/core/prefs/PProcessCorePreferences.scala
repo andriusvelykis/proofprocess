@@ -22,7 +22,7 @@ object PProcessCorePreferences {
   
   /** Retrieves Boolean value for ProofProcess Core preferences (supports Default values) */
   def getBoolean(key: String, default: Boolean) =
-    Platform.getPreferencesService.getBoolean(pluginId, TRACK_PROOF_PROCESS, false, null)
+    Platform.getPreferencesService.getBoolean(pluginId, key, default, null)
   
   /** Preference indicating whether to track proof process live */
   val TRACK_PROOF_PROCESS = pluginId + ".trackProofProcess"
