@@ -41,13 +41,15 @@ object ProofManager {
   /** Key for the loaded project reference on resource */
   lazy private val PROP_PROOF_PROCESS =
     new QualifiedName(plugin.pluginId, "proofProcess") //$NON-NLS-1$
-  
+
   @throws(classOf[CoreException])
-  def proofProject(projectResource: IProject, monitor: IProgressMonitor): Project =
+  def proofProject(projectResource: IProject,
+                   monitor: IProgressMonitor = new NullProgressMonitor): Project =
     proofManager(projectResource, monitor).proofs
-  
+
   @throws(classOf[CoreException])
-  def proofLog(projectResource: IProject, monitor: IProgressMonitor): ProofLog =
+  def proofLog(projectResource: IProject,
+               monitor: IProgressMonitor = new NullProgressMonitor): ProofLog =
     proofManager(projectResource, monitor).proofLog
   
   @throws(classOf[CoreException])
