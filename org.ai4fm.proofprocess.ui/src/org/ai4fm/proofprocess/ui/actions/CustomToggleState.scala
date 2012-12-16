@@ -27,13 +27,3 @@ class CustomToggleState(prefGet: => Boolean, prefSet: Boolean => Unit) extends S
   })
 
 }
-
-import org.ai4fm.proofprocess.core.prefs.PProcessCorePreferences._
-
-/** A toggle command state for `TRACK_PROOF_PROCESS` preference.
-  * 
-  * @author Andrius Velykis
-  */
-class TrackProofProcessState
-  // read/write preferences in Core plugin
-  extends CustomToggleState(getBoolean(TRACK_PROOF_PROCESS, true), preferences.putBoolean(TRACK_PROOF_PROCESS, _))
