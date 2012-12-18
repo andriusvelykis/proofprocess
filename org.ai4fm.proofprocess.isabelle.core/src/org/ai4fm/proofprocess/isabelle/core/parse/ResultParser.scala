@@ -72,6 +72,57 @@ object ResultParser {
     case _ => None
   }
 
+
+  def labelledTerms(cmdState: State,
+      labelMatch: String => Boolean): Map[String, List[PPTerm]] = {
+    
+    val results = cmdState.results.values
+    
+    val lTermResults = results.toStream map (labelledTermMarkup(labelMatch))
+    
+    // unpack option results
+    val lTerms = lTermResults.flatten.headOption
+    
+    val labelledPPTerms = lTerms map ( lMap => lMap mapValues markupTerms )
+    
+    labelledPPTerms getOrElse Map()
+  }
+
+
+  /**
+   * Parses labelled terms (e.g. for "picking this" from structured proof) from result
+   * element (writeln).
+   *
+   * @return  a labelled list of pairs `(render, term)` for each label type, where the `render` is a
+   *          human-readable render of the term, `term` is the marked-up term XML element.
+   */
+  def labelledTermMarkup(labelMatch: String => Boolean)
+                        (resultElem: XML.Tree): Option[Map[String, List[(String, XML.Elem)]]] =
+    resultElem match {
+      case output @ XML.Elem(Markup(Isabelle_Markup.WRITELN, _), _) =>
+        val labelledTerms = collectDepthFirst(output,
+          {
+            case labelledBlock @ LabelledBlock(label) if (labelMatch(label)) => {
+              val terms = nestedMarkupTerms(labelledBlock)
+
+              // group each term with its label
+              terms map ((label, _))
+            }
+          })
+
+        // group by label
+        val groupedTerms = labelledTerms.flatten groupBy (_._1)
+
+        // drop the labels from values, and get the rendering of each term
+        val withRender = groupedTerms mapValues { lTerms =>
+          lTerms map { case (_, t) => (render(t), t) }
+        }
+
+        Some(withRender)
+
+      case _ => None
+    }
+
   def nestedMarkupTerms(elem: XML.Tree): List[XML.Elem] =
     collectDepthFirst(elem, { case MarkupTerm(termXml) => termXml })
 
@@ -83,6 +134,15 @@ object ResultParser {
     }
   }
 
+
+  object LabelledBlock {
+    def unapply(elem: XML.Tree): Option[String] = elem match {
+      // block with the first body element having text
+      case XML.Elem(Markup(Isabelle_Markup.BLOCK, _), XML.Text(text) :: _) => Some(text)
+      case _ => None
+    }
+  }
+  
   
   /** Parses goals from result element (writeln).
     * @return a list of pairs @{code (render, term)} for each subgoal,
