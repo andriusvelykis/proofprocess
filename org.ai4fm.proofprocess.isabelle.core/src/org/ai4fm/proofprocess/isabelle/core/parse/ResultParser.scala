@@ -50,13 +50,14 @@ object ResultParser {
       Some(ppTerms)
     } else if (resultMarkupTerms.isDefined) {
       
-      val ppTerms = resultMarkupTerms.get.map(Function.tupled(markupTerm))
+      val ppTerms = markupTerms(resultMarkupTerms.get)
       
       Some(ppTerms)
     } else {
       None
     }
   }
+
 
   /** Parses goals from trace element.
     * @return a list of terms if they were parsed (empty list means no outstanding subgoals), 
@@ -70,7 +71,18 @@ object ResultParser {
         { _ collect { case XML.Elem(Markup("subgoal_term", _), term) => Term_XML.Decode.term(term) } }
     case _ => None
   }
-  
+
+  def nestedMarkupTerms(elem: XML.Tree): List[XML.Elem] =
+    collectDepthFirst(elem, { case MarkupTerm(termXml) => termXml })
+
+
+  object MarkupTerm {
+    def unapply(elem: XML.Tree): Option[XML.Elem] = elem match {
+      case termXml @ XML.Elem(Markup(Isabelle_Markup.TERM, _), _) => Some(termXml)
+      case _ => None
+    }
+  }
+
   
   /** Parses goals from result element (writeln).
     * @return a list of pairs @{code (render, term)} for each subgoal,
@@ -81,10 +93,10 @@ object ResultParser {
     case output @ XML.Elem(Markup(Isabelle_Markup.WRITELN, _), _) =>
       val subgoalOpts = collectDepthFirst(output,
         {
-          case subgoal @ XML.Elem(Markup(Isabelle_Markup.SUBGOAL, _), _) =>
-            collectDepthFirst(subgoal, {
-              case termXml @ XML.Elem(Markup(Isabelle_Markup.TERM, _), _) => termXml
-            }).headOption
+          case subgoal @ XML.Elem(Markup(Isabelle_Markup.SUBGOAL, _), _) => {
+            val terms = nestedMarkupTerms(subgoal)
+            terms.headOption
+          }
         })
       
       // get the rendering of each term as well
@@ -141,5 +153,8 @@ object ResultParser {
     ppTerm.setTerm(term)
     ppTerm
   }
+  
+  def markupTerms(termDisplays: List[(String, XML.Tree)]): List[PPTerm] =
+    termDisplays map Function.tupled(markupTerm)
   
 }
