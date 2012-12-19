@@ -167,10 +167,17 @@ trait ProofEntryReader {
   
   private def propsToTerms(props: List[Proposition[Term]]): List[Term] =
     props map (_ match {
-      // FIXME special term for assumptions?
-      case Assumption(t) => t
-      // FIXME!! link it back into one term
-      case Judgement(assms, goal) => goal
+      case Assumption(t) => {
+        val assmTerm = isaFactory.createAssumptionTerm
+        assmTerm.setTerm(t)
+        assmTerm
+      }
+      case Judgement(assms, goal) => {
+        val jTerm = isaFactory.createJudgementTerm
+        jTerm.getAssms.addAll(assms)
+        jTerm.setGoal(goal)
+        jTerm
+      }
     })
   
   private def proofEntry(proofStep: GoalStep[State, Term]): ProofEntry = {
