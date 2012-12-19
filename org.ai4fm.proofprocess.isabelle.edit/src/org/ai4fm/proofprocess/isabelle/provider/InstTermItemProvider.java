@@ -180,6 +180,16 @@ public class InstTermItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.INST_TERM__TERM,
+				 IsabelleProofProcessFactory.eINSTANCE.createAssumptionTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.INST_TERM__TERM,
+				 IsabelleProofProcessFactory.eINSTANCE.createJudgementTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
 				(IsabelleProofProcessPackage.Literals.INST_TERM__INSTS,
 				 IsabelleProofProcessFactory.eINSTANCE.createInst()));
 	}

@@ -283,6 +283,52 @@ public class IsabelleProofProcessItemProviderAdapterFactory extends IsabelleProo
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.AssumptionTerm} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected AssumptionTermItemProvider assumptionTermItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.isabelle.AssumptionTerm}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createAssumptionTermAdapter() {
+		if (assumptionTermItemProvider == null) {
+			assumptionTermItemProvider = new AssumptionTermItemProvider(this);
+		}
+
+		return assumptionTermItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.isabelle.JudgementTerm} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected JudgementTermItemProvider judgementTermItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.isabelle.JudgementTerm}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createJudgementTermAdapter() {
+		if (judgementTermItemProvider == null) {
+			judgementTermItemProvider = new JudgementTermItemProvider(this);
+		}
+
+		return judgementTermItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -390,6 +436,8 @@ public class IsabelleProofProcessItemProviderAdapterFactory extends IsabelleProo
 		if (isabelleTraceItemProvider != null) isabelleTraceItemProvider.dispose();
 		if (namedTermTreeItemProvider != null) namedTermTreeItemProvider.dispose();
 		if (isabelleCommandItemProvider != null) isabelleCommandItemProvider.dispose();
+		if (assumptionTermItemProvider != null) assumptionTermItemProvider.dispose();
+		if (judgementTermItemProvider != null) judgementTermItemProvider.dispose();
 	}
 
 }

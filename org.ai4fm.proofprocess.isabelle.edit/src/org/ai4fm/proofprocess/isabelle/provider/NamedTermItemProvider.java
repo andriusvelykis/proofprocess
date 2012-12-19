@@ -175,6 +175,16 @@ public class NamedTermItemProvider
 			(createChildParameter
 				(IsabelleProofProcessPackage.Literals.NAMED_TERM__TERM,
 				 IsabelleProofProcessFactory.eINSTANCE.createInstTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.NAMED_TERM__TERM,
+				 IsabelleProofProcessFactory.eINSTANCE.createAssumptionTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.NAMED_TERM__TERM,
+				 IsabelleProofProcessFactory.eINSTANCE.createJudgementTerm()));
 	}
 
 }
