@@ -166,16 +166,18 @@ trait ProofEntryReader {
   
   
   private def propsToTerms(props: List[Proposition[Term]]): List[Term] =
+    // note that terms are cloned when put into Assumption/Judgement terms
+    // since they cannot be shared here
     props map (_ match {
       case Assumption(t) => {
         val assmTerm = isaFactory.createAssumptionTerm
-        assmTerm.setTerm(t)
+        assmTerm.setTerm(cloneTerm(t))
         assmTerm
       }
       case Judgement(assms, goal) => {
         val jTerm = isaFactory.createJudgementTerm
-        jTerm.getAssms.addAll(assms)
-        jTerm.setGoal(goal)
+        jTerm.getAssms.addAll(assms map cloneTerm)
+        jTerm.setGoal(cloneTerm(goal))
         jTerm
       }
     })
