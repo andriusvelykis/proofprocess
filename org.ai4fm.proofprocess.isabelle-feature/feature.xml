@@ -21,7 +21,7 @@
       <import feature="org.ai4fm.proofprocess-feature" version="1.1.0.qualifier"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.scala-ide.scala.library" version="2.9.1" match="greaterOrEqual"/>
+      <import plugin="org.scala-ide.scala.library" version="2.10.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.emf.edit"/>
       <import plugin="org.eclipse.ui"/>
