@@ -16,7 +16,7 @@
   <dependencies>
     <dependency>
       <groupId>com.assembla.scala-incubator</groupId>
-      <artifactId>graph-core_2.9.2.osgi</artifactId>
+      <artifactId>graph-core_2.10.osgi</artifactId>
     </dependency>
     <dependency>
       <groupId>org.ai4fm.graph</groupId>

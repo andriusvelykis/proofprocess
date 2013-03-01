@@ -131,7 +131,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.assembla.scala-incubator.graph-core_2.9.2.osgi"
+         id="com.assembla.scala-incubator.graph-core_2.10.osgi"
          download-size="0"
          install-size="0"
          version="0.0.0"

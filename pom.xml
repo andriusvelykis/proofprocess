@@ -62,8 +62,8 @@
       <dependency>
         <!-- Scala Graphs: https://www.assembla.com/spaces/scala-graph/wiki -->
         <groupId>com.assembla.scala-incubator</groupId>
-        <artifactId>graph-core_2.9.2.osgi</artifactId>
-        <version>1.5.1</version>
+        <artifactId>graph-core_2.10.osgi</artifactId>
+        <version>1.6.1</version>
       </dependency>
       <dependency>
         <!-- Scala Graph Isomorphism by AI4FM -->
