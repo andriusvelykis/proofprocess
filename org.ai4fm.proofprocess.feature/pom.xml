@@ -7,7 +7,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.ai4fm.proofprocess-feature</artifactId>
+  <artifactId>org.ai4fm.proofprocess.feature</artifactId>
   <packaging>eclipse-feature</packaging>
 
   <name>ProofProcess Core Feature</name>

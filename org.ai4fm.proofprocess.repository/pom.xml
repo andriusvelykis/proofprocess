@@ -7,7 +7,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.ai4fm.proofprocess-repository</artifactId>
+  <artifactId>org.ai4fm.proofprocess.repository</artifactId>
   <packaging>eclipse-repository</packaging>
 
   <name>ProofProcess Framework p2 Repository</name>

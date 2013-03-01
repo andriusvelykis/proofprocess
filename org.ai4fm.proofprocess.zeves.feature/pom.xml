@@ -7,10 +7,10 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.ai4fm.proofprocess.isabelle-feature</artifactId>
+  <artifactId>org.ai4fm.proofprocess.zeves.feature</artifactId>
   <packaging>eclipse-feature</packaging>
 
-  <name>Isabelle ProofProcess Feature</name>
+  <name>Z/EVES ProofProcess Feature</name>
 
   <dependencies>
     <dependency>

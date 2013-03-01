@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.ai4fm.proofprocess-feature_1.0.0.qualifier.jar" id="org.ai4fm.proofprocess-feature" version="1.0.0.qualifier">
+   <feature url="features/org.ai4fm.proofprocess.feature_1.0.0.qualifier.jar" id="org.ai4fm.proofprocess.feature" version="1.0.0.qualifier">
       <category name="org.ai4fm.proofprocess.category"/>
    </feature>
-   <feature url="features/org.ai4fm.proofprocess.isabelle-feature_1.0.0.qualifier.jar" id="org.ai4fm.proofprocess.isabelle-feature" version="1.0.0.qualifier">
+   <feature url="features/org.ai4fm.proofprocess.isabelle.feature_1.0.0.qualifier.jar" id="org.ai4fm.proofprocess.isabelle.feature" version="1.0.0.qualifier">
       <category name="org.ai4fm.proofprocess.category"/>
    </feature>
-   <feature url="features/org.ai4fm.proofprocess.zeves-feature_1.0.0.qualifier.jar" id="org.ai4fm.proofprocess.zeves-feature" version="1.0.0.qualifier">
+   <feature url="features/org.ai4fm.proofprocess.zeves.feature_1.0.0.qualifier.jar" id="org.ai4fm.proofprocess.zeves.feature" version="1.0.0.qualifier">
       <category name="org.ai4fm.proofprocess.category"/>
    </feature>
    <category-def name="org.ai4fm.proofprocess.category" label="ProofProcess Framework">
