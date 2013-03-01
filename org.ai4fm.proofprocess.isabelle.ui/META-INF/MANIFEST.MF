@@ -12,6 +12,6 @@ Require-Bundle: org.eclipse.ui,
  org.ai4fm.proofprocess;bundle-version="1.0.0",
  org.ai4fm.proofprocess.isabelle;bundle-version="1.0.0",
  org.ai4fm.proofprocess.isabelle.core;bundle-version="1.0.0",
- isabelle.pure;bundle-version="2012.0.0"
+ isabelle.pure;bundle-version="2013.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
