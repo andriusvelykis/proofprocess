@@ -11,6 +11,7 @@ import isabelle.XML.Tree;
 
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
+import org.ai4fm.proofprocess.isabelle.AssumptionTerm;
 import org.ai4fm.proofprocess.isabelle.DisplayTerm;
 import org.ai4fm.proofprocess.isabelle.Inst;
 import org.ai4fm.proofprocess.isabelle.InstTerm;
@@ -20,6 +21,7 @@ import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace;
 
+import org.ai4fm.proofprocess.isabelle.JudgementTerm;
 import org.ai4fm.proofprocess.isabelle.MarkupTerm;
 import org.ai4fm.proofprocess.isabelle.NameTerm;
 import org.ai4fm.proofprocess.isabelle.NamedTerm;
@@ -108,6 +110,20 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * @generated
 	 */
 	private EClass isabelleCommandEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass assumptionTermEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass judgementTermEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -452,6 +468,51 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getAssumptionTerm() {
+		return assumptionTermEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAssumptionTerm_Term() {
+		return (EReference)assumptionTermEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJudgementTerm() {
+		return judgementTermEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJudgementTerm_Assms() {
+		return (EReference)judgementTermEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJudgementTerm_Goal() {
+		return (EReference)judgementTermEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public EDataType getIsabelleXML() {
 		return isabelleXMLEDataType;
@@ -532,6 +593,13 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		isabelleCommandEClass = createEClass(ISABELLE_COMMAND);
 		createEAttribute(isabelleCommandEClass, ISABELLE_COMMAND__SOURCE);
 
+		assumptionTermEClass = createEClass(ASSUMPTION_TERM);
+		createEReference(assumptionTermEClass, ASSUMPTION_TERM__TERM);
+
+		judgementTermEClass = createEClass(JUDGEMENT_TERM);
+		createEReference(judgementTermEClass, JUDGEMENT_TERM__ASSMS);
+		createEReference(judgementTermEClass, JUDGEMENT_TERM__GOAL);
+
 		// Create data types
 		isabelleXMLEDataType = createEDataType(ISABELLE_XML);
 		isabelleTermEDataType = createEDataType(ISABELLE_TERM);
@@ -576,6 +644,8 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		instTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 		isabelleTraceEClass.getESuperTypes().add(theProofProcessPackage.getTrace());
 		isabelleCommandEClass.getESuperTypes().add(this.getNamedTermTree());
+		assumptionTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
+		judgementTermEClass.getESuperTypes().add(theProofProcessPackage.getTerm());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(displayTermEClass, DisplayTerm.class, "DisplayTerm", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -613,6 +683,13 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 
 		initEClass(isabelleCommandEClass, IsabelleCommand.class, "IsabelleCommand", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIsabelleCommand_Source(), ecorePackage.getEString(), "source", null, 1, 1, IsabelleCommand.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(assumptionTermEClass, AssumptionTerm.class, "AssumptionTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getAssumptionTerm_Term(), theProofProcessPackage.getTerm(), null, "term", null, 1, 1, AssumptionTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(judgementTermEClass, JudgementTerm.class, "JudgementTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJudgementTerm_Assms(), theProofProcessPackage.getTerm(), null, "assms", null, 0, -1, JudgementTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJudgementTerm_Goal(), theProofProcessPackage.getTerm(), null, "goal", null, 1, 1, JudgementTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(isabelleXMLEDataType, Tree.class, "IsabelleXML", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

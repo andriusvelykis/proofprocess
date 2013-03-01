@@ -115,6 +115,14 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 				return createIsabelleCommandAdapter();
 			}
 			@Override
+			public Adapter caseAssumptionTerm(AssumptionTerm object) {
+				return createAssumptionTermAdapter();
+			}
+			@Override
+			public Adapter caseJudgementTerm(JudgementTerm object) {
+				return createJudgementTermAdapter();
+			}
+			@Override
 			public Adapter caseTerm(Term object) {
 				return createTermAdapter();
 			}
@@ -279,6 +287,34 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIsabelleCommandAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.isabelle.AssumptionTerm <em>Assumption Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.isabelle.AssumptionTerm
+	 * @generated
+	 */
+	public Adapter createAssumptionTermAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.isabelle.JudgementTerm <em>Judgement Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.isabelle.JudgementTerm
+	 * @generated
+	 */
+	public Adapter createJudgementTermAdapter() {
 		return null;
 	}
 

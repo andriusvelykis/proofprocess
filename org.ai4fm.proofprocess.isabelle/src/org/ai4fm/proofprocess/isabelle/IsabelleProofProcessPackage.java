@@ -451,6 +451,71 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	int ISABELLE_COMMAND_FEATURE_COUNT = NAMED_TERM_TREE_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.AssumptionTermImpl <em>Assumption Term</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.isabelle.impl.AssumptionTermImpl
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getAssumptionTerm()
+	 * @generated
+	 */
+	int ASSUMPTION_TERM = 10;
+
+	/**
+	 * The feature id for the '<em><b>Term</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSUMPTION_TERM__TERM = ProofProcessPackage.TERM_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Assumption Term</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ASSUMPTION_TERM_FEATURE_COUNT = ProofProcessPackage.TERM_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.isabelle.impl.JudgementTermImpl <em>Judgement Term</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.isabelle.impl.JudgementTermImpl
+	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getJudgementTerm()
+	 * @generated
+	 */
+	int JUDGEMENT_TERM = 11;
+
+	/**
+	 * The feature id for the '<em><b>Assms</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JUDGEMENT_TERM__ASSMS = ProofProcessPackage.TERM_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Goal</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JUDGEMENT_TERM__GOAL = ProofProcessPackage.TERM_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Judgement Term</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JUDGEMENT_TERM_FEATURE_COUNT = ProofProcessPackage.TERM_FEATURE_COUNT + 2;
+
+	/**
 	 * The meta object id for the '<em>Isabelle XML</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -458,7 +523,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleXML()
 	 * @generated
 	 */
-	int ISABELLE_XML = 10;
+	int ISABELLE_XML = 12;
 
 	/**
 	 * The meta object id for the '<em>Isabelle Term</em>' data type.
@@ -468,7 +533,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getIsabelleTerm()
 	 * @generated
 	 */
-	int ISABELLE_TERM = 11;
+	int ISABELLE_TERM = 13;
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.DisplayTerm <em>Display Term</em>}'.
@@ -747,6 +812,59 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	EAttribute getIsabelleCommand_Source();
 
 	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.AssumptionTerm <em>Assumption Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Assumption Term</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.AssumptionTerm
+	 * @generated
+	 */
+	EClass getAssumptionTerm();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.ai4fm.proofprocess.isabelle.AssumptionTerm#getTerm <em>Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Term</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.AssumptionTerm#getTerm()
+	 * @see #getAssumptionTerm()
+	 * @generated
+	 */
+	EReference getAssumptionTerm_Term();
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.isabelle.JudgementTerm <em>Judgement Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Judgement Term</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.JudgementTerm
+	 * @generated
+	 */
+	EClass getJudgementTerm();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.isabelle.JudgementTerm#getAssms <em>Assms</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Assms</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.JudgementTerm#getAssms()
+	 * @see #getJudgementTerm()
+	 * @generated
+	 */
+	EReference getJudgementTerm_Assms();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.ai4fm.proofprocess.isabelle.JudgementTerm#getGoal <em>Goal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Goal</em>'.
+	 * @see org.ai4fm.proofprocess.isabelle.JudgementTerm#getGoal()
+	 * @see #getJudgementTerm()
+	 * @generated
+	 */
+	EReference getJudgementTerm_Goal();
+
+	/**
 	 * Returns the meta object for data type '{@link isabelle.XML.Tree <em>Isabelle XML</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1017,6 +1135,50 @@ public interface IsabelleProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ISABELLE_COMMAND__SOURCE = eINSTANCE.getIsabelleCommand_Source();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.AssumptionTermImpl <em>Assumption Term</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.isabelle.impl.AssumptionTermImpl
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getAssumptionTerm()
+		 * @generated
+		 */
+		EClass ASSUMPTION_TERM = eINSTANCE.getAssumptionTerm();
+
+		/**
+		 * The meta object literal for the '<em><b>Term</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ASSUMPTION_TERM__TERM = eINSTANCE.getAssumptionTerm_Term();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.isabelle.impl.JudgementTermImpl <em>Judgement Term</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.isabelle.impl.JudgementTermImpl
+		 * @see org.ai4fm.proofprocess.isabelle.impl.IsabelleProofProcessPackageImpl#getJudgementTerm()
+		 * @generated
+		 */
+		EClass JUDGEMENT_TERM = eINSTANCE.getJudgementTerm();
+
+		/**
+		 * The meta object literal for the '<em><b>Assms</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JUDGEMENT_TERM__ASSMS = eINSTANCE.getJudgementTerm_Assms();
+
+		/**
+		 * The meta object literal for the '<em><b>Goal</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JUDGEMENT_TERM__GOAL = eINSTANCE.getJudgementTerm_Goal();
 
 		/**
 		 * The meta object literal for the '<em>Isabelle XML</em>' data type.

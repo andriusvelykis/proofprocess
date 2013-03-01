@@ -76,6 +76,8 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 			case IsabelleProofProcessPackage.ISABELLE_TRACE: return (EObject)createIsabelleTrace();
 			case IsabelleProofProcessPackage.NAMED_TERM_TREE: return (EObject)createNamedTermTree();
 			case IsabelleProofProcessPackage.ISABELLE_COMMAND: return (EObject)createIsabelleCommand();
+			case IsabelleProofProcessPackage.ASSUMPTION_TERM: return (EObject)createAssumptionTerm();
+			case IsabelleProofProcessPackage.JUDGEMENT_TERM: return (EObject)createJudgementTerm();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -212,6 +214,26 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	public IsabelleCommand createIsabelleCommand() {
 		IsabelleCommandImpl isabelleCommand = new IsabelleCommandImpl();
 		return isabelleCommand;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AssumptionTerm createAssumptionTerm() {
+		AssumptionTermImpl assumptionTerm = new AssumptionTermImpl();
+		return assumptionTerm;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JudgementTerm createJudgementTerm() {
+		JudgementTermImpl judgementTerm = new JudgementTermImpl();
+		return judgementTerm;
 	}
 
 	/**

@@ -1,13 +1,16 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
+import org.ai4fm.proofprocess.Term
+import org.ai4fm.proofprocess.core.analysis.{Assumption, Judgement}
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
+
 import isabelle.Command
 import isabelle.Command.State
 import isabelle.Document
 import isabelle.Document.Node.Name
 import isabelle.Document.Snapshot
 import isabelle.Linear_Set
-import isabelle.Protocol
-import org.ai4fm.proofprocess.Term
+import isabelle.Protocol.command_status
 
 
 /** Reads the proof states from the current snapshot. Given a set of changed commands, calculates
@@ -21,7 +24,7 @@ object SnapshotReader {
   private val PROOF_START_CMDS = Set("lemma", "theorem", "function", "primrec", "definition")
   
   case class ProofTextData(val name: Document.Node.Name, val documentText: String, syncPoint: Int)
-  case class ProofData(val proofState: List[(State, List[Term])], val textData: ProofTextData)
+  case class ProofData(val proofState: List[StepResults], val textData: ProofTextData)
 
   def readProofs(docState: Document.State, changedCommands: Set[Command]): (List[ProofData], Map[Command, Int]) = {
     // filter the proof process commands to valid one 
@@ -52,7 +55,7 @@ object SnapshotReader {
     
     val proofData = proofs map { proof =>
       
-      val (lastState, _) = proof.last
+      val lastState = proof.last.state
       val lastCmd = lastState.command
       val doc = lastCmd.node_name
       val snapshot = snapshots.get(doc).get
@@ -165,19 +168,68 @@ object SnapshotReader {
   def isError(cmdState: State) =
     // no errors in the results
     cmdState.results.values.exists(ResultParser.isError)
-    
-    
-  private def withGoals(proofState: List[State]): List[(State, List[Term])] = {
-    
-    proofState.flatMap(state => {
-      val goals = ResultParser.goalTerms(state) orElse {
-        // workaround for "by" not outputting goals in "markup" term case
-        if ("by".equals(state.command.name)) Some(Nil) else None
-      }
+
+
+  // "picking this" both in `in` and `out`?
+  private val IN_ASSM_LABELS = Set("picking this:", "using this:")
+  private val OUT_ASSM_LABELS = Set("picking this:", "this:")
+  
+  private val ALL_ASSM_LABELS = IN_ASSM_LABELS ++ OUT_ASSM_LABELS
+
+  private def withGoals(proofState: List[State]): List[StepResults] = {
+
+    proofState flatMap (state => {
+
+      val assmTerms = ResultParser.labelledTerms(state,
+        label => ALL_ASSM_LABELS.contains(label.trim))
+
+      // trim the keys (remove newlines, etc)
+      val trimmedAssms = assmTerms map { case (k, v) => (k.trim, v) }
+
+      val inAssms = collectMapped(trimmedAssms, IN_ASSM_LABELS)
+      val outAssms = collectMapped(trimmedAssms, OUT_ASSM_LABELS)
       
-      // if goals can be resolved, map it with the state into tuple 
-      goals map {(state, _)}
+      val isByCmd = "by" == state.command.name
+
+      val stepTypeOpt = ResultParser.stepProofType(state)
+      // last step 'by' has no output, so assume 'prove' step type
+      val stepType = stepTypeOpt orElse ( if (isByCmd) Some(Prove) else None ) 
+      
+      // workaround for "by" not outputting goals in "markup" term case
+      // also "by" when used in forward proof can go into "state" proof and output outstanding
+      // goals - so we replace it with "finished", i.e. empty list of goals
+      val goals = if (isByCmd) Some(Nil) else ResultParser.goalTerms(state)
+      
+      // only produce results if step type is defined
+      stepType map ( StepResults(state, _, inAssms, outAssms, goals) )
     })
+  }
+  
+  private def collectMapped[A, B](mapped: Map[A, List[B]], collect: Set[A]): List[B] = {
+    val results = collect.toList flatMap mapped.get
+    results.flatten
+  }
+
+  case class StepResults(state: State,
+                         stateType: StepProofType,
+                         inAssms: List[Term],
+                         outAssms: List[Term],
+                         outGoals: Option[List[Term]]) {
+    
+    lazy val inAssmProps = inAssms map (Assumption(_))
+    lazy val outAssmProps = outAssms map (Assumption(_))
+    
+    private def addInAssms(goal: Judgement[Term]): Judgement[Term] = {
+      val updAssms = (goal.assms ::: inAssms).distinct
+      goal.copy( assms = updAssms )
+    }
+
+    // convert each goal to a Judgement (assms + goal)
+    // also link explicit assumptions with out goals - add them to each out goal
+    lazy val outGoalProps = outGoals map { goals =>
+      goals map ResultParser.splitAssmsGoal map addInAssms
+    }
+    
   }
 
 }

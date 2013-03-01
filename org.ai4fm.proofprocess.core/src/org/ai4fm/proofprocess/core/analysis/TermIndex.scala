@@ -15,14 +15,45 @@ package org.ai4fm.proofprocess.core.analysis
  */
 object TermIndex {
 
-  type GoalStep[A, T] = (A, List[T], List[T])
-
   def indexedGoalSteps[A, T](matches: (T, T) => Boolean)
                             (goals: List[GoalStep[A, T]],
                              cache: IndexedSeq[T] = IndexedSeq()): (IndexedSeq[T], List[GoalStep[A, Int]]) = {
 
+    def indexedProposition(cache: IndexedSeq[T],
+                           prop: Proposition[T]): (IndexedSeq[T], Proposition[Int]) =
+      prop match {
+        case Assumption(t) => {
+          val (resultCache, index) = indexedTerm(matches)(t, cache)
+          (resultCache, Assumption(index))
+        }
+
+        case Judgement(assms, goal) => {
+          val (assmsCache, assmsIndexes) = indexed(matches)(assms, cache)
+          val (goalCache, goalIndex) = indexedTerm(matches)(goal, cache)
+          (goalCache, Judgement(assmsIndexes, goalIndex))
+        }
+      }
+
     /** indexes the goal step (its in/out goals) */
-    def indexedStep(cache: IndexedSeq[T], goal: GoalStep[A, T]): (IndexedSeq[T], GoalStep[A, Int]) = {
+    def indexedStep(cache: IndexedSeq[T], step: GoalStep[A, T]): (IndexedSeq[T], GoalStep[A, Int]) = {
+      
+      val (c1, inProps) = foldLeftAndMap(indexedProposition)(cache)(step.in)
+      val (c2, outProps) = foldLeftAndMap(indexedProposition)(c1)(step.out)
+      
+      (c2, GoalStep(step.info, inProps, outProps))
+    }
+
+    foldLeftAndMap(indexedStep)(cache)(goals)
+  }
+  
+  type GoalStep1[A, T] = (A, List[T], List[T])
+
+  def indexedGoalSteps1[A, T](matches: (T, T) => Boolean)
+                            (goals: List[GoalStep1[A, T]],
+                             cache: IndexedSeq[T] = IndexedSeq()): (IndexedSeq[T], List[GoalStep1[A, Int]]) = {
+
+    /** indexes the goal step (its in/out goals) */
+    def indexedStep(cache: IndexedSeq[T], goal: GoalStep1[A, T]): (IndexedSeq[T], GoalStep1[A, Int]) = {
 
       val (g, inGoals, outGoals) = goal
       val (c1, inGoalIds) = indexed(matches)(inGoals, cache)

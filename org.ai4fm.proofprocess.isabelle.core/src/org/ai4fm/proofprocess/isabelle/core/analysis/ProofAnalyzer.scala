@@ -6,7 +6,7 @@ import org.ai4fm.proofprocess.core.analysis.ProofEntryMatcher
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin._
 import org.ai4fm.proofprocess.isabelle.core.parse.{ProofEntryData, ProofEntryReader, SnapshotReader}
-import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.ProofData
+import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.{ProofData, StepResults}
 import org.ai4fm.proofprocess.project.core.{ProofHistoryManager, ProofManager}
 import org.ai4fm.proofprocess.project.core.util.{ProofProcessUtil, ResourceUtil}
 import org.eclipse.core.resources.IProject
@@ -41,7 +41,7 @@ object ProofAnalyzer {
 
           // map snapshot entries to actually matched proof entries for logging
           val entryMatchMap = PProcessUtil.chainMaps(proofEntryData.entryMap, matchMapping)
-          logActivity(project, entryMatchMap, changedCommands, proofData.proofState.map(_._1), monitor);
+          logActivity(project, entryMatchMap, changedCommands, proofData.proofState.map(_.state), monitor);
 
           // FIXME commit here or after all analysis? or somewhere else altogether?
           commit(proofStore)
@@ -99,7 +99,7 @@ object ProofAnalyzer {
     }
   }
 
-  private def proofEntries(proofStore: ProofStore, proofState: List[(State, List[Term])],
+  private def proofEntries(proofStore: ProofStore, proofState: List[StepResults],
       cmdLoc: State => Loc) = {
 
     val entryReader = new ProofEntryReader {

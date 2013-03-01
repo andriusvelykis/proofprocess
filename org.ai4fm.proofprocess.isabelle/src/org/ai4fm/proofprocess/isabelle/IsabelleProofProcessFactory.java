@@ -107,6 +107,24 @@ public interface IsabelleProofProcessFactory extends EFactory {
 	IsabelleCommand createIsabelleCommand();
 
 	/**
+	 * Returns a new object of class '<em>Assumption Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Assumption Term</em>'.
+	 * @generated
+	 */
+	AssumptionTerm createAssumptionTerm();
+
+	/**
+	 * Returns a new object of class '<em>Judgement Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Judgement Term</em>'.
+	 * @generated
+	 */
+	JudgementTerm createJudgementTerm();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

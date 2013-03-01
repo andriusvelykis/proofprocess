@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package org.ai4fm.proofprocess.isabelle.provider;
 
@@ -10,9 +6,9 @@ package org.ai4fm.proofprocess.isabelle.provider;
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.isabelle.Inst;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
+import org.ai4fm.proofprocess.isabelle.JudgementTerm;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -21,24 +17,22 @@ import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.Inst} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.JudgementTerm} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class InstItemProvider
+public class JudgementTermItemProvider
 	extends ItemProviderAdapter
 	implements
 		IEditingDomainItemProvider,
@@ -52,7 +46,7 @@ public class InstItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public InstItemProvider(AdapterFactory adapterFactory) {
+	public JudgementTermItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -67,54 +61,8 @@ public class InstItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addNamePropertyDescriptor(object);
-			addIndexPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Name feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addNamePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Inst_name_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Inst_name_feature", "_UI_Inst_type"),
-				 IsabelleProofProcessPackage.Literals.INST__NAME,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Index feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addIndexPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_Inst_index_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_Inst_index_feature", "_UI_Inst_type"),
-				 IsabelleProofProcessPackage.Literals.INST__INDEX,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
 	}
 
 	/**
@@ -129,7 +77,8 @@ public class InstItemProvider
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(IsabelleProofProcessPackage.Literals.INST__TERM);
+			childrenFeatures.add(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__ASSMS);
+			childrenFeatures.add(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL);
 		}
 		return childrenFeatures;
 	}
@@ -148,14 +97,14 @@ public class InstItemProvider
 	}
 
 	/**
-	 * This returns Inst.gif.
+	 * This returns JudgementTerm.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Inst"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/JudgementTerm"));
 	}
 
 	/**
@@ -166,10 +115,7 @@ public class InstItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((Inst)object).getName();
-		return label == null || label.length() == 0 ?
-			getString("_UI_Inst_type") :
-			getString("_UI_Inst_type") + " " + label;
+		return getString("_UI_JudgementTerm_type");
 	}
 
 	/**
@@ -183,12 +129,9 @@ public class InstItemProvider
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(Inst.class)) {
-			case IsabelleProofProcessPackage.INST__NAME:
-			case IsabelleProofProcessPackage.INST__INDEX:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-			case IsabelleProofProcessPackage.INST__TERM:
+		switch (notification.getFeatureID(JudgementTerm.class)) {
+			case IsabelleProofProcessPackage.JUDGEMENT_TERM__ASSMS:
+			case IsabelleProofProcessPackage.JUDGEMENT_TERM__GOAL:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -208,38 +151,96 @@ public class InstItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__ASSMS,
 				 IsabelleProofProcessFactory.eINSTANCE.createMarkupTerm()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__ASSMS,
 				 IsabelleProofProcessFactory.eINSTANCE.createIsaTerm()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__ASSMS,
 				 IsabelleProofProcessFactory.eINSTANCE.createNameTerm()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__ASSMS,
 				 IsabelleProofProcessFactory.eINSTANCE.createNamedTerm()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__ASSMS,
 				 IsabelleProofProcessFactory.eINSTANCE.createInstTerm()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__ASSMS,
 				 IsabelleProofProcessFactory.eINSTANCE.createAssumptionTerm()));
 
 		newChildDescriptors.add
 			(createChildParameter
-				(IsabelleProofProcessPackage.Literals.INST__TERM,
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__ASSMS,
 				 IsabelleProofProcessFactory.eINSTANCE.createJudgementTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL,
+				 IsabelleProofProcessFactory.eINSTANCE.createMarkupTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL,
+				 IsabelleProofProcessFactory.eINSTANCE.createIsaTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL,
+				 IsabelleProofProcessFactory.eINSTANCE.createNameTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL,
+				 IsabelleProofProcessFactory.eINSTANCE.createNamedTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL,
+				 IsabelleProofProcessFactory.eINSTANCE.createInstTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL,
+				 IsabelleProofProcessFactory.eINSTANCE.createAssumptionTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL,
+				 IsabelleProofProcessFactory.eINSTANCE.createJudgementTerm()));
+	}
+
+	/**
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+		Object childFeature = feature;
+		Object childObject = child;
+
+		boolean qualify =
+			childFeature == IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__ASSMS ||
+			childFeature == IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL;
+
+		if (qualify) {
+			return getString
+				("_UI_CreateChild_text2",
+				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+		}
+		return super.getCreateChildText(owner, feature, child, selection);
 	}
 
 	/**
