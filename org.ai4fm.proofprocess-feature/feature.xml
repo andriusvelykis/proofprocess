@@ -2,7 +2,7 @@
 <feature
       id="org.ai4fm.proofprocess-feature"
       label="%featureName"
-      version="1.0.0.qualifier"
+      version="1.1.0.qualifier"
       provider-name="%providerName">
 
    <description url="%descriptionURL">
@@ -24,7 +24,6 @@
       <import plugin="org.eclipse.emf.ecore" version="2.7.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore.xmi" version="2.7.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.edit" version="2.7.1" match="greaterOrEqual"/>
-      <import plugin="org.scala-ide.scala.library" version="2.9.2" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.filesystem" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
@@ -131,7 +130,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.assembla.scala-incubator.graph-core_2.9.2.osgi"
+         id="com.assembla.scala-incubator.graph-core_2.10.osgi"
          download-size="0"
          install-size="0"
          version="0.0.0"
