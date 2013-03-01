@@ -1,6 +1,7 @@
 package org.ai4fm.graph.isomorphism
 
 import scala.collection.Set
+import scala.language.higherKinds
 
 import scalax.collection.Graph
 import scalax.collection.GraphPredef._

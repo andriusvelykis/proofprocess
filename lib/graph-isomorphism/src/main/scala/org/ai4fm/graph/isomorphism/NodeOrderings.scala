@@ -1,9 +1,12 @@
 package org.ai4fm.graph.isomorphism
 
+import scala.language.higherKinds
+
 import scalax.collection.Graph
 import scalax.collection.GraphPredef._
 import scalax.collection.GraphTraversal.AnyConnected
 import scalax.collection.GraphTraversal.VisitorReturn._
+
 
 /**
  * @author Andrius Velykis
