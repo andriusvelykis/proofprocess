@@ -116,7 +116,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
     lazy val mapped2 = mapping.keySet
     
     def terminals[Node](mapped: Set[Node], direction: Node => Set[Node]): Set[Node] = {
-      val linked = (mapped map direction) flatten
+      val linked = (mapped map direction).flatten
       val unmapped = linked diff mapped
       
       unmapped
