@@ -65,7 +65,7 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
   
   def fromInitial(initialMappings: Map[N2, N1], root: Node2): MatchResult = {
 
-    val dfsOrder = NodeOrderings.depthFirstOrdering(g2, root)
+    val dfsOrder = NodeOrderings.depthFirstOrdering(g2)(root)
     val initState = new State(Map(), dfsOrder)
 
     val state = if (initialMappings.isEmpty) {

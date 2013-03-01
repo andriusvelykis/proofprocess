@@ -30,12 +30,9 @@ object NodeOrderings {
     }
   }
   
-  def depthFirstOrdering[N, E[X] <: EdgeLikeIn[X]](g: Graph[N, E], 
-                                                   root: Node[N, E]): Ordering[Node[N, E]] = {
+  def depthFirstOrdering[N, E[X] <: EdgeLikeIn[X]](g: Graph[N, E]) 
+                                                  (root: g.NodeT): Ordering[g.NodeT] = {
 
-    // typecast because cannot use dependent types in parameters
-    val r = root.asInstanceOf[g.NodeT]
-    
     def traverseConnected(root: g.NodeT, all: scala.collection.Set[g.NodeT], 
                           acc: List[g.NodeT]): List[g.NodeT] = {
       
@@ -64,7 +61,7 @@ object NodeOrderings {
     }
 
     // reverse after traversal to start with root
-    val ordered = traverseConnected(r, g.nodes, List()).reverse.distinct
+    val ordered = traverseConnected(root, g.nodes, List()).reverse.distinct
     
     predefOrdering(ordered)
   }
