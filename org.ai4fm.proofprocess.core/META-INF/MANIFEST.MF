@@ -17,6 +17,6 @@ Export-Package: org.ai4fm.proofprocess.core.analysis,
  org.ai4fm.proofprocess.core.prefs,
  org.ai4fm.proofprocess.core.store,
  org.ai4fm.proofprocess.core.util
-Import-Package: org.ai4fm.graph.isomorphism;version="1.0.0",
- scalax.collection;version="1.5.1",
- scalax.collection.immutable;version="1.5.1"
+Import-Package: org.ai4fm.graph.isomorphism;version="1.1.0",
+ scalax.collection;version="1.6.1",
+ scalax.collection.immutable;version="1.6.1"

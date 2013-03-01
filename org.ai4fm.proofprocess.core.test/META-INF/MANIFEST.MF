@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.scala-ide.scala.library;bundle-version="2.10.0",
  org.junit4;bundle-version="[4.3.0,5.0.0)"
 Bundle-ActivationPolicy: lazy
-Import-Package: scalax.collection;version="1.5.1",
- scalax.collection.generic;version="1.5.1",
- scalax.collection.immutable;version="1.5.1"
+Import-Package: scalax.collection;version="1.6.1",
+ scalax.collection.generic;version="1.6.1",
+ scalax.collection.immutable;version="1.6.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
