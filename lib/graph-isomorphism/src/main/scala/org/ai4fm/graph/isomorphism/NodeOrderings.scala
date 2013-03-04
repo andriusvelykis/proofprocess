@@ -1,9 +1,12 @@
 package org.ai4fm.graph.isomorphism
 
+import scala.language.higherKinds
+
 import scalax.collection.Graph
 import scalax.collection.GraphPredef._
 import scalax.collection.GraphTraversal.AnyConnected
 import scalax.collection.GraphTraversal.VisitorReturn._
+
 
 /**
  * @author Andrius Velykis
@@ -27,12 +30,9 @@ object NodeOrderings {
     }
   }
   
-  def depthFirstOrdering[N, E[X] <: EdgeLikeIn[X]](g: Graph[N, E], 
-                                                   root: Node[N, E]): Ordering[Node[N, E]] = {
+  def depthFirstOrdering[N, E[X] <: EdgeLikeIn[X]](g: Graph[N, E]) 
+                                                  (root: g.NodeT): Ordering[g.NodeT] = {
 
-    // typecast because cannot use dependent types in parameters
-    val r = root.asInstanceOf[g.NodeT]
-    
     def traverseConnected(root: g.NodeT, all: scala.collection.Set[g.NodeT], 
                           acc: List[g.NodeT]): List[g.NodeT] = {
       
@@ -61,7 +61,8 @@ object NodeOrderings {
     }
 
     // reverse after traversal to start with root
-    val ordered = traverseConnected(r, g.nodes, List()).reverse.distinct
+    // TODO fix workaround for g.nodes.copy losing edge information (Set ++ nodes)
+    val ordered = traverseConnected(root, (Set() ++ g.nodes), List()).reverse.distinct
     
     predefOrdering(ordered)
   }
