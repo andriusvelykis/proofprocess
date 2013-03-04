@@ -39,7 +39,7 @@ object CommandParser {
     
     // use command tokens with markup infos to determine command arguments
     // filter out whitespace/comments though
-    val tokenInfos = tokenInfoStream(cmdState, cmdState.command.span).filter({ case (token, _) => !token.is_ignored });
+    val tokenInfos = tokenInfoStream(cmdState, cmdState.command.span).filter({ case (token, _) => token.is_proper });
 
     // check if the first token is COMMAND, then create the command and parse the tokens
     tokenInfos.headOption match {
@@ -346,7 +346,7 @@ object CommandParser {
   
   def commandId(cmd: Command): Option[String] = {
     // find first non-ignored token and use it if applicable
-    val firstId = cmd.span.find(token => !token.is_command && !token.is_ignored)
+    val firstId = cmd.span.find(token => !token.is_command && token.is_proper)
     
     // ensure it is a name and then use its source
     firstId filter {_.is_name} map {_.source}
