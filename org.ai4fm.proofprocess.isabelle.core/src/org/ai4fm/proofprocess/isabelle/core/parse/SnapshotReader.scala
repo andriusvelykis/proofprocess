@@ -125,7 +125,7 @@ object SnapshotReader {
     // first of all go backwards and collect everything before the target command
     // stop when the proof start command is reached
     var lastProofStart = false
-    val beforeCmdsRev = commands.reverse_iterator(targetCommand).map(commandState).takeWhile(state => {
+    val beforeCmdsRev = commands.reverse.iterator(targetCommand).map(commandState).takeWhile(state => {
       val prevStart = lastProofStart
       lastProofStart = isProofStart(state)
       // take while previous is not proof start
