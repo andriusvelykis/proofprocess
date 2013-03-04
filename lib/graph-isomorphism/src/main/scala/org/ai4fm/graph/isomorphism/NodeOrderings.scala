@@ -61,7 +61,8 @@ object NodeOrderings {
     }
 
     // reverse after traversal to start with root
-    val ordered = traverseConnected(root, g.nodes, List()).reverse.distinct
+    // TODO fix workaround for g.nodes.copy losing edge information (Set ++ nodes)
+    val ordered = traverseConnected(root, (Set() ++ g.nodes), List()).reverse.distinct
     
     predefOrdering(ordered)
   }

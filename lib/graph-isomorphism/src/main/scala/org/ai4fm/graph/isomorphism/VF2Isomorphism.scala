@@ -124,11 +124,13 @@ trait VF2Isomorphism[N1, E1[X1] <: EdgeLikeIn[X1], N2, E2[X2] <: EdgeLikeIn[X2]]
 
     lazy val terminals1Out = terminals[Node1](mapped1, n => n.diSuccessors)
     lazy val terminals1In = terminals[Node1](mapped1, n => n.diPredecessors)
-    lazy val lookaheadNew1 = g1.nodes diff ( mapped1 ++ terminals1In ++ terminals1Out )
+    // TODO fix workaround for g.nodes.copy losing edge information (Set ++ nodes)
+    lazy val lookaheadNew1 = (Set() ++ g1.nodes) diff ( mapped1 ++ terminals1In ++ terminals1Out )
 
     lazy val terminals2Out = terminals[Node2](mapped2, n => n.diSuccessors)
     lazy val terminals2In = terminals[Node2](mapped2, m => m.diPredecessors)
-    lazy val lookaheadNew2 = g2.nodes diff ( mapped2 ++ terminals2In ++ terminals2Out )
+    // TODO fix workaround for g.nodes.copy losing edge information (Set ++ nodes)
+    lazy val lookaheadNew2 = (Set() ++ g2.nodes) diff ( mapped2 ++ terminals2In ++ terminals2Out )
     
     def min(nodes: Set[Node2]): Node2 = nodes min ord
     
