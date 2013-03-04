@@ -15,6 +15,7 @@ import org.ai4fm.proofprocess.isabelle.Inst
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 import org.ai4fm.proofprocess.isabelle.NamedTermTree
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._
 
@@ -269,9 +270,9 @@ object CommandParser {
   private def cmdTerms(cmdState: State): Map[String, ITerm] = {
     // get everything nested in TRACING->cmd_terms elements - it will give us the command term XML
     // structures
-    val cmdXmlTerms = cmdState.results map { _._2 } collect {
+    val cmdXmlTerms = (cmdState.resultValues collect {
       case XML.Elem(Markup(Markup.TRACING, _), XML.Elem(Markup("cmd_terms", _), cterms) :: Nil) => cterms
-    } flatten;
+    }).flatten;
 
     // split each XML term into source/term pair and parse the values
     val terms = cmdXmlTerms collect {

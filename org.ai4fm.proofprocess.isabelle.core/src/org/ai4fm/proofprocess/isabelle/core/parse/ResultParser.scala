@@ -26,10 +26,10 @@ object ResultParser {
     */
   def goalTerms(cmdState: State): Option[List[PPTerm]] = {
     
-    val results = cmdState.results.values.toList
+    val results = cmdState.resultValues
     
-    def findInResults[A](fn: (XML.Tree => Option[A])) =
-      results.map(fn).flatten.headOption
+    def findInResults[A](fn: (XML.Tree => Option[A])): Option[A] =
+      results.map(fn).flatten.nextOption
     
     // find the first list of goal terms from the trace, if available 
     val traceTerms = inTrace(results)(traceGoalTerms)
@@ -72,7 +72,7 @@ object ResultParser {
   def labelledTerms(cmdState: State,
                     labelMatch: String => Boolean): Map[String, List[PPTerm]] = {
     
-    val results = cmdState.results.values.toList
+    val results = cmdState.resultValues
     
     val lTerms = inResults(results)( (_, body) => labelledTermMarkup(labelMatch)(body) ) 
     
@@ -167,7 +167,7 @@ object ResultParser {
     }
   }
 
-  def inResults[A](body: XML.Body)
+  def inResults[A](body: TraversableOnce[XML.Tree])
                   (lookup: (StepProofType.StepProofType, XML.Body) => Option[A]): Option[A] = {
     
     val results = body.toStream flatMap {
@@ -178,7 +178,7 @@ object ResultParser {
     results.headOption
   }
   
-  def inTrace[A](body: XML.Body)(lookup: XML.Body => Option[A]): Option[A] = {
+  def inTrace[A](body: TraversableOnce[XML.Tree])(lookup: XML.Body => Option[A]): Option[A] = {
     
     val results = body.toStream flatMap {
       case Tracing(traceBody) => lookup(traceBody)
@@ -276,7 +276,7 @@ object ResultParser {
   
   def stepProofType(cmdState: State): Option[StepProofType.StepProofType] = {
 
-    val results = cmdState.results.values.toList
+    val results = cmdState.resultValues
     
     val typeOpt = inResults(results)( (typ, body) => Some(typ) )
     typeOpt
@@ -299,4 +299,12 @@ object ResultParser {
 //    // TODO shorthand? [[Assm; Assm2]]==>Goal -- or are these not in proof goals?
 //    
 //  }
+  
+  implicit class CommandValueState(state: State) {
+    def resultValues: Iterator[XML.Tree] = state.results.entries map (_._2)
+  }
+  
+  implicit class MyIteratorOps[T](i: Iterator[T]) {
+    def nextOption: Option[T] = if (i.hasNext) Some(i.next) else None
+  }
 }
