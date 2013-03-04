@@ -2,7 +2,6 @@ package org.ai4fm.proofprocess.isabelle.core.parse
 
 import isabelle.Command
 import isabelle.Command.State
-import isabelle.Isabelle_Markup
 import isabelle.Markup
 import isabelle.Markup_Tree
 import isabelle.Properties
@@ -71,7 +70,7 @@ object CommandParser {
 
               // if it is a fact, add its name to the fact list
               // also consume any outstanding terms for the fact (terms go before facts, e.g. "x="Y" in exI)
-              case Some(Isabelle_Markup.Entity("fact", name)) =>
+              case Some(Markup.Entity("fact", name)) =>
                 // consume insts to produce a InstTerm
                 
                 val namedFactOpt = lookaheadNamedFact(terms, name, tokens.tail)
@@ -81,7 +80,7 @@ object CommandParser {
                 parseTokens(ids, instFact :: facts, Nil, namedRoot, termRoot, nextTokens)
 
               // if it is a method, start a new method branch
-              case Some(Isabelle_Markup.Entity(Isabelle_Markup.METHOD, name)) => {
+              case Some(Markup.Entity(Markup.METHOD, name)) => {
                 val method = addTermTree(command, name)
 
                 consume()
@@ -141,7 +140,7 @@ object CommandParser {
   
   private def commandName(markups: Stream[Markup]): Option[String] = {
     val markupName = markups.collectFirst({ 
-      case Markup(Isabelle_Markup.COMMAND, props) => props.collectFirst({ 
+      case Markup(Markup.COMMAND, props) => props.collectFirst({ 
         case (Markup.NAME, value) => value }) })
     
     markupName getOrElse None
@@ -271,7 +270,7 @@ object CommandParser {
     // get everything nested in TRACING->cmd_terms elements - it will give us the command term XML
     // structures
     val cmdXmlTerms = cmdState.results map { _._2 } collect {
-      case XML.Elem(Markup(Isabelle_Markup.TRACING, _), XML.Elem(Markup("cmd_terms", _), cterms) :: Nil) => cterms
+      case XML.Elem(Markup(Markup.TRACING, _), XML.Elem(Markup("cmd_terms", _), cterms) :: Nil) => cterms
     } flatten;
 
     // split each XML term into source/term pair and parse the values

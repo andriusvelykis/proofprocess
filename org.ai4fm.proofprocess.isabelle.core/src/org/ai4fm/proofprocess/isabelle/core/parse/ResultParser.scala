@@ -4,7 +4,7 @@ import org.ai4fm.proofprocess.{Term => PPTerm}
 import org.ai4fm.proofprocess.core.analysis.Judgement
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 
-import isabelle.{Isabelle_Markup, Markup, Pretty}
+import isabelle.{Markup, Pretty}
 import isabelle.{Term_XML, XML}
 import isabelle.Command.State
 import isabelle.Term.Term
@@ -118,7 +118,7 @@ object ResultParser {
 
   object MarkupTerm {
     def unapply(elem: XML.Tree): Option[XML.Elem] = elem match {
-      case termXml @ XML.Elem(Markup(Isabelle_Markup.TERM, _), _) => Some(termXml)
+      case termXml @ XML.Elem(Markup(Markup.TERM, _), _) => Some(termXml)
       case _ => None
     }
   }
@@ -127,7 +127,7 @@ object ResultParser {
   object LabelledBlock {
     def unapply(elem: XML.Tree): Option[(String, XML.Body)] = elem match {
       // block with the first body element having text
-      case XML.Elem(Markup(Isabelle_Markup.BLOCK, _), XML.Text(text) :: rest) => Some((text, rest))
+      case XML.Elem(Markup(Markup.BLOCK, _), XML.Text(text) :: rest) => Some((text, rest))
       case _ => None
     }
   }
@@ -148,8 +148,8 @@ object ResultParser {
   object ResultState {
     def unapply(elem: XML.Tree): Option[(StepProofType.StepProofType, XML.Body)] =
       elem match {
-        case XML.Elem(Markup(Isabelle_Markup.WRITELN, _),
-          XML.Elem(Markup(Isabelle_Markup.STATE, _), stateBody) :: _) => {
+        case XML.Elem(Markup(Markup.WRITELN, _),
+          XML.Elem(Markup(Markup.STATE, _), stateBody) :: _) => {
           val proofBlocks = collectDepthFirst(stateBody, {
             case ProofTypeBlock(typ, body) => (typ, body)
           })
@@ -162,7 +162,7 @@ object ResultParser {
 
   object Tracing {
     def unapply(elem: XML.Tree): Option[XML.Body] = elem match {
-      case XML.Elem(Markup(Isabelle_Markup.TRACING, _), tracingBody) => Some(tracingBody)
+      case XML.Elem(Markup(Markup.TRACING, _), tracingBody) => Some(tracingBody)
       case _ => None
     }
   }
@@ -197,7 +197,7 @@ object ResultParser {
   def resultGoalMarkup(body: XML.Body): Option[List[(String, XML.Elem)]] = {
 
     val subgoalOpts = collectDepthFirst(body, {
-      case XML.Elem(Markup(Isabelle_Markup.SUBGOAL, _), subgoalBody) => {
+      case XML.Elem(Markup(Markup.SUBGOAL, _), subgoalBody) => {
         val terms = nestedMarkupTerms(subgoalBody)
         terms.headOption
       }
@@ -246,7 +246,7 @@ object ResultParser {
     }
   
   def isError(elem: XML.Tree): Boolean = elem match {
-    case XML.Elem(Markup(Isabelle_Markup.ERROR, _), _) => true
+    case XML.Elem(Markup(Markup.ERROR, _), _) => true
     case _ => false
   }
   
