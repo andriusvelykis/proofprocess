@@ -1,7 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.prover
 
 import isabelle.Symbol
-import isabelle.eclipse.core.IsabelleCorePlugin
+import isabelle.eclipse.core.IsabelleCore
 import org.ai4fm.proofprocess.Attempt
 import org.ai4fm.proofprocess.{Proof => PPProof}
 import org.ai4fm.proofprocess.ProofDecor
@@ -169,6 +169,6 @@ object ProverDataConverter {
   // TODO move encoding to capture process?
   // E.g. so that we could access and convert the data without running Isabelle
   def encode(termStr: String): String =
-    if (IsabelleCorePlugin.getIsabelle.isInit) Symbol.encode(termStr) else termStr
+    if (IsabelleCore.isabelle.isInit) Symbol.encode(termStr) else termStr
     
 }
