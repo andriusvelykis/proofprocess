@@ -55,6 +55,12 @@
       <artifactId>scala-library</artifactId>
       <version>${scala.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-actors</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
   </dependencies>
 
   <dependencyManagement>
@@ -80,12 +86,6 @@
        <id>eclipse-juno</id>
        <layout>p2</layout>
        <url>http://download.eclipse.org/releases/juno</url>
-    </repository>
-
-    <repository>
-       <id>scala-eclipse-toolchain-osgi</id>
-       <layout>p2</layout>
-       <url>http://download.scala-ide.org/scala-eclipse-toolchain-osgi-210x/</url>
     </repository>
     
     <repository>
