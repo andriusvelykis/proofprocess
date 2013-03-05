@@ -1,4 +1,4 @@
-package org.ai4fm.proofprocess.cdo
+package org.ai4fm.proofprocess.cdo.internal
 
 import java.net.URI
 

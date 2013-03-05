@@ -2,6 +2,7 @@ package org.ai4fm.proofprocess.cdo
 
 import java.net.URI
 
+import org.ai4fm.proofprocess.cdo.internal.PProcessCDOPlugin
 import org.eclipse.emf.cdo.session.CDOSession
 
 
