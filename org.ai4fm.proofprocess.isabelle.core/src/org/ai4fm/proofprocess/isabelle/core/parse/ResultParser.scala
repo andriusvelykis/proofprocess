@@ -4,7 +4,7 @@ import org.ai4fm.proofprocess.{Term => PPTerm}
 import org.ai4fm.proofprocess.core.analysis.Judgement
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 
-import isabelle.{Isabelle_Markup, Markup, Pretty}
+import isabelle.{Markup, Pretty}
 import isabelle.{Term_XML, XML}
 import isabelle.Command.State
 import isabelle.Term.Term
@@ -26,10 +26,10 @@ object ResultParser {
     */
   def goalTerms(cmdState: State): Option[List[PPTerm]] = {
     
-    val results = cmdState.results.values.toList
+    val results = cmdState.resultValues
     
-    def findInResults[A](fn: (XML.Tree => Option[A])) =
-      results.map(fn).flatten.headOption
+    def findInResults[A](fn: (XML.Tree => Option[A])): Option[A] =
+      results.map(fn).flatten.nextOption
     
     // find the first list of goal terms from the trace, if available 
     val traceTerms = inTrace(results)(traceGoalTerms)
@@ -72,7 +72,7 @@ object ResultParser {
   def labelledTerms(cmdState: State,
                     labelMatch: String => Boolean): Map[String, List[PPTerm]] = {
     
-    val results = cmdState.results.values.toList
+    val results = cmdState.resultValues
     
     val lTerms = inResults(results)( (_, body) => labelledTermMarkup(labelMatch)(body) ) 
     
@@ -118,7 +118,7 @@ object ResultParser {
 
   object MarkupTerm {
     def unapply(elem: XML.Tree): Option[XML.Elem] = elem match {
-      case termXml @ XML.Elem(Markup(Isabelle_Markup.TERM, _), _) => Some(termXml)
+      case termXml @ XML.Elem(Markup(Markup.TERM, _), _) => Some(termXml)
       case _ => None
     }
   }
@@ -127,7 +127,7 @@ object ResultParser {
   object LabelledBlock {
     def unapply(elem: XML.Tree): Option[(String, XML.Body)] = elem match {
       // block with the first body element having text
-      case XML.Elem(Markup(Isabelle_Markup.BLOCK, _), XML.Text(text) :: rest) => Some((text, rest))
+      case XML.Elem(Markup(Markup.BLOCK, _), XML.Text(text) :: rest) => Some((text, rest))
       case _ => None
     }
   }
@@ -148,8 +148,8 @@ object ResultParser {
   object ResultState {
     def unapply(elem: XML.Tree): Option[(StepProofType.StepProofType, XML.Body)] =
       elem match {
-        case XML.Elem(Markup(Isabelle_Markup.WRITELN, _),
-          XML.Elem(Markup(Isabelle_Markup.STATE, _), stateBody) :: _) => {
+        case XML.Elem(Markup(Markup.WRITELN, _),
+          XML.Elem(Markup(Markup.STATE, _), stateBody) :: _) => {
           val proofBlocks = collectDepthFirst(stateBody, {
             case ProofTypeBlock(typ, body) => (typ, body)
           })
@@ -162,12 +162,12 @@ object ResultParser {
 
   object Tracing {
     def unapply(elem: XML.Tree): Option[XML.Body] = elem match {
-      case XML.Elem(Markup(Isabelle_Markup.TRACING, _), tracingBody) => Some(tracingBody)
+      case XML.Elem(Markup(Markup.TRACING, _), tracingBody) => Some(tracingBody)
       case _ => None
     }
   }
 
-  def inResults[A](body: XML.Body)
+  def inResults[A](body: TraversableOnce[XML.Tree])
                   (lookup: (StepProofType.StepProofType, XML.Body) => Option[A]): Option[A] = {
     
     val results = body.toStream flatMap {
@@ -178,7 +178,7 @@ object ResultParser {
     results.headOption
   }
   
-  def inTrace[A](body: XML.Body)(lookup: XML.Body => Option[A]): Option[A] = {
+  def inTrace[A](body: TraversableOnce[XML.Tree])(lookup: XML.Body => Option[A]): Option[A] = {
     
     val results = body.toStream flatMap {
       case Tracing(traceBody) => lookup(traceBody)
@@ -197,7 +197,7 @@ object ResultParser {
   def resultGoalMarkup(body: XML.Body): Option[List[(String, XML.Elem)]] = {
 
     val subgoalOpts = collectDepthFirst(body, {
-      case XML.Elem(Markup(Isabelle_Markup.SUBGOAL, _), subgoalBody) => {
+      case XML.Elem(Markup(Markup.SUBGOAL, _), subgoalBody) => {
         val terms = nestedMarkupTerms(subgoalBody)
         terms.headOption
       }
@@ -246,7 +246,7 @@ object ResultParser {
     }
   
   def isError(elem: XML.Tree): Boolean = elem match {
-    case XML.Elem(Markup(Isabelle_Markup.ERROR, _), _) => true
+    case XML.Elem(Markup(Markup.ERROR, _), _) => true
     case _ => false
   }
   
@@ -276,7 +276,7 @@ object ResultParser {
   
   def stepProofType(cmdState: State): Option[StepProofType.StepProofType] = {
 
-    val results = cmdState.results.values.toList
+    val results = cmdState.resultValues
     
     val typeOpt = inResults(results)( (typ, body) => Some(typ) )
     typeOpt
@@ -299,4 +299,12 @@ object ResultParser {
 //    // TODO shorthand? [[Assm; Assm2]]==>Goal -- or are these not in proof goals?
 //    
 //  }
+  
+  implicit class CommandValueState(state: State) {
+    def resultValues: Iterator[XML.Tree] = state.results.entries map (_._2)
+  }
+  
+  implicit class MyIteratorOps[T](i: Iterator[T]) {
+    def nextOption: Option[T] = if (i.hasNext) Some(i.next) else None
+  }
 }

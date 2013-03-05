@@ -2,6 +2,7 @@ package org.ai4fm.proofprocess.isabelle.core.parse
 
 import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.core.analysis.{Assumption, Judgement}
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
 
 import isabelle.Command
@@ -125,7 +126,7 @@ object SnapshotReader {
     // first of all go backwards and collect everything before the target command
     // stop when the proof start command is reached
     var lastProofStart = false
-    val beforeCmdsRev = commands.reverse_iterator(targetCommand).map(commandState).takeWhile(state => {
+    val beforeCmdsRev = commands.reverse.iterator(targetCommand).map(commandState).takeWhile(state => {
       val prevStart = lastProofStart
       lastProofStart = isProofStart(state)
       // take while previous is not proof start
@@ -167,7 +168,7 @@ object SnapshotReader {
   
   def isError(cmdState: State) =
     // no errors in the results
-    cmdState.results.values.exists(ResultParser.isError)
+    cmdState.resultValues.exists(ResultParser.isError)
 
 
   // "picking this" both in `in` and `out`?

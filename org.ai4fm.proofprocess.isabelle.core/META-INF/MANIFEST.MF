@@ -19,6 +19,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/tracker.xml
 Export-Package: org.ai4fm.proofprocess.isabelle.core.prover
-Import-Package: scalax.collection;version="1.6.1",
+Import-Package: org.eclipse.emf.edit,
+ scalax.collection;version="1.6.1",
  scalax.collection.generic;version="1.6.1",
  scalax.collection.immutable;version="1.6.1"
