@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.ui.views
 
 import scala.annotation.tailrec
+import scala.language.implicitConversions
 
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.core.prefs.PreferenceTracker

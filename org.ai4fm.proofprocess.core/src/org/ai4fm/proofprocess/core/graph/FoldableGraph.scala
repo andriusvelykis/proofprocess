@@ -1,5 +1,7 @@
 package org.ai4fm.proofprocess.core.graph
 
+import scala.language.implicitConversions
+
 import scalax.collection.Graph
 import scalax.collection.GraphEdge._
 import scalax.collection.GraphPredef._
