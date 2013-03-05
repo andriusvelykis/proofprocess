@@ -15,6 +15,7 @@
          and then here at the root.
     <module>lib</module>
     -->
+    <module>org.ai4fm.proofprocess.target</module>
     <module>org.ai4fm.filehistory</module>
     <module>org.ai4fm.filehistory.core</module>
     <module>org.ai4fm.proofprocess.cdo</module>
@@ -80,33 +81,6 @@
     </dependencies>
   </dependencyManagement>
 
-  <repositories>
-    <repository>
-       <!-- Need Juno for CDO 4.1 -->
-       <id>eclipse-juno</id>
-       <layout>p2</layout>
-       <url>http://download.eclipse.org/releases/juno</url>
-    </repository>
-    
-    <repository>
-       <id>eclipse-zest2</id>
-       <layout>p2</layout>
-       <url>https://hudson.eclipse.org/hudson/job/gef-zest-integration/lastSuccessfulBuild/artifact/targetPlatform</url>
-    </repository>
-
-    <repository>
-       <id>isabelle-eclipse</id>
-       <layout>p2</layout>
-       <url>http://www.ai4fm.org/isabelle-eclipse/updates/latest/</url>
-    </repository>
-
-    <repository>
-       <id>czt-eclipse</id>
-       <layout>p2</layout>
-       <url>http://czt.sourceforge.net/eclipse/updates/latest/</url>
-    </repository>
-    
-  </repositories>
 
   <build>
     <sourceDirectory>${basedir}/src</sourceDirectory>
@@ -125,6 +99,13 @@
         <version>${tycho.version}</version>
         <configuration>
           <pomDependencies>consider</pomDependencies>
+          <target>
+            <artifact>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>org.ai4fm.proofprocess.target</artifactId>
+              <version>${project.version}</version>
+            </artifact>
+          </target>
           <environments>
             <environment>
               <os>linux</os>
