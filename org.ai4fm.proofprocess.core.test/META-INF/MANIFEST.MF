@@ -7,10 +7,12 @@ Fragment-Host: org.ai4fm.proofprocess.core
 Bundle-Version: 1.1.0.qualifier
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
- org.ai4fm.proofprocess;bundle-version="1.0.0",
- org.junit4;bundle-version="[4.3.0,5.0.0)"
+ org.ai4fm.proofprocess;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
-Import-Package: scala;version="2.10.0",
+Import-Package: org.hamcrest.core,
+ org.junit;version="[4.3.0,5.0.0)",
+ org.junit.runner;version="[4.3.0,5.0.0)",
+ scala;version="2.10.0",
  scala.collection;version="2.10.0",
  scala.collection.generic;version="2.10.0",
  scala.collection.immutable;version="2.10.0",
