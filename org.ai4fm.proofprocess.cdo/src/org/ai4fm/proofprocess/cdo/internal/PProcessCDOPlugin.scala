@@ -1,17 +1,16 @@
-package org.ai4fm.proofprocess.cdo
+package org.ai4fm.proofprocess.cdo.internal
 
 import java.net.URI
 
 import scala.actors.Future
 import scala.actors.Futures.future
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.SynchronizedMap
+import scala.collection.mutable.{HashMap, SynchronizedMap}
 
 import org.ai4fm.proofprocess.cdo.internal.db.PProcessRepository
-import org.eclipse.core.runtime.IStatus
-import org.eclipse.core.runtime.Plugin
-import org.eclipse.core.runtime.Status
+import org.eclipse.core.runtime.{IStatus, Plugin, Status}
+import org.eclipse.emf.cdo.session.CDOSession
 import org.osgi.framework.BundleContext
+
 
 /**
   * @author Andrius Velykis 
@@ -68,7 +67,7 @@ class PProcessCDOPlugin extends Plugin {
   /** Retrieves an open session for the given repository.
     * Initialises a new repository if one does not exist.
     */
-  def session(databaseLoc: URI, repositoryName: String) =
+  def session(databaseLoc: URI, repositoryName: String): CDOSession =
     repository(RepositoryId(databaseLoc, repositoryName)).session
   
   private case class RepositoryId(val databaseLoc: URI, val name: String)
