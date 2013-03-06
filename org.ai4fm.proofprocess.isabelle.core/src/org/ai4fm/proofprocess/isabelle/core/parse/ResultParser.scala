@@ -130,12 +130,12 @@ object ResultParser {
   }
 
   object ProofTypeBlock {
-    def unapply(elem: XML.Tree): Option[(StepProofType.StepProofType, XML.Body)] = elem match {
+    def unapply(elem: XML.Tree): Option[StepProofType.StepProofType] = elem match {
 
-      case LabelledBlock(text, body) =>
-        if (text.startsWith("proof (prove)")) Some((StepProofType.Prove, body))
-        else if (text.startsWith("proof (state)")) Some((StepProofType.State, body))
-        else if (text.startsWith("proof (chain)")) Some((StepProofType.Chain, body))
+      case LabelledBlock(text, _) =>
+        if (text.startsWith("proof (prove)")) Some(StepProofType.Prove)
+        else if (text.startsWith("proof (state)")) Some(StepProofType.State)
+        else if (text.startsWith("proof (chain)")) Some(StepProofType.Chain)
         else None
 
       case _ => None
@@ -148,10 +148,12 @@ object ResultParser {
         case XML.Elem(Markup(Markup.WRITELN_MESSAGE, _),
           XML.Elem(Markup(Markup.STATE, _), stateBody) :: _) => {
           val proofBlocks = collectDepthFirst(stateBody, {
-            case ProofTypeBlock(typ, body) => (typ, body)
+            case ProofTypeBlock(typ) => typ
           })
-          // assume a single proof block per writeln
-          proofBlocks.headOption
+          // assume a single proof block per writeln message for proof type indication
+          // use the whole state for results lookup, since results are no longer nested
+          // under proof type declaration (since Isabelle 2013)
+          proofBlocks.headOption map (typ => (typ, stateBody))
         }
         case _ => None
       }
