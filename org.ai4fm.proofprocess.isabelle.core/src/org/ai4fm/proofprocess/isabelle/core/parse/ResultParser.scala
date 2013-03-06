@@ -26,10 +26,7 @@ object ResultParser {
     */
   def goalTerms(cmdState: State): Option[List[PPTerm]] = {
     
-    val results = cmdState.resultValues
-    
-    def findInResults[A](fn: (XML.Tree => Option[A])): Option[A] =
-      results.map(fn).flatten.nextOption
+    val results = cmdState.resultValues.toStream
     
     // find the first list of goal terms from the trace, if available 
     val traceTerms = inTrace(results)(traceGoalTerms)
@@ -72,7 +69,7 @@ object ResultParser {
   def labelledTerms(cmdState: State,
                     labelMatch: String => Boolean): Map[String, List[PPTerm]] = {
     
-    val results = cmdState.resultValues
+    val results = cmdState.resultValues.toStream
     
     val lTerms = inResults(results)( (_, body) => labelledTermMarkup(labelMatch)(body) ) 
     
@@ -133,12 +130,12 @@ object ResultParser {
   }
 
   object ProofTypeBlock {
-    def unapply(elem: XML.Tree): Option[(StepProofType.StepProofType, XML.Body)] = elem match {
+    def unapply(elem: XML.Tree): Option[StepProofType.StepProofType] = elem match {
 
-      case LabelledBlock(text, body) =>
-        if (text.startsWith("proof (prove)")) Some((StepProofType.Prove, body))
-        else if (text.startsWith("proof (state)")) Some((StepProofType.State, body))
-        else if (text.startsWith("proof (chain)")) Some((StepProofType.Chain, body))
+      case LabelledBlock(text, _) =>
+        if (text.startsWith("proof (prove)")) Some(StepProofType.Prove)
+        else if (text.startsWith("proof (state)")) Some(StepProofType.State)
+        else if (text.startsWith("proof (chain)")) Some(StepProofType.Chain)
         else None
 
       case _ => None
@@ -148,13 +145,15 @@ object ResultParser {
   object ResultState {
     def unapply(elem: XML.Tree): Option[(StepProofType.StepProofType, XML.Body)] =
       elem match {
-        case XML.Elem(Markup(Markup.WRITELN, _),
+        case XML.Elem(Markup(Markup.WRITELN_MESSAGE, _),
           XML.Elem(Markup(Markup.STATE, _), stateBody) :: _) => {
           val proofBlocks = collectDepthFirst(stateBody, {
-            case ProofTypeBlock(typ, body) => (typ, body)
+            case ProofTypeBlock(typ) => typ
           })
-          // assume a single proof block per writeln
-          proofBlocks.headOption
+          // assume a single proof block per writeln message for proof type indication
+          // use the whole state for results lookup, since results are no longer nested
+          // under proof type declaration (since Isabelle 2013)
+          proofBlocks.headOption map (typ => (typ, stateBody))
         }
         case _ => None
       }
@@ -162,15 +161,15 @@ object ResultParser {
 
   object Tracing {
     def unapply(elem: XML.Tree): Option[XML.Body] = elem match {
-      case XML.Elem(Markup(Markup.TRACING, _), tracingBody) => Some(tracingBody)
+      case XML.Elem(Markup(Markup.TRACING_MESSAGE, _), tracingBody) => Some(tracingBody)
       case _ => None
     }
   }
 
-  def inResults[A](body: TraversableOnce[XML.Tree])
+  def inResults[A](body: Stream[XML.Tree])
                   (lookup: (StepProofType.StepProofType, XML.Body) => Option[A]): Option[A] = {
     
-    val results = body.toStream flatMap {
+    val results = body flatMap {
       case ResultState(typ, stateBody) => lookup(typ, stateBody)
       case _ => None
     }
@@ -276,7 +275,7 @@ object ResultParser {
   
   def stepProofType(cmdState: State): Option[StepProofType.StepProofType] = {
 
-    val results = cmdState.resultValues
+    val results = cmdState.resultValues.toStream
     
     val typeOpt = inResults(results)( (typ, body) => Some(typ) )
     typeOpt

@@ -152,19 +152,20 @@ object SnapshotReader {
     // take valid proof commands only
     // do not continue after unfinished commands
     // ignore errors TODO count errors and do not include after certain threshold?
-    proofState.filter(state => isValidProofCommand(state.command)).takeWhile(isFinished).takeWhile(!isError(_))
+    val valid = proofState.filter(state => isValidProofCommand(state.command))
+    val finished = valid.takeWhile(isFinished)
+    val nonErr = finished.takeWhile(!isError(_))
+    nonErr
   }
 
   def isValidProofCommand(command: Command): Boolean = {
     // TODO exclude others, e.g. definitions, "thm ...", etc?
     // take non-ignored and non-malformed commands
-    !command.is_ignored && !command.is_malformed
+    command.is_command
   }
 
-  def isFinished(cmdState: State) = {
-    import isabelle.Protocol._
+  def isFinished(cmdState: State) =
     command_status(cmdState.status).is_finished
-  }
   
   def isError(cmdState: State) =
     // no errors in the results
