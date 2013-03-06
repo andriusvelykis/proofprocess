@@ -145,7 +145,7 @@ object ResultParser {
   object ResultState {
     def unapply(elem: XML.Tree): Option[(StepProofType.StepProofType, XML.Body)] =
       elem match {
-        case XML.Elem(Markup(Markup.WRITELN, _),
+        case XML.Elem(Markup(Markup.WRITELN_MESSAGE, _),
           XML.Elem(Markup(Markup.STATE, _), stateBody) :: _) => {
           val proofBlocks = collectDepthFirst(stateBody, {
             case ProofTypeBlock(typ, body) => (typ, body)
@@ -159,7 +159,7 @@ object ResultParser {
 
   object Tracing {
     def unapply(elem: XML.Tree): Option[XML.Body] = elem match {
-      case XML.Elem(Markup(Markup.TRACING, _), tracingBody) => Some(tracingBody)
+      case XML.Elem(Markup(Markup.TRACING_MESSAGE, _), tracingBody) => Some(tracingBody)
       case _ => None
     }
   }
