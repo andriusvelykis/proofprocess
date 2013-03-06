@@ -28,9 +28,6 @@ object ResultParser {
     
     val results = cmdState.resultValues
     
-    def findInResults[A](fn: (XML.Tree => Option[A])): Option[A] =
-      results.map(fn).flatten.nextOption
-    
     // find the first list of goal terms from the trace, if available 
     val traceTerms = inTrace(results)(traceGoalTerms)
     // find the first list of goal terms (with markups) from the results, if available
