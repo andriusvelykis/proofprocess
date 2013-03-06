@@ -26,7 +26,7 @@ object ResultParser {
     */
   def goalTerms(cmdState: State): Option[List[PPTerm]] = {
     
-    val results = cmdState.resultValues
+    val results = cmdState.resultValues.toStream
     
     // find the first list of goal terms from the trace, if available 
     val traceTerms = inTrace(results)(traceGoalTerms)
@@ -69,7 +69,7 @@ object ResultParser {
   def labelledTerms(cmdState: State,
                     labelMatch: String => Boolean): Map[String, List[PPTerm]] = {
     
-    val results = cmdState.resultValues
+    val results = cmdState.resultValues.toStream
     
     val lTerms = inResults(results)( (_, body) => labelledTermMarkup(labelMatch)(body) ) 
     
@@ -164,10 +164,10 @@ object ResultParser {
     }
   }
 
-  def inResults[A](body: TraversableOnce[XML.Tree])
+  def inResults[A](body: Stream[XML.Tree])
                   (lookup: (StepProofType.StepProofType, XML.Body) => Option[A]): Option[A] = {
     
-    val results = body.toStream flatMap {
+    val results = body flatMap {
       case ResultState(typ, stateBody) => lookup(typ, stateBody)
       case _ => None
     }
@@ -273,7 +273,7 @@ object ResultParser {
   
   def stepProofType(cmdState: State): Option[StepProofType.StepProofType] = {
 
-    val results = cmdState.resultValues
+    val results = cmdState.resultValues.toStream
     
     val typeOpt = inResults(results)( (typ, body) => Some(typ) )
     typeOpt
