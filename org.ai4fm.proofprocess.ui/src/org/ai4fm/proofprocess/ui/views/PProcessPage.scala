@@ -139,7 +139,7 @@ class PProcessPage(viewPart: IViewPart,
     trackEntryPref.dispose()
     proofEntryTracker foreach (_.dispose())
     adapterFactory.dispose
-	super.dispose
+    super.dispose
   }
 
 }
