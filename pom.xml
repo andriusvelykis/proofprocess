@@ -97,7 +97,7 @@
     <repository>
        <id>isabelle-eclipse</id>
        <layout>p2</layout>
-       <url>http://www.ai4fm.org/isabelle-eclipse/updates/latest/</url>
+       <url>http://andriusvelykis.github.com/isabelle-eclipse/updates/isabelle2012/releases/</url>
     </repository>
 
     <repository>
