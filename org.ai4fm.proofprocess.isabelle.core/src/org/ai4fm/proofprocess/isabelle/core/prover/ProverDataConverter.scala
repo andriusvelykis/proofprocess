@@ -14,6 +14,7 @@ import org.ai4fm.proofprocess.isabelle.DisplayTerm
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace
 import org.ai4fm.proofprocess.isabelle.{IsaTerm => PPIsaTerm}
+import org.ai4fm.proofprocess.isabelle.JudgementTerm
 import org.ai4fm.proofprocess.isabelle.NameTerm
 import org.ai4fm.proofprocess.isabelle.core.parse.{IsaCommands => isa}
 import org.ai4fm.proofprocess.isabelle.core.prover.ProverData._
@@ -158,12 +159,14 @@ object ProverDataConverter {
     // TODO support insts
     terms.map({ case t: NameTerm => Thm(t.getName) })
     
-  def terms(terms: List[Term]): List[TermRef] =
+  def terms(ts: List[Term]): List[TermRef] =
     // TODO something about markup terms?
-    terms.map({
+    ts.map({
       // use StrTerm always for now
       case t: PPIsaTerm => StrTerm(encode(t.getDisplay)) //IsaTerm(t.getTerm)
       case s: DisplayTerm => StrTerm(encode(s.getDisplay))
+      // FIXME a bit of a hack (also handle assumptions!)
+      case j: JudgementTerm => terms(List(j.getGoal)).head
     })
     
   // TODO move encoding to capture process?
