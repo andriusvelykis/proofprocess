@@ -13,12 +13,18 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="isabelle.eclipse.feature.feature.group" version="0.0.0"/>
+<unit id="isabelle.eclipse.product.feature.feature.group" version="0.0.0"/>
 <repository location="http://andriusvelykis.github.io/isabelle-eclipse/updates/isabelle2013/nightly/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="in.iitd.mldev.feature.feature.group" version="0.0.0"/>
+<repository location="http://andriusvelykis.github.io/ml-dev/updates/nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="net.sourceforge.czt.core.feature.feature.group" version="0.0.0"/>
 <unit id="net.sourceforge.czt.eclipse.feature.feature.group" version="0.0.0"/>
 <unit id="net.sourceforge.czt.eclipse.zeves.feature.feature.group" version="0.0.0"/>
+<unit id="net.sourceforge.czt.eclipse.product.feature.feature.group" version="0.0.0"/>
 <repository location="http://czt.sourceforge.net/eclipse/updates/nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
