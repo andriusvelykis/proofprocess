@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.assembla.scala-incubator</groupId>
   <artifactId>graph-core_2.10.osgi</artifactId>
-  <version>1.6.1</version>
+  <version>${graph-core.version}</version>
   <packaging>bundle</packaging>
 
   <name>Graph Core</name>
@@ -18,7 +18,19 @@
     <dependency>
       <groupId>com.assembla.scala-incubator</groupId>
       <artifactId>graph-core_2.10</artifactId>
-      <version>1.6.1</version>
+      <version>${graph-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-actors</artifactId>
+      <version>${scala.version}</version>
     </dependency>
   </dependencies>
 
