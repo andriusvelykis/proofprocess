@@ -62,18 +62,11 @@ trait ProofEntryReader {
     
     val steps = inOutSteps map Function.tupled(analyseStep)
     
-    // link command states with respective proof step entries (for activity logging)
-    var stateEntryMapping = Map[State, ProofEntry]()
-
-    // convert to nodes - keep the in/out propositions, but use ProofEntry as node
-    val nodeSteps = steps map (step => {
-      
-      val entry = proofEntry(step)
-      // mark mapping
-      stateEntryMapping += (step.info -> entry)
-      
-      GoalStep(entry, step.in, step.out)
-    })
+    // create ProofEntry elements for each step
+    val stepPPEntryMapping = steps.map { s => (s, proofEntry(s)) }
+    
+    // use ProofEntry as step contents
+    val nodeSteps = stepPPEntryMapping.map { case (step, entry) => step.copy(info = entry) }
     
     val (_, indexedSteps) = indexedGoalSteps(matchTerms)(nodeSteps)
     
@@ -84,8 +77,11 @@ trait ProofEntryReader {
     // try connecting the goal steps into a graph structure
     // depending on how goals/assumptions change
     val proofGraph = GoalGraphMatcher2.goalGraph(indexedSteps, initialGraph)
-    
-    (proofGraph, stateEntryMapping)
+
+    // keep the mapping from command State -> ProofEntry (for activity logging)
+    val cmdToPPEntry = stepPPEntryMapping.map { case (step, entry) => (step.info, entry) }
+
+    (proofGraph, cmdToPPEntry.toMap)
   }
 
   
