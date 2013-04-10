@@ -1,11 +1,13 @@
 package org.ai4fm.proofprocess.isabelle.core.analysis
 
 import org.ai4fm.proofprocess.{Attempt, Loc, ProofEntry, ProofStore, Term}
-import org.ai4fm.proofprocess.core.analysis.ProofAttemptMatcher._
+import org.ai4fm.proofprocess.core.analysis.ProofAttemptMatcher.{findCreateAttempt, findCreateProof}
 import org.ai4fm.proofprocess.core.analysis.ProofEntryMatcher
 import org.ai4fm.proofprocess.core.util.PProcessUtil
-import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin._
-import org.ai4fm.proofprocess.isabelle.core.parse.{ProofEntryData, ProofEntryReader, SnapshotReader}
+import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin.error
+import org.ai4fm.proofprocess.isabelle.core.parse.{ParsedProof, ProofEntryReader}
+import org.ai4fm.proofprocess.isabelle.core.parse.ProofEntryReader.ParseEntries
+import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader
 import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.{ProofData, StepResults}
 import org.ai4fm.proofprocess.project.core.{ProofHistoryManager, ProofManager}
 import org.ai4fm.proofprocess.project.core.util.{ProofProcessUtil, ResourceUtil}
@@ -32,20 +34,21 @@ object ProofAnalyzer {
 
     proofs foreach { proofData =>
       
-      val proofEntriesOpt = readProofEntries(proofData, commandStarts, monitor)
+      readProofEntries(proofData, commandStarts, monitor) match {
 
-      proofEntriesOpt foreach {
-        case (project, proofStore, proofEntryData) => {
+        case Some((project, proofStore, parsedProof, proofEntries)) => {
 
-          val (_, matchMapping) = analyzeEntries(proofStore, proofEntryData)
+          val (_, matchMapping) = analyzeProofAttempt(proofStore, parsedProof)
 
           // map snapshot entries to actually matched proof entries for logging
-          val entryMatchMap = PProcessUtil.chainMaps(proofEntryData.entryMap, matchMapping)
+          val entryMatchMap = PProcessUtil.chainMaps(proofEntries, matchMapping)
           logActivity(project, entryMatchMap, changedCommands, proofData.proofState.map(_.state), monitor);
 
           // FIXME commit here or after all analysis? or somewhere else altogether?
           commit(proofStore)
         }
+        
+        case None => // invalid proof - ignore PP analysis
       }
     }
     Status.OK_STATUS;
@@ -53,7 +56,7 @@ object ProofAnalyzer {
   
   @throws(classOf[CoreException])
   private def readProofEntries(proofData: ProofData, commandStarts: Map[Command, Int],
-      monitor: IProgressMonitor): Option[(IProject, ProofStore, ProofEntryData)] = {
+      monitor: IProgressMonitor): Option[(IProject, ProofStore, ParsedProof, ParseEntries)] = {
 
     import isabelle.eclipse.core.resource.URIThyLoad._
     
@@ -75,9 +78,13 @@ object ProofAnalyzer {
         ProofProcessUtil.createTextLoc(fileVersion, offset, cmd.range.stop - cmd.range.start);
       }
       
-      val proofInfoOpt = proofEntries(proofProject, proofData.proofState, textLoc)
+      proofEntries(proofProject, proofData.proofState, textLoc) match {
+        
+        case Some((parsedProof, parseEntries)) =>
+          Some((project, proofProject, parsedProof, parseEntries))
 
-      proofInfoOpt.map((project, proofProject, _))
+        case None => None
+      }
     }
   }
 
@@ -141,16 +148,16 @@ object ProofAnalyzer {
     ProofManager.commitTransaction(proofStore, new NullProgressMonitor)
   }
 
-  private def analyzeEntries(proofStore: ProofStore,
-      entryData: ProofEntryData): (Attempt, Map[ProofEntry, ProofEntry]) = {
+  private def analyzeProofAttempt(proofStore: ProofStore, parsedProof: ParsedProof)
+      : (Attempt, Map[ProofEntry, ProofEntry]) = {
     
     val entryMatcher = ProofEntryMatcher()
 
     val targetProof =
-      findCreateProof(entryMatcher)(proofStore, entryData.label, entryData.goals)
+      findCreateProof(entryMatcher)(proofStore, parsedProof.label, parsedProof.proofGoals)
 
     val attemptMapping =
-      findCreateAttempt(entryMatcher)(entryData.proofGraph, targetProof)
+      findCreateAttempt(entryMatcher)(parsedProof.proofGraph, targetProof)
 
     attemptMapping
   }

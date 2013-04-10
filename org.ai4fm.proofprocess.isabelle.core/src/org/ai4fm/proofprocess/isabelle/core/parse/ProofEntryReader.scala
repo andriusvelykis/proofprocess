@@ -4,13 +4,20 @@ import scala.collection.JavaConversions._
 
 import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph
+import scalax.collection.immutable.Graph
 
 import org.ai4fm.proofprocess.{Intent, Loc, ProofEntry, ProofProcessFactory, Term, Trace}
-import org.ai4fm.proofprocess.core.analysis.{Assumption, GoalGraphMatcher2, GoalStep, Judgement, Proposition}
-import org.ai4fm.proofprocess.core.analysis.TermIndex
+import org.ai4fm.proofprocess.core.analysis.{
+  Assumption,
+  GoalGraphMatcher2,
+  GoalStep,
+  Judgement,
+  Proposition,
+  TermIndex
+}
 import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.isabelle.{IsabelleProofProcessFactory, IsabelleTrace}
-import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType.Prove
 import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.StepResults
 
 import isabelle.Command.State
@@ -20,6 +27,8 @@ import isabelle.Command.State
   * @author Andrius Velykis 
   */
 trait ProofEntryReader {
+
+  import ProofEntryReader.ParseEntries
   
   private val factory = ProofProcessFactory.eINSTANCE
   private val isaFactory = IsabelleProofProcessFactory.eINSTANCE
@@ -60,18 +69,19 @@ trait ProofEntryReader {
   }
 
 
-  def readEntries(proofState: List[StepResults]): Option[ProofEntryData] = proofState match {
+  def readEntries(proofState: List[StepResults]): Option[(ParsedProof, ParseEntries)] =
+    proofState match {
 
-    // ensure we are analysing a non-empty proof here
-    case NonEmptyProof(lemmaCmd, proofCmds) =>
-      Some(parseProofStructure(lemmaCmd, proofCmds))
+      // ensure we are analysing a non-empty proof here
+      case NonEmptyProof(lemmaCmd, proofCmds) =>
+        Some(parseProofStructure(lemmaCmd, proofCmds))
 
-    case _ => None
-  }
+      case _ => None
+    }
 
 
   private def parseProofStructure(lemmaStep: StepResults,
-                                  proofSteps: List[StepResults]): ProofEntryData = {
+                                  proofSteps: List[StepResults]): (ParsedProof, ParseEntries) = {
 
     val (proofGraph, entryMapping) = parseProofGraph(lemmaStep, proofSteps)
 
@@ -80,12 +90,12 @@ trait ProofEntryReader {
     val proofGoals = lemmaStep.outGoals getOrElse Nil
     val proofLabel = CommandParser.commandId(lemmaStep.state.command)
 
-    ProofEntryData(proofGoals, proofLabel, proofGraph, entryMapping) 
+    (ParsedProof(proofGoals, proofLabel, proofGraph), entryMapping) 
   }
 
 
   private def parseProofGraph(initialStep: StepResults, proofSteps: List[StepResults])
-      : (PPRootGraph[ProofEntry], Map[State, ProofEntry]) = {
+      : (PPRootGraph[ProofEntry], ParseEntries) = {
 
     // create goal steps, which show how input goals are transformed to output goals
     val goalSteps = createGoalSteps(initialStep, proofSteps)
@@ -158,7 +168,7 @@ trait ProofEntryReader {
    */
   private def mapToPPEntries(transform: GoalStep[State, Term] => ProofEntry)(
                                steps: List[GoalStep[State, Term]])
-      : (List[GoalStep[ProofEntry, Term]], Map[State, ProofEntry]) = {
+      : (List[GoalStep[ProofEntry, Term]], ParseEntries) = {
 
     // create ProofEntry elements for each step
     val ppMapping = steps.map { s => (s, transform(s)) }
@@ -308,8 +318,12 @@ trait ProofEntryReader {
 
 }
 
-case class ProofEntryData(goals: List[Term],
-                          label: Option[String],
-                          proofGraph: PPRootGraph[ProofEntry],
-                          entryMap: Map[State, ProofEntry])
+object ProofEntryReader {
 
+  type ParseEntries = Map[State, ProofEntry]
+
+}
+
+case class ParsedProof(proofGoals: List[Term],
+                       label: Option[String],
+                       proofGraph: PPRootGraph[ProofEntry])
