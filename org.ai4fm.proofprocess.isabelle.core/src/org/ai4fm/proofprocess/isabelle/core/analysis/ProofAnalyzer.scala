@@ -26,35 +26,47 @@ import isabelle.eclipse.core.resource.URIThyLoad.toURINodeName
   */
 object ProofAnalyzer {
 
-  @throws(classOf[CoreException])
+  @throws[CoreException]
   def analyze(docState: Document.State, changedCommands: Set[Command], monitor: IProgressMonitor): IStatus = {
 
     // TODO sort proofs?
     val (proofs, commandStarts) = SnapshotReader.readProofs(docState, changedCommands)
 
-    proofs foreach { proofData =>
-      
-      readProofEntries(proofData, commandStarts, monitor) match {
+    proofs foreach processProof(changedCommands, commandStarts, monitor)
 
-        case Some((project, proofStore, parsedProof, proofEntries)) => {
-
-          val (_, matchMapping) = analyzeProofAttempt(proofStore, parsedProof)
-
-          // map snapshot entries to actually matched proof entries for logging
-          val entryMatchMap = PProcessUtil.chainMaps(proofEntries, matchMapping)
-          logActivity(project, entryMatchMap, changedCommands, proofData.proofState.map(_.state), monitor);
-
-          // FIXME commit here or after all analysis? or somewhere else altogether?
-          commit(proofStore)
-        }
-        
-        case None => // invalid proof - ignore PP analysis
-      }
-    }
     Status.OK_STATUS;
   }
+
+  /**
+   * Processes the proof attempt by parsing proof entries and performing some analysis to
+   * infer the ProofProcess Attempt and its structure.
+   * 
+   * If successful, the attempt and the activities are added to the ProofProcess data.
+   */
+  @throws[CoreException]
+  private def processProof(changedCommands: Set[Command],
+                           commandStarts: Map[Command, Int],
+                           monitor: IProgressMonitor)(
+                             proof: ProofData) =
+    readProofEntries(proof, commandStarts, monitor) match {
+
+      case Some((project, proofStore, parsedProof, proofEntries)) => {
+
+        val (_, matchMapping) = analyzeProofAttempt(proofStore, parsedProof)
+
+        // map snapshot entries to actually matched proof entries for logging
+        val entryMatchMap = PProcessUtil.chainMaps(proofEntries, matchMapping)
+        logActivity(project, entryMatchMap, changedCommands, proof.proofState.map(_.state), monitor);
+
+        // FIXME commit here or after all analysis? or somewhere else altogether?
+        commit(proofStore)
+      }
+
+      case None => // invalid proof - ignore PP analysis
+    }
   
-  @throws(classOf[CoreException])
+  
+  @throws[CoreException]
   private def readProofEntries(proofData: ProofData, commandStarts: Map[Command, Int],
       monitor: IProgressMonitor): Option[(IProject, ProofStore, ParsedProof, ParseEntries)] = {
 
@@ -136,7 +148,7 @@ object ProofAnalyzer {
     entryReader.readEntries(proofState)
   }
   
-  @throws(classOf[CoreException])
+  @throws[CoreException]
   private def logActivity(project: IProject, proofEntries: State => Option[ProofEntry],
     changedCommands: Set[Command], proofState: List[State], monitor: IProgressMonitor) {
 
