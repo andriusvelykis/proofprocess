@@ -61,19 +61,15 @@ trait ProofEntryReader {
     val inOutSteps = inSteps zip proofSteps
     
     val steps = inOutSteps map Function.tupled(analyseStep)
-    
-    // create ProofEntry elements for each step
-    val stepPPEntryMapping = steps.map { s => (s, proofEntry(s)) }
-    
-    // use ProofEntry as step contents
-    val nodeSteps = stepPPEntryMapping.map { case (step, entry) => step.copy(info = entry) }
-    
-    val proofGraph = stepsToGraph(indexTerms(nodeSteps))
 
-    // keep the mapping from command State -> ProofEntry (for activity logging)
-    val cmdToPPEntry = stepPPEntryMapping.map { case (step, entry) => (step.info, entry) }
+    // create ProofEntry elements for each command step - they will be used in further analysis
+    // this bridges from Isabelle commands data to ProofProcess data structures
+    // use `#proofEntry()` method for transformation
+    val (ppSteps, commandEntries) = mapToPPEntries(proofEntry)(steps)
+    
+    val proofGraph = stepsToGraph(indexTerms(ppSteps))
 
-    (proofGraph, cmdToPPEntry.toMap)
+    (proofGraph, commandEntries)
   }
 
   
@@ -111,6 +107,29 @@ trait ProofEntryReader {
     val diffL2 = l2 diff same
 
     (same, diffL1, diffL2)
+  }
+
+
+  /**
+   * Creates ProofProcess ProofEntry data structures for each Isabelle Command state (each step).
+   * 
+   * The ProofEntry is then used within each goal step, while the mapping State -> ProofEntry
+   * is also kept (for activity logging).
+   */
+  private def mapToPPEntries(transform: GoalStep[State, Term] => ProofEntry)(
+                               steps: List[GoalStep[State, Term]]):
+      (List[GoalStep[ProofEntry, Term]], Map[State, ProofEntry]) = {
+
+    // create ProofEntry elements for each step
+    val ppMapping = steps.map { s => (s, transform(s)) }
+
+    // replace the command State by ProofEntry in step contents
+    val ppSteps = ppMapping.map { case (step, entry) => step.copy(info = entry) }
+    
+    // extract the mapping from command State -> ProofEntry
+    val cmdToPPEntry = ppMapping.map { case (step, entry) => (step.info, entry) }
+    
+    (ppSteps, cmdToPPEntry.toMap)
   }
 
 
