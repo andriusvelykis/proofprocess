@@ -72,7 +72,7 @@ trait ProofEntryReader {
       // mark mapping
       stateEntryMapping += (step.info -> entry)
       
-      GoalStep(proofEntry(step), step.in, step.out)
+      GoalStep(entry, step.in, step.out)
     })
     
     val (_, indexedSteps) = indexedGoalSteps(matchTerms)(nodeSteps)
