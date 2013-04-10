@@ -7,7 +7,7 @@ import scalax.collection.immutable.Graph
 
 import org.ai4fm.proofprocess.{Intent, Loc, ProofEntry, ProofProcessFactory, Term, Trace}
 import org.ai4fm.proofprocess.core.analysis.{Assumption, GoalGraphMatcher2, GoalStep, Judgement, Proposition}
-import org.ai4fm.proofprocess.core.analysis.TermIndex.indexedGoalSteps
+import org.ai4fm.proofprocess.core.analysis.TermIndex
 import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.isabelle.{IsabelleProofProcessFactory, IsabelleTrace}
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
@@ -68,9 +68,7 @@ trait ProofEntryReader {
     // use ProofEntry as step contents
     val nodeSteps = stepPPEntryMapping.map { case (step, entry) => step.copy(info = entry) }
     
-    val (_, indexedSteps) = indexedGoalSteps(matchTerms)(nodeSteps)
-    
-    val proofGraph = stepsToGraph(indexedSteps)
+    val proofGraph = stepsToGraph(indexTerms(nodeSteps))
 
     // keep the mapping from command State -> ProofEntry (for activity logging)
     val cmdToPPEntry = stepPPEntryMapping.map { case (step, entry) => (step.info, entry) }
@@ -115,6 +113,20 @@ trait ProofEntryReader {
     (same, diffL1, diffL2)
   }
 
+
+  /**
+   * Indexes terms in goal steps:
+   * performs term matching and assigns the same index to matching terms.
+   * 
+   * This allows performing the matching upfront and use `==` on goals afterwards to compare.
+   * 
+   * Uses `#matchTerms` method to perform term matching.
+   */
+  private def indexTerms[A](steps: List[GoalStep[A, Term]]): List[GoalStep[A, Int]] = {
+    val (_, indexedSteps) = TermIndex.indexedGoalSteps(matchTerms)(steps)
+    indexedSteps
+  }
+  
 
   /**
    * Tries mapping the goal step sequence to a Graph structure,
