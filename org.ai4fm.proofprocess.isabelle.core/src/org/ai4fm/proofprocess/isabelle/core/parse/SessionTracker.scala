@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter
 import isabelle.Command
 import isabelle.Document
 import isabelle.Session
-import isabelle.eclipse.core.IsabelleCorePlugin
+import isabelle.eclipse.core.IsabelleCore
 import isabelle.eclipse.core.util.LoggingActor
 import isabelle.eclipse.core.util.SessionEvents
 
@@ -75,7 +75,7 @@ class SessionTracker extends SessionEvents {
 
   private def addPendingAnalysis(changed: Session.Commands_Changed) = if (tracking.isTracking) {
 
-    IsabelleCorePlugin.getIsabelle.session foreach{ session =>
+    IsabelleCore.isabelle.session foreach { session =>
       
       // Isabelle State is immutable, so just take the whole state for processing 
       // we can analyse what is needed in a low-priority analysis thread

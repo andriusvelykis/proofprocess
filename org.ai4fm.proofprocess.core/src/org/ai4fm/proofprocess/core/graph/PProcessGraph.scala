@@ -221,7 +221,7 @@ object PProcessGraph {
         require(!branchMergesDeepestFirst.isEmpty)
         
         // get all merge points for this level
-        val mergePoints = branchMergesDeepestFirst flatMap { case (root, merges) => merges.headOption } toSet
+        val mergePoints = (branchMergesDeepestFirst flatMap { case (root, merges) => merges.headOption }).toSet
         
         // we will merge on the above merge points later in the method.
         // However, there is additional consideration needed: what if one of the branches is a merge point?

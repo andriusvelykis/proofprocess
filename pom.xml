@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ai4fm.proofprocess</groupId>
   <artifactId>org.ai4fm.proofprocess-parent</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>ProofProcess Parent</name>
@@ -15,6 +15,7 @@
          and then here at the root.
     <module>lib</module>
     -->
+    <module>org.ai4fm.proofprocess.target</module>
     <module>org.ai4fm.filehistory</module>
     <module>org.ai4fm.filehistory.core</module>
     <module>org.ai4fm.proofprocess.cdo</module>
@@ -43,8 +44,9 @@
   </modules>
 
   <properties>
-    <tycho.version>0.16.0</tycho.version>
-    <scala.version>2.9.2</scala.version>
+    <tycho.version>0.17.0</tycho.version>
+    <tycho-extras.version>0.17.0</tycho-extras.version>
+    <scala.version>2.10.1</scala.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -55,6 +57,12 @@
       <artifactId>scala-library</artifactId>
       <version>${scala.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-actors</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
   </dependencies>
 
   <dependencyManagement>
@@ -62,51 +70,18 @@
       <dependency>
         <!-- Scala Graphs: https://www.assembla.com/spaces/scala-graph/wiki -->
         <groupId>com.assembla.scala-incubator</groupId>
-        <artifactId>graph-core_2.9.2.osgi</artifactId>
-        <version>1.5.1</version>
+        <artifactId>graph-core_2.10.osgi</artifactId>
+        <version>1.6.1</version>
       </dependency>
       <dependency>
         <!-- Scala Graph Isomorphism by AI4FM -->
         <groupId>org.ai4fm.graph</groupId>
         <artifactId>graph-isomorphism</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
 
-  <repositories>
-    <repository>
-       <!-- Need Juno for CDO 4.1 -->
-       <id>eclipse-juno</id>
-       <layout>p2</layout>
-       <url>http://download.eclipse.org/releases/juno</url>
-    </repository>
-
-    <repository>
-       <id>scala-eclipse-toolchain-osgi</id>
-       <layout>p2</layout>
-       <url>http://download.scala-ide.org/scala-eclipse-toolchain-osgi-${scala.version}-SNAPSHOT/</url>
-    </repository>
-    
-    <repository>
-       <id>eclipse-zest2</id>
-       <layout>p2</layout>
-       <url>https://hudson.eclipse.org/hudson/job/gef-zest-integration/lastSuccessfulBuild/artifact/targetPlatform</url>
-    </repository>
-
-    <repository>
-       <id>isabelle-eclipse</id>
-       <layout>p2</layout>
-       <url>http://andriusvelykis.github.com/isabelle-eclipse/updates/isabelle2012/releases/</url>
-    </repository>
-
-    <repository>
-       <id>czt-eclipse</id>
-       <layout>p2</layout>
-       <url>http://czt.sourceforge.net/eclipse/updates/latest/</url>
-    </repository>
-    
-  </repositories>
 
   <build>
     <sourceDirectory>${basedir}/src</sourceDirectory>
@@ -125,6 +100,13 @@
         <version>${tycho.version}</version>
         <configuration>
           <pomDependencies>consider</pomDependencies>
+          <target>
+            <artifact>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>org.ai4fm.proofprocess.target</artifactId>
+              <version>${project.version}</version>
+            </artifact>
+          </target>
           <environments>
             <environment>
               <os>linux</os>
@@ -191,6 +173,27 @@
             </execution>
           </executions>
         </plugin>
+
+        <plugin>
+          <!-- Use reproducible qualifiers based on Git timestamp -->
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-packaging-plugin</artifactId>
+          <version>${tycho.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.eclipse.tycho.extras</groupId>
+              <artifactId>tycho-buildtimestamp-jgit</artifactId>
+              <version>${tycho-extras.version}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <timestampProvider>jgit</timestampProvider>
+            <jgit.ignore>
+              pom.xml
+            </jgit.ignore>
+          </configuration>
+        </plugin>
+
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>

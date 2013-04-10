@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.ai4fm.proofprocess</groupId>
     <artifactId>org.ai4fm.proofprocess.lib-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
   </parent>
   <groupId>com.assembla.scala-incubator</groupId>
-  <artifactId>graph-core_2.9.2.osgi</artifactId>
-  <version>1.5.1</version>
+  <artifactId>graph-core_2.10.osgi</artifactId>
+  <version>${graph-core.version}</version>
   <packaging>bundle</packaging>
 
   <name>Graph Core</name>
@@ -17,8 +17,20 @@
   <dependencies>
     <dependency>
       <groupId>com.assembla.scala-incubator</groupId>
-      <artifactId>graph-core_2.9.2</artifactId>
-      <version>1.5.1</version>
+      <artifactId>graph-core_2.10</artifactId>
+      <version>${graph-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-actors</artifactId>
+      <version>${scala.version}</version>
     </dependency>
   </dependencies>
 
@@ -30,7 +42,7 @@
         <configuration>
           <instructions>
             <!-- Only embed the graph-core dependency (otherwise it also embeds scala library) -->
-            <Embed-Dependency>graph-core_2.9.2</Embed-Dependency>
+            <Embed-Dependency>graph-core_2.10</Embed-Dependency>
             <!-- Export packages with version, otherwise cannot use versioned package imports.
                  See also http://fusesource.com/docs/esb/4.4/esb_deploy_osgi/BestPractices-BuildBundles.html -->
             <_exportcontents>*;version=${project.version}</_exportcontents>

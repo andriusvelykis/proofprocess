@@ -2,7 +2,6 @@ package org.ai4fm.proofprocess.isabelle.core.parse
 
 import isabelle.Command
 import isabelle.Command.State
-import isabelle.Isabelle_Markup
 import isabelle.Markup
 import isabelle.Markup_Tree
 import isabelle.Properties
@@ -16,6 +15,7 @@ import org.ai4fm.proofprocess.isabelle.Inst
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 import org.ai4fm.proofprocess.isabelle.NamedTermTree
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._
 
@@ -40,7 +40,7 @@ object CommandParser {
     
     // use command tokens with markup infos to determine command arguments
     // filter out whitespace/comments though
-    val tokenInfos = tokenInfoStream(cmdState, cmdState.command.span).filter({ case (token, _) => !token.is_ignored });
+    val tokenInfos = tokenInfoStream(cmdState, cmdState.command.span).filter({ case (token, _) => token.is_proper });
 
     // check if the first token is COMMAND, then create the command and parse the tokens
     tokenInfos.headOption match {
@@ -71,7 +71,7 @@ object CommandParser {
 
               // if it is a fact, add its name to the fact list
               // also consume any outstanding terms for the fact (terms go before facts, e.g. "x="Y" in exI)
-              case Some(Isabelle_Markup.Entity("fact", name)) =>
+              case Some(Markup.Entity("fact", name)) =>
                 // consume insts to produce a InstTerm
                 
                 val namedFactOpt = lookaheadNamedFact(terms, name, tokens.tail)
@@ -81,7 +81,7 @@ object CommandParser {
                 parseTokens(ids, instFact :: facts, Nil, namedRoot, termRoot, nextTokens)
 
               // if it is a method, start a new method branch
-              case Some(Isabelle_Markup.Entity(Isabelle_Markup.METHOD, name)) => {
+              case Some(Markup.Entity(Markup.METHOD, name)) => {
                 val method = addTermTree(command, name)
 
                 consume()
@@ -141,7 +141,7 @@ object CommandParser {
   
   private def commandName(markups: Stream[Markup]): Option[String] = {
     val markupName = markups.collectFirst({ 
-      case Markup(Isabelle_Markup.COMMAND, props) => props.collectFirst({ 
+      case Markup(Markup.COMMAND, props) => props.collectFirst({ 
         case (Markup.NAME, value) => value }) })
     
     markupName getOrElse None
@@ -270,9 +270,9 @@ object CommandParser {
   private def cmdTerms(cmdState: State): Map[String, ITerm] = {
     // get everything nested in TRACING->cmd_terms elements - it will give us the command term XML
     // structures
-    val cmdXmlTerms = cmdState.results map { _._2 } collect {
-      case XML.Elem(Markup(Isabelle_Markup.TRACING, _), XML.Elem(Markup("cmd_terms", _), cterms) :: Nil) => cterms
-    } flatten;
+    val cmdXmlTerms = (cmdState.resultValues collect {
+      case XML.Elem(Markup(Markup.TRACING, _), XML.Elem(Markup("cmd_terms", _), cterms) :: Nil) => cterms
+    }).flatten;
 
     // split each XML term into source/term pair and parse the values
     val terms = cmdXmlTerms collect {
@@ -347,7 +347,7 @@ object CommandParser {
   
   def commandId(cmd: Command): Option[String] = {
     // find first non-ignored token and use it if applicable
-    val firstId = cmd.span.find(token => !token.is_command && !token.is_ignored)
+    val firstId = cmd.span.find(token => !token.is_command && token.is_proper)
     
     // ensure it is a name and then use its source
     firstId filter {_.is_name} map {_.source}

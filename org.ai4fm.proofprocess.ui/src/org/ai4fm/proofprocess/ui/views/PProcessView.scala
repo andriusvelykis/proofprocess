@@ -4,10 +4,11 @@ import org.ai4fm.proofprocess.core.store.{IProofEntryTracker, IProofStoreProvide
 import org.eclipse.core.resources.IResource
 import org.eclipse.ui.{IEditorPart, IWorkbenchPart}
 import org.eclipse.ui.ide.ResourceUtil
-import org.eclipse.ui.part.{IPage, MessagePage, PageBook}
+import org.eclipse.ui.part.{IPage, MessagePage, PageBook, PageBookView}
+import org.eclipse.ui.part.PageBookView.PageRec
 
 
-class PProcessView extends ScalaPageBookView {
+class PProcessView extends PageBookView {
 
   override protected def createDefaultPage(book: PageBook): IPage = {
     val messagePage = new MessagePage
@@ -18,7 +19,7 @@ class PProcessView extends ScalaPageBookView {
     messagePage;
   }
 
-  override protected def doCreatePage0(part: IWorkbenchPart): IPage = {
+  override protected def doCreatePage(part: IWorkbenchPart): PageRec = {
     // must resolve without None
     val proofStoreProvider = getProofStore(part).get
     val proofEntryTracker = getProofEntryTracker(part)
@@ -28,11 +29,13 @@ class PProcessView extends ScalaPageBookView {
     initPage(proofProcessPage)
     proofProcessPage.createControl(getPageBook())
 
-    proofProcessPage
+    new PageRec(part, proofProcessPage)
   }
 
-  protected def doDestroyPage(part: IWorkbenchPart, page: IPage) =
-    page.dispose()
+  override protected def doDestroyPage(part: IWorkbenchPart, pageRecord: PageRec) {
+    pageRecord.page.dispose()
+    pageRecord.dispose()
+  }
 
   override protected def getBootstrapPart(): IWorkbenchPart = {
     val part = Option(getSite.getPage) flatMap { p => Option(p.getActivePart) } filter { isImportant }

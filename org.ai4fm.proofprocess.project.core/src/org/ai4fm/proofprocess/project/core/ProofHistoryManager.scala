@@ -10,7 +10,7 @@ import org.ai4fm.filehistory.FileVersion
 import org.ai4fm.filehistory.core.FileHistoryUtil
 import org.ai4fm.filehistory.core.IFileHistoryManager
 import org.ai4fm.filehistory.core.XmlFileHistoryManager
-import org.ai4fm.proofprocess.cdo.PProcessCDOPlugin
+import org.ai4fm.proofprocess.cdo.PProcessCDO
 import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.error
 import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.log
 import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.plugin
@@ -107,7 +107,7 @@ object ProofHistoryManager {
     val databaseLocPath = plugin.getStateLocation.append("database")
     val databaseLocUri = URIUtil.toURI(databaseLocPath)
 
-    val session = PProcessCDOPlugin.plugin.session(databaseLocUri, repositoryName)
+    val session = PProcessCDO.session(databaseLocUri, repositoryName)
     val transaction = session.openTransaction(editingDomain.getResourceSet)
 
     // resolve the "filehistory" resource in the CDO repository

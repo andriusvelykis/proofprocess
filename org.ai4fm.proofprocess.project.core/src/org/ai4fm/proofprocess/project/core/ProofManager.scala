@@ -4,7 +4,7 @@ import java.io.IOException
 
 import scala.collection.JavaConversions.asScalaBuffer
 
-import org.ai4fm.proofprocess.cdo.PProcessCDOPlugin
+import org.ai4fm.proofprocess.cdo.PProcessCDO
 import org.ai4fm.proofprocess.log.ProofLog
 import org.ai4fm.proofprocess.log.ProofProcessLogFactory
 import org.ai4fm.proofprocess.project.Project
@@ -100,7 +100,7 @@ object ProofManager {
     val databaseLocPath = plugin.getStateLocation.append("database")
     val databaseLocUri = URIUtil.toURI(databaseLocPath)
 
-    val session = PProcessCDOPlugin.plugin.session(databaseLocUri, repositoryName)
+    val session = PProcessCDO.session(databaseLocUri, repositoryName)
     val transaction = session.openTransaction(editingDomain.getResourceSet)
 
     // resolve the "proof" and "prooflog" resources in the CDO repository

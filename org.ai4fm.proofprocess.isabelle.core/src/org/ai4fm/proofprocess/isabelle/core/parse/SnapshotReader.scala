@@ -2,6 +2,7 @@ package org.ai4fm.proofprocess.isabelle.core.parse
 
 import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.core.analysis.{Assumption, Judgement}
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
 
 import isabelle.Command
@@ -125,7 +126,7 @@ object SnapshotReader {
     // first of all go backwards and collect everything before the target command
     // stop when the proof start command is reached
     var lastProofStart = false
-    val beforeCmdsRev = commands.reverse_iterator(targetCommand).map(commandState).takeWhile(state => {
+    val beforeCmdsRev = commands.reverse.iterator(targetCommand).map(commandState).takeWhile(state => {
       val prevStart = lastProofStart
       lastProofStart = isProofStart(state)
       // take while previous is not proof start
@@ -151,23 +152,24 @@ object SnapshotReader {
     // take valid proof commands only
     // do not continue after unfinished commands
     // ignore errors TODO count errors and do not include after certain threshold?
-    proofState.filter(state => isValidProofCommand(state.command)).takeWhile(isFinished).takeWhile(!isError(_))
+    val valid = proofState.filter(state => isValidProofCommand(state.command))
+    val finished = valid.takeWhile(isFinished)
+    val nonErr = finished.takeWhile(!isError(_))
+    nonErr
   }
 
   def isValidProofCommand(command: Command): Boolean = {
     // TODO exclude others, e.g. definitions, "thm ...", etc?
     // take non-ignored and non-malformed commands
-    !command.is_ignored && !command.is_malformed
+    command.is_command
   }
 
-  def isFinished(cmdState: State) = {
-    import isabelle.Protocol._
+  def isFinished(cmdState: State) =
     command_status(cmdState.status).is_finished
-  }
   
   def isError(cmdState: State) =
     // no errors in the results
-    cmdState.results.values.exists(ResultParser.isError)
+    cmdState.resultValues.exists(ResultParser.isError)
 
 
   // "picking this" both in `in` and `out`?

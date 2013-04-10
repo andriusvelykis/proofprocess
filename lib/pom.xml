@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.ai4fm.proofprocess</groupId>
     <artifactId>org.ai4fm.proofprocess-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
   </parent>
 -->
   <groupId>org.ai4fm.proofprocess</groupId>
   <artifactId>org.ai4fm.proofprocess.lib-parent</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>ProofProcess 3rd-party Libraries Parent</name>
@@ -20,6 +20,9 @@
     <!-- Use build timestamp as OSGI qualifier (e.g. 1.6.0.201209062207) -->
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
     <osgi-version-qualifier>${maven.build.timestamp}</osgi-version-qualifier>
+
+    <scala.version>2.10.1</scala.version>
+    <graph-core.version>1.6.1</graph-core.version>
   </properties>
 
   <modules>
@@ -30,6 +33,15 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.5.1</version>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+          </configuration>
+        </plugin>
 
         <!-- Generate OSGI bundles for 3rd party libraries. This will add additional information to
 		     their manifest files, which indicate OSGI properties, e.g. name/version/packages/etc.

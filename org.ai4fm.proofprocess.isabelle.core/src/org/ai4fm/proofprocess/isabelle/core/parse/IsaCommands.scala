@@ -1,9 +1,10 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
+import scala.collection.JavaConverters._
+
 import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.isabelle.IsabelleCommand
-import org.ai4fm.proofprocess.isabelle.NamedTermTree
-import scala.collection.JavaConversions._
+import org.ai4fm.proofprocess.isabelle.{IsabelleCommand, NamedTermTree}
+
 
 /** Extractor objects for common Isabelle commands.
   * 
@@ -55,13 +56,13 @@ object IsaCommands {
       val facts = namedFacts(branch)
       def get(name: String) = facts.getOrElse(name, Nil);
 
-      (get("rule"), branch.getTerms toList, get("arbitrary"), get("taking"))
+      (get("rule"), branch.getTerms.asScala.toList, get("arbitrary"), get("taking"))
     }
   }
   
   object Apply {
     def unapply(cmd: IsabelleCommand): Option[List[NamedTermTree]] = cmd.getName match {
-      case "apply" => Some(cmd.getBranches toList)
+      case "apply" => Some(cmd.getBranches.asScala.toList)
       case _ => None
     }
   }
@@ -75,7 +76,7 @@ object IsaCommands {
   
   object ProofMethCommand {
     def unapply(cmd: IsabelleCommand): Option[List[NamedTermTree]] = cmd.getName match {
-      case "apply" | "by" | "proof" => Some(cmd.getBranches toList)
+      case "apply" | "by" | "proof" => Some(cmd.getBranches.asScala.toList)
       case _ => None
     }
   }
@@ -84,7 +85,7 @@ object IsaCommands {
     Option(branch) filter {_.getName() == name}
   
   def namedBranchTerms(branch: NamedTermTree, name: String): Option[TList] =
-    namedBranch(branch, name) map { _.getTerms toList }
+    namedBranch(branch, name) map { _.getTerms.asScala.toList }
 
   def autoNamedFacts(branch: NamedTermTree, name: String): Option[(TList, TList, TList)] =
     namedBranch(branch, name) map { branch =>
@@ -95,7 +96,7 @@ object IsaCommands {
     }
   
   def namedFacts(parent: NamedTermTree): Map[String, List[Term]] =
-    parent.getBranches map {br => (br.getName, br.getTerms toList )} toMap
+    (parent.getBranches.asScala map {br => (br.getName, br.getTerms.asScala.toList )}).toMap
 
   abstract class NamedBranchTerms(val name: String) {
     def unapply(branch: NamedTermTree): Option[TList] = namedBranchTerms(branch, name)
