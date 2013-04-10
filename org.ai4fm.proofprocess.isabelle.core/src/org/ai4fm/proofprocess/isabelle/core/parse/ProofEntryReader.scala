@@ -32,26 +32,57 @@ trait ProofEntryReader {
   
   def textLoc(cmd: State): Loc
 
-  def readEntries(proofState: List[StepResults]): Option[ProofEntryData] =
-    proofState match {
-      // Assume that a proof with just one command (e.g. "declaration") is too short to be included
-      // in the ProofProcess. This way we only concern ourselves with proofs that have been tried proving
-      // (instead of capturing every version of lemma declaration)
-      case lemmaCmd :: restCmds if !lemmaCmd.outGoals.isEmpty && !restCmds.isEmpty => {
-        // Assume that the first step in any proof is the "declaration" command, e.g. "lemma ..."
-        // Also check that initial goals are not empty - don't allow proofs with empty goals
-        // Also check that proof steps are available
-        val (proofGraph, entryMapping) = parseProofGraph(lemmaCmd, restCmds)
+  
+  /**
+   * An extractor object for valid proof:
+   * one that has a lemma definition command followed by at least one proof command.
+   * 
+   * Extracts the lemma command and the remaining proof commands, if available.
+   */
+  object NonEmptyProof {
 
-        // TODO judgements instead of outGoals (or convert?)
-        Some(ProofEntryData(lemmaCmd.outGoals getOrElse Nil,
-          CommandParser.commandId(lemmaCmd.state.command),
-          proofGraph,
-          entryMapping))
+    def unapply(proofState: List[StepResults]): Option[(StepResults, List[StepResults])] =
+      proofState match {
+        // Assume that a proof with just one command (e.g. "declaration") is too short
+        // to be included in the ProofProcess. This way we only concern ourselves with proofs
+        // that have been attempted (instead of capturing every version of lemma declaration)
+        case lemmaCmd :: restCmds
+            if !lemmaCmd.outGoals.isEmpty && !restCmds.isEmpty => {
+          // Assume that the first step in any proof is the "declaration" command, e.g. "lemma ..."
+          // Also check that initial goals are not empty - don't allow proofs with empty goals
+          // Also check that proof steps are available
+          Some(lemmaCmd, restCmds)
+        }
+
+        // empty/short proof state - nothing to parse
+        case _ => None
       }
-      // empty/short proof state - nothing to parse
-      case _ => None
-    }
+  }
+
+
+  def readEntries(proofState: List[StepResults]): Option[ProofEntryData] = proofState match {
+
+    // ensure we are analysing a non-empty proof here
+    case NonEmptyProof(lemmaCmd, proofCmds) =>
+      Some(parseProofStructure(lemmaCmd, proofCmds))
+
+    case _ => None
+  }
+
+
+  private def parseProofStructure(lemmaStep: StepResults,
+                                  proofSteps: List[StepResults]): ProofEntryData = {
+
+    val (proofGraph, entryMapping) = parseProofGraph(lemmaStep, proofSteps)
+
+    // get proof info from the lemma (first) step
+    // TODO judgements instead of outGoals (or convert?)
+    val proofGoals = lemmaStep.outGoals getOrElse Nil
+    val proofLabel = CommandParser.commandId(lemmaStep.state.command)
+
+    ProofEntryData(proofGoals, proofLabel, proofGraph, entryMapping) 
+  }
+
 
   private def parseProofGraph(initialStep: StepResults, proofSteps: List[StepResults])
       : (PPRootGraph[ProofEntry], Map[State, ProofEntry]) = {
@@ -69,6 +100,7 @@ trait ProofEntryReader {
     (proofGraph, commandEntries)
   }
 
+
   private def createGoalSteps(initialStep: StepResults,
                               proofSteps: List[StepResults]): List[GoalStep[State, Term]] = {
 
@@ -77,11 +109,11 @@ trait ProofEntryReader {
     val inOutSteps = inSteps zip proofSteps
 
     // now try to to make sense of a GoalStep from the before-after results
-    inOutSteps map Function.tupled(analyseStep)
+    inOutSteps map Function.tupled(analyseGoalStep)
   }
 
   
-  private def analyseStep(prev: StepResults, current: StepResults): GoalStep[State, Term] =
+  private def analyseGoalStep(prev: StepResults, current: StepResults): GoalStep[State, Term] =
     // TODO only the previous needs to be 'prove'?
     if (prev.stateType == Prove/* && current.stateType == Prove*/) {
       
