@@ -59,45 +59,56 @@ object ProofAnalyzer {
     
     val proofTextData = proofData.textData
     
-    val pathStr = proofTextData.name.node
-    val pathUri = proofTextData.name.uri
+    withProjectResource(proofTextData.name) { project =>
+
+      val proofProject = ProofManager.proofProject(project, monitor)
+      val pathStr = proofTextData.name.node
+
+      // TODO make path relative for file history
+      val fileVersion = ProofHistoryManager.syncFileVersion(
+        project, pathStr, Some(proofTextData.documentText), Some(proofTextData.syncPoint), monitor)
+
+      def textLoc(cmdState: State): Loc = {
+        val cmd = cmdState.command
+        // TODO ignore position at all instead of 0?
+        val offset = commandStarts.getOrElse(cmd, 0)
+        ProofProcessUtil.createTextLoc(fileVersion, offset, cmd.range.stop - cmd.range.start);
+      }
+      
+      val proofInfoOpt = proofEntries(proofProject, proofData.proofState, textLoc)
+
+      proofInfoOpt.map((project, proofProject, _))
+    }
+  }
+
+  private def withProjectResource[A](document: Document.Node.Name)(
+                                       f: IProject => Option[A]): Option[A] =
+    findProjectResource(document) match {
+
+      case Some(project) => f(project)
+
+      case None =>
+        // cannot locate the project, therefore cannot access proof process model
+        error(msg = Some("Unable to locate project for resource " + document.node))
+        None
+
+    }
+
+  private def findProjectResource(document: Document.Node.Name): Option[IProject] = {
+
+    val pathUri = document.uri
     
-    val project = if (pathUri.isAbsolute) {
+    if (pathUri.isAbsolute) {
       // URI encoding
       Option(ResourceUtil.findProject(pathUri))
     } else {
       // Path encoding
+      val pathStr = document.node
       val filePath = Path.fromOSString(pathStr)
       Option(ResourceUtil.findProject(filePath))
     }
-
-    if (project.isEmpty) {
-      // cannot locate the project, therefore cannot access proof process model
-      error(msg = Some("Unable to locate project for resource " + pathStr))
-    }
-
-    project flatMap { project =>
-      {
-
-        val proofProject = ProofManager.proofProject(project, monitor)
-
-        // TODO make path relative for file history
-        val fileVersion = ProofHistoryManager.syncFileVersion(
-          project, pathStr, Some(proofTextData.documentText), Some(proofTextData.syncPoint), monitor)
-
-        def textLoc(cmdState: State): Loc = {
-          val cmd = cmdState.command
-          // TODO ignore position at all instead of 0?
-          val offset = commandStarts.getOrElse(cmd, 0)
-          ProofProcessUtil.createTextLoc(fileVersion, offset, cmd.range.stop - cmd.range.start);
-        }
-        
-        val proofInfoOpt = proofEntries(proofProject, proofData.proofState, textLoc)
-
-        proofInfoOpt.map((project, proofProject, _))
-      }
-    }
   }
+
 
   private def proofEntries(proofStore: ProofStore, proofState: List[StepResults],
       cmdLoc: State => Loc) = {
