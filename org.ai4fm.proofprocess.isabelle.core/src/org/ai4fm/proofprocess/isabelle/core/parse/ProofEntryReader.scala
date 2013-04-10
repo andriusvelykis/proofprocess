@@ -70,13 +70,7 @@ trait ProofEntryReader {
     
     val (_, indexedSteps) = indexedGoalSteps(matchTerms)(nodeSteps)
     
-    // map the possible root nodes to the nearest `proof` command
-    // to avoid them hanging from the root, e.g. for assumptions, etc.
-    val initialGraph = rootsToProof(indexedSteps, Nil)
-    
-    // try connecting the goal steps into a graph structure
-    // depending on how goals/assumptions change
-    val proofGraph = GoalGraphMatcher2.goalGraph(indexedSteps, initialGraph)
+    val proofGraph = stepsToGraph(indexedSteps)
 
     // keep the mapping from command State -> ProofEntry (for activity logging)
     val cmdToPPEntry = stepPPEntryMapping.map { case (step, entry) => (step.info, entry) }
@@ -119,6 +113,24 @@ trait ProofEntryReader {
     val diffL2 = l2 diff same
 
     (same, diffL1, diffL2)
+  }
+
+
+  /**
+   * Tries mapping the goal step sequence to a Graph structure,
+   * depending on how goals/assumptions change.
+   * 
+   * The goal type `G` must support `==` for goal matching!
+   */
+  private def stepsToGraph[G](steps: List[GoalStep[ProofEntry, G]]): PPRootGraph[ProofEntry] = {
+
+    // map the possible root nodes to the nearest `proof` command
+    // to avoid them hanging from the root, e.g. for assumptions, etc.
+    val initialGraph = rootsToProof(steps, Nil)
+    
+    // try connecting the goal steps into a graph structure
+    // depending on how goals/assumptions change
+    GoalGraphMatcher2.goalGraph(steps, initialGraph)
   }
 
 
