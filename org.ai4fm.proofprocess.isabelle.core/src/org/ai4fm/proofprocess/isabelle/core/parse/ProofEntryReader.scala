@@ -41,7 +41,7 @@ trait ProofEntryReader {
         // Assume that the first step in any proof is the "declaration" command, e.g. "lemma ..."
         // Also check that initial goals are not empty - don't allow proofs with empty goals
         // Also check that proof steps are available
-        val (proofGraph, entryMapping) = readProofSteps(restCmds, lemmaCmd)
+        val (proofGraph, entryMapping) = parseProofGraph(lemmaCmd, restCmds)
 
         // TODO judgements instead of outGoals (or convert?)
         Some(ProofEntryData(lemmaCmd.outGoals getOrElse Nil,
@@ -53,23 +53,31 @@ trait ProofEntryReader {
       case _ => None
     }
 
-  private def readProofSteps(proofSteps: List[StepResults],
-                             initialStep: StepResults): (PPRootGraph[ProofEntry], Map[State, ProofEntry]) = {
-    
-    // make a list with ingoals-info-outgoals steps
-    val inSteps = initialStep :: proofSteps
-    val inOutSteps = inSteps zip proofSteps
-    
-    val steps = inOutSteps map Function.tupled(analyseStep)
+  private def parseProofGraph(initialStep: StepResults, proofSteps: List[StepResults])
+      : (PPRootGraph[ProofEntry], Map[State, ProofEntry]) = {
+
+    // create goal steps, which show how input goals are transformed to output goals
+    val goalSteps = createGoalSteps(initialStep, proofSteps)
 
     // create ProofEntry elements for each command step - they will be used in further analysis
     // this bridges from Isabelle commands data to ProofProcess data structures
     // use `#proofEntry()` method for transformation
-    val (ppSteps, commandEntries) = mapToPPEntries(proofEntry)(steps)
+    val (ppSteps, commandEntries) = mapToPPEntries(proofEntry)(goalSteps)
     
     val proofGraph = stepsToGraph(indexTerms(ppSteps))
 
     (proofGraph, commandEntries)
+  }
+
+  private def createGoalSteps(initialStep: StepResults,
+                              proofSteps: List[StepResults]): List[GoalStep[State, Term]] = {
+
+    // make a list with ingoals-info-outgoals steps
+    val inSteps = initialStep :: proofSteps
+    val inOutSteps = inSteps zip proofSteps
+
+    // now try to to make sense of a GoalStep from the before-after results
+    inOutSteps map Function.tupled(analyseStep)
   }
 
   
@@ -112,13 +120,13 @@ trait ProofEntryReader {
 
   /**
    * Creates ProofProcess ProofEntry data structures for each Isabelle Command state (each step).
-   * 
+   *
    * The ProofEntry is then used within each goal step, while the mapping State -> ProofEntry
    * is also kept (for activity logging).
    */
   private def mapToPPEntries(transform: GoalStep[State, Term] => ProofEntry)(
-                               steps: List[GoalStep[State, Term]]):
-      (List[GoalStep[ProofEntry, Term]], Map[State, ProofEntry]) = {
+                               steps: List[GoalStep[State, Term]])
+      : (List[GoalStep[ProofEntry, Term]], Map[State, ProofEntry]) = {
 
     // create ProofEntry elements for each step
     val ppMapping = steps.map { s => (s, transform(s)) }
