@@ -33,7 +33,7 @@ trait ProofEntryReader {
   private val factory = ProofProcessFactory.eINSTANCE
   private val isaFactory = IsabelleProofProcessFactory.eINSTANCE
   
-  def stepIntent(): Intent
+  def stepIntent: Intent
   
   def cloneTerm(term: Term): Term
   
