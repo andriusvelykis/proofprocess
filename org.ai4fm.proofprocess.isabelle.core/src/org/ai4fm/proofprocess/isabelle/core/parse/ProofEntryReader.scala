@@ -17,7 +17,7 @@ import org.ai4fm.proofprocess.core.analysis.{
 }
 import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.isabelle.{IsabelleProofProcessFactory, IsabelleTrace}
-import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType.Prove
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
 import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.StepResults
 
 import isabelle.Command.State
@@ -119,36 +119,54 @@ trait ProofEntryReader {
     val inOutSteps = inSteps zip proofSteps
 
     // now try to to make sense of a GoalStep from the before-after results
-    inOutSteps map Function.tupled(analyseGoalStep)
+    val goalSteps = inOutSteps map Function.tupled(analyseGoalStep)
+
+    // flatten - some of the goals may have been skipped (e.g. chain)
+    goalSteps.flatten
   }
 
   
-  private def analyseGoalStep(prev: StepResults, current: StepResults): GoalStep[State, Term] =
-    // TODO only the previous needs to be 'prove'?
-    if (prev.stateType == Prove/* && current.stateType == Prove*/) {
+  // FIXME special support for fixing!
+  private def analyseGoalStep(prev: StepResults, current: StepResults)
+      : Option[GoalStep[State, Term]] = (prev.stateType, current.stateType) match {
+
+    // Skip Chain steps, since they are just links between assumptions and their use.
+    // The assumption introduction will be captured in the previous State steps, and their use
+    // will be captured in the next State.
+    case (_, Chain) => None
+
+    case (Prove, _) => {
+      // Two consecutive Prove steps, so check for goal diffs
+      //
+      // Note: it seems that only the previous needs to be `Prove`.
+      // Switching from `Prove` to e.g. `State` would require a `proof` command, which may affect
+      // the goal (`proof <command>` or keep it the same (e.g. `proof -`).
+      // For this reason, only check that the previous is proof
       
-      // two consecutive Prove steps, so check for goal diffs
       val (unchanged, changedIn, changedOut) = 
         diffs(prev.outGoalProps getOrElse Nil, current.outGoalProps getOrElse Nil)
 
       // TODO narrow the changed goals further?
-      GoalStep(current.state,
-               current.inAssmProps ::: changedIn,
-               current.outAssmProps ::: changedOut)
+      Some(GoalStep(current.state,
+                    current.inAssmProps ::: changedIn,
+                    current.outAssmProps ::: changedOut))
       
-    }/* else if (prev.stateType == State) {
-      // diff in assumptions - they may be repeating?
-    }*/ else {
+    }
+
+//    case (State, _) => // diff in assumptions - they may be repeating?
+    
+    case _ => {
 
       // out assumptions or out goals are exclusive
       val out = if (!current.outAssmProps.isEmpty) current.outAssmProps
                 else current.outGoalProps getOrElse Nil
-      
-      GoalStep(current.state,
-               // TODO review: no "in" goals - previous was a state?
-               current.inAssmProps,
-               out)
+
+      Some(GoalStep(current.state,
+                    // TODO review: no "in" goals - previous was a state?
+                    current.inAssmProps,
+                    out))
     }
+  }
   
   
   private def diffs[A](l1: List[A], l2: List[A]): (List[A], List[A], List[A]) = {
