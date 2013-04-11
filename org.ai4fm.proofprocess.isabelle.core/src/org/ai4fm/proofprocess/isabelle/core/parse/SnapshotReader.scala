@@ -1,7 +1,6 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
-import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.core.analysis.{Assumption, Judgement}
+import org.ai4fm.proofprocess.core.analysis.{Assumption, EqTerm, Judgement}
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
 
@@ -214,14 +213,14 @@ object SnapshotReader {
 
   case class StepResults(state: State,
                          stateType: StepProofType,
-                         inAssms: List[Term],
-                         outAssms: List[Term],
-                         outGoals: Option[List[Term]]) {
+                         inAssms: List[EqTerm],
+                         outAssms: List[EqTerm],
+                         outGoals: Option[List[EqTerm]]) {
     
     lazy val inAssmProps = inAssms map (Assumption(_))
     lazy val outAssmProps = outAssms map (Assumption(_))
     
-    private def addInAssms(goal: Judgement[Term]): Judgement[Term] = {
+    private def addInAssms(goal: Judgement[EqTerm]): Judgement[EqTerm] = {
       val updAssms = (goal.assms ::: inAssms).distinct
       goal.copy( assms = updAssms )
     }

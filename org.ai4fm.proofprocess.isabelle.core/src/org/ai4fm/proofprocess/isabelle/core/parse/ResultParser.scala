@@ -1,8 +1,8 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
-import org.ai4fm.proofprocess.{Term => PPTerm}
-import org.ai4fm.proofprocess.core.analysis.Judgement
+import org.ai4fm.proofprocess.core.analysis.{EqTerm, Judgement}
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
+import org.ai4fm.proofprocess.isabelle.core.data.{EqIsaTerm, EqMarkupTerm}
 
 import isabelle.{Markup, Pretty}
 import isabelle.{Term_XML, XML}
@@ -24,7 +24,7 @@ object ResultParser {
     * display of goals. The XML structures are wrapped into MarkupTerm structures.
     * </p>
     */
-  def goalTerms(cmdState: State): Option[List[PPTerm]] = {
+  def goalTerms(cmdState: State): Option[List[EqTerm]] = {
     
     val results = cmdState.resultValues.toStream
     
@@ -67,7 +67,7 @@ object ResultParser {
 
 
   def labelledTerms(cmdState: State,
-                    labelMatch: String => Boolean): Map[String, List[PPTerm]] = {
+                    labelMatch: String => Boolean): Map[String, List[EqTerm]] = {
     
     val results = cmdState.resultValues.toStream
     
@@ -251,21 +251,21 @@ object ResultParser {
   
   def render(elem: XML.Tree): String = Pretty.str_of(List(elem))
   
-  def isaTerm(display: String, term: Term): PPTerm = {
+  def isaTerm(display: String, term: Term): EqTerm = {
     val ppTerm = factory.createIsaTerm()
     ppTerm.setDisplay(display)
     ppTerm.setTerm(term)
-    ppTerm
+    new EqIsaTerm(ppTerm)
   }
   
-  def markupTerm(display: String, term: XML.Tree): PPTerm = {
+  def markupTerm(display: String, term: XML.Tree): EqTerm = {
     val ppTerm = factory.createMarkupTerm()
     ppTerm.setDisplay(display)
     ppTerm.setTerm(term)
-    ppTerm
+    new EqMarkupTerm(ppTerm)
   }
   
-  def markupTerms(termDisplays: List[(String, XML.Tree)]): List[PPTerm] =
+  def markupTerms(termDisplays: List[(String, XML.Tree)]): List[EqTerm] =
     termDisplays map Function.tupled(markupTerm)
 
   object StepProofType extends Enumeration {
@@ -288,7 +288,7 @@ object ResultParser {
 //  }
   
   
-  def splitAssmsGoal(term: PPTerm): Judgement[PPTerm] = term match {
+  def splitAssmsGoal(term: EqTerm): Judgement[EqTerm] = term match {
     // TODO implement splitting of term into assumptions + goal
     case _ => Judgement(Nil, term)
   }

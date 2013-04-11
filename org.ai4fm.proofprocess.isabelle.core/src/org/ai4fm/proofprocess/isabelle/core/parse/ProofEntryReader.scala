@@ -4,16 +4,16 @@ import scala.collection.JavaConversions._
 
 import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph
-import scalax.collection.immutable.Graph
 
 import org.ai4fm.proofprocess.{Intent, Loc, ProofEntry, ProofProcessFactory, Term, Trace}
 import org.ai4fm.proofprocess.core.analysis.{
   Assumption,
+  Eq,
+  EqTerm,
   GoalGraphMatcher2,
   GoalStep,
   Judgement,
-  Proposition,
-  TermIndex
+  Proposition
 }
 import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.isabelle.{IsabelleProofProcessFactory, IsabelleTrace}
@@ -90,7 +90,7 @@ trait ProofEntryReader {
     val proofGoals = lemmaStep.outGoals getOrElse Nil
     val proofLabel = CommandParser.commandId(lemmaStep.state.command)
 
-    (ParsedProof(proofGoals, proofLabel, proofGraph), entryMapping) 
+    (ParsedProof(proofGoals map (_.term), proofLabel, proofGraph), entryMapping) 
   }
 
 
@@ -105,14 +105,14 @@ trait ProofEntryReader {
     // use `#proofEntry()` method for transformation
     val (ppSteps, commandEntries) = mapToPPEntries(proofEntry)(goalSteps)
     
-    val proofGraph = stepsToGraph(indexTerms(ppSteps))
+    val proofGraph = stepsToGraph(ppSteps)
 
     (proofGraph, commandEntries)
   }
 
 
   private def createGoalSteps(initialStep: StepResults,
-                              proofSteps: List[StepResults]): List[GoalStep[State, Term]] = {
+                              proofSteps: List[StepResults]): List[GoalStep[State, EqTerm]] = {
 
     // make a list with ingoals-info-outgoals steps
     val inSteps = initialStep :: proofSteps
@@ -128,7 +128,7 @@ trait ProofEntryReader {
   
   // FIXME special support for fixing!
   private def analyseGoalStep(prev: StepResults, current: StepResults)
-      : Option[GoalStep[State, Term]] = (prev.stateType, current.stateType) match {
+      : Option[GoalStep[State, EqTerm]] = (prev.stateType, current.stateType) match {
 
     // Skip Chain steps, since they are just links between assumptions and their use.
     // The assumption introduction will be captured in the previous State steps, and their use
@@ -184,9 +184,9 @@ trait ProofEntryReader {
    * The ProofEntry is then used within each goal step, while the mapping State -> ProofEntry
    * is also kept (for activity logging).
    */
-  private def mapToPPEntries(transform: GoalStep[State, Term] => ProofEntry)(
-                               steps: List[GoalStep[State, Term]])
-      : (List[GoalStep[ProofEntry, Term]], ParseEntries) = {
+  private def mapToPPEntries[T <: Eq](transform: GoalStep[State, T] => ProofEntry)(
+                                        steps: List[GoalStep[State, T]])
+      : (List[GoalStep[ProofEntry, T]], ParseEntries) = {
 
     // create ProofEntry elements for each step
     val ppMapping = steps.map { s => (s, transform(s)) }
@@ -202,26 +202,11 @@ trait ProofEntryReader {
 
 
   /**
-   * Indexes terms in goal steps:
-   * performs term matching and assigns the same index to matching terms.
-   * 
-   * This allows performing the matching upfront and use `==` on goals afterwards to compare.
-   * 
-   * Uses `#matchTerms` method to perform term matching.
-   */
-  private def indexTerms[A](steps: List[GoalStep[A, Term]]): List[GoalStep[A, Int]] = {
-    val (_, indexedSteps) = TermIndex.indexedGoalSteps(matchTerms)(steps)
-    indexedSteps
-  }
-  
-
-  /**
    * Tries mapping the goal step sequence to a Graph structure,
    * depending on how goals/assumptions change.
-   * 
-   * The goal type `G` must support `==` for goal matching!
    */
-  private def stepsToGraph[G](steps: List[GoalStep[ProofEntry, G]]): PPRootGraph[ProofEntry] = {
+  private def stepsToGraph[G <: Eq](steps: List[GoalStep[ProofEntry, G]])
+      : PPRootGraph[ProofEntry] = {
 
     // map the possible root nodes to the nearest `proof` command
     // to avoid them hanging from the root, e.g. for assumptions, etc.
@@ -272,24 +257,24 @@ trait ProofEntryReader {
     entry.getProofStep.getTrace.asInstanceOf[IsabelleTrace].getCommand.getName
   
   
-  private def propsToTerms(props: List[Proposition[Term]]): List[Term] =
+  private def propsToTerms(props: List[Proposition[EqTerm]]): List[Term] =
     // note that terms are cloned when put into Assumption/Judgement terms
     // since they cannot be shared here
     props map (_ match {
       case Assumption(t) => {
         val assmTerm = isaFactory.createAssumptionTerm
-        assmTerm.setTerm(cloneTerm(t))
+        assmTerm.setTerm(cloneTerm(t.term))
         assmTerm
       }
       case Judgement(assms, goal) => {
         val jTerm = isaFactory.createJudgementTerm
-        jTerm.getAssms.addAll(assms map cloneTerm)
-        jTerm.setGoal(cloneTerm(goal))
+        jTerm.getAssms.addAll(assms map (_.term) map cloneTerm)
+        jTerm.setGoal(cloneTerm(goal.term))
         jTerm
       }
     })
   
-  private def proofEntry(proofStep: GoalStep[State, Term]): ProofEntry = {
+  private def proofEntry(proofStep: GoalStep[State, EqTerm]): ProofEntry = {
     
     val cmdState = proofStep.info
     val inGoals = propsToTerms(proofStep.in)
