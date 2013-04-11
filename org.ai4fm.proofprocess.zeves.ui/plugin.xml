@@ -10,5 +10,30 @@
             restorable="true">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="net.sourceforge.czt.eclipse.zeves.ui.ZEvesPerspective">
+         <viewShortcut
+               id="org.ai4fm.proofprocess.ui.PProcessView">
+         </viewShortcut>
+         <viewShortcut
+               id="org.ai4fm.proofprocess.ui.PProcessGraphView">
+         </viewShortcut>
+         <view
+               id="org.ai4fm.proofprocess.ui.PProcessView"
+               minimized="false"
+               relationship="stack"
+               relative="org.eclipse.ui.views.ContentOutline">
+         </view>
+         <view
+               id="org.ai4fm.proofprocess.ui.PProcessGraphView"
+               minimized="false"
+               relationship="stack"
+               relative="org.eclipse.ui.console.ConsoleView"
+               visible="false">
+         </view>
+      </perspectiveExtension>
+   </extension>
 
 </plugin>
