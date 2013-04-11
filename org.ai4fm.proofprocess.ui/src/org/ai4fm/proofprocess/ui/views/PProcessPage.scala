@@ -14,8 +14,10 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.{AdapterFactoryContentProvider, AdapterFactoryLabelProvider}
 import org.eclipse.jface.action.{GroupMarker, MenuManager}
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
+import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
 import org.eclipse.jface.viewers.{StructuredSelection, TreePath, TreeViewer}
 import org.eclipse.swt.SWT
+import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.widgets.Composite
 import org.eclipse.ui.{IViewPart, IWorkbenchActionConstants}
 import org.eclipse.ui.part.Page
@@ -51,10 +53,20 @@ class PProcessPage(viewPart: IViewPart,
     treeViewer.getTree.setMenu(menu)
     // register the menu with site to allow contributions
     getSite.registerContextMenu(viewPart.getViewSite.getId, mgr, treeViewer)
+
+    val resourceMgr = new LocalResourceManager(JFaceResources.getResources, treeViewer.getTree)
+    val overridingLabelProvider = new PProcessViewLabelProvider(resourceMgr)
     
-    
-    treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
-    treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
+    treeViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory))
+
+    // allow overriding image via overriding label provider
+    treeViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory) {
+      override def getImage(element: AnyRef): Image = {
+        val overrideImg = overridingLabelProvider.getImage(element)
+        
+        overrideImg getOrElse super.getImage(element)
+      }
+    })
 
     // register as global selection provider
     getSite().setSelectionProvider(treeViewer);
