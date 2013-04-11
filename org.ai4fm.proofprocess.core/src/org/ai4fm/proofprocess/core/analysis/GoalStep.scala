@@ -11,10 +11,10 @@ package org.ai4fm.proofprocess.core.analysis
  * 
  * @author Andrius Velykis
  */
-case class GoalStep[A, T](info: A,
-                          in: List[Proposition[T]],
-                          out: List[Proposition[T]])
+case class GoalStep[+A, +T](info: A,
+                            in: List[Proposition[T]],
+                            out: List[Proposition[T]])
 
-sealed trait Proposition[T]
-case class Assumption[T](assm: T) extends Proposition[T]
-case class Judgement[T](assms: List[T], goal: T) extends Proposition[T]
+sealed trait Proposition[+T]
+case class Assumption[+T](assm: T) extends Proposition[T]
+case class Judgement[+T](assms: List[T], goal: T) extends Proposition[T]
