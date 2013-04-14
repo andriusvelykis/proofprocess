@@ -32,25 +32,30 @@ object ResultParser {
     val traceTerms = inTrace(results)(traceGoalTerms)
     // find the first list of goal terms (with markups) from the results, if available
     val resultMarkupTerms = inResults(results)( (_, body) => resultGoalMarkup(body) )
-    
-    if (traceTerms.isDefined) {
 
-      // get the rendered term strings from the results
-      // note there can be less of them, so pad (fill) the list with empty renders to accommodate
-      val rendered = resultMarkupTerms.getOrElse(Nil).map(_._1)
-      val renderedFull = rendered.padTo(traceTerms.get.size, "")
-      
-      val renderTerms = renderedFull.zip(traceTerms.get)
-      val ppTerms = renderTerms.map(Function.tupled(isaTerm))
-      
-      Some(ppTerms)
-    } else if (resultMarkupTerms.isDefined) {
-      
-      val ppTerms = markupTerms(resultMarkupTerms.get)
-      
-      Some(ppTerms)
-    } else {
-      None
+    (traceTerms, resultMarkupTerms) match {
+
+      case (Some(traceTerms), Some(resultMarkupTerms)) => {
+        // require markup terms when getting trace terms (for rendering)
+
+        // get the rendered term strings from the results
+        // note there can be less of them, so pad (fill) the list with empty renders to accommodate
+        val rendered = resultMarkupTerms.map(_._1)
+        val renderedFull = rendered.padTo(traceTerms.size, "")
+        
+        val renderTerms = renderedFull.zip(traceTerms)
+        val ppTerms = renderTerms.map(Function.tupled(isaTerm))
+        
+        Some(ppTerms)
+      }
+
+      case (_, Some(resultMarkupTerms)) => {
+        val ppTerms = markupTerms(resultMarkupTerms)
+        
+        Some(ppTerms)
+      }
+
+      case _ => None
     }
   }
 
