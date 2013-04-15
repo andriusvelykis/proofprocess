@@ -171,24 +171,14 @@ object SnapshotReader {
     cmdState.resultValues.exists(ResultParser.isError)
 
 
-  // "picking this" both in `in` and `out`?
-  private val IN_ASSM_LABELS = Set("picking this:", "using this:")
-  private val OUT_ASSM_LABELS = Set("picking this:", "this:")
-  
-  private val ALL_ASSM_LABELS = IN_ASSM_LABELS ++ OUT_ASSM_LABELS
-
   private def withGoals(proofState: List[State]): List[StepResults] = {
 
     proofState flatMap (state => {
 
-      val assmTerms = ResultParser.labelledTerms(state,
-        label => ALL_ASSM_LABELS.contains(label.trim))
+      val factTerms = ResultParser.parseFacts(state)
 
-      // trim the keys (remove newlines, etc)
-      val trimmedAssms = assmTerms map { case (k, v) => (k.trim, v) }
-
-      val inAssms = collectMapped(trimmedAssms, IN_ASSM_LABELS)
-      val outAssms = collectMapped(trimmedAssms, OUT_ASSM_LABELS)
+      val inAssms = collectMapped(factTerms, ResultParser.IN_ASSM_LABELS)
+      val outAssms = collectMapped(factTerms, ResultParser.OUT_ASSM_LABELS)
       
       val isByCmd = "by" == state.command.name
 

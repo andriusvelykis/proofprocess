@@ -71,27 +71,76 @@ object ResultParser {
       { _ collect { case XML.Elem(Markup("subgoal_term", _), term) => Term_XML.Decode.term(term) } }
 
 
-  def labelledTerms(cmdState: State,
-                    labelMatch: String => Boolean): Map[String, List[EqTerm]] = {
-    
+  // "picking this" both in `in` and `out`?
+  val IN_ASSM_LABELS = Set("picking this:", "using this:")
+  val OUT_ASSM_LABELS = Set("picking this:", "this:")
+  
+  val ALL_ASSM_LABELS = IN_ASSM_LABELS ++ OUT_ASSM_LABELS
+
+
+  /**
+   * Parses the facts (e.g. assumptions) from the command proof state output.
+   * 
+   * If available, uses Isabelle term fact tracing (requires `proof.ML` patch).
+   */
+  def parseFacts(cmdState: State): Map[String, List[EqTerm]] = {
+
     val results = cmdState.resultValues.toStream
-    
-    val lTerms = inResults(results)( (_, body) => labelledTermMarkup(labelMatch)(body) ) 
-    
-    val labelledPPTerms = lTerms map ( lMap => lMap mapValues markupTerms )
-    
-    labelledPPTerms getOrElse Map()
+
+    // find the first list of fact terms from the trace, if available
+    val facts = inTrace(results)(parseFactsInTrace)
+
+    val markupFacts = inResults(results)( (_, body) => Some(labelledTermMarkup(ALL_ASSM_LABELS)(body)) )
+
+    val labelFacts = (facts, markupFacts) match {
+      case (Some(isaFactTerms), Some(labelMarkupFacts)) => {
+        // if Isabelle terms are available for the facts, use them together with
+        // the rendering and labels from markup.
+        val allFacts = labelMarkupFacts zip isaFactTerms
+        // unpack and create IsaTerms
+        allFacts.map { case ((label, (display, _)), term) => (label, isaTerm(display, term)) }
+      }
+
+      case (_, Some(labelMarkupFacts)) => {
+        // unpack and create MarkupTerms
+        labelMarkupFacts.map { case (label, (display, mTerm)) => (label, markupTerm(display, mTerm)) }
+      }
+
+      case _ => Stream.empty
+    }
+
+    // group by label
+    labelFacts.toList.groupBy (_._1).mapValues { _.map(_._2) }
   }
+
+
+  /**
+   * Parses fact terms from trace element.
+   * @return a list of terms if they were parsed or None if term information could not be parsed.
+   */
+  def parseFactsInTrace(trace: XML.Body): Option[List[Term]] = {
+    // find "fact_terms" elems and then decode each "fact_term" in them
+    val factGroups = trace collect
+      { case XML.Elem(Markup("fact_terms", _), factTerms) => factTerms } map
+      { _ collect { case XML.Elem(Markup("fact_term", _), term) => Term_XML.Decode.term(term) } }
+
+    if (factGroups.isEmpty) {
+      None
+    } else {
+      Some(factGroups.flatten)
+    }
+  }
+
 
   /**
    * Parses labelled terms (e.g. for "picking this" from structured proof) from result
    * element (writeln).
    *
-   * @return  a labelled list of pairs `(render, term)` for each label type, where the `render` is a
-   *          human-readable render of the term, `term` is the marked-up term XML element.
+   * @return  a stream of `(label, (render, term))` for all matching labels, where the `render` is
+   *          a human-readable render of the term, `term` is the marked-up term XML element.
    */
   def labelledTermMarkup(labelMatch: String => Boolean)
-                        (body: XML.Body): Option[Map[String, List[(String, XML.Elem)]]] = {
+                        (body: XML.Body): Stream[(String, (String, XML.Elem))] = {
 
     val labelledTerms = collectDepthFirst(body,
       {
@@ -101,17 +150,12 @@ object ResultParser {
           // group each term with its label
           terms map ((label, _))
         }
-      })
+      }).flatten
 
-    // group by label
-    val groupedTerms = labelledTerms.flatten groupBy (_._1)
+    // get the rendering of each term
+    val withRender = labelledTerms map { case (label, t) => (label, (render(t), t)) }
 
-    // drop the labels from values, and get the rendering of each term
-    val withRender = groupedTerms mapValues { lTerms =>
-      lTerms.toList map { case (_, t) => (render(t), t) }
-    }
-
-    Some(withRender)
+    withRender
   }
 
   def nestedMarkupTerms(body: XML.Body): Stream[XML.Elem] =
@@ -129,7 +173,7 @@ object ResultParser {
   object LabelledBlock {
     def unapply(elem: XML.Tree): Option[(String, XML.Body)] = elem match {
       // block with the first body element having text
-      case XML.Elem(Markup(Markup.BLOCK, _), XML.Text(text) :: rest) => Some((text, rest))
+      case XML.Elem(Markup(Markup.BLOCK, _), XML.Text(text) :: rest) => Some((text.trim, rest))
       case _ => None
     }
   }
