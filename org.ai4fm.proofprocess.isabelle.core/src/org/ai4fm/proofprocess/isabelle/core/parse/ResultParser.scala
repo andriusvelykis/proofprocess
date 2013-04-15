@@ -64,7 +64,7 @@ object ResultParser {
     val results = cmdState.resultValues.toStream
     
     // find the first list of goal terms from the trace, if available 
-    val traceTerms = inTrace(results)(traceGoalTerms)
+    val traceTerms = inTrace(results)(traceGoalTerms).headOption
     // find the first list of goal terms (with markups) from the results, if available
     val resultMarkupTerms = inResults(results)( (_, body) => resultGoalMarkup(body) )
 
@@ -123,7 +123,8 @@ object ResultParser {
     val results = cmdState.resultValues.toStream
 
     // find the first list of fact terms from the trace, if available
-    val facts = inTrace(results)(parseFactsInTrace)
+    val factsStream = inTrace(results)(parseFactsInTrace).flatten
+    val facts = if (factsStream.isEmpty) None else Some(factsStream.toList)
 
     val markupFacts = inResults(results)( (_, body) => Some(labelledTermMarkup(ALL_ASSM_LABELS)(body)) )
 
@@ -155,15 +156,9 @@ object ResultParser {
    */
   def parseFactsInTrace(trace: XML.Body): Option[List[Term]] = {
     // find "fact_terms" elems and then decode each "fact_term" in them
-    val factGroups = trace collect
+    trace collectFirst
       { case XML.Elem(Markup("fact_terms", _), factTerms) => factTerms } map
       { _ collect { case XML.Elem(Markup("fact_term", _), term) => Term_XML.Decode.term(term) } }
-
-    if (factGroups.isEmpty) {
-      None
-    } else {
-      Some(factGroups.flatten)
-    }
   }
 
 
@@ -261,14 +256,12 @@ object ResultParser {
     results.headOption
   }
   
-  def inTrace[A](body: TraversableOnce[XML.Tree])(lookup: XML.Body => Option[A]): Option[A] = {
+  def inTrace[A](body: TraversableOnce[XML.Tree])(lookup: XML.Body => Option[A]): Stream[A] = {
     
-    val results = body.toStream flatMap {
+    body.toStream flatMap {
       case Tracing(traceBody) => lookup(traceBody)
       case _ => None
     }
-    // single tracing only, so take the first one
-    results.headOption
   }
 
   /**
