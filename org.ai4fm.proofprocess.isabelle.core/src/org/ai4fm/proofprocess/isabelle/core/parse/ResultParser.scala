@@ -6,7 +6,7 @@ import org.ai4fm.proofprocess.isabelle.core.data.{EqIsaTerm, EqMarkupTerm}
 
 import isabelle.{Markup, Pretty}
 import isabelle.{Term_XML, XML}
-import isabelle.Command.State
+import isabelle.Command
 import isabelle.Term.Term
 
 
@@ -21,7 +21,7 @@ object ResultParser {
   /**
    * Parses command results, such as assumptions, goals, proof type from the command state.
    */
-  def parseCommandResults(commandState: State): Option[StepResults] = {
+  def parseCommandResults(commandState: Command.State): Option[StepResults] = {
 
     val factTerms = ResultParser.parseFacts(commandState)
 
@@ -59,7 +59,7 @@ object ResultParser {
     * display of goals. The XML structures are wrapped into MarkupTerm structures.
     * </p>
     */
-  def goalTerms(cmdState: State): Option[List[EqTerm]] = {
+  def goalTerms(cmdState: Command.State): Option[List[EqTerm]] = {
     
     val results = cmdState.resultValues.toStream
     
@@ -118,7 +118,7 @@ object ResultParser {
    * 
    * If available, uses Isabelle term fact tracing (requires `proof.ML` patch).
    */
-  def parseFacts(cmdState: State): Map[String, List[EqTerm]] = {
+  def parseFacts(cmdState: Command.State): Map[String, List[EqTerm]] = {
 
     val results = cmdState.resultValues.toStream
 
@@ -357,7 +357,7 @@ object ResultParser {
     val Prove, State, Chain = Value
   }
   
-  def stepProofType(cmdState: State): Option[StepProofType.StepProofType] = {
+  def stepProofType(cmdState: Command.State): Option[StepProofType.StepProofType] = {
 
     val results = cmdState.resultValues.toStream
     
@@ -383,7 +383,7 @@ object ResultParser {
 //    
 //  }
   
-  implicit class CommandValueState(state: State) {
+  implicit class CommandValueState(state: Command.State) {
     def resultValues: Iterator[XML.Tree] = state.results.entries map (_._2)
   }
   
@@ -392,7 +392,7 @@ object ResultParser {
   }
 
 
-  case class StepResults(state: State,
+  case class StepResults(state: Command.State,
                          stateType: StepProofType.StepProofType,
                          inAssms: List[EqTerm],
                          outAssms: List[EqTerm],
