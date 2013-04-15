@@ -21,7 +21,7 @@ object ResultParser {
   /**
    * Parses command results, such as assumptions, goals, proof type from the command state.
    */
-  def parseCommandResults(commandState: Command.State): Option[StepResults] = {
+  def parseCommandResults(commandState: Command.State): Option[CommandResults] = {
 
     val factTerms = ResultParser.parseFacts(commandState)
 
@@ -40,7 +40,7 @@ object ResultParser {
     val goals = if (isByCmd) Some(Nil) else ResultParser.goalTerms(commandState)
     
     // only produce results if step type is defined
-    stepType map ( StepResults(commandState, _, inAssms, outAssms, goals) )
+    stepType map ( CommandResults(commandState, _, inAssms, outAssms, goals) )
   }
   
   private def collectMapped[A, B](mapped: Map[A, List[B]], collect: Set[A]): List[B] = {
@@ -389,29 +389,6 @@ object ResultParser {
   
   implicit class MyIteratorOps[T](i: Iterator[T]) {
     def nextOption: Option[T] = if (i.hasNext) Some(i.next) else None
-  }
-
-
-  case class StepResults(state: Command.State,
-                         stateType: StepProofType.StepProofType,
-                         inAssms: List[EqTerm],
-                         outAssms: List[EqTerm],
-                         outGoals: Option[List[EqTerm]]) {
-    
-    lazy val inAssmProps = inAssms map (Assumption(_))
-    lazy val outAssmProps = outAssms map (Assumption(_))
-    
-    private def addInAssms(goal: Judgement[EqTerm]): Judgement[EqTerm] = {
-      val updAssms = (goal.assms ::: inAssms).distinct
-      goal.copy( assms = updAssms )
-    }
-
-    // convert each goal to a Judgement (assms + goal)
-    // also link explicit assumptions with out goals - add them to each out goal
-    lazy val outGoalProps = outGoals map { goals =>
-      goals map ResultParser.splitAssmsGoal map addInAssms
-    }
-    
   }
 
 }

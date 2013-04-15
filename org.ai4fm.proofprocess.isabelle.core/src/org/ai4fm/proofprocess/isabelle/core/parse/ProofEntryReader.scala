@@ -18,7 +18,6 @@ import org.ai4fm.proofprocess.core.analysis.{
 import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.isabelle.{IsabelleProofProcessFactory, IsabelleTrace}
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
-import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepResults
 
 import isabelle.Command.State
 
@@ -50,7 +49,7 @@ trait ProofEntryReader {
    */
   object NonEmptyProof {
 
-    def unapply(proofState: List[StepResults]): Option[(StepResults, List[StepResults])] =
+    def unapply(proofState: List[CommandResults]): Option[(CommandResults, List[CommandResults])] =
       proofState match {
         // Assume that a proof with just one command (e.g. "declaration") is too short
         // to be included in the ProofProcess. This way we only concern ourselves with proofs
@@ -69,7 +68,7 @@ trait ProofEntryReader {
   }
 
 
-  def readEntries(proofState: List[StepResults]): Option[(ParsedProof, ParseEntries)] =
+  def readEntries(proofState: List[CommandResults]): Option[(ParsedProof, ParseEntries)] =
     proofState match {
 
       // ensure we are analysing a non-empty proof here
@@ -80,8 +79,8 @@ trait ProofEntryReader {
     }
 
 
-  private def parseProofStructure(lemmaStep: StepResults,
-                                  proofSteps: List[StepResults]): (ParsedProof, ParseEntries) = {
+  private def parseProofStructure(lemmaStep: CommandResults,
+                                  proofSteps: List[CommandResults]): (ParsedProof, ParseEntries) = {
 
     val (proofGraph, entryMapping) = parseProofGraph(lemmaStep, proofSteps)
 
@@ -94,7 +93,7 @@ trait ProofEntryReader {
   }
 
 
-  private def parseProofGraph(initialStep: StepResults, proofSteps: List[StepResults])
+  private def parseProofGraph(initialStep: CommandResults, proofSteps: List[CommandResults])
       : (PPRootGraph[ProofEntry], ParseEntries) = {
 
     // create goal steps, which show how input goals are transformed to output goals
@@ -111,8 +110,8 @@ trait ProofEntryReader {
   }
 
 
-  private def createGoalSteps(initialStep: StepResults,
-                              proofSteps: List[StepResults]): List[GoalStep[State, EqTerm]] = {
+  private def createGoalSteps(initialStep: CommandResults,
+                              proofSteps: List[CommandResults]): List[GoalStep[State, EqTerm]] = {
 
     // make a list with ingoals-info-outgoals steps
     val inSteps = initialStep :: proofSteps
@@ -127,7 +126,7 @@ trait ProofEntryReader {
 
   
   // FIXME special support for fixing!
-  private def analyseGoalStep(prev: StepResults, current: StepResults)
+  private def analyseGoalStep(prev: CommandResults, current: CommandResults)
       : Option[GoalStep[State, EqTerm]] = (prev.stateType, current.stateType) match {
 
     // Skip Chain steps, since they are just links between assumptions and their use.

@@ -1,7 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
 import org.ai4fm.proofprocess.core.analysis.{Assumption, EqTerm, Judgement}
-import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.{CommandValueState, StepResults}
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
 
 import isabelle.Command
@@ -24,7 +24,7 @@ object SnapshotReader {
   private val PROOF_START_CMDS = Set("lemma", "theorem", "function", "primrec", "definition")
   
   case class ProofTextData(val name: Document.Node.Name, val documentText: String, syncPoint: Int)
-  case class ProofData(val proofState: List[StepResults], val textData: ProofTextData)
+  case class ProofData(val proofState: List[CommandResults], val textData: ProofTextData)
 
   def readProofs(docState: Document.State, changedCommands: Set[Command]): (List[ProofData], Map[Command, Int]) = {
     // filter the proof process commands to valid one 
