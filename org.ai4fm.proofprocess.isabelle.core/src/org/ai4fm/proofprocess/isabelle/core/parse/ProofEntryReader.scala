@@ -18,7 +18,7 @@ import org.ai4fm.proofprocess.core.analysis.{
 import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.isabelle.{IsabelleProofProcessFactory, IsabelleTrace}
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
-import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.StepResults
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepResults
 
 import isabelle.Command.State
 

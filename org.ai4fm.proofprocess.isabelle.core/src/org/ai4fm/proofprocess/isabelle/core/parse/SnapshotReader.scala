@@ -1,7 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
 import org.ai4fm.proofprocess.core.analysis.{Assumption, EqTerm, Judgement}
-import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.{CommandValueState, StepResults}
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
 
 import isabelle.Command
@@ -37,7 +37,7 @@ object SnapshotReader {
     val proofSpans = collectProofSpans(snapshots, validCmds)
     val proofStates = proofSpans.map(filterProofSpan)
 
-    val proofsWithGoals = proofStates.map(withGoals)
+    val proofsWithGoals = proofStates.map( _ flatMap ResultParser.parseCommandResults)
 
     // filter out empty proofs and return
     val proofs = proofsWithGoals.filterNot(_.isEmpty)
@@ -169,58 +169,5 @@ object SnapshotReader {
   def isError(cmdState: State) =
     // no errors in the results
     cmdState.resultValues.exists(ResultParser.isError)
-
-
-  private def withGoals(proofState: List[State]): List[StepResults] = {
-
-    proofState flatMap (state => {
-
-      val factTerms = ResultParser.parseFacts(state)
-
-      val inAssms = collectMapped(factTerms, ResultParser.IN_ASSM_LABELS)
-      val outAssms = collectMapped(factTerms, ResultParser.OUT_ASSM_LABELS)
-      
-      val isByCmd = "by" == state.command.name
-
-      val stepTypeOpt = ResultParser.stepProofType(state)
-      // last step 'by' has no output, so assume 'prove' step type
-      val stepType = stepTypeOpt orElse ( if (isByCmd) Some(Prove) else None ) 
-      
-      // workaround for "by" not outputting goals in "markup" term case
-      // also "by" when used in forward proof can go into "state" proof and output outstanding
-      // goals - so we replace it with "finished", i.e. empty list of goals
-      val goals = if (isByCmd) Some(Nil) else ResultParser.goalTerms(state)
-      
-      // only produce results if step type is defined
-      stepType map ( StepResults(state, _, inAssms, outAssms, goals) )
-    })
-  }
-  
-  private def collectMapped[A, B](mapped: Map[A, List[B]], collect: Set[A]): List[B] = {
-    val results = collect.toList flatMap mapped.get
-    results.flatten
-  }
-
-  case class StepResults(state: State,
-                         stateType: StepProofType,
-                         inAssms: List[EqTerm],
-                         outAssms: List[EqTerm],
-                         outGoals: Option[List[EqTerm]]) {
-    
-    lazy val inAssmProps = inAssms map (Assumption(_))
-    lazy val outAssmProps = outAssms map (Assumption(_))
-    
-    private def addInAssms(goal: Judgement[EqTerm]): Judgement[EqTerm] = {
-      val updAssms = (goal.assms ::: inAssms).distinct
-      goal.copy( assms = updAssms )
-    }
-
-    // convert each goal to a Judgement (assms + goal)
-    // also link explicit assumptions with out goals - add them to each out goal
-    lazy val outGoalProps = outGoals map { goals =>
-      goals map ResultParser.splitAssmsGoal map addInAssms
-    }
-    
-  }
 
 }

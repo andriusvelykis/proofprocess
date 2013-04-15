@@ -1,6 +1,6 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
-import org.ai4fm.proofprocess.core.analysis.{EqTerm, Judgement}
+import org.ai4fm.proofprocess.core.analysis.{Assumption, EqTerm, Judgement}
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 import org.ai4fm.proofprocess.isabelle.core.data.{EqIsaTerm, EqMarkupTerm}
 
@@ -10,10 +10,45 @@ import isabelle.Command.State
 import isabelle.Term.Term
 
 
+/**
+ * @author Andrius Velykis
+ */
 object ResultParser {
   
   val factory = IsabelleProofProcessFactory.eINSTANCE
+
+
+  /**
+   * Parses command results, such as assumptions, goals, proof type from the command state.
+   */
+  def parseCommandResults(commandState: State): Option[StepResults] = {
+
+    val factTerms = ResultParser.parseFacts(commandState)
+
+    val inAssms = collectMapped(factTerms, ResultParser.IN_ASSM_LABELS)
+    val outAssms = collectMapped(factTerms, ResultParser.OUT_ASSM_LABELS)
+    
+    val isByCmd = "by" == commandState.command.name
+
+    val stepTypeOpt = ResultParser.stepProofType(commandState)
+    // last step 'by' has no output, so assume 'prove' step type
+    val stepType = stepTypeOpt orElse ( if (isByCmd) Some(StepProofType.Prove) else None ) 
+    
+    // workaround for "by" not outputting goals in "markup" term case
+    // also "by" when used in forward proof can go into "state" proof and output outstanding
+    // goals - so we replace it with "finished", i.e. empty list of goals
+    val goals = if (isByCmd) Some(Nil) else ResultParser.goalTerms(commandState)
+    
+    // only produce results if step type is defined
+    stepType map ( StepResults(commandState, _, inAssms, outAssms, goals) )
+  }
   
+  private def collectMapped[A, B](mapped: Map[A, List[B]], collect: Set[A]): List[B] = {
+    val results = collect.toList flatMap mapped.get
+    results.flatten
+  }
+
+
   /** Retrieves goal terms from the command results.
     * <p>
     * It gives priority to the actual Isabelle terms passed via tracing mechanism. These currently
@@ -355,4 +390,28 @@ object ResultParser {
   implicit class MyIteratorOps[T](i: Iterator[T]) {
     def nextOption: Option[T] = if (i.hasNext) Some(i.next) else None
   }
+
+
+  case class StepResults(state: State,
+                         stateType: StepProofType.StepProofType,
+                         inAssms: List[EqTerm],
+                         outAssms: List[EqTerm],
+                         outGoals: Option[List[EqTerm]]) {
+    
+    lazy val inAssmProps = inAssms map (Assumption(_))
+    lazy val outAssmProps = outAssms map (Assumption(_))
+    
+    private def addInAssms(goal: Judgement[EqTerm]): Judgement[EqTerm] = {
+      val updAssms = (goal.assms ::: inAssms).distinct
+      goal.copy( assms = updAssms )
+    }
+
+    // convert each goal to a Judgement (assms + goal)
+    // also link explicit assumptions with out goals - add them to each out goal
+    lazy val outGoalProps = outGoals map { goals =>
+      goals map ResultParser.splitAssmsGoal map addInAssms
+    }
+    
+  }
+
 }

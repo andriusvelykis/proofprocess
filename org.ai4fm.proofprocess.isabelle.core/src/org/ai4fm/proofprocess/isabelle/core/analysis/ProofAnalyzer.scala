@@ -7,8 +7,9 @@ import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin.error
 import org.ai4fm.proofprocess.isabelle.core.parse.{ParsedProof, ProofEntryReader}
 import org.ai4fm.proofprocess.isabelle.core.parse.ProofEntryReader.ParseEntries
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepResults
 import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader
-import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.{ProofData, StepResults}
+import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.ProofData
 import org.ai4fm.proofprocess.project.core.{ProofHistoryManager, ProofManager}
 import org.ai4fm.proofprocess.project.core.util.{ProofProcessUtil, ResourceUtil}
 import org.eclipse.core.resources.IProject
