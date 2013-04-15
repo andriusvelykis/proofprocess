@@ -1,12 +1,11 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
-import org.ai4fm.proofprocess.core.analysis.{Assumption, EqTerm, Judgement}
+import org.ai4fm.proofprocess.core.analysis.{EqTerm, Judgement}
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
 import org.ai4fm.proofprocess.isabelle.core.data.{EqIsaTerm, EqMarkupTerm}
 
-import isabelle.{Markup, Pretty}
+import isabelle.{Command, Markup, Pretty}
 import isabelle.{Term_XML, XML}
-import isabelle.Command
 import isabelle.Term.Term
 
 
