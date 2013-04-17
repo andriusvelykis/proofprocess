@@ -22,6 +22,7 @@ object SnapshotReader {
   case class ProofTextData(val name: Document.Node.Name, val documentText: String, syncPoint: Int)
   case class ProofData(val proofState: List[CommandResults], val textData: ProofTextData)
 
+
   def readProofs(docState: Document.State, changedCommands: Set[Command]): (List[ProofData], Map[Command, Int]) = {
     // filter the proof process commands to valid one 
     val validCmds = changedCommands.filter(isValidProofCommand)
@@ -60,18 +61,20 @@ object SnapshotReader {
     
     (proofData, commandStarts)
   }
-  
 
-  private def collectSnapshots(docState: Document.State, cmds: Set[Command]): Map[Document.Node.Name, Snapshot] = {
+
+  private def collectSnapshots(docState: Document.State,
+                               cmds: Set[Command]): Map[Document.Node.Name, Snapshot] = {
 
     val cmdDocs = cmds.map(_.node_name)
     val snapshots = cmdDocs map { docState.snapshot(_, Nil) }
 
     cmdDocs.zip(snapshots).toMap
   }
-  
 
-  private def collectProofSpans(snapshots: Map[Document.Node.Name, Snapshot], commands: Set[Command]): List[List[Command.State]] = {
+
+  private def collectProofSpans(snapshots: Map[Document.Node.Name, Snapshot],
+                                commands: Set[Command]): List[List[Command.State]] = {
 
     if (commands.isEmpty) {
       Nil
@@ -102,13 +105,16 @@ object SnapshotReader {
       }
     }
   }
-  
 
-  /** Retrieves the proof state of the target command. The encompassing proof state can span
-    * both before and after the target command. We capture everything between two adjacent
-    * "proof starts", e.g. between start of the lemma, and start of the next lemma.
-    */
-  private def collectProofSpan(snapshot: Snapshot, commands: Linear_Set[Command], targetCommand: Command): List[Command.State] = {
+
+  /**
+   * Retrieves the proof state of the target command. The encompassing proof state can span
+   * both before and after the target command. We capture everything between two adjacent
+   * "proof starts", e.g. between start of the lemma, and start of the next lemma.
+   */
+  private def collectProofSpan(snapshot: Snapshot,
+                               commands: Linear_Set[Command],
+                               targetCommand: Command): List[Command.State] = {
 
     def commandState(cmd: Command) = snapshot.state.command_state(snapshot.version, cmd)
     
@@ -166,6 +172,7 @@ object SnapshotReader {
       Some(results)
     }
   }
+
 
   private def filterProofSpan(proofState: List[Command.State]): List[Command.State] = {
 
