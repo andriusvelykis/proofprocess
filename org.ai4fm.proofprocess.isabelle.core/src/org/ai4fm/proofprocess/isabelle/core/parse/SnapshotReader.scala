@@ -1,12 +1,8 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
-import org.ai4fm.proofprocess.core.analysis.{Assumption, EqTerm, Judgement}
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
-import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
 
-import isabelle.Command
-import isabelle.Document
-import isabelle.Document.Node.Name
+import isabelle.{Command, Document}
 import isabelle.Document.Snapshot
 import isabelle.Linear_Set
 import isabelle.Protocol.command_status
@@ -71,7 +67,7 @@ object SnapshotReader {
   }
   
 
-  private def collectSnapshots(docState: Document.State, cmds: Set[Command]): Map[Name, Snapshot] = {
+  private def collectSnapshots(docState: Document.State, cmds: Set[Command]): Map[Document.Node.Name, Snapshot] = {
 
     val cmdDocs = cmds.map(_.node_name)
     val snapshots = cmdDocs map { docState.snapshot(_, Nil) }
@@ -80,7 +76,7 @@ object SnapshotReader {
   }
   
 
-  private def collectProofSpans(snapshots: Map[Name, Snapshot], commands: Set[Command]): List[List[Command.State]] = {
+  private def collectProofSpans(snapshots: Map[Document.Node.Name, Snapshot], commands: Set[Command]): List[List[Command.State]] = {
 
     if (commands.isEmpty) {
       Nil
