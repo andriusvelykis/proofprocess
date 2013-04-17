@@ -1,10 +1,14 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
+import scala.annotation.tailrec
+
 import org.ai4fm.proofprocess.core.analysis.{EqTerm, Judgement}
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
+import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin.{error, log}
 import org.ai4fm.proofprocess.isabelle.core.data.{EqIsaTerm, EqMarkupTerm}
+import org.ai4fm.proofprocess.isabelle.core.logic.Logic
 
-import isabelle.{Command, Markup, Pretty}
+import isabelle.{Command, Markup, Pretty, Symbol}
 import isabelle.{Term_XML, XML}
 import isabelle.Term.Term
 
@@ -362,18 +366,163 @@ object ResultParser {
 //    val foundTypes = collectDepthFirst(body, { case ProofTypeBlock(typ) => typ } )
 //    foundTypes.headOption
 //  }
-  
-  
+
+
+  /**
+   * Splits the given term into assumptions (premises) and goal (conclusion).
+   * The result is wrapped into a Judgement.
+   * 
+   * This provides a "normal form" to match goals, e.g. sometimes the assumptions are inline with
+   * the goal, other times they are available as "this: ..." and listed separately.
+   */
   def splitAssmsGoal(term: EqTerm): Judgement[EqTerm] = term match {
-    // TODO implement splitting of term into assumptions + goal
-    case _ => Judgement(Nil, term)
+
+    case iTerm: EqIsaTerm => splitIsaTerm(iTerm)
+
+    // TODO implement better splitting for markup term - currently only splitting the display..
+    case mTerm: EqMarkupTerm => splitMarkupTerm(mTerm)
+
+    // catch-all just in case
+    case _ => {
+      log(error(msg = Some("Splitting unknown term: " + term)))
+      // for unknown term, assume it's all goal - don't split
+      Judgement(Nil, term)
+    }
   }
-  
-//  def splitAssmsGoalText(termStr: String): (List[String], String) = {
-//    
-//    // TODO shorthand? [[Assm; Assm2]]==>Goal -- or are these not in proof goals?
-//    
-//  }
+
+
+  /**
+   * Splits Isabelle term into assumptions + goal.
+   * 
+   * Uses logic operations to split on top-level meta implications. Also tries to split the display
+   * string accordingly.
+   */
+  private def splitIsaTerm(term: EqIsaTerm): Judgement[EqIsaTerm] = {
+
+    val assms = Logic.strip_imp_prems(term.isabelleTerm)
+    if (assms.isEmpty) {
+      // no assumptions to split - just use the original term
+      Judgement(Nil, term)
+    } else {
+      
+      val goal = Logic.strip_imp_concl(term.isabelleTerm)
+      val (assmStrs, goalStr) = splitDisplay(term.term.getDisplay)
+
+      // just in case - pad the list to the assumptions length
+      val fullAssmStrs = assmStrs.padTo(assms.length, "")
+      val isaAssms = assms zip fullAssmStrs
+
+      val isaGoal = (goal, goalStr)
+
+      // create new terms for split assumptions and goal
+      def createITerm(isaT: (Term, String)): EqIsaTerm = {
+        val (term, display) = isaT
+        val newTerm = factory.createIsaTerm
+        newTerm.setTerm(term)
+        newTerm.setDisplay(display)
+        new EqIsaTerm(newTerm)
+      }
+
+      val assmTerms = isaAssms map createITerm
+      val goalTerm = createITerm(isaGoal)
+
+      Judgement(assmTerms, goalTerm)
+    }
+  }
+
+
+  /**
+   * Splits a markup term into assumptions + goal.
+   * 
+   * Currently only splits the display string. Markup XML splitting is not supported at the moment.
+   */
+  private def splitMarkupTerm(term: EqMarkupTerm): Judgement[EqMarkupTerm] = {
+    val (assmStrs, goalStr) = splitDisplay(term.display)
+
+    if (assmStrs.isEmpty) {
+      // no assumptions to split - just use the original term
+      Judgement(Nil, term)
+    } else {
+      // create new terms for split assumptions and goal
+      def createMTerm(display: String): EqMarkupTerm = {
+        val newTerm = factory.createMarkupTerm
+        newTerm.setTerm(XML.Text("TODO split"))
+        newTerm.setDisplay(display)
+        new EqMarkupTerm(newTerm)
+      }
+      val assmTerms = assmStrs map createMTerm
+      val goalTerm = createMTerm(goalStr)
+      
+      Judgement(assmTerms, goalTerm)
+    }
+  }
+
+
+  // assume single-character for now
+  lazy val META_IMPLICATION = Symbol.decode("\\<Longrightarrow>").charAt(0)
+
+  /**
+   * Splits the given term display string on the top-level meta implications into
+   * assumptions + goal.
+   */
+  private def splitDisplay(termStr: String): (List[String], String) = {
+
+    // split on META_IMPLICATION, but only when it is not nested in parentheses -
+    // top level implication only
+    val (_, splitIndices) = (termStr.zipWithIndex foldLeft (0, Nil: List[Int])) {
+      case ((openParens, implInds), (ch, index)) =>
+        ch match {
+          case '(' => (openParens + 1, implInds)
+          case ')' => (openParens - 1, implInds)
+
+          // only split on implication when it is not nested in parentheses
+          case META_IMPLICATION if openParens == 0 => (openParens, index :: implInds)
+
+          // continue otherwise
+          case _ => (openParens, implInds)
+        }
+    }
+
+    if (splitIndices.isEmpty) {
+      // nothing to split on - everything is the goal
+      (Nil, termStr)
+    } else {
+
+      // split at indices (they are reversed, which is ok) and trim the inner spaces
+      val splits = splitAt(termStr, splitIndices, Nil).map(_.trim)
+
+      // the last is goal, the rest are assumptions
+      // also trim the values and remove lingering parentheses if needed
+      val goalStr = trimParens(splits.last)
+      val assmStrs = splits.init map trimParens
+
+      (assmStrs, goalStr)
+    }
+  }
+
+  @tailrec
+  private def splitAt(str: String,
+                      reverseInds: List[Int],
+                      acc: List[String]): List[String] = reverseInds match {
+    // collect the last remaining string
+    case Nil => str :: acc
+
+    // split the strings and continue on the part at the front
+    case index :: is => {
+      val (remaining, take) = (str.substring(0, index), str.substring(index + 1))
+      splitAt(remaining, is, take :: acc)
+    }
+  }
+
+  private def trimParens(str: String): String = {
+    val str1 = str.trim
+    val trimFirst = if (str1.startsWith("(")) str1.substring(1) else str
+    val trimLast = if (trimFirst.endsWith(")")) trimFirst.substring(0, trimFirst.length - 1)
+                   else trimFirst
+
+    trimLast.trim
+  }
+
   
   implicit class CommandValueState(state: Command.State) {
     def resultValues: Iterator[XML.Tree] = state.results.entries map (_._2)
