@@ -10,12 +10,12 @@ import org.ai4fm.proofprocess.isabelle.IsaTerm
 class EqIsaTerm(val term: IsaTerm) extends EqTerm {
 
   // cache for quick access to avoid EMF+CDO redirection
-  lazy val display = term.getDisplay
+  lazy val isabelleTerm = term.getTerm
 
   // assume immutable markup term
-  override lazy val hashCode = 41 * display.hashCode
+  override lazy val hashCode = 41 * isabelleTerm.hashCode
 
   override def equals(x: Any) = x match {
-    case eqT: EqIsaTerm => display == eqT.display
+    case eqT: EqIsaTerm => isabelleTerm == eqT.isabelleTerm
   }
 }
