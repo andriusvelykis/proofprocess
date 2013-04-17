@@ -5,7 +5,6 @@ import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
 
 import isabelle.Command
-import isabelle.Command.State
 import isabelle.Document
 import isabelle.Document.Node.Name
 import isabelle.Document.Snapshot
@@ -81,7 +80,7 @@ object SnapshotReader {
   }
   
 
-  private def collectProofSpans(snapshots: Map[Name, Snapshot], commands: Set[Command]): List[List[State]] = {
+  private def collectProofSpans(snapshots: Map[Name, Snapshot], commands: Set[Command]): List[List[Command.State]] = {
 
     if (commands.isEmpty) {
       Nil
@@ -118,7 +117,7 @@ object SnapshotReader {
     * both before and after the target command. We capture everything between two adjacent
     * "proof starts", e.g. between start of the lemma, and start of the next lemma.
     */
-  private def collectProofSpan(snapshot: Snapshot, commands: Linear_Set[Command], targetCommand: Command): List[State] = {
+  private def collectProofSpan(snapshot: Snapshot, commands: Linear_Set[Command], targetCommand: Command): List[Command.State] = {
 
     def commandState(cmd: Command) = snapshot.state.command_state(snapshot.version, cmd)
     
@@ -140,13 +139,13 @@ object SnapshotReader {
   }
   
 
-  private def isProofStart(cmdState: State): Boolean = {
+  private def isProofStart(cmdState: Command.State): Boolean = {
     // TODO add checks for "Step 0" in results as well, 
     // e.g. for proofs of "fun" definitions, etc.
     PROOF_START_CMDS.contains(cmdState.command.name);
   }
 
-  private def filterProofSpan(proofState: List[State]): List[State] = {
+  private def filterProofSpan(proofState: List[Command.State]): List[Command.State] = {
 
     // take valid proof commands only
     // do not continue after unfinished commands
@@ -163,10 +162,10 @@ object SnapshotReader {
     command.is_command
   }
 
-  def isFinished(cmdState: State) =
+  def isFinished(cmdState: Command.State) =
     command_status(cmdState.status).is_finished
   
-  def isError(cmdState: State) =
+  def isError(cmdState: Command.State) =
     // no errors in the results
     cmdState.resultValues.exists(ResultParser.isError)
 
