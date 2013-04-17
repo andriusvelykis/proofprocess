@@ -51,11 +51,8 @@ object SnapshotReader {
       val lastState = proof.last.state
       val lastCmd = lastState.command
       val doc = lastCmd.node_name
-      val snapshot = snapshots.get(doc).get
       
-      val command_starts = nodeCommandStarts(snapshot.node).toMap
-      
-      val lastCmdOffset = snapshot.node.command_start(lastCmd).get
+      val lastCmdOffset = commandStarts(lastCmd)
       val documentText = docTexts.get(doc).get
       
       ProofData(proof, ProofTextData(doc, documentText, lastCmdOffset + lastCmd.length))
