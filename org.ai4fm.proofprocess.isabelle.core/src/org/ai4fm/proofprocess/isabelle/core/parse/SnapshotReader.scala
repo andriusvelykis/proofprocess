@@ -1,5 +1,6 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
+import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin.{error, log}
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
 
 import isabelle.{Command, Document}
@@ -30,12 +31,9 @@ object SnapshotReader {
     val snapshots = collectSnapshots(docState, validCmds)
 
     val proofSpans = collectProofSpans(snapshots, validCmds)
-    val proofStates = proofSpans.map(filterProofSpan)
 
-    val proofsWithGoals = proofStates.map( _ flatMap ResultParser.parseCommandResults)
-
-    // filter out empty proofs and return
-    val proofs = proofsWithGoals.filterNot(_.isEmpty)
+    val proofSpanResults = proofSpans map readProof
+    val validResultSpans = proofSpanResults.flatten
     
     // Print the commands into a text document. Each command carries the original source from
     // the text document, so concatenating them back together produces the original document.
@@ -48,7 +46,7 @@ object SnapshotReader {
     // merge all maps (check for empty map case)
     val commandStarts = commandStartMaps reduceLeftOption (_ ++ _) getOrElse (Map.empty)
     
-    val proofData = proofs map { proof =>
+    val proofData = validResultSpans map { proof =>
       
       val lastState = proof.last.state
       val lastCmd = lastState.command
@@ -141,11 +139,41 @@ object SnapshotReader {
     PROOF_START_CMDS.contains(cmdState.command.name);
   }
 
+
+  /**
+   * Tries parsing valid proof results from the given proof span.
+   * 
+   * Returns a minimal valid/parsed proof as a list of command results,
+   * or None if the proof span is invalid (unfinished/erroneous/unparsable). 
+   */
+  private def readProof(proofSpan: List[Command.State]): Option[List[CommandResults]] = {
+    // take minimum valid proof span (e.g. no errors, must be finished)
+    val minValidSpan = filterProofSpan(proofSpan)
+
+    val commandResults = minValidSpan.toStream map ResultParser.parseCommandResults
+
+    // only take the first successfully parsed results (stop at parse problems)
+    val (validResults, invalidTail) = commandResults span (_.isDefined)
+
+    if (!invalidTail.isEmpty) {
+      // debugging - investigate..
+      log(error(msg = Some(
+        "Dropping unparsed command results for proof: " + proofSpan.headOption)))
+    }
+
+    if (validResults.isEmpty) {
+      None
+    } else {
+      // unpack
+      val results = validResults.flatten.toList 
+      Some(results)
+    }
+  }
+
   private def filterProofSpan(proofState: List[Command.State]): List[Command.State] = {
 
     // take valid proof commands only
-    // do not continue after unfinished commands
-    // ignore errors TODO count errors and do not include after certain threshold?
+    // do not continue after unfinished/erroneous commands
     val valid = proofState.filter(state => isValidProofCommand(state.command))
     val finished = valid.takeWhile(isFinished)
     val nonErr = finished.takeWhile(!isError(_))
