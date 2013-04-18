@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
-import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin.{error, log}
+import scala.collection.TraversableOnce
+
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
 
 import isabelle.{Command, Document}
@@ -22,6 +23,9 @@ object SnapshotReader {
   case class ProofTextData(val name: Document.Node.Name, val documentText: String, syncPoint: Int)
   case class ProofData(val proofState: List[CommandResults], val textData: ProofTextData)
 
+  /**
+   * Reads proofs of that include the given commands from the given snapshots state.
+   */
   def readProofs(docState: Document.State,
                  changedCommands: Set[Command]): (List[ProofData], Map[Command, Int]) = {
 
@@ -32,35 +36,19 @@ object SnapshotReader {
     // multiple snapshots for the commands arising from the same document
     val snapshots = collectSnapshots(docState, validCmds)
 
+    // also collect document text and command starts:
+    // needed for file history sync and command locations
+    val documents = snapshots mapValues collectDocumentInfo
+
     val proofSpans = collectProofSpans(snapshots, validCmds)
 
-    val proofSpanResults = proofSpans map readProof
+    val proofSpanResults = proofSpans map readProof(documents)
     val validResultSpans = proofSpanResults.flatten
-    
-    // Print the commands into a text document. Each command carries the original source from
-    // the text document, so concatenating them back together produces the original document.
-    val docTexts = snapshots.map({ case (doc, snapshot) => (doc, snapshot.node.commands.toList.map(_.source).mkString)})
-    
-    def nodeCommandStarts(node: Document.Node) = Document.Node.command_starts(node.commands.iterator)
-    
-    // create a map of all command starts - needed to indicate command location
-    val commandStartMaps = snapshots.values.map(s => nodeCommandStarts(s.node).toMap)
-    // merge all maps (check for empty map case)
-    val commandStarts = commandStartMaps reduceLeftOption (_ ++ _) getOrElse (Map.empty)
-    
-    val proofData = validResultSpans map { proof =>
-      
-      val lastState = proof.last.state
-      val lastCmd = lastState.command
-      val doc = lastCmd.node_name
-      
-      val lastCmdOffset = commandStarts(lastCmd)
-      val documentText = docTexts.get(doc).get
-      
-      ProofData(proof, ProofTextData(doc, documentText, lastCmdOffset + lastCmd.length))
-    }
-    
-    (proofData, commandStarts)
+
+    // merge all command starts into a single map
+    val allCommandStarts = mergeMaps(documents.values.iterator map (_.commandStarts))
+
+    (validResultSpans, allCommandStarts)
   }
 
 
@@ -146,11 +134,12 @@ object SnapshotReader {
 
   /**
    * Tries parsing valid proof results from the given proof span.
-   * 
+   *
    * Returns a minimal valid/parsed proof as a list of command results,
-   * or None if the proof span is invalid (unfinished/erroneous/unparsable). 
+   * or None if the proof span is invalid (unfinished/erroneous/unparsable).
    */
-  private def readProof(proofSpan: List[Command.State]): Option[List[CommandResults]] = {
+  private def readProof(documents: Map[Document.Node.Name, DocumentInfo])(
+                          proofSpan: List[Command.State]): Option[ProofData] = {
     // take minimum valid proof span (e.g. no errors, must be finished)
     val minValidSpan = filterProofSpan(proofSpan)
 
@@ -164,7 +153,19 @@ object SnapshotReader {
     } else {
       // unpack
       val results = validResults.flatten.toList 
-      Some(results)
+
+      // use the last command as a sync point
+      val lastCmd = results.last.state.command
+      val docName = lastCmd.node_name
+
+      // resolve document text
+      val docInfo = documents(docName)
+
+      // use the last command end as the sync point
+      val lastCmdOffset = docInfo.commandStarts(lastCmd)
+      val proofEnd = lastCmdOffset + lastCmd.length
+
+      Some(ProofData(results, ProofTextData(docName, docInfo.text, proofEnd)))
     }
   }
 
@@ -191,5 +192,27 @@ object SnapshotReader {
   def isError(cmdState: Command.State) =
     // no errors in the results
     cmdState.resultValues.exists(ResultParser.isError)
+
+
+  private def collectDocumentInfo(snapshot: Snapshot): DocumentInfo = {
+    // Print the commands into a text document. Each command carries the original source from
+    // the text document, so concatenating them back together produces the original document.
+    val snapshotCmds = snapshot.node.commands.iterator
+    val snapshotText = (snapshotCmds map (_.source)).mkString
+
+    // create a map of command starts (to indicate command location)
+    val cmdStartsIt = Document.Node.command_starts(snapshot.node.commands.iterator)
+    val cmdStarts = cmdStartsIt.toMap
+
+    DocumentInfo(snapshotText, cmdStarts)
+  }
+
+
+  /** Merges the given maps. Returns empty map if no maps are given. */
+  private def mergeMaps[K, V](maps: TraversableOnce[Map[K, V]]): Map[K, V] =
+    maps reduceLeftOption (_ ++ _) getOrElse Map.empty
+
+
+  private case class DocumentInfo(text: String, commandStarts: Map[Command, Int])
 
 }
