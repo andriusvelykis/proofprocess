@@ -26,21 +26,21 @@ object ResultParser {
    */
   def parseCommandResults(commandState: Command.State): Option[CommandResults] = {
 
-    val factTerms = ResultParser.parseFacts(commandState)
+    val factTerms = parseFacts(commandState)
 
-    val inAssms = collectMapped(factTerms, ResultParser.IN_ASSM_LABELS)
-    val outAssms = collectMapped(factTerms, ResultParser.OUT_ASSM_LABELS)
+    val inAssms = collectMapped(factTerms, IN_ASSM_LABELS)
+    val outAssms = collectMapped(factTerms, OUT_ASSM_LABELS)
     
     val isByCmd = "by" == commandState.command.name
 
-    val stepTypeOpt = ResultParser.stepProofType(commandState)
+    val stepTypeOpt = stepProofType(commandState)
     // last step 'by' has no output, so assume 'prove' step type
     val stepType = stepTypeOpt orElse ( if (isByCmd) Some(StepProofType.Prove) else None ) 
     
     // workaround for "by" not outputting goals in "markup" term case
     // also "by" when used in forward proof can go into "state" proof and output outstanding
     // goals - so we replace it with "finished", i.e. empty list of goals
-    val goals = if (isByCmd) Some(Nil) else ResultParser.goalTerms(commandState)
+    val goals = if (isByCmd) Some(Nil) else goalTerms(commandState)
     
     // only produce results if step type is defined
     stepType map ( CommandResults(commandState, _, inAssms, outAssms, goals) )
