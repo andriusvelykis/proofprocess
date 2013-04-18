@@ -43,12 +43,11 @@ object SnapshotReader {
     val proofSpans = collectProofSpans(snapshots, validCmds)
 
     val proofSpanResults = proofSpans map readProof(documents)
-    val validResultSpans = proofSpanResults.flatten
 
     // merge all command starts into a single map
     val allCommandStarts = mergeMaps(documents.values.iterator map (_.commandStarts))
 
-    (validResultSpans, allCommandStarts)
+    (proofSpanResults.flatten, allCommandStarts)
   }
 
 
