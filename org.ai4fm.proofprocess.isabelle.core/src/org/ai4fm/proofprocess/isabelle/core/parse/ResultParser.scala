@@ -191,6 +191,49 @@ object ResultParser {
     withRender
   }
 
+
+  def filterXML(markupP: String => Boolean, withText: Boolean, body: XML.Body): XML.Body = {
+    val foo = body map { e => filterXML(markupP, withText, e) }
+    // also merge text elements into one
+    mergeText(foo.flatten)
+  }
+
+  def filterXML(markupP: String => Boolean, withText: Boolean, elem: XML.Tree): Option[XML.Tree] =
+    elem match {
+      case text @ XML.Text(_) => if (withText) Some(text) else None
+
+      case e @ XML.Elem(m @ Markup(markup, _), body) => if (markupP(markup)) {
+        // match - do not unpack further
+        Some(e)
+      } else {
+        val filteredBody = filterXML(markupP, withText, body)
+
+        filteredBody match {
+          case Nil => None
+          // if a single element is the result of filter, drop the current one
+          case single :: Nil => Some(single)
+          // if multiple elements are kept, also keep the parent
+          case multiple => Some(XML.Elem(m, multiple))
+        }
+      }
+    }
+
+  /**
+   * Merges the adjacent XML text elements but keeps non-text elements intact
+   */
+  private def mergeText(body: XML.Body): XML.Body =
+    (body foldRight (Nil: XML.Body)) { case (e, b) =>
+      e match {
+        case t @ XML.Text(text) => b.headOption match {
+          case Some(XML.Text(next)) => XML.Text(text + next) :: b.tail
+          case _ => t :: b
+        }
+
+        case nonText => nonText :: b
+      }
+    }
+
+
   def nestedMarkupTerms(body: XML.Body): Stream[XML.Elem] =
     collectDepthFirst(body, { case MarkupTerm(termXml) => termXml })
 
