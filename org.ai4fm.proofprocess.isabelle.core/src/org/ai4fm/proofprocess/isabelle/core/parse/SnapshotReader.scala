@@ -22,8 +22,9 @@ object SnapshotReader {
   case class ProofTextData(val name: Document.Node.Name, val documentText: String, syncPoint: Int)
   case class ProofData(val proofState: List[CommandResults], val textData: ProofTextData)
 
+  def readProofs(docState: Document.State,
+                 changedCommands: Set[Command]): (List[ProofData], Map[Command, Int]) = {
 
-  def readProofs(docState: Document.State, changedCommands: Set[Command]): (List[ProofData], Map[Command, Int]) = {
     // filter the proof process commands to valid one 
     val validCmds = changedCommands.filter(isValidProofCommand)
 
