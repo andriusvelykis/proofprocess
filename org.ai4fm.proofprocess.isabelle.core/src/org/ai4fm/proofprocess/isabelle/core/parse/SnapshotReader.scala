@@ -156,13 +156,7 @@ object SnapshotReader {
     val commandResults = minValidSpan.toStream map ResultParser.parseCommandResults
 
     // only take the first successfully parsed results (stop at parse problems)
-    val (validResults, invalidTail) = commandResults span (_.isDefined)
-
-    if (!invalidTail.isEmpty) {
-      // debugging - investigate..
-      log(error(msg = Some(
-        "Dropping unparsed command results for proof: " + proofSpan.headOption)))
-    }
+    val validResults = commandResults takeWhile (_.isDefined)
 
     if (validResults.isEmpty) {
       None
