@@ -20,30 +20,50 @@ object ResultParser {
   
   val factory = IsabelleProofProcessFactory.eINSTANCE
 
+  /**
+   * A filter for interesting result markups
+   */
+  private val RESULT_MARKUPS = Set(Markup.TERM, Markup.SUBGOAL)
+
 
   /**
    * Parses command results, such as assumptions, goals, proof type from the command state.
    */
   def parseCommandResults(commandState: Command.State): Option[CommandResults] = {
 
-    val factTerms = parseFacts(commandState)
+    val allCmdResults = commandState.resultValues.toStream
 
-    val inAssms = collectMapped(factTerms, IN_ASSM_LABELS)
-    val outAssms = collectMapped(factTerms, OUT_ASSM_LABELS)
+    val proofOutputResults = commandStateResults(allCmdResults)
     
-    val isByCmd = "by" == commandState.command.name
+    proofOutputResults match {
+      case None => None
 
-    val stepTypeOpt = stepProofType(commandState)
-    // last step 'by' has no output, so assume 'prove' step type
-    val stepType = stepTypeOpt orElse ( if (isByCmd) Some(StepProofType.Prove) else None ) 
-    
-    // workaround for "by" not outputting goals in "markup" term case
-    // also "by" when used in forward proof can go into "state" proof and output outstanding
-    // goals - so we replace it with "finished", i.e. empty list of goals
-    val goals = if (isByCmd) Some(Nil) else goalTerms(commandState)
-    
-    // only produce results if step type is defined
-    stepType map ( CommandResults(commandState, _, inAssms, outAssms, goals) )
+      case Some(proofOutputFull) => {
+
+        // trim excess markup
+        val proofOutput = filterXML(RESULT_MARKUPS, true, proofOutputFull)
+
+        val factTerms = parseFacts(proofOutput, allCmdResults)
+
+        val inAssms = collectMapped(factTerms, IN_ASSM_LABELS)
+        val outAssms = collectMapped(factTerms, OUT_ASSM_LABELS)
+
+        val isByCmd = "by" == commandState.command.name
+
+        val stepTypeOpt = stepProofType(proofOutput)
+        // last step 'by' has no output, so assume 'prove' step type
+        val stepType = stepTypeOpt orElse ( if (isByCmd) Some(StepProofType.Prove) else None ) 
+
+        // workaround for "by" not outputting goals in "markup" term case
+        // also "by" when used in forward proof can go into "state" proof and output outstanding
+        // goals - so we replace it with "finished", i.e. empty list of goals
+        val goals = if (isByCmd) Some(Nil) else goalTerms(proofOutput, allCmdResults)
+
+        // only produce results if step type is defined
+        stepType map ( CommandResults(commandState, _, inAssms, outAssms, goals) )
+
+      }
+    }
   }
   
   private def collectMapped[A, B](mapped: Map[A, List[B]], collect: Set[A]): List[B] = {
@@ -52,24 +72,21 @@ object ResultParser {
   }
 
 
-  /** Retrieves goal terms from the command results.
-    * <p>
-    * It gives priority to the actual Isabelle terms passed via tracing mechanism. These currently
-    * require an extension to Isabelle to output them. Returns IsaTerms in that case.
-    * </p>
-    * <p>
-    * If the tracing terms are not available, uses the XML of marked-up terms used for user
-    * display of goals. The XML structures are wrapped into MarkupTerm structures.
-    * </p>
-    */
-  def goalTerms(cmdState: Command.State): Option[List[EqTerm]] = {
-    
-    val results = cmdState.resultValues.toStream
+  /**
+   * Retrieves goal terms from the command results.
+   *
+   * It gives priority to the actual Isabelle terms passed via tracing mechanism. These currently
+   * require an extension to Isabelle to output them. Returns IsaTerms in that case.
+   *
+   * If the tracing terms are not available, uses the XML of marked-up terms used for user
+   * display of goals. The XML structures are wrapped into MarkupTerm structures.
+   */
+  private def goalTerms(proofOutput: XML.Body, allResults: Stream[XML.Tree]): Option[List[EqTerm]] = {
     
     // find the first list of goal terms from the trace, if available 
-    val traceTerms = inTrace(results)(traceGoalTerms).headOption
-    // find the first list of goal terms (with markups) from the results, if available
-    val resultMarkupTerms = inResults(results)( (_, body) => resultGoalMarkup(body) )
+    val traceTerms = inTrace(allResults)(traceGoalTerms).headOption
+    // find the list goal terms (with markups) from the proof output, if available
+    val resultMarkupTerms = resultGoalMarkup(proofOutput)
 
     (traceTerms, resultMarkupTerms) match {
 
@@ -118,38 +135,39 @@ object ResultParser {
 
   /**
    * Parses the facts (e.g. assumptions) from the command proof state output.
-   * 
+   *
    * If available, uses Isabelle term fact tracing (requires `proof.ML` patch).
    */
-  def parseFacts(cmdState: Command.State): Map[String, List[EqTerm]] = {
+  private def parseFacts(proofOutput: XML.Body,
+                         allResults: Stream[XML.Tree]): Map[String, List[EqTerm]] = {
 
-    val results = cmdState.resultValues.toStream
+    val labelMarkupFacts = labelledTermMarkup(ALL_ASSM_LABELS)(proofOutput)
 
-    // find the first list of fact terms from the trace, if available
-    val factsStream = inTrace(results)(parseFactsInTrace).flatten
-    val facts = if (factsStream.isEmpty) None else Some(factsStream.toList)
+    if (labelMarkupFacts.isEmpty) {
+      // cannot parse any markup facts - no assumptions parsed at all then
+      // (we need display strings even for traced facts..)
+      Map()
+    } else {
 
-    val markupFacts = inResults(results)( (_, body) => Some(labelledTermMarkup(ALL_ASSM_LABELS)(body)) )
+      // try getting the facts from trace (if available)
+      val isaFactTerms = inTrace(allResults)(parseFactsInTrace).flatten
 
-    val labelFacts = (facts, markupFacts) match {
-      case (Some(isaFactTerms), Some(labelMarkupFacts)) => {
+      val labelFacts = if (!isaFactTerms.isEmpty) {
+
         // if Isabelle terms are available for the facts, use them together with
         // the rendering and labels from markup.
         val allFacts = labelMarkupFacts zip isaFactTerms
         // unpack and create IsaTerms
         allFacts.map { case ((label, (display, _)), term) => (label, isaTerm(display, term)) }
+
+      } else {
+        // just markup facts available: unpack and create MarkupTerms
+        labelMarkupFacts map { case (label, (display, mTerm)) => (label, markupTerm(display, mTerm)) }
       }
 
-      case (_, Some(labelMarkupFacts)) => {
-        // unpack and create MarkupTerms
-        labelMarkupFacts.map { case (label, (display, mTerm)) => (label, markupTerm(display, mTerm)) }
-      }
-
-      case _ => Stream.empty
+      // group by label
+      labelFacts.toList groupBy (_._1) mapValues { _.map(_._2) }
     }
-
-    // group by label
-    labelFacts.toList.groupBy (_._1).mapValues { _.map(_._2) }
   }
 
 
@@ -177,6 +195,7 @@ object ResultParser {
 
     val labelledTerms = collectDepthFirst(body,
       {
+        // labelled block is at sibling level to terms..
         case LabelledBlock(label, blockBody) if (labelMatch(label)) => {
           val terms = nestedMarkupTerms(blockBody)
 
@@ -248,11 +267,20 @@ object ResultParser {
 
   object LabelledBlock {
     def unapply(elem: XML.Tree): Option[(String, XML.Body)] = elem match {
-      // block with the first body element having text
-      case XML.Elem(Markup(Markup.BLOCK, _), XML.Text(text) :: rest) => Some((text.trim, rest))
+      // block with a Text element
+      case Block(XML.Text(text) :: body) => Some((text.trim, body))
       case _ => None
     }
   }
+
+
+  object Block {
+    def unapply(elem: XML.Tree): Option[XML.Body] = elem match {
+      case XML.Elem(Markup(Markup.BLOCK, _), body) => Some(body)
+      case _ => None
+    }
+  }
+
 
   object ProofTypeBlock {
     def unapply(elem: XML.Tree): Option[StepProofType.StepProofType] = elem match {
@@ -268,18 +296,10 @@ object ResultParser {
   }
 
   object ResultState {
-    def unapply(elem: XML.Tree): Option[(StepProofType.StepProofType, XML.Body)] =
+    def unapply(elem: XML.Tree): Option[XML.Body] =
       elem match {
         case XML.Elem(Markup(Markup.WRITELN_MESSAGE, _),
-          XML.Elem(Markup(Markup.STATE, _), stateBody) :: _) => {
-          val proofBlocks = collectDepthFirst(stateBody, {
-            case ProofTypeBlock(typ) => typ
-          })
-          // assume a single proof block per writeln message for proof type indication
-          // use the whole state for results lookup, since results are no longer nested
-          // under proof type declaration (since Isabelle 2013)
-          proofBlocks.headOption map (typ => (typ, stateBody))
-        }
+          XML.Elem(Markup(Markup.STATE, _), stateBody) :: _) => Some (stateBody)
         case _ => None
       }
   }
@@ -291,17 +311,16 @@ object ResultParser {
     }
   }
 
-  def inResults[A](body: Stream[XML.Tree])
-                  (lookup: (StepProofType.StepProofType, XML.Body) => Option[A]): Option[A] = {
-    
-    val results = body flatMap {
-      case ResultState(typ, stateBody) => lookup(typ, stateBody)
-      case _ => None
-    }
-    // single state only, so take the first one
-    results.headOption
-  }
-  
+
+  /**
+   * Retrieves the State command results.
+   * 
+   * Takes the first one matching, since a single state is expected. 
+   */
+  private def commandStateResults(cmdResults: Stream[XML.Tree]): Option[XML.Body] =
+    cmdResults collectFirst { case ResultState(stateBody) => stateBody }
+
+
   def inTrace[A](body: TraversableOnce[XML.Tree])(lookup: XML.Body => Option[A]): Stream[A] = {
     
     body.toStream flatMap {
@@ -396,19 +415,8 @@ object ResultParser {
     val Prove, State, Chain = Value
   }
   
-  def stepProofType(cmdState: Command.State): Option[StepProofType.StepProofType] = {
-
-    val results = cmdState.resultValues.toStream
-    
-    val typeOpt = inResults(results)( (typ, body) => Some(typ) )
-    typeOpt
-  }
-  
-//  private def proofTypeMarkup(body: XML.Body): Option[StepProofType.StepProofType] = {
-//
-//    val foundTypes = collectDepthFirst(body, { case ProofTypeBlock(typ) => typ } )
-//    foundTypes.headOption
-//  }
+  private def stepProofType(proofOutput: XML.Body): Option[StepProofType.StepProofType] = 
+    proofOutput collectFirst { case ProofTypeBlock(proofType) => proofType }
 
 
   /**
