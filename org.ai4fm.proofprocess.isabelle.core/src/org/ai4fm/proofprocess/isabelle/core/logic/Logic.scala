@@ -12,13 +12,11 @@ import isabelle.Term._
  */
 object Logic {
 
-  private val IMP = "HOL.Trueprop"
-
   /**
    * A1==>...An==>B  goes to  [A1,...,An], where B is not an implication
    */
   def strip_imp_prems(term: Term): List[Term] = term match {
-    case (App(Const(IMP, _), App(a, b))) => a :: strip_imp_prems(b)
+    case (App(App(Const("==>", _), a), b)) => a :: strip_imp_prems(b)
     case _ => Nil
   }
 
@@ -26,7 +24,7 @@ object Logic {
    * A1==>...An==>B  goes to B, where B is not an implication
    */
   def strip_imp_concl(term: Term): Term = term match {
-    case (App(Const(IMP, _), App(a, b))) => strip_imp_concl(b)
+    case (App(App(Const("==>", _), a), b)) => strip_imp_concl(b)
     case a => a
   }
 
