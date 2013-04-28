@@ -257,7 +257,7 @@ trait ProofEntryReader {
 
     // map the possible root nodes to the nearest `proof` command
     // to avoid them hanging from the root, e.g. for assumptions, etc.
-    val initialGraph = rootsToProof(steps, Nil)
+    val initialGraph = rootsToProof(steps, Nil, None)
     
     // try connecting the goal steps into a graph structure
     // depending on how goals/assumptions change
@@ -266,7 +266,8 @@ trait ProofEntryReader {
 
 
   private def rootsToProof(nodeSteps: List[GoalStep[ProofEntry, _]],
-                           proofNodes: List[ProofEntry]): PPGraph[ProofEntry] = nodeSteps match {
+                           proofNodes: List[ProofEntry],
+                           lastStep: Option[ProofEntry]): PPGraph[ProofEntry] = nodeSteps match {
 
     case Nil => Graph()
 
@@ -276,32 +277,41 @@ trait ProofEntryReader {
       val cmdName = commandName(entry)
 
       if ("proof" == cmdName) {
+        
         // add to stack, nothing to map
-        rootsToProof(ns, entry :: proofNodes)
+        val g = rootsToProof(ns, entry :: proofNodes, Some(entry))
+
+        if (step.in.isEmpty && lastStep.isDefined) {
+          // special handling for `proof -`
+          // map it to the previous step
+          g + (lastStep.get ~> entry)
+        } else {
+          g
+        }
 
       } else if ("fix" == cmdName) {
         // replace as the node to attach roots instead of `proof` - also link to `proof`
         // (assume `proof` is already there..)
         val proofNode = proofNodes.head
-        rootsToProof(ns, entry :: proofNodes.tail) + (proofNode ~> entry)
+        rootsToProof(ns, entry :: proofNodes.tail, Some(entry)) + (proofNode ~> entry)
 
       } else if ("qed" == cmdName) {
         // pop the stack, consumed a nested proof (also nothing to map)
-        rootsToProof(ns, proofNodes.tail)
+        rootsToProof(ns, proofNodes.tail, Some(entry))
 
       } else if (step.in.isEmpty) {
         // step will not be connected to anything, so link it to the nearest proof
         if (proofNodes.isEmpty) {
           // no proof nodes available, will be root - no mapping
-          rootsToProof(ns, proofNodes)
+          rootsToProof(ns, proofNodes, Some(entry))
         } else {
           val proofNode = proofNodes.head
-          rootsToProof(ns, proofNodes) + (proofNode ~> entry)
+          rootsToProof(ns, proofNodes, Some(entry)) + (proofNode ~> entry)
         }
       } else {
         // step will possibly have other connections, so no mapping
         // TODO review with multiple assumptions, some of which should be linked to proof?
-        rootsToProof(ns, proofNodes)
+        rootsToProof(ns, proofNodes, Some(entry))
       }
     }
   }
