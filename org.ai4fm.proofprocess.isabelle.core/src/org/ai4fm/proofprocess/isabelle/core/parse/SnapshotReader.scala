@@ -1,14 +1,10 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
-import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.core.analysis.{Assumption, Judgement}
-import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
-import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
+import scala.collection.TraversableOnce
 
-import isabelle.Command
-import isabelle.Command.State
-import isabelle.Document
-import isabelle.Document.Node.Name
+import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.CommandValueState
+
+import isabelle.{Command, Document}
 import isabelle.Document.Snapshot
 import isabelle.Linear_Set
 import isabelle.Protocol.command_status
@@ -25,9 +21,14 @@ object SnapshotReader {
   private val PROOF_START_CMDS = Set("lemma", "theorem", "function", "primrec", "definition")
   
   case class ProofTextData(val name: Document.Node.Name, val documentText: String, syncPoint: Int)
-  case class ProofData(val proofState: List[StepResults], val textData: ProofTextData)
+  case class ProofData(val proofState: List[CommandResults], val textData: ProofTextData)
 
-  def readProofs(docState: Document.State, changedCommands: Set[Command]): (List[ProofData], Map[Command, Int]) = {
+  /**
+   * Reads proofs of that include the given commands from the given snapshots state.
+   */
+  def readProofs(docState: Document.State,
+                 changedCommands: Set[Command]): (List[ProofData], Map[Command, Int]) = {
+
     // filter the proof process commands to valid one 
     val validCmds = changedCommands.filter(isValidProofCommand)
 
@@ -35,54 +36,33 @@ object SnapshotReader {
     // multiple snapshots for the commands arising from the same document
     val snapshots = collectSnapshots(docState, validCmds)
 
+    // also collect document text and command starts:
+    // needed for file history sync and command locations
+    val documents = snapshots mapValues collectDocumentInfo
+
     val proofSpans = collectProofSpans(snapshots, validCmds)
-    val proofStates = proofSpans.map(filterProofSpan)
 
-    val proofsWithGoals = proofStates.map(withGoals)
+    val proofSpanResults = proofSpans map readProof(documents)
 
-    // filter out empty proofs and return
-    val proofs = proofsWithGoals.filterNot(_.isEmpty)
-    
-    // Print the commands into a text document. Each command carries the original source from
-    // the text document, so concatenating them back together produces the original document.
-    val docTexts = snapshots.map({ case (doc, snapshot) => (doc, snapshot.node.commands.toList.map(_.source).mkString)})
-    
-    def nodeCommandStarts(node: Document.Node) = Document.Node.command_starts(node.commands.iterator)
-    
-    // create a map of all command starts - needed to indicate command location
-    val commandStartMaps = snapshots.values.map(s => nodeCommandStarts(s.node).toMap)
-    // merge all maps (check for empty map case)
-    val commandStarts = commandStartMaps reduceLeftOption (_ ++ _) getOrElse (Map.empty)
-    
-    val proofData = proofs map { proof =>
-      
-      val lastState = proof.last.state
-      val lastCmd = lastState.command
-      val doc = lastCmd.node_name
-      val snapshot = snapshots.get(doc).get
-      
-      val command_starts = nodeCommandStarts(snapshot.node).toMap
-      
-      val lastCmdOffset = snapshot.node.command_start(lastCmd).get
-      val documentText = docTexts.get(doc).get
-      
-      ProofData(proof, ProofTextData(doc, documentText, lastCmdOffset + lastCmd.length))
-    }
-    
-    (proofData, commandStarts)
+    // merge all command starts into a single map
+    val allCommandStarts = mergeMaps(documents.values.iterator map (_.commandStarts))
+
+    (proofSpanResults.flatten, allCommandStarts)
   }
-  
 
-  private def collectSnapshots(docState: Document.State, cmds: Set[Command]): Map[Name, Snapshot] = {
+
+  private def collectSnapshots(docState: Document.State,
+                               cmds: Set[Command]): Map[Document.Node.Name, Snapshot] = {
 
     val cmdDocs = cmds.map(_.node_name)
     val snapshots = cmdDocs map { docState.snapshot(_, Nil) }
 
     cmdDocs.zip(snapshots).toMap
   }
-  
 
-  private def collectProofSpans(snapshots: Map[Name, Snapshot], commands: Set[Command]): List[List[State]] = {
+
+  private def collectProofSpans(snapshots: Map[Document.Node.Name, Snapshot],
+                                commands: Set[Command]): List[List[Command.State]] = {
 
     if (commands.isEmpty) {
       Nil
@@ -113,13 +93,16 @@ object SnapshotReader {
       }
     }
   }
-  
 
-  /** Retrieves the proof state of the target command. The encompassing proof state can span
-    * both before and after the target command. We capture everything between two adjacent
-    * "proof starts", e.g. between start of the lemma, and start of the next lemma.
-    */
-  private def collectProofSpan(snapshot: Snapshot, commands: Linear_Set[Command], targetCommand: Command): List[State] = {
+
+  /**
+   * Retrieves the proof state of the target command. The encompassing proof state can span
+   * both before and after the target command. We capture everything between two adjacent
+   * "proof starts", e.g. between start of the lemma, and start of the next lemma.
+   */
+  private def collectProofSpan(snapshot: Snapshot,
+                               commands: Linear_Set[Command],
+                               targetCommand: Command): List[Command.State] = {
 
     def commandState(cmd: Command) = snapshot.state.command_state(snapshot.version, cmd)
     
@@ -141,17 +124,55 @@ object SnapshotReader {
   }
   
 
-  private def isProofStart(cmdState: State): Boolean = {
+  private def isProofStart(cmdState: Command.State): Boolean = {
     // TODO add checks for "Step 0" in results as well, 
     // e.g. for proofs of "fun" definitions, etc.
     PROOF_START_CMDS.contains(cmdState.command.name);
   }
 
-  private def filterProofSpan(proofState: List[State]): List[State] = {
+
+  /**
+   * Tries parsing valid proof results from the given proof span.
+   *
+   * Returns a minimal valid/parsed proof as a list of command results,
+   * or None if the proof span is invalid (unfinished/erroneous/unparsable).
+   */
+  private def readProof(documents: Map[Document.Node.Name, DocumentInfo])(
+                          proofSpan: List[Command.State]): Option[ProofData] = {
+    // take minimum valid proof span (e.g. no errors, must be finished)
+    val minValidSpan = filterProofSpan(proofSpan)
+
+    val commandResults = minValidSpan.toStream map ResultParser.parseCommandResults
+
+    // only take the first successfully parsed results (stop at parse problems)
+    val validResults = commandResults takeWhile (_.isDefined)
+
+    if (validResults.isEmpty) {
+      None
+    } else {
+      // unpack
+      val results = validResults.flatten.toList 
+
+      // use the last command as a sync point
+      val lastCmd = results.last.state.command
+      val docName = lastCmd.node_name
+
+      // resolve document text
+      val docInfo = documents(docName)
+
+      // use the last command end as the sync point
+      val lastCmdOffset = docInfo.commandStarts(lastCmd)
+      val proofEnd = lastCmdOffset + lastCmd.length
+
+      Some(ProofData(results, ProofTextData(docName, docInfo.text, proofEnd)))
+    }
+  }
+
+
+  private def filterProofSpan(proofState: List[Command.State]): List[Command.State] = {
 
     // take valid proof commands only
-    // do not continue after unfinished commands
-    // ignore errors TODO count errors and do not include after certain threshold?
+    // do not continue after unfinished/erroneous commands
     val valid = proofState.filter(state => isValidProofCommand(state.command))
     val finished = valid.takeWhile(isFinished)
     val nonErr = finished.takeWhile(!isError(_))
@@ -164,74 +185,33 @@ object SnapshotReader {
     command.is_command
   }
 
-  def isFinished(cmdState: State) =
+  def isFinished(cmdState: Command.State) =
     command_status(cmdState.status).is_finished
   
-  def isError(cmdState: State) =
+  def isError(cmdState: Command.State) =
     // no errors in the results
     cmdState.resultValues.exists(ResultParser.isError)
 
 
-  // "picking this" both in `in` and `out`?
-  private val IN_ASSM_LABELS = Set("picking this:", "using this:")
-  private val OUT_ASSM_LABELS = Set("picking this:", "this:")
-  
-  private val ALL_ASSM_LABELS = IN_ASSM_LABELS ++ OUT_ASSM_LABELS
+  private def collectDocumentInfo(snapshot: Snapshot): DocumentInfo = {
+    // Print the commands into a text document. Each command carries the original source from
+    // the text document, so concatenating them back together produces the original document.
+    val snapshotCmds = snapshot.node.commands.iterator
+    val snapshotText = (snapshotCmds map (_.source)).mkString
 
-  private def withGoals(proofState: List[State]): List[StepResults] = {
+    // create a map of command starts (to indicate command location)
+    val cmdStartsIt = Document.Node.command_starts(snapshot.node.commands.iterator)
+    val cmdStarts = cmdStartsIt.toMap
 
-    proofState flatMap (state => {
-
-      val assmTerms = ResultParser.labelledTerms(state,
-        label => ALL_ASSM_LABELS.contains(label.trim))
-
-      // trim the keys (remove newlines, etc)
-      val trimmedAssms = assmTerms map { case (k, v) => (k.trim, v) }
-
-      val inAssms = collectMapped(trimmedAssms, IN_ASSM_LABELS)
-      val outAssms = collectMapped(trimmedAssms, OUT_ASSM_LABELS)
-      
-      val isByCmd = "by" == state.command.name
-
-      val stepTypeOpt = ResultParser.stepProofType(state)
-      // last step 'by' has no output, so assume 'prove' step type
-      val stepType = stepTypeOpt orElse ( if (isByCmd) Some(Prove) else None ) 
-      
-      // workaround for "by" not outputting goals in "markup" term case
-      // also "by" when used in forward proof can go into "state" proof and output outstanding
-      // goals - so we replace it with "finished", i.e. empty list of goals
-      val goals = if (isByCmd) Some(Nil) else ResultParser.goalTerms(state)
-      
-      // only produce results if step type is defined
-      stepType map ( StepResults(state, _, inAssms, outAssms, goals) )
-    })
-  }
-  
-  private def collectMapped[A, B](mapped: Map[A, List[B]], collect: Set[A]): List[B] = {
-    val results = collect.toList flatMap mapped.get
-    results.flatten
+    DocumentInfo(snapshotText, cmdStarts)
   }
 
-  case class StepResults(state: State,
-                         stateType: StepProofType,
-                         inAssms: List[Term],
-                         outAssms: List[Term],
-                         outGoals: Option[List[Term]]) {
-    
-    lazy val inAssmProps = inAssms map (Assumption(_))
-    lazy val outAssmProps = outAssms map (Assumption(_))
-    
-    private def addInAssms(goal: Judgement[Term]): Judgement[Term] = {
-      val updAssms = (goal.assms ::: inAssms).distinct
-      goal.copy( assms = updAssms )
-    }
 
-    // convert each goal to a Judgement (assms + goal)
-    // also link explicit assumptions with out goals - add them to each out goal
-    lazy val outGoalProps = outGoals map { goals =>
-      goals map ResultParser.splitAssmsGoal map addInAssms
-    }
-    
-  }
+  /** Merges the given maps. Returns empty map if no maps are given. */
+  private def mergeMaps[K, V](maps: TraversableOnce[Map[K, V]]): Map[K, V] =
+    maps reduceLeftOption (_ ++ _) getOrElse Map.empty
+
+
+  private case class DocumentInfo(text: String, commandStarts: Map[Command, Int])
 
 }

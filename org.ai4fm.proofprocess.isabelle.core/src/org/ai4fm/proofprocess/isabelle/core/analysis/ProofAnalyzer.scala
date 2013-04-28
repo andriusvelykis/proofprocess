@@ -5,10 +5,10 @@ import org.ai4fm.proofprocess.core.analysis.ProofAttemptMatcher.{findCreateAttem
 import org.ai4fm.proofprocess.core.analysis.ProofEntryMatcher
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin.error
-import org.ai4fm.proofprocess.isabelle.core.parse.{ParsedProof, ProofEntryReader}
+import org.ai4fm.proofprocess.isabelle.core.parse.{CommandResults, ParsedProof, ProofEntryReader}
 import org.ai4fm.proofprocess.isabelle.core.parse.ProofEntryReader.ParseEntries
 import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader
-import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.{ProofData, StepResults}
+import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.ProofData
 import org.ai4fm.proofprocess.project.core.{ProofHistoryManager, ProofManager}
 import org.ai4fm.proofprocess.project.core.util.{ProofProcessUtil, ResourceUtil}
 import org.eclipse.core.resources.IProject
@@ -152,7 +152,7 @@ object ProofAnalyzer {
    * Parses proof entries and structure from the captured raw proof state.
    */
   private def parsePPEntries(proofStore: ProofStore,
-                             proofState: List[StepResults],
+                             proofState: List[CommandResults],
                              cmdLoc: State => Loc) = {
 
     val entryReader = new ProofEntryReader {

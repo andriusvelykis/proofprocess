@@ -4,29 +4,30 @@ import scala.collection.JavaConversions._
 
 import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph
-import scalax.collection.immutable.Graph
 
 import org.ai4fm.proofprocess.{Intent, Loc, ProofEntry, ProofProcessFactory, Term, Trace}
 import org.ai4fm.proofprocess.core.analysis.{
   Assumption,
+  Eq,
+  EqTerm,
   GoalGraphMatcher2,
   GoalStep,
   Judgement,
-  Proposition,
-  TermIndex
+  Proposition
 }
 import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.isabelle.{IsabelleProofProcessFactory, IsabelleTrace}
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
-import org.ai4fm.proofprocess.isabelle.core.parse.SnapshotReader.StepResults
 
-import isabelle.Command.State
+import isabelle.Command
 
 
 /**
   * @author Andrius Velykis 
   */
 trait ProofEntryReader {
+
+  private type GoalStepT = GoalStep[Command.State, EqTerm]
 
   import ProofEntryReader.ParseEntries
   
@@ -39,7 +40,7 @@ trait ProofEntryReader {
   
   def matchTerms(term1: Term, term2: Term): Boolean
   
-  def textLoc(cmd: State): Loc
+  def textLoc(cmd: Command.State): Loc
 
   
   /**
@@ -50,7 +51,7 @@ trait ProofEntryReader {
    */
   object NonEmptyProof {
 
-    def unapply(proofState: List[StepResults]): Option[(StepResults, List[StepResults])] =
+    def unapply(proofState: List[CommandResults]): Option[(CommandResults, List[CommandResults])] =
       proofState match {
         // Assume that a proof with just one command (e.g. "declaration") is too short
         // to be included in the ProofProcess. This way we only concern ourselves with proofs
@@ -69,7 +70,7 @@ trait ProofEntryReader {
   }
 
 
-  def readEntries(proofState: List[StepResults]): Option[(ParsedProof, ParseEntries)] =
+  def readEntries(proofState: List[CommandResults]): Option[(ParsedProof, ParseEntries)] =
     proofState match {
 
       // ensure we are analysing a non-empty proof here
@@ -80,8 +81,8 @@ trait ProofEntryReader {
     }
 
 
-  private def parseProofStructure(lemmaStep: StepResults,
-                                  proofSteps: List[StepResults]): (ParsedProof, ParseEntries) = {
+  private def parseProofStructure(lemmaStep: CommandResults,
+                                  proofSteps: List[CommandResults]): (ParsedProof, ParseEntries) = {
 
     val (proofGraph, entryMapping) = parseProofGraph(lemmaStep, proofSteps)
 
@@ -90,11 +91,11 @@ trait ProofEntryReader {
     val proofGoals = lemmaStep.outGoals getOrElse Nil
     val proofLabel = CommandParser.commandId(lemmaStep.state.command)
 
-    (ParsedProof(proofGoals, proofLabel, proofGraph), entryMapping) 
+    (ParsedProof(proofGoals map (_.term), proofLabel, proofGraph), entryMapping) 
   }
 
 
-  private def parseProofGraph(initialStep: StepResults, proofSteps: List[StepResults])
+  private def parseProofGraph(initialStep: CommandResults, proofSteps: List[CommandResults])
       : (PPRootGraph[ProofEntry], ParseEntries) = {
 
     // create goal steps, which show how input goals are transformed to output goals
@@ -105,68 +106,114 @@ trait ProofEntryReader {
     // use `#proofEntry()` method for transformation
     val (ppSteps, commandEntries) = mapToPPEntries(proofEntry)(goalSteps)
     
-    val proofGraph = stepsToGraph(indexTerms(ppSteps))
+    val proofGraph = stepsToGraph(ppSteps)
 
     (proofGraph, commandEntries)
   }
 
 
-  private def createGoalSteps(initialStep: StepResults,
-                              proofSteps: List[StepResults]): List[GoalStep[State, Term]] = {
+  private type StructAssmsStack = List[List[Assumption[EqTerm]]]
+
+  private def createGoalSteps(initialStep: CommandResults,
+                              proofSteps: List[CommandResults]): List[GoalStepT] = {
 
     // make a list with ingoals-info-outgoals steps
     val inSteps = initialStep :: proofSteps
     val inOutSteps = inSteps zip proofSteps
 
     // now try to to make sense of a GoalStep from the before-after results
-    val goalSteps = inOutSteps map Function.tupled(analyseGoalStep)
+    val goalSteps = inOutSteps map Function.tupled(analyseGoalStep0)
 
     // flatten - some of the goals may have been skipped (e.g. chain)
     goalSteps.flatten
   }
 
-  
-  // FIXME special support for fixing!
-  private def analyseGoalStep(prev: StepResults, current: StepResults)
-      : Option[GoalStep[State, Term]] = (prev.stateType, current.stateType) match {
+  private def analyseGoalStep0(prev: CommandResults,
+                               current: CommandResults): Option[GoalStepT] = {
 
-    // Skip Chain steps, since they are just links between assumptions and their use.
-    // The assumption introduction will be captured in the previous State steps, and their use
-    // will be captured in the next State.
-    case (_, Chain) => None
+    val goalStepOpt = analyseGoalStep(prev, current)
 
-    case (Prove, _) => {
-      // Two consecutive Prove steps, so check for goal diffs
-      //
-      // Note: it seems that only the previous needs to be `Prove`.
-      // Switching from `Prove` to e.g. `State` would require a `proof` command, which may affect
-      // the goal (`proof <command>` or keep it the same (e.g. `proof -`).
-      // For this reason, only check that the previous is proof
-      
-      val (unchanged, changedIn, changedOut) = 
-        diffs(prev.outGoalProps getOrElse Nil, current.outGoalProps getOrElse Nil)
-
-      // TODO narrow the changed goals further?
-      Some(GoalStep(current.state,
-                    current.inAssmProps ::: changedIn,
-                    current.outAssmProps ::: changedOut))
-      
-    }
-
-//    case (State, _) => // diff in assumptions - they may be repeating?
-    
-    case _ => {
-
-      // out assumptions or out goals are exclusive
-      val out = if (!current.outAssmProps.isEmpty) current.outAssmProps
-                else current.outGoalProps getOrElse Nil
-
-      Some(GoalStep(current.state,
-                    // TODO review: no "in" goals - previous was a state?
-                    current.inAssmProps,
-                    out))
-    }
+    // if possible, adapt for have/show commands
+    goalStepOpt flatMap (adaptForHaveShow(_, current))
   }
+
+  // FIXME special support for fixing!
+  private def analyseGoalStep(prev: CommandResults, current: CommandResults): Option[GoalStepT] =
+    (prev.stateType, current.stateType) match {
+
+      // Skip Chain steps, since they are just links between assumptions and their use.
+      // The assumption introduction will be captured in the previous State steps, and their use
+      // will be captured in the next State.
+      case (_, Chain) => None
+
+      case (Prove, _) => {
+        // Two consecutive Prove steps, so check for goal diffs
+        //
+        // Note: it seems that only the previous needs to be `Prove`.
+        // Switching from `Prove` to e.g. `State` would require a `proof` command, which may affect
+        // the goal (`proof <command>` or keep it the same (e.g. `proof -`).
+        // For this reason, only check that the previous is proof
+
+        val (unchanged, changedIn, changedOut) =
+          diffs(prev.outGoalProps getOrElse Nil, current.outGoalProps getOrElse Nil)
+
+        // TODO narrow the changed goals further?
+        Some(GoalStep(current.state,
+          current.inAssmProps ::: changedIn,
+          current.outAssmProps ::: changedOut))
+
+      }
+
+//      case (State, _) => // diff in assumptions - they may be repeating?
+
+      case _ => {
+
+        // out assumptions or out goals are exclusive
+        val out = if (!current.outAssmProps.isEmpty) current.outAssmProps
+        else current.outGoalProps getOrElse Nil
+
+        Some(GoalStep(current.state,
+          // TODO review: no "in" goals - previous was a state?
+          current.inAssmProps,
+          out))
+      }
+    }
+
+  /**
+   * Additional analysis checks to accommodate have/show commands in structured proof:
+   * 
+   * -  Final steps of such have/show proof are dropped if possible
+   * -  "have ..." commands also introduce the assumption, not just an outstanding goal
+   *    (note that this assumption technically is not available for the `have` proof itself)
+   */
+  private def adaptForHaveShow(goalStep: GoalStepT, current: CommandResults): Option[GoalStepT] =
+    if (current.structFinish.isDefined) {
+      // if this is a "structured proof finish step", i.e. the step that completes
+      // a "have ..." or "show ...", drop it (or clear its out-goals)
+
+      if (ResultParser.isByCmd(current.state)) {
+        // keep the by cmd analysis.. but remove all out-results
+        val updStep = goalStep.copy(out = Nil)
+        Some(updStep)
+      } else {
+        // drop the struct finish command (normally either "done" or "qed")
+        // but keep the updated stack
+        None
+      }
+
+    } else if (ResultParser.isHaveCmd(current.state)) {
+      // for "have ..." commands, the goal also becomes an out-assumption
+      // (it introduces new assumptions)
+
+      // wrap each out-goal into an Assumption and add to the goal step output
+      val goalsAsAssms = current.outGoals map (goals => goals map (Assumption(_))) getOrElse Nil
+      val updStep = goalStep.copy(out = goalsAsAssms ::: goalStep.out)
+      Some(updStep)
+
+    } else {
+      // nothing else to adapt
+      Some(goalStep)
+    }
   
   
   private def diffs[A](l1: List[A], l2: List[A]): (List[A], List[A], List[A]) = {
@@ -181,12 +228,12 @@ trait ProofEntryReader {
   /**
    * Creates ProofProcess ProofEntry data structures for each Isabelle Command state (each step).
    *
-   * The ProofEntry is then used within each goal step, while the mapping State -> ProofEntry
+   * The ProofEntry is then used within each goal step, while the mapping Command.State -> ProofEntry
    * is also kept (for activity logging).
    */
-  private def mapToPPEntries(transform: GoalStep[State, Term] => ProofEntry)(
-                               steps: List[GoalStep[State, Term]])
-      : (List[GoalStep[ProofEntry, Term]], ParseEntries) = {
+  private def mapToPPEntries[T <: Eq](transform: GoalStep[Command.State, T] => ProofEntry)(
+                                        steps: List[GoalStep[Command.State, T]])
+      : (List[GoalStep[ProofEntry, T]], ParseEntries) = {
 
     // create ProofEntry elements for each step
     val ppMapping = steps.map { s => (s, transform(s)) }
@@ -202,30 +249,15 @@ trait ProofEntryReader {
 
 
   /**
-   * Indexes terms in goal steps:
-   * performs term matching and assigns the same index to matching terms.
-   * 
-   * This allows performing the matching upfront and use `==` on goals afterwards to compare.
-   * 
-   * Uses `#matchTerms` method to perform term matching.
-   */
-  private def indexTerms[A](steps: List[GoalStep[A, Term]]): List[GoalStep[A, Int]] = {
-    val (_, indexedSteps) = TermIndex.indexedGoalSteps(matchTerms)(steps)
-    indexedSteps
-  }
-  
-
-  /**
    * Tries mapping the goal step sequence to a Graph structure,
    * depending on how goals/assumptions change.
-   * 
-   * The goal type `G` must support `==` for goal matching!
    */
-  private def stepsToGraph[G](steps: List[GoalStep[ProofEntry, G]]): PPRootGraph[ProofEntry] = {
+  private def stepsToGraph[G <: Eq](steps: List[GoalStep[ProofEntry, G]])
+      : PPRootGraph[ProofEntry] = {
 
     // map the possible root nodes to the nearest `proof` command
     // to avoid them hanging from the root, e.g. for assumptions, etc.
-    val initialGraph = rootsToProof(steps, Nil)
+    val initialGraph = rootsToProof(steps, Nil, None)
     
     // try connecting the goal steps into a graph structure
     // depending on how goals/assumptions change
@@ -234,7 +266,8 @@ trait ProofEntryReader {
 
 
   private def rootsToProof(nodeSteps: List[GoalStep[ProofEntry, _]],
-                           proofNodes: List[ProofEntry]): PPGraph[ProofEntry] = nodeSteps match {
+                           proofNodes: List[ProofEntry],
+                           lastStep: Option[ProofEntry]): PPGraph[ProofEntry] = nodeSteps match {
 
     case Nil => Graph()
 
@@ -244,26 +277,41 @@ trait ProofEntryReader {
       val cmdName = commandName(entry)
 
       if ("proof" == cmdName) {
+        
         // add to stack, nothing to map
-        rootsToProof(ns, entry :: proofNodes)
+        val g = rootsToProof(ns, entry :: proofNodes, Some(entry))
+
+        if (step.in.isEmpty && lastStep.isDefined) {
+          // special handling for `proof -`
+          // map it to the previous step
+          g + (lastStep.get ~> entry)
+        } else {
+          g
+        }
+
+      } else if ("fix" == cmdName) {
+        // replace as the node to attach roots instead of `proof` - also link to `proof`
+        // (assume `proof` is already there..)
+        val proofNode = proofNodes.head
+        rootsToProof(ns, entry :: proofNodes.tail, Some(entry)) + (proofNode ~> entry)
 
       } else if ("qed" == cmdName) {
         // pop the stack, consumed a nested proof (also nothing to map)
-        rootsToProof(ns, proofNodes.tail)
+        rootsToProof(ns, proofNodes.tail, Some(entry))
 
       } else if (step.in.isEmpty) {
         // step will not be connected to anything, so link it to the nearest proof
         if (proofNodes.isEmpty) {
           // no proof nodes available, will be root - no mapping
-          rootsToProof(ns, proofNodes)
+          rootsToProof(ns, proofNodes, Some(entry))
         } else {
           val proofNode = proofNodes.head
-          rootsToProof(ns, proofNodes) + (proofNode ~> entry)
+          rootsToProof(ns, proofNodes, Some(entry)) + (proofNode ~> entry)
         }
       } else {
         // step will possibly have other connections, so no mapping
         // TODO review with multiple assumptions, some of which should be linked to proof?
-        rootsToProof(ns, proofNodes)
+        rootsToProof(ns, proofNodes, Some(entry))
       }
     }
   }
@@ -272,31 +320,31 @@ trait ProofEntryReader {
     entry.getProofStep.getTrace.asInstanceOf[IsabelleTrace].getCommand.getName
   
   
-  private def propsToTerms(props: List[Proposition[Term]]): List[Term] =
+  private def propsToTerms(props: List[Proposition[EqTerm]]): List[Term] =
     // note that terms are cloned when put into Assumption/Judgement terms
     // since they cannot be shared here
     props map (_ match {
       case Assumption(t) => {
         val assmTerm = isaFactory.createAssumptionTerm
-        assmTerm.setTerm(cloneTerm(t))
+        assmTerm.setTerm(cloneTerm(t.term))
         assmTerm
       }
       case Judgement(assms, goal) => {
         val jTerm = isaFactory.createJudgementTerm
-        jTerm.getAssms.addAll(assms map cloneTerm)
-        jTerm.setGoal(cloneTerm(goal))
+        jTerm.getAssms.addAll(assms map (_.term) map cloneTerm)
+        jTerm.setGoal(cloneTerm(goal.term))
         jTerm
       }
     })
   
-  private def proofEntry(proofStep: GoalStep[State, Term]): ProofEntry = {
+  private def proofEntry(proofStep: GoalStepT): ProofEntry = {
     
     val cmdState = proofStep.info
     val inGoals = propsToTerms(proofStep.in)
     val outGoals = propsToTerms(proofStep.out)
 
     val info = factory.createProofInfo
-    info.setNarrative(cmdState.command.source)
+    info.setNarrative(cmdState.command.source.trim)
 
     info.setIntent(stepIntent)
 
@@ -320,7 +368,7 @@ trait ProofEntryReader {
     entry
   }
 
-  private def proofStepTrace(cmdState: State): Trace = {
+  private def proofStepTrace(cmdState: Command.State): Trace = {
 
     val trace = isaFactory.createIsabelleTrace()
 
@@ -338,7 +386,7 @@ trait ProofEntryReader {
 
 object ProofEntryReader {
 
-  type ParseEntries = Map[State, ProofEntry]
+  type ParseEntries = Map[Command.State, ProofEntry]
 
 }
 

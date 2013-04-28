@@ -15,19 +15,19 @@ import scalax.collection.GraphEdge.DiEdge
  */
 object GoalGraphMatcher2 {
   
-  private case class LinkContext[N, T](
+  private case class LinkContext[N, T <: Eq](
       graph: PPGraph[N],
       props: Map[Proposition[T], N])
 
 
-  def goalGraph[N, T](proofSteps: List[GoalStep[N, T]])
-                     (implicit nodeManifest: Manifest[N]): PPRootGraph[N] =
+  def goalGraph[N, T <: Eq](proofSteps: List[GoalStep[N, T]])
+                           (implicit nodeManifest: Manifest[N]): PPRootGraph[N] =
     goalGraph(proofSteps, Graph())
 
 
   // cannot set initial to default being empty graph, because the manifest is somehow not available
-  def goalGraph[N, T](proofSteps: List[GoalStep[N, T]], initial: PPGraph[N])
-                     (implicit nodeManifest: Manifest[N]): PPRootGraph[N] = {
+  def goalGraph[N, T <: Eq](proofSteps: List[GoalStep[N, T]], initial: PPGraph[N])
+                           (implicit nodeManifest: Manifest[N]): PPRootGraph[N] = {
     
     // now go through the proof steps from the start
     // and link each proof step with its calculated parent
@@ -41,9 +41,9 @@ object GoalGraphMatcher2 {
     PPRootGraph(graph, roots)
   }
 
-
-  private def linkStep[N, T](context: LinkContext[N, T],
-                             step: GoalStep[N, T]): LinkContext[N, T] = {
+  
+  private def linkStep[N, T <: Eq](context: LinkContext[N, T],
+                                   step: GoalStep[N, T]): LinkContext[N, T] = {
     
     val stepNode = step.info
     
