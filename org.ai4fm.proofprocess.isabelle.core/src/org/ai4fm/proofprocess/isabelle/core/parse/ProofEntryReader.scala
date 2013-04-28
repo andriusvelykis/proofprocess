@@ -279,6 +279,12 @@ trait ProofEntryReader {
         // add to stack, nothing to map
         rootsToProof(ns, entry :: proofNodes)
 
+      } else if ("fix" == cmdName) {
+        // replace as the node to attach roots instead of `proof` - also link to `proof`
+        // (assume `proof` is already there..)
+        val proofNode = proofNodes.head
+        rootsToProof(ns, entry :: proofNodes.tail) + (proofNode ~> entry)
+
       } else if ("qed" == cmdName) {
         // pop the stack, consumed a nested proof (also nothing to map)
         rootsToProof(ns, proofNodes.tail)
