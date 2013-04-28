@@ -344,7 +344,7 @@ trait ProofEntryReader {
     val outGoals = propsToTerms(proofStep.out)
 
     val info = factory.createProofInfo
-    info.setNarrative(cmdState.command.source)
+    info.setNarrative(cmdState.command.source.trim)
 
     info.setIntent(stepIntent)
 
