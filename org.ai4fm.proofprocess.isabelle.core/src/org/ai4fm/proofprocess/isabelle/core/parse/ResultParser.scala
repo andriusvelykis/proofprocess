@@ -34,12 +34,20 @@ object ResultParser {
    */
   def parseCommandResults(commandState: Command.State): Option[CommandResults] = {
 
+    val byCmd = isByCmd(commandState)
+
     val allCmdResults = commandState.resultValues.toStream
 
     val allOutputResults = commandStateResults(allCmdResults)
 
     if (allOutputResults.isEmpty) {
-      None
+      // note that simple `by` may be without any results at all, so check for that
+      if (byCmd) {
+        // standard empty results (Prove type)
+        Some(CommandResults(commandState, StepProofType.Prove, Nil, Nil, Some(Nil), None))
+      } else {
+        None
+      }
     } else {
       
       // trim excess markup
@@ -52,8 +60,6 @@ object ResultParser {
 
       val inAssms = collectMapped(factTerms, IN_ASSM_LABELS)
       val outAssms = collectMapped(factTerms, OUT_ASSM_LABELS)
-
-      val byCmd = isByCmd(commandState)
 
       val stepTypeOpt = stepProofType(proofOutput)
       // last step 'by' has no output, so assume 'prove' step type
