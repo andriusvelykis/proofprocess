@@ -19,7 +19,7 @@ import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 import org.ai4fm.proofprocess.isabelle.{IsabelleProofProcessFactory, IsabelleTrace}
 import org.ai4fm.proofprocess.isabelle.core.parse.ResultParser.StepProofType._
 
-import isabelle.Command.State
+import isabelle.Command
 
 
 /**
@@ -38,7 +38,7 @@ trait ProofEntryReader {
   
   def matchTerms(term1: Term, term2: Term): Boolean
   
-  def textLoc(cmd: State): Loc
+  def textLoc(cmd: Command.State): Loc
 
   
   /**
@@ -110,24 +110,75 @@ trait ProofEntryReader {
   }
 
 
+  private type StructAssmsStack = List[List[Assumption[EqTerm]]]
+
   private def createGoalSteps(initialStep: CommandResults,
-                              proofSteps: List[CommandResults]): List[GoalStep[State, EqTerm]] = {
+                              proofSteps: List[CommandResults]): List[GoalStep[Command.State, EqTerm]] = {
 
     // make a list with ingoals-info-outgoals steps
     val inSteps = initialStep :: proofSteps
     val inOutSteps = inSteps zip proofSteps
 
+    val nilSteps: List[Option[GoalStep[Command.State, EqTerm]]] = Nil
+    val nilAssmsStack: StructAssmsStack = Nil
+
     // now try to to make sense of a GoalStep from the before-after results
-    val goalSteps = inOutSteps map Function.tupled(analyseGoalStep)
+    val (goalSteps, _) = (inOutSteps foldRight (nilSteps, nilAssmsStack)) {
+      case ((prev, current), (acc, structFinishStack)) => {
+        val (step, sfStack) = analyseGoalStep0(prev, current, structFinishStack)
+        (step :: acc, sfStack)
+      }
+    }
 
     // flatten - some of the goals may have been skipped (e.g. chain)
     goalSteps.flatten
   }
 
-  
+
+  private def analyseGoalStep0(prev: CommandResults,
+      current: CommandResults,
+      structFinishStack: StructAssmsStack)
+      : (Option[GoalStep[Command.State, EqTerm]], StructAssmsStack) = {
+
+    val isStructFinish = current.structFinish.isDefined
+    val structFinishAssms = if (isStructFinish) current.outAssmProps else Nil
+
+    val goalStep = analyseGoalStep(prev, current)
+
+    if (isStructFinish) {
+      
+      val newStructFinish = structFinishAssms :: structFinishStack
+      
+      if (ResultParser.isByCmd(current.state)) {
+        // keep the by cmd analysis.. but remove all out-results
+        (goalStep map (_.copy(out = Nil)), newStructFinish)
+      } else {
+        // drop the struct finish command (normally either "done" or "qed")
+        // but keep the updated stack
+        (None, newStructFinish)
+      }
+    } else (prev.stateType, current.stateType) match {
+
+      // if it is a switch to Prove step, consume pending struct finish (if available)..
+      // this step is the declaration of "have ..." or "show ..."
+      case (Chain, Prove) | (State, Prove) => structFinishStack match {
+
+        case (headAssms :: restStack) => {
+          // add the head assumptions to the goal step outputs
+          val newGoalStep = goalStep map (s => s.copy(out = headAssms ::: s.out))
+          (newGoalStep, restStack)
+        }
+
+        case Nil => (goalStep, Nil)
+      }
+      case _ => (goalStep, structFinishStack)
+    }
+  }
+
+
   // FIXME special support for fixing!
   private def analyseGoalStep(prev: CommandResults, current: CommandResults)
-      : Option[GoalStep[State, EqTerm]] = (prev.stateType, current.stateType) match {
+      : (Option[GoalStep[Command.State, EqTerm]]) = (prev.stateType, current.stateType) match {
 
     // Skip Chain steps, since they are just links between assumptions and their use.
     // The assumption introduction will be captured in the previous State steps, and their use
@@ -180,11 +231,11 @@ trait ProofEntryReader {
   /**
    * Creates ProofProcess ProofEntry data structures for each Isabelle Command state (each step).
    *
-   * The ProofEntry is then used within each goal step, while the mapping State -> ProofEntry
+   * The ProofEntry is then used within each goal step, while the mapping Command.State -> ProofEntry
    * is also kept (for activity logging).
    */
-  private def mapToPPEntries[T <: Eq](transform: GoalStep[State, T] => ProofEntry)(
-                                        steps: List[GoalStep[State, T]])
+  private def mapToPPEntries[T <: Eq](transform: GoalStep[Command.State, T] => ProofEntry)(
+                                        steps: List[GoalStep[Command.State, T]])
       : (List[GoalStep[ProofEntry, T]], ParseEntries) = {
 
     // create ProofEntry elements for each step
@@ -273,7 +324,7 @@ trait ProofEntryReader {
       }
     })
   
-  private def proofEntry(proofStep: GoalStep[State, EqTerm]): ProofEntry = {
+  private def proofEntry(proofStep: GoalStep[Command.State, EqTerm]): ProofEntry = {
     
     val cmdState = proofStep.info
     val inGoals = propsToTerms(proofStep.in)
@@ -304,7 +355,7 @@ trait ProofEntryReader {
     entry
   }
 
-  private def proofStepTrace(cmdState: State): Trace = {
+  private def proofStepTrace(cmdState: Command.State): Trace = {
 
     val trace = isaFactory.createIsabelleTrace()
 
@@ -322,7 +373,7 @@ trait ProofEntryReader {
 
 object ProofEntryReader {
 
-  type ParseEntries = Map[State, ProofEntry]
+  type ParseEntries = Map[Command.State, ProofEntry]
 
 }
 

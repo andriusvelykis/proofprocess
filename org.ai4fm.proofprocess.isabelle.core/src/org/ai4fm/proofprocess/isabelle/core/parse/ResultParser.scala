@@ -33,42 +33,49 @@ object ResultParser {
 
     val allCmdResults = commandState.resultValues.toStream
 
-    val proofOutputResults = commandStateResults(allCmdResults)
-    
-    proofOutputResults match {
-      case None => None
+    val allOutputResults = commandStateResults(allCmdResults)
 
-      case Some(proofOutputFull) => {
+    if (allOutputResults.isEmpty) {
+      None
+    } else {
+      
+      // trim excess markup
+      val allOutputs = allOutputResults map (filterXML(RESULT_MARKUPS, true, _))
 
-        // trim excess markup
-        val proofOutput = filterXML(RESULT_MARKUPS, true, proofOutputFull)
+      // assume that proof (state) output is the last one
+      val proofOutput = allOutputs.last
 
-        val factTerms = parseFacts(proofOutput, allCmdResults)
+      val factTerms = parseFacts(proofOutput, allCmdResults)
 
-        val inAssms = collectMapped(factTerms, IN_ASSM_LABELS)
-        val outAssms = collectMapped(factTerms, OUT_ASSM_LABELS)
+      val inAssms = collectMapped(factTerms, IN_ASSM_LABELS)
+      val outAssms = collectMapped(factTerms, OUT_ASSM_LABELS)
 
-        val isByCmd = "by" == commandState.command.name
+      val byCmd = isByCmd(commandState)
 
-        val stepTypeOpt = stepProofType(proofOutput)
-        // last step 'by' has no output, so assume 'prove' step type
-        val stepType = stepTypeOpt orElse ( if (isByCmd) Some(StepProofType.Prove) else None ) 
+      val stepTypeOpt = stepProofType(proofOutput)
+      // last step 'by' has no output, so assume 'prove' step type
+      val stepType = stepTypeOpt orElse ( if (byCmd) Some(StepProofType.Prove) else None )
 
-        // workaround for "by" not outputting goals in "markup" term case
-        // also "by" when used in forward proof can go into "state" proof and output outstanding
-        // goals - so we replace it with "finished", i.e. empty list of goals
-        val goals = if (isByCmd) Some(Nil) else goalTerms(proofOutput, allCmdResults)
+      // parse if this step finishes the structured proof branch, e.g. "have ..."
+      val structFinishOpt = parseStructProofFinish(allOutputs)
 
-        // only produce results if step type is defined
-        stepType map ( CommandResults(commandState, _, inAssms, outAssms, goals) )
+      // workaround for "by" not outputting goals in "markup" term case
+      // also "by" when used in forward proof can go into "state" proof and output outstanding
+      // goals - so we replace it with "finished", i.e. empty list of goals
+      val goals = if (byCmd) Some(Nil) else goalTerms(proofOutput, allCmdResults)
 
-      }
+      // only produce results if step type is defined
+      stepType map ( CommandResults(commandState, _, inAssms, outAssms, goals, structFinishOpt) )
     }
   }
   
   private def collectMapped[A, B](mapped: Map[A, List[B]], collect: Set[A]): List[B] = {
     val results = collect.toList flatMap mapped.get
     results.flatten
+  }
+
+  def isByCmd(commandState: Command.State): Boolean = {
+    "by" == commandState.command.name
   }
 
 
@@ -295,6 +302,18 @@ object ResultParser {
     }
   }
 
+  object StructProofFinishBlock {
+    def unapply(elem: XML.Tree): Option[StructProofFinish.StructProofFinish] = elem match {
+
+      case LabelledBlock(text, _) =>
+        if (text.startsWith("have")) Some(StructProofFinish.Have)
+        else if (text.startsWith("show")) Some(StructProofFinish.Show)
+        else None
+
+      case _ => None
+    }
+  }
+
   object ResultState {
     def unapply(elem: XML.Tree): Option[XML.Body] =
       elem match {
@@ -315,10 +334,12 @@ object ResultParser {
   /**
    * Retrieves the State command results.
    * 
-   * Takes the first one matching, since a single state is expected. 
+   * Note that there can be multiple states, e.g. "have ....", "successful attempt ..." and
+   * only then "proof () ...". For now, as an easy workaround, just take the last one, which we
+   * assume to be the "proof () ..." one.
    */
-  private def commandStateResults(cmdResults: Stream[XML.Tree]): Option[XML.Body] =
-    cmdResults collectFirst { case ResultState(stateBody) => stateBody }
+  private def commandStateResults(cmdResults: Stream[XML.Tree]): Stream[XML.Body] =
+    cmdResults collect { case ResultState(stateBody) => stateBody }
 
 
   def inTrace[A](body: TraversableOnce[XML.Tree])(lookup: XML.Body => Option[A]): Stream[A] = {
@@ -414,9 +435,22 @@ object ResultParser {
     type StepProofType = Value
     val Prove, State, Chain = Value
   }
-  
+
   private def stepProofType(proofOutput: XML.Body): Option[StepProofType.StepProofType] = 
     proofOutput collectFirst { case ProofTypeBlock(proofType) => proofType }
+
+
+  /**
+   * Enum to indicate structured proof finishing step, e.g. which outputs "have ..." or "show ...".
+   */
+  object StructProofFinish extends Enumeration {
+    type StructProofFinish = Value
+    val Have, Show = Value
+  }
+  
+  private def parseStructProofFinish(allOutputs: Stream[XML.Body])
+      : Option[StructProofFinish.StructProofFinish] = 
+    allOutputs.head collectFirst { case StructProofFinishBlock(finishType) => finishType }
 
 
   /**

@@ -3,6 +3,7 @@ package org.ai4fm.proofprocess.isabelle.core.parse
 import org.ai4fm.proofprocess.core.analysis.{Assumption, EqTerm, Judgement}
 
 import ResultParser.StepProofType.StepProofType
+import ResultParser.StructProofFinish.StructProofFinish
 import isabelle.Command
 
 
@@ -15,7 +16,8 @@ case class CommandResults(state: Command.State,
                           stateType: StepProofType,
                           inAssms: List[EqTerm],
                           outAssms: List[EqTerm],
-                          outGoals: Option[List[EqTerm]]) {
+                          outGoals: Option[List[EqTerm]],
+                          structFinish: Option[StructProofFinish]) {
 
 
   lazy val inAssmProps = inAssms map (Assumption(_))
