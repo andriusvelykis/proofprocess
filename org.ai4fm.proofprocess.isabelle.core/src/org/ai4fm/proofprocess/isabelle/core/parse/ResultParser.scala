@@ -63,9 +63,9 @@ object ResultParser {
       val structFinishOpt = parseStructProofFinish(allOutputs)
 
       // workaround for "by" not outputting goals in "markup" term case
-      // also "by" when used in forward proof can go into "state" proof and output outstanding
-      // goals - so we replace it with "finished", i.e. empty list of goals
-      val goals = if (byCmd) Some(Nil) else goalTerms(proofOutput, allCmdResults)
+      // note that the case in forward proof where "state" is output is handled during have/show
+      // analysis
+      val goals = goalTerms(proofOutput, allCmdResults) orElse ( if (byCmd) Some(Nil) else None )
 
       // only produce results if step type is defined
       stepType map ( CommandResults(commandState, _, inAssms, outAssms, goals, structFinishOpt) )
