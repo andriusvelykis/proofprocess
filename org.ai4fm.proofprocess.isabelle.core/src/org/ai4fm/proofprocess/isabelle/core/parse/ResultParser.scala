@@ -25,6 +25,9 @@ object ResultParser {
    */
   private val RESULT_MARKUPS = Set(Markup.TERM, Markup.SUBGOAL)
 
+  private val SHOW_COMMANDS = Set("show", "thus")
+
+  private val HAVE_COMMANDS = Set("have", "hence")
 
   /**
    * Parses command results, such as assumptions, goals, proof type from the command state.
@@ -74,9 +77,14 @@ object ResultParser {
     results.flatten
   }
 
-  def isByCmd(commandState: Command.State): Boolean = {
+  def isByCmd(commandState: Command.State): Boolean =
     "by" == commandState.command.name
-  }
+
+  def isShowCmd(commandState: Command.State): Boolean = 
+    SHOW_COMMANDS(commandState.command.name)
+
+  def isHaveCmd(commandState: Command.State): Boolean = 
+    HAVE_COMMANDS(commandState.command.name)
 
 
   /**
