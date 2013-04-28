@@ -300,14 +300,19 @@ object ResultParser {
   object ProofTypeBlock {
     def unapply(elem: XML.Tree): Option[StepProofType.StepProofType] = elem match {
 
-      case LabelledBlock(text, _) =>
-        if (text.startsWith("proof (prove)")) Some(StepProofType.Prove)
-        else if (text.startsWith("proof (state)")) Some(StepProofType.State)
-        else if (text.startsWith("proof (chain)")) Some(StepProofType.Chain)
-        else None
+      case LabelledBlock(text, _) => parseProofType(text)
+
+      // sometimes it's just text
+      case XML.Text(text) => parseProofType(text)
 
       case _ => None
     }
+
+    private def parseProofType(text: String): Option[StepProofType.StepProofType] =
+      if (text.startsWith("proof (prove)")) Some(StepProofType.Prove)
+      else if (text.startsWith("proof (state)")) Some(StepProofType.State)
+      else if (text.startsWith("proof (chain)")) Some(StepProofType.Chain)
+      else None
   }
 
   object StructProofFinishBlock {
