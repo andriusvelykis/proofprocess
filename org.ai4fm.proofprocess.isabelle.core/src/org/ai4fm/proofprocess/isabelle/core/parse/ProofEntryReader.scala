@@ -27,6 +27,8 @@ import isabelle.Command
   */
 trait ProofEntryReader {
 
+  private type GoalStepT = GoalStep[Command.State, EqTerm]
+
   import ProofEntryReader.ParseEntries
   
   private val factory = ProofProcessFactory.eINSTANCE
@@ -113,7 +115,7 @@ trait ProofEntryReader {
   private type StructAssmsStack = List[List[Assumption[EqTerm]]]
 
   private def createGoalSteps(initialStep: CommandResults,
-                              proofSteps: List[CommandResults]): List[GoalStep[Command.State, EqTerm]] = {
+                              proofSteps: List[CommandResults]): List[GoalStepT] = {
 
     // make a list with ingoals-info-outgoals steps
     val inSteps = initialStep :: proofSteps
@@ -126,8 +128,8 @@ trait ProofEntryReader {
     goalSteps.flatten
   }
 
-  private def analyseGoalStep0(prev: CommandResults, current: CommandResults)
-      : Option[GoalStep[Command.State, EqTerm]] = {
+  private def analyseGoalStep0(prev: CommandResults,
+                               current: CommandResults): Option[GoalStepT] = {
 
     val goalStepOpt = analyseGoalStep(prev, current)
 
@@ -135,48 +137,47 @@ trait ProofEntryReader {
     goalStepOpt flatMap (adaptForHaveShow(_, current))
   }
 
-
   // FIXME special support for fixing!
-  private def analyseGoalStep(prev: CommandResults, current: CommandResults)
-      : (Option[GoalStep[Command.State, EqTerm]]) = (prev.stateType, current.stateType) match {
+  private def analyseGoalStep(prev: CommandResults, current: CommandResults): Option[GoalStepT] =
+    (prev.stateType, current.stateType) match {
 
-    // Skip Chain steps, since they are just links between assumptions and their use.
-    // The assumption introduction will be captured in the previous State steps, and their use
-    // will be captured in the next State.
-    case (_, Chain) => None
+      // Skip Chain steps, since they are just links between assumptions and their use.
+      // The assumption introduction will be captured in the previous State steps, and their use
+      // will be captured in the next State.
+      case (_, Chain) => None
 
-    case (Prove, _) => {
-      // Two consecutive Prove steps, so check for goal diffs
-      //
-      // Note: it seems that only the previous needs to be `Prove`.
-      // Switching from `Prove` to e.g. `State` would require a `proof` command, which may affect
-      // the goal (`proof <command>` or keep it the same (e.g. `proof -`).
-      // For this reason, only check that the previous is proof
-      
-      val (unchanged, changedIn, changedOut) = 
-        diffs(prev.outGoalProps getOrElse Nil, current.outGoalProps getOrElse Nil)
+      case (Prove, _) => {
+        // Two consecutive Prove steps, so check for goal diffs
+        //
+        // Note: it seems that only the previous needs to be `Prove`.
+        // Switching from `Prove` to e.g. `State` would require a `proof` command, which may affect
+        // the goal (`proof <command>` or keep it the same (e.g. `proof -`).
+        // For this reason, only check that the previous is proof
 
-      // TODO narrow the changed goals further?
-      Some(GoalStep(current.state,
-                    current.inAssmProps ::: changedIn,
-                    current.outAssmProps ::: changedOut))
-      
+        val (unchanged, changedIn, changedOut) =
+          diffs(prev.outGoalProps getOrElse Nil, current.outGoalProps getOrElse Nil)
+
+        // TODO narrow the changed goals further?
+        Some(GoalStep(current.state,
+          current.inAssmProps ::: changedIn,
+          current.outAssmProps ::: changedOut))
+
+      }
+
+//      case (State, _) => // diff in assumptions - they may be repeating?
+
+      case _ => {
+
+        // out assumptions or out goals are exclusive
+        val out = if (!current.outAssmProps.isEmpty) current.outAssmProps
+        else current.outGoalProps getOrElse Nil
+
+        Some(GoalStep(current.state,
+          // TODO review: no "in" goals - previous was a state?
+          current.inAssmProps,
+          out))
+      }
     }
-
-//    case (State, _) => // diff in assumptions - they may be repeating?
-    
-    case _ => {
-
-      // out assumptions or out goals are exclusive
-      val out = if (!current.outAssmProps.isEmpty) current.outAssmProps
-                else current.outGoalProps getOrElse Nil
-
-      Some(GoalStep(current.state,
-                    // TODO review: no "in" goals - previous was a state?
-                    current.inAssmProps,
-                    out))
-    }
-  }
 
   /**
    * Additional analysis checks to accommodate have/show commands in structured proof:
@@ -185,8 +186,7 @@ trait ProofEntryReader {
    * -  "have ..." commands also introduce the assumption, not just an outstanding goal
    *    (note that this assumption technically is not available for the `have` proof itself)
    */
-  private def adaptForHaveShow(goalStep: GoalStep[Command.State, EqTerm],
-                               current: CommandResults): Option[GoalStep[Command.State, EqTerm]] =
+  private def adaptForHaveShow(goalStep: GoalStepT, current: CommandResults): Option[GoalStepT] =
     if (current.structFinish.isDefined) {
       // if this is a "structured proof finish step", i.e. the step that completes
       // a "have ..." or "show ...", drop it (or clear its out-goals)
@@ -321,7 +321,7 @@ trait ProofEntryReader {
       }
     })
   
-  private def proofEntry(proofStep: GoalStep[Command.State, EqTerm]): ProofEntry = {
+  private def proofEntry(proofStep: GoalStepT): ProofEntry = {
     
     val cmdState = proofStep.info
     val inGoals = propsToTerms(proofStep.in)
