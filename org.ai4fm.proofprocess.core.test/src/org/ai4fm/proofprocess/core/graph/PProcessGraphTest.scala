@@ -268,8 +268,12 @@ class PProcessGraphTest {
   sealed trait PElem
   case class Entry(e: Int) extends PElem
   case class Seq(seq: List[PElem]) extends PElem
-  case class Par(par: Set[PElem]) extends PElem
+  case class Par(par: Set[PElem], links: Set[Entry]) extends PElem
   case class Decor(entry: PElem) extends PElem
+
+  object Par {
+    def apply(elems: Set[PElem]): Par = Par(elems, Set())
+  }
   
   object EntryCase extends CaseObject[PElem, Entry, Int]{
     def unapply(e: PElem): Option[Int] = e match {
@@ -287,12 +291,15 @@ class PProcessGraphTest {
     def apply(elems: List[PElem]) = Seq(elems)
   }
   
-  object ParCase extends CaseObject[PElem, Par, Set[PElem]] {
+  object ParCase extends CaseObject[PElem, Par, (Set[PElem], Set[Entry])] {
     def unapply(e: PElem) = e match {
-        case Par(elems) => Some(elems)
+        case Par(entries, links) => Some(entries, links)
         case _ => None
       }
-    def apply(elems: Set[PElem]) = Par(elems)
+    def apply(elems: (Set[PElem], Set[Entry])) = {
+      val (entries, links) = elems
+      Par(entries, links)
+    }
   }
   
   object DecorCase extends CaseObject[PElem, Decor, PElem] {

@@ -68,17 +68,23 @@ object PProcessGraph {
 
       // for parallel, create subgraphs of each parallel entry,
       // and then merge these subgraphs and their roots
-      case ppTree.parallel(elems) => {
+      case ppTree.parallel((entries, links)) => {
 
         // create subgraph based on the accumulated graph
-        val subGraphs = elems map (e => graph0(e, acc))
+        val subGraphs = entries map (e => graph0(e, acc))
 
         val merged = subGraphs.foldRight(emptyGraph) {
           case (PPRootGraph(subGraph, subRoots), PPRootGraph(foldGraph, foldRoots)) => 
             PPRootGraph(subGraph ++ foldGraph, subRoots ++ foldRoots)
         }
 
-        merged
+        val withLinks =
+          if (!links.isEmpty) {
+            merged.copy(roots = merged.roots ++ links)
+          }
+          else merged
+
+        withLinks
       }
 
       // for sequences, just accumulate subgraph from the end, this way elements at the
@@ -176,7 +182,7 @@ object PProcessGraph {
       // check if the element is already parallel, otherwise wrap it into a parallel
       val par = elem match {
         case ppTree.parallel(_) => elem
-        case _ => ppTree.parallel(Set(elem))
+        case _ => ppTree.parallel(Set(elem), Set())
       }
       par
     }
@@ -288,7 +294,7 @@ object PProcessGraph {
         /**
          * Returns the merged element and a soft-link element merge if available
          */
-        def mergeGroup(group: BranchMerges, mergePoint: Entry): (Elem, Option[Elem]) = {
+        def mergeGroup(group: BranchMerges, mergePoint: Entry): (Elem, Option[Entry]) = {
 
           // continue recursively for the group (remaining merges)
           val groupElem = mergeDeepest(group)
@@ -337,10 +343,11 @@ object PProcessGraph {
         // now that we have the merged groups, join them with the leaf branches into a single
         // parallel split
         val branches = groupRoots.toSet ++ leafSubGraphs.toSet
-        if (isMulti(branches)) {
+        if (isMulti(branches) || !softLinks.isEmpty) {
           // multiple branches, group into parallel
-          // this also handles the case of direct merges 
-          ppTree.parallel(branches)
+          // this also handles the case of direct merges
+          // also create a parallel if there are soft links
+          ppTree.parallel(branches, softLinks)
         } else {
           // single branch - return itself
           branches.head
