@@ -1,26 +1,19 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
+import java.util.Queue
 import java.util.concurrent.ConcurrentLinkedQueue
 
 import scala.actors.Actor._
 
 import org.ai4fm.proofprocess.core.parse.TrackingToggle
-import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin._
+import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin.error
 import org.ai4fm.proofprocess.isabelle.core.analysis.ProofAnalyzer
-import org.eclipse.core.runtime.CoreException
-import org.eclipse.core.runtime.IProgressMonitor
-import org.eclipse.core.runtime.IStatus
-import org.eclipse.core.runtime.Status
-import org.eclipse.core.runtime.jobs.IJobChangeEvent
-import org.eclipse.core.runtime.jobs.Job
-import org.eclipse.core.runtime.jobs.JobChangeAdapter
+import org.eclipse.core.runtime.{CoreException, IProgressMonitor, IStatus, Status}
+import org.eclipse.core.runtime.jobs.{IJobChangeEvent, Job, JobChangeAdapter}
 
-import isabelle.Command
-import isabelle.Document
-import isabelle.Session
+import isabelle.{Command, Document, Session}
 import isabelle.eclipse.core.IsabelleCore
-import isabelle.eclipse.core.util.LoggingActor
-import isabelle.eclipse.core.util.SessionEvents
+import isabelle.eclipse.core.util.{LoggingActor, SessionEvents}
 
 
 /**
@@ -86,6 +79,32 @@ class SessionTracker extends SessionEvents {
     }
   }
 
+
+  /**
+   * Retrieves all pending events and merges them.
+   * 
+   * Uses the last available snapshot state and collects all commands into one
+   */
+  private def allPendingEvents(): Option[CommandAnalysisEvent] = {
+    val allPending = pollAll(pendingEvents)
+
+    if (allPending.isEmpty) {
+      None
+    } else {
+      val allCmdLists = allPending map (_.changedCommands)
+      val allCmds = allCmdLists.flatten.toSet
+
+      val lastState = allPending.last.docState
+      Some(CommandAnalysisEvent(allCmds, lastState))
+    }
+  }
+
+  private def pollAll[A](queue: Queue[A]): List[A] = Option(queue.poll()) match {
+    case None => Nil
+    case Some(elem) => elem :: pollAll(queue)
+  }
+
+
   private class AnalysisJob extends Job("Analysing proof process") {
 
     // lowest priority
@@ -93,7 +112,9 @@ class SessionTracker extends SessionEvents {
 
     override protected def run(monitor: IProgressMonitor): IStatus = {
 
-      val nextEvent = Option(pendingEvents.poll())
+      // merge pending events for performance improvements
+//      val nextEvent = Option(pendingEvents.poll())
+      val nextEvent = allPendingEvents()
       nextEvent match {
         // nothing to execute
         case None => Status.OK_STATUS
