@@ -143,7 +143,7 @@ object PProcessGraph {
 
     assert(rootGraph.isAcyclic)
     
-    def pullMergeUp(mergeAt: MergeMap, successor: Entry, entry: Entry) = {
+    def pullMergeUp(mergeAt: MergeMap, successor: Entry, entry: Entry): MergeMap = {
       val succMerges = mergeAt(successor)
       if (!succMerges.isEmpty) {
         mergeAt + (entry -> succMerges)
