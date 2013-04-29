@@ -292,9 +292,10 @@ object PProcessGraph {
         val (leafBranches, mergeGroups) = groupBranches(entryBranches)
         
         /**
-         * Returns the merged element and a soft-link element merge if available
+         * Returns the merged element. Note that soft-links are not created for merges, they will
+         * be created for outgoing elements in parallels (TODO verify).
          */
-        def mergeGroup(group: BranchMerges, mergePoint: Entry): (Elem, Option[Entry]) = {
+        def mergeGroup(group: BranchMerges, mergePoint: Entry): Elem = {
 
           // continue recursively for the group (remaining merges)
           val groupElem = mergeDeepest(group)
@@ -316,17 +317,17 @@ object PProcessGraph {
           // this will create a merge point after the (possibly) parallel split
           mergeSubGraph match {
             // no unclaimed subgraph available, so no merge
-            // note that we still want to keep the merge information,
-            // so return it the mergepoint as soft link
-            case None => (directMergeGroupElem, Some(mergePoint))
+
+            // Note: do not add soft links on merge point, since it is just a calculation.
+            // Soft links will be added where the outgoing link is (in parallel branches)
+            case None => directMergeGroupElem
 
             // can merge - add after parallel
-            case Some(mergeTail) => (toSeq(directMergeGroupElem, mergeTail), None)
+            case Some(mergeTail) => toSeq(directMergeGroupElem, mergeTail)
           }
         }
         
-        val groupRoots0 = mergeGroups map { case (mergePoint, group) => mergeGroup(group, mergePoint) }
-        val (groupRoots, groupSoftLinks) = groupRoots0.unzip
+        val groupRoots = mergeGroups map { case (mergePoint, group) => mergeGroup(group, mergePoint) }
         
         // resolve parallel subgraphs:
         // - subGraphs if there are unclaimed subgraphs
@@ -335,10 +336,8 @@ object PProcessGraph {
         val leafSubGraphs = (leafSubGraphs0 map (_._2)).flatten
         val leafSoftLinks = leafSubGraphs0 filter (_._2.isEmpty) map (_._1)
 
-        val softLinks = groupSoftLinks.flatten.toSet ++ leafSoftLinks
-        if (!softLinks.isEmpty) {
-          println("Soft links: " + softLinks)
-        }
+        // do not create soft links for group merges
+        val softLinks = /*groupSoftLinks.flatten.toSet ++ */leafSoftLinks.toSet
 
         // now that we have the merged groups, join them with the leaf branches into a single
         // parallel split
