@@ -117,14 +117,18 @@ trait ProofEntryReader {
   private def createGoalSteps(initialStep: CommandResults,
                               proofSteps: List[CommandResults]): List[GoalStepT] = {
 
+    // drop all Chain steps - they are not required in the analysis..
+    val noChainSteps = proofSteps filter (_.stateType != Chain)
+
     // make a list with ingoals-info-outgoals steps
-    val inSteps = initialStep :: proofSteps
-    val inOutSteps = inSteps zip proofSteps
+    val inSteps = initialStep :: noChainSteps
+    val inOutSteps = inSteps zip noChainSteps
 
     // now try to to make sense of a GoalStep from the before-after results
     val goalSteps = inOutSteps map Function.tupled(analyseGoalStep0)
 
-    // flatten - some of the goals may have been skipped (e.g. chain)
+    // flatten - some of the goals may have been skipped
+    // (e.g. "done" or "qed" in structured proof)
     goalSteps.flatten
   }
 
@@ -141,10 +145,10 @@ trait ProofEntryReader {
   private def analyseGoalStep(prev: CommandResults, current: CommandResults): Option[GoalStepT] =
     (prev.stateType, current.stateType) match {
 
-      // Skip Chain steps, since they are just links between assumptions and their use.
-      // The assumption introduction will be captured in the previous State steps, and their use
-      // will be captured in the next State.
-      case (_, Chain) => None
+//      // Skip Chain steps, since they are just links between assumptions and their use.
+//      // The assumption introduction will be captured in the previous State steps, and their use
+//      // will be captured in the next State.
+//      case (_, Chain) => None
 
       case (Prove, _) => {
         // Two consecutive Prove steps, so check for goal diffs
@@ -154,12 +158,14 @@ trait ProofEntryReader {
         // the goal (`proof <command>` or keep it the same (e.g. `proof -`).
         // For this reason, only check that the previous is proof
 
-        val (unchanged, changedIn, changedOut) =
-          diffs(prev.outGoalProps getOrElse Nil, current.outGoalProps getOrElse Nil)
+        val (unchanged, changedIn, changedOut) = diffs(prev.outGoalProps, current.outGoalProps)
 
+
+        // also diff `in` assumptions,
+        // e.g. in `using` case assumptions may be added to the previous one
         // TODO narrow the changed goals further?
         Some(GoalStep(current.state,
-          current.inAssmProps ::: changedIn,
+          diffInAssms(prev, current) ::: changedIn,
           current.outAssmProps ::: changedOut))
 
       }
@@ -174,10 +180,17 @@ trait ProofEntryReader {
 
         Some(GoalStep(current.state,
           // TODO review: no "in" goals - previous was a state?
-          current.inAssmProps,
+          diffInAssms(prev, current),
           out))
       }
     }
+
+  private def diffInAssms(prev: CommandResults,
+                          current: CommandResults): List[Assumption[EqTerm]] = {
+    val newInAssms = current.inAssmProps diff prev.inAssmProps
+    // make them distinct (why have duplicate assms?)
+    newInAssms.distinct
+  }
 
   /**
    * Additional analysis checks to accommodate have/show commands in structured proof:
@@ -214,8 +227,11 @@ trait ProofEntryReader {
       // nothing else to adapt
       Some(goalStep)
     }
-  
-  
+
+
+  private def diffs[A](l1: Option[List[A]], l2: Option[List[A]]): (List[A], List[A], List[A]) =
+    diffs(l1 getOrElse Nil, l2 getOrElse Nil)
+
   private def diffs[A](l1: List[A], l2: List[A]): (List[A], List[A], List[A]) = {
     val same = l1 intersect l2
     val diffL1 = l1 diff same
