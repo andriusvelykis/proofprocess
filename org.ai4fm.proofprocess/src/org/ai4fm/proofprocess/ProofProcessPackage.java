@@ -478,13 +478,22 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_PARALLEL__ENTRIES = PROOF_ELEM_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Links</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROOF_PARALLEL__LINKS = PROOF_ELEM_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Proof Parallel</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROOF_PARALLEL_FEATURE_COUNT = PROOF_ELEM_FEATURE_COUNT + 1;
+	int PROOF_PARALLEL_FEATURE_COUNT = PROOF_ELEM_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.ProofDecorImpl <em>Proof Decor</em>}' class.
@@ -974,6 +983,17 @@ public interface ProofProcessPackage extends EPackage {
 	EReference getProofParallel_Entries();
 
 	/**
+	 * Returns the meta object for the reference list '{@link org.ai4fm.proofprocess.ProofParallel#getLinks <em>Links</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Links</em>'.
+	 * @see org.ai4fm.proofprocess.ProofParallel#getLinks()
+	 * @see #getProofParallel()
+	 * @generated
+	 */
+	EReference getProofParallel_Links();
+
+	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.ProofDecor <em>Proof Decor</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1393,6 +1413,14 @@ public interface ProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PROOF_PARALLEL__ENTRIES = eINSTANCE.getProofParallel_Entries();
+
+		/**
+		 * The meta object literal for the '<em><b>Links</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROOF_PARALLEL__LINKS = eINSTANCE.getProofParallel_Links();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.ProofDecorImpl <em>Proof Decor</em>}' class.
