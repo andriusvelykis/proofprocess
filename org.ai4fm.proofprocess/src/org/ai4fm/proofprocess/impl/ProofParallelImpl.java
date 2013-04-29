@@ -9,6 +9,7 @@ package org.ai4fm.proofprocess.impl;
 import java.util.Collection;
 
 import org.ai4fm.proofprocess.ProofElem;
+import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofParallel;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
@@ -72,8 +73,8 @@ public class ProofParallelImpl extends ProofElemImpl implements ProofParallel {
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	public EList<ProofElem> getLinks() {
-		return (EList<ProofElem>)eDynamicGet(ProofProcessPackage.PROOF_PARALLEL__LINKS, ProofProcessPackage.Literals.PROOF_PARALLEL__LINKS, true, true);
+	public EList<ProofEntry> getLinks() {
+		return (EList<ProofEntry>)eDynamicGet(ProofProcessPackage.PROOF_PARALLEL__LINKS, ProofProcessPackage.Literals.PROOF_PARALLEL__LINKS, true, true);
 	}
 
 	/**
@@ -121,7 +122,7 @@ public class ProofParallelImpl extends ProofElemImpl implements ProofParallel {
 				return;
 			case ProofProcessPackage.PROOF_PARALLEL__LINKS:
 				getLinks().clear();
-				getLinks().addAll((Collection<? extends ProofElem>)newValue);
+				getLinks().addAll((Collection<? extends ProofEntry>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

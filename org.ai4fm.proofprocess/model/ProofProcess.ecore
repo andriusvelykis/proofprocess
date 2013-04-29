@@ -61,7 +61,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="entries" ordered="false"
         lowerBound="1" upperBound="-1" eType="#//ProofElem" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="links" upperBound="-1"
-        eType="#//ProofElem"/>
+        eType="#//ProofEntry"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProofDecor" eSuperTypes="#//ProofElem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entry" lowerBound="1" eType="#//ProofElem"

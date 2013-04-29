@@ -44,7 +44,7 @@ public interface ProofParallel extends ProofElem {
 
 	/**
 	 * Returns the value of the '<em><b>Links</b></em>' reference list.
-	 * The list contents are of type {@link org.ai4fm.proofprocess.ProofElem}.
+	 * The list contents are of type {@link org.ai4fm.proofprocess.ProofEntry}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Links</em>' reference list isn't clear,
@@ -56,6 +56,6 @@ public interface ProofParallel extends ProofElem {
 	 * @model
 	 * @generated
 	 */
-	EList<ProofElem> getLinks();
+	EList<ProofEntry> getLinks();
 
 } // ProofParallel
