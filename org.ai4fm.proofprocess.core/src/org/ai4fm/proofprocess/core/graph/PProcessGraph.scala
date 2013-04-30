@@ -363,8 +363,7 @@ object PProcessGraph {
     def createSubGraph(mergeAt: MergeMap,
                        subGraphs: Map[Entry, Elem])(
                          entry: Entry,
-                         successors: Iterable[Entry],
-                         isMerge: Boolean): (Elem, MergeMap, Map[Entry, Elem]) = {
+                         successors: Iterable[Entry]): (Elem, MergeMap, Map[Entry, Elem]) = {
 
       val succs = successors.toList
       
@@ -402,26 +401,22 @@ object PProcessGraph {
             // first try to close the open branches of the parallel that can be merged
             val (splitMergeTree, subGraphs1) = merge(mergeAt, subGraphs)(entry, multiple)
 
-            if (isMerge) {
-              // this is a merge as well as split
-              // This special case is handled as a bit of a hack (though the case is not expected
-              // to appear in proofs), by doing 2 Parallel branches in a row
-              // TODO implement
-              throw new IllegalArgumentException("Invalid graph to convert to ProofProcess tree (merge+split).")
-
-            } else {
-              // not a merge - add the entry before the parallel
-              val newSeq = toSeq(entry, splitMergeTree)
-              (newSeq, mergeAt, subGraphs1)
-            }
+            // add the entry before the parallel
+            // this entry+split will work as a subgraph for entry. The case when an entry is also
+            // a merge will be handled via soft links: the first merge branch will add this as
+            // a parallel entry, and the remaining ones will make it a soft link
+            val newSeq = toSeq(entry, splitMergeTree)
+            (newSeq, mergeAt, subGraphs1)
           }
         }
       }
     }
-    
-    def handleNode(subGraphs: Map[Entry, Elem], mergeAt: MergeMap)
-                  (node: Entry, predecessors: Iterable[Entry], successors: Iterable[Entry]
-                  ): (Map[Entry, Elem], MergeMap) = {
+
+    def handleNode(subGraphs: Map[Entry, Elem],
+                   mergeAt: MergeMap)(
+                     node: Entry,
+                     predecessors: Iterable[Entry],
+                     successors: Iterable[Entry]): (Map[Entry, Elem], MergeMap) = {
 
       val entry = node
 
@@ -438,7 +433,7 @@ object PProcessGraph {
       }
 
       val (entrySubGraph, newMergeAt, newSubGraphs) =
-        createSubGraph(predMergeAt, subGraphs)(entry, successors, isMerge)
+        createSubGraph(predMergeAt, subGraphs)(entry, successors)
 
       val newSubGraphs1 = newSubGraphs + (entry -> entrySubGraph)
 
