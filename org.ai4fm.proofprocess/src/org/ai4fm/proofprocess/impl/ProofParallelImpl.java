@@ -9,6 +9,7 @@ package org.ai4fm.proofprocess.impl;
 import java.util.Collection;
 
 import org.ai4fm.proofprocess.ProofElem;
+import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofParallel;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
@@ -29,6 +30,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofParallelImpl#getEntries <em>Entries</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofParallelImpl#getLinks <em>Links</em>}</li>
  * </ul>
  * </p>
  *
@@ -70,6 +72,16 @@ public class ProofParallelImpl extends ProofElemImpl implements ProofParallel {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+	public EList<ProofEntry> getLinks() {
+		return (EList<ProofEntry>)eDynamicGet(ProofProcessPackage.PROOF_PARALLEL__LINKS, ProofProcessPackage.Literals.PROOF_PARALLEL__LINKS, true, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -89,6 +101,8 @@ public class ProofParallelImpl extends ProofElemImpl implements ProofParallel {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_PARALLEL__ENTRIES:
 				return getEntries();
+			case ProofProcessPackage.PROOF_PARALLEL__LINKS:
+				return getLinks();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -106,6 +120,10 @@ public class ProofParallelImpl extends ProofElemImpl implements ProofParallel {
 				getEntries().clear();
 				getEntries().addAll((Collection<? extends ProofElem>)newValue);
 				return;
+			case ProofProcessPackage.PROOF_PARALLEL__LINKS:
+				getLinks().clear();
+				getLinks().addAll((Collection<? extends ProofEntry>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -121,6 +139,9 @@ public class ProofParallelImpl extends ProofElemImpl implements ProofParallel {
 			case ProofProcessPackage.PROOF_PARALLEL__ENTRIES:
 				getEntries().clear();
 				return;
+			case ProofProcessPackage.PROOF_PARALLEL__LINKS:
+				getLinks().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -135,6 +156,8 @@ public class ProofParallelImpl extends ProofElemImpl implements ProofParallel {
 		switch (featureID) {
 			case ProofProcessPackage.PROOF_PARALLEL__ENTRIES:
 				return !getEntries().isEmpty();
+			case ProofProcessPackage.PROOF_PARALLEL__LINKS:
+				return !getLinks().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

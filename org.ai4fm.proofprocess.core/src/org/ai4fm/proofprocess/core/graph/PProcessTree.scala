@@ -19,7 +19,7 @@ trait PProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Decor <: 
   
   def seq: CaseObject[Elem, Seq, List[Elem]]
   
-  def parallel: CaseObject[Elem, Parallel, Set[Elem]]
+  def parallel: CaseObject[Elem, Parallel, (Set[Elem], Set[Entry])]
   
   def decor: CaseObject[Elem, Decor, Elem]
 }
@@ -30,5 +30,6 @@ object PProcessTree {
   }
   
   type Factory[ActualElem, Contents] = Function[Contents, ActualElem]
-  trait CaseObject[Elem, Actual <: Elem, Contents] extends Extractor[Elem, Contents] with Factory[Actual, Contents]
+  trait CaseObject[Elem, Actual <: Elem, Contents]
+    extends Extractor[Elem, Contents] with Factory[Actual, Contents]
 }

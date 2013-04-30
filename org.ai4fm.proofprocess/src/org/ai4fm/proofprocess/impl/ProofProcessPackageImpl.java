@@ -536,6 +536,15 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getProofParallel_Links() {
+		return (EReference)proofParallelEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public EClass getProofDecor() {
 		return proofDecorEClass;
@@ -722,6 +731,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 
 		proofParallelEClass = createEClass(PROOF_PARALLEL);
 		createEReference(proofParallelEClass, PROOF_PARALLEL__ENTRIES);
+		createEReference(proofParallelEClass, PROOF_PARALLEL__LINKS);
 
 		proofDecorEClass = createEClass(PROOF_DECOR);
 		createEReference(proofDecorEClass, PROOF_DECOR__ENTRY);
@@ -818,6 +828,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 
 		initEClass(proofParallelEClass, ProofParallel.class, "ProofParallel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofParallel_Entries(), this.getProofElem(), null, "entries", null, 1, -1, ProofParallel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getProofParallel_Links(), this.getProofEntry(), null, "links", null, 0, -1, ProofParallel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(proofDecorEClass, ProofDecor.class, "ProofDecor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofDecor_Entry(), this.getProofElem(), null, "entry", null, 1, 1, ProofDecor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

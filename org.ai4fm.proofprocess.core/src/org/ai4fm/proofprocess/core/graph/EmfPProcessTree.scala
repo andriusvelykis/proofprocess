@@ -57,19 +57,25 @@ object EmfPProcessTree
       case _ => None
     }
   }
-  
-  
-  object ProofParallelTree extends CaseObject[ProofElem, ProofParallel, Set[ProofElem]] {
 
-    override def apply(elems: Set[ProofElem]): ProofParallel = {
+
+  object ProofParallelTree
+      extends CaseObject[ProofElem, ProofParallel, (Set[ProofElem], Set[ProofEntry])] {
+
+    override def apply(elems: (Set[ProofElem], Set[ProofEntry])): ProofParallel = {
+      val (entries, links) = elems
       val par = factory.createProofParallel
-      par.getEntries.addAll(elems.asJava)
+      par.getEntries.addAll(entries.asJava)
+      par.getLinks.addAll(links.asJava)
       par.setInfo(factory.createProofInfo)
       par
     }
 
-    override def unapply(e: ProofElem): Option[Set[ProofElem]] = e match {
-      case par: ProofParallel => Some(par.getEntries.asScala.toSet)
+    override def unapply(e: ProofElem): Option[(Set[ProofElem], Set[ProofEntry])] = e match {
+      case par: ProofParallel => Some((
+        par.getEntries.asScala.toSet,
+        par.getLinks.asScala.toSet))
+
       case _ => None
     }
   }

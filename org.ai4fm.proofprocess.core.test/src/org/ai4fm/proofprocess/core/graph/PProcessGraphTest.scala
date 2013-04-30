@@ -260,6 +260,43 @@ class PProcessGraphTest {
     assertEquals(s8, p8)
     assertEquals(PPRootGraph(m8 - (e(2) ~> e(5), e(3) ~> e(6)), r1), toGraph(p8))
   }
+
+
+  /**
+   * A merge for the lower branches
+   *    1
+   *    |
+   *    2
+   *    |\
+   *    3 \
+   *   / \ \
+   *  4   6 |
+   *  |   |/
+   *  5   7
+   * 
+   * The 2->7 will have a soft link.
+   */
+  val m9 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(3) ~> e(4), e(4) ~> e(5), 
+                 e(3) ~> e(6), e(6) ~> e(7), e(2) ~> e(7))
+  
+  @Test
+  def softLink() {
+    val s9 = Seq(List(1,
+                      2,
+                      Par(Set(Seq(List(3,
+                                       Par(Set(Seq(List(4,
+                                                        5)),
+                                               Seq(List(6,
+                                                        7))))
+                                       ))),
+                          Set(7)) // <-- soft link
+                      ))
+
+    val p9 = toPProcessTree(m9, r1)
+    assertEquals(s9, p9)
+    assertEquals(PPRootGraph(m9, r1), toGraph(p9))
+  }
+
   
   // Int + Case Class based testing data structures (to avoid creating EMF ones)
   
@@ -268,8 +305,12 @@ class PProcessGraphTest {
   sealed trait PElem
   case class Entry(e: Int) extends PElem
   case class Seq(seq: List[PElem]) extends PElem
-  case class Par(par: Set[PElem]) extends PElem
+  case class Par(par: Set[PElem], links: Set[Entry]) extends PElem
   case class Decor(entry: PElem) extends PElem
+
+  object Par {
+    def apply(elems: Set[PElem]): Par = Par(elems, Set())
+  }
   
   object EntryCase extends CaseObject[PElem, Entry, Int]{
     def unapply(e: PElem): Option[Int] = e match {
@@ -287,12 +328,15 @@ class PProcessGraphTest {
     def apply(elems: List[PElem]) = Seq(elems)
   }
   
-  object ParCase extends CaseObject[PElem, Par, Set[PElem]] {
+  object ParCase extends CaseObject[PElem, Par, (Set[PElem], Set[Entry])] {
     def unapply(e: PElem) = e match {
-        case Par(elems) => Some(elems)
+        case Par(entries, links) => Some(entries, links)
         case _ => None
       }
-    def apply(elems: Set[PElem]) = Par(elems)
+    def apply(elems: (Set[PElem], Set[Entry])) = {
+      val (entries, links) = elems
+      Par(entries, links)
+    }
   }
   
   object DecorCase extends CaseObject[PElem, Decor, PElem] {
