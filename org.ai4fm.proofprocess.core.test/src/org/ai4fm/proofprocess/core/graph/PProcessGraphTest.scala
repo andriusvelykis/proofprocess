@@ -260,6 +260,43 @@ class PProcessGraphTest {
     assertEquals(s8, p8)
     assertEquals(PPRootGraph(m8 - (e(2) ~> e(5), e(3) ~> e(6)), r1), toGraph(p8))
   }
+
+
+  /**
+   * A merge for the lower branches
+   *    1
+   *    |
+   *    2
+   *    |\
+   *    3 \
+   *   / \ \
+   *  4   6 |
+   *  |   |/
+   *  5   7
+   * 
+   * The 2->7 will have a soft link.
+   */
+  val m9 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(3) ~> e(4), e(4) ~> e(5), 
+                 e(3) ~> e(6), e(6) ~> e(7), e(2) ~> e(7))
+  
+  @Test
+  def softLink() {
+    val s9 = Seq(List(1,
+                      2,
+                      Par(Set(Seq(List(3,
+                                       Par(Set(Seq(List(4,
+                                                        5)),
+                                               Seq(List(6,
+                                                        7))))
+                                       ))),
+                          Set(7)) // <-- soft link
+                      ))
+
+    val p9 = toPProcessTree(m9, r1)
+    assertEquals(s9, p9)
+    assertEquals(PPRootGraph(m9, r1), toGraph(p9))
+  }
+
   
   // Int + Case Class based testing data structures (to avoid creating EMF ones)
   
