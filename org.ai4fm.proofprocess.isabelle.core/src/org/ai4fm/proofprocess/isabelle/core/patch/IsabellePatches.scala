@@ -24,7 +24,8 @@ object IsabellePatches {
   private val PATCHED_COMMENT_REGEX = "Patched for AI4FM ProofProcess v([0-9]+)".r
 
   private val allPatches: List[PatchInfo] = List(
-    PatchInfo("trace_goal_terms.patch", "201305011000", "src/Pure/goal_display.ML")
+    PatchInfo("trace_goal_terms.patch", "201305011000", "src/Pure/goal_display.ML"),
+    PatchInfo("trace_fact_terms.patch", "201305011630", "src/Pure/Isar/proof.ML")
     )
 
   case class PatchInfo(patch: String, version: String, targetPath: String) {
