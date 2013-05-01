@@ -46,5 +46,11 @@
          </view>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="org.ai4fm.proofprocess.isabelle.core.patchHandler">
+      <handler
+            class="org.ai4fm.proofprocess.isabelle.ui.actions.PatchActionHandler">
+      </handler>
+   </extension>
 
 </plugin>

@@ -13,6 +13,14 @@
   <name>ProofProcess PDE target definition</name>
 
 
+  <dependencies>
+    <dependency>
+      <groupId>com.googlecode.java-diff-utils</groupId>
+      <artifactId>diffutils</artifactId>
+    </dependency>
+  </dependencies>
+
+
   <build>
     <plugins>
       <plugin>

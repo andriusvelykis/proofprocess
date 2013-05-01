@@ -8,6 +8,7 @@ import scala.actors.Actor._
 import org.ai4fm.proofprocess.core.parse.TrackingToggle
 import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin.error
 import org.ai4fm.proofprocess.isabelle.core.analysis.ProofAnalyzer
+import org.ai4fm.proofprocess.isabelle.core.patch.IsabellePatcher
 import org.eclipse.core.runtime.{CoreException, IProgressMonitor, IStatus, Status}
 import org.eclipse.core.runtime.jobs.{IJobChangeEvent, Job, JobChangeAdapter}
 
@@ -65,6 +66,9 @@ class SessionTracker extends SessionEvents {
       analysisJob.schedule
     }
   })
+
+  private val patcher = new IsabellePatcher
+
 
   private def addPendingAnalysis(changed: Session.Commands_Changed) = if (tracking.isTracking) {
 
@@ -133,11 +137,15 @@ class SessionTracker extends SessionEvents {
     }
 
   @throws(classOf[CoreException])
-  private def analyze(event: CommandAnalysisEvent, monitor: IProgressMonitor): IStatus = {
+  private def analyze(event: CommandAnalysisEvent, monitor: IProgressMonitor): IStatus =
+    if (patcher.checkIsabellePatched()) {
 
-    // delegate to the proof analyzer
-    ProofAnalyzer.analyze(event.docState, event.changedCommands, monitor)
-  }
+      // delegate to the proof analyzer
+      ProofAnalyzer.analyze(event.docState, event.changedCommands, monitor)
+
+    } else {
+      Status.CANCEL_STATUS
+    }
 
 }
 

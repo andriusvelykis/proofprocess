@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.ai4fm.proofprocess.isabelle.core.patchHandler" name="Patch Handler" schema="schema/org.ai4fm.proofprocess.isabelle.core.patchHandler.exsd"/>
+
+</plugin>
