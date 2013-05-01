@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ai4fm.proofprocess;bundle-version="1.0.0",
  org.ai4fm.proofprocess.isabelle;bundle-version="1.0.0",
- org.ai4fm.proofprocess.isabelle.core;bundle-version="1.0.0",
+ org.ai4fm.proofprocess.isabelle.core;bundle-version="1.1.0",
  isabelle.pure;bundle-version="2013.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
@@ -21,4 +21,6 @@ Import-Package: org.eclipse.help,
  scala.collection.generic;version="2.10.0",
  scala.collection.immutable;version="2.10.0",
  scala.collection.mutable;version="2.10.0",
+ scala.concurrent;version="2.10.0",
+ scala.concurrent.duration;version="2.10.0",
  scala.runtime;version="2.10.0"
