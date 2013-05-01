@@ -1,19 +1,24 @@
-Subject: [PATCH Isabelle2011-1] tracing actual goal terms when outputting the goal
+Subject: [PATCH Isabelle2013] tracing actual goal terms when outputting the goal
 
-diff -rupN src/Pure/goal_display.ML src-patched/Pure/goal_display.ML
---- src/Pure/goal_display.ML	2011-10-09 15:47:58.000000000 +0100
-+++ src-patched/Pure/goal_display.ML	2012-05-26 17:57:50.000000000 +0100
-@@ -128,7 +128,13 @@ fun pretty_goals ctxt0 state =
+diff --git a/src/Pure/goal_display.ML b/src/Pure/goal_display.ML
+--- a/src/Pure/goal_display.ML
++++ b/src/Pure/goal_display.ML
+@@ -1,3 +1,4 @@
++(*  Patched for AI4FM ProofProcess v201305011000  *)
+ (*  Title:      Pure/goal_display.ML
+     Author:     Lawrence C Paulson, Cambridge University Computer Laboratory
+     Author:     Makarius
+@@ -129,7 +130,13 @@
      val {prop, tpairs, ...} = Thm.rep_thm state;
      val (As, B) = Logic.strip_horn prop;
      val ngoals = length As;
-+    
++
 +    fun subgoal_term term = XML.Elem(("subgoal_term", []), Term_XML.Encode.term term);
 +    fun subgoal_terms terms = XML.Elem(("subgoal_terms", []), map subgoal_term terms);
 +    fun yxml_subgoal_terms terms = YXML.string_of (subgoal_terms terms);
-+
    in
++    (* trace subgoal terms for AI4FM ProofProcess capture *)
 +    tracing(yxml_subgoal_terms As);
-     (if show_main_goal then [prt_term B] else []) @
+     (if show_main_goal then [Pretty.mark Markup.goal (prt_term B)] else []) @
       (if ngoals = 0 then [Pretty.str "No subgoals!"]
        else if ngoals > goals_limit then
