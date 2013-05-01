@@ -21,8 +21,10 @@ class PatchActionHandler extends IPatchActionHandler {
 
     val msg =
       "AI4FM ProofProcess currently requires patching Isabelle Pure source files to enable " +
-      "capturing proof details. Without this, the captured data will be limited.\n\n" +
-      "The following files in Isabelle distribution will be patched:\n" +
+      "capturing proof details. Without this, the captured data will be limited." +
+      "The patches add tracing of some information (e.g. terms) but does not change " +
+      "Isabelle operation otherwise.\n\n" +
+      "The following files in the Isabelle distribution will be patched:\n" +
       files.mkString("\n")
 
     MessageDialog.openConfirm(shell, "Patch Isabelle for ProofProcess", msg)
