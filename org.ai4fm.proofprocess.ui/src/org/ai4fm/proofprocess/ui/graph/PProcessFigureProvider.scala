@@ -1,13 +1,11 @@
 package org.ai4fm.proofprocess.ui.graph
 
-import org.ai4fm.proofprocess.Proof
-import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.ui.graph.draw.ProofEntryFigure
-import org.ai4fm.proofprocess.ui.graph.draw.ProofFigure
+import org.ai4fm.proofprocess.{Proof, ProofEntry}
+import org.ai4fm.proofprocess.ui.graph.draw.{ProofEntryFigure, ProofFigure}
 import org.eclipse.draw2d.IFigure
+import org.eclipse.gef4.zest.core.viewers.IFigureProvider
 import org.eclipse.jface.resource.ResourceManager
 import org.eclipse.jface.viewers.ILabelProvider
-import org.eclipse.zest.core.viewers.IFigureProvider
 
 
 /** Custom figure provider for ProofProcess data to display in a graph.

@@ -1,9 +1,8 @@
 package org.ai4fm.proofprocess.ui.graph
 
-import org.ai4fm.proofprocess.ProofDecor
-import org.ai4fm.proofprocess.ProofParallel
-import org.ai4fm.proofprocess.ProofSeq
-import org.eclipse.zest.core.viewers.INestedContentProvider
+import org.ai4fm.proofprocess.{ProofDecor, ProofParallel, ProofSeq}
+import org.eclipse.gef4.zest.core.viewers.INestedContentProvider
+
 
 /** ProofProcess data nesting provider for Zest GraphViewer.
   * 
