@@ -4,7 +4,7 @@
   <properties size='1'>
     <property name='p2.timestamp' value='${timestamp}'/>
   </properties>
-  <children size='1'>
+  <children size='4'>
     <child location='${nightly.updates.url}'/>
     <child location='https://hudson.eclipse.org/hudson/job/gef-zest-integration/lastSuccessfulBuild/artifact/targetPlatform'/>
     <child location='http://andriusvelykis.github.io/isabelle-eclipse/updates/isabelle2013/nightly/'/>
