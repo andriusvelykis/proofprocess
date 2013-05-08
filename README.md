@@ -2,6 +2,21 @@
 
 A framework to capture, store and analyse expert's interactive proof process. The framework is part of the [AI4FM research project][ai4fm], which aims to learn from an expert doing interactive theorem proving to increase automation of formal proofs.
 
+## Downloads
+
+Install the ProofProcess framework plug-ins by using the following update site in the Eclipse [_Update Manager_][update-manager]:
+
+[`http://www.ai4fm.org/proofprocess/updates/nightly/`][download-updates]
+
+When installing, select the ProofProcess framework for your theorem prover, e.g. **Isabelle ProofProcess integration** or **Z/EVES ProofProcess integration** - all required plug-ins will be downloaded and installed automatically.
+
+Note that Isabelle/Eclipse requires **Java 7** to run, so make sure that your Eclipse IDE is running on Java 7. [Refer to Isabelle/Eclipse documentation for details][isabelle-eclipse-java7].
+
+[download-updates]: http://www.ai4fm.org/proofprocess/updates/nightly/
+[update-manager]: http://www.vogella.com/articles/Eclipse/article.html#updatemanager
+[isabelle-eclipse-java7]: http://andriusvelykis.github.io/isabelle-eclipse/getting-started/#java-7
+
+
 ## Components
 
 The framework aims to be generic across theorem provers. Current prototype implementations include support for Isabelle and Z/EVES theorem provers.
