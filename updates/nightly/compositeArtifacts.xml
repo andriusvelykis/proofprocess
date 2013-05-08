@@ -2,10 +2,10 @@
 <?compositeArtifactRepository version='1.0.0'?>
 <repository name='ProofProcess Nightly Updates' type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>
   <properties size='1'>
-    <property name='p2.timestamp' value='201305081125'/>
+    <property name='p2.timestamp' value='201305081352'/>
   </properties>
-  <children size='1'>
-    <child location='http://sourceforge.net/projects/proofprocess/files/updates/nightly/201305081125'/>
+  <children size='4'>
+    <child location='http://sourceforge.net/projects/proofprocess/files/updates/nightly/201305081352'/>
     <child location='https://hudson.eclipse.org/hudson/job/gef-zest-integration/lastSuccessfulBuild/artifact/targetPlatform'/>
     <child location='http://andriusvelykis.github.io/isabelle-eclipse/updates/isabelle2013/nightly/'/>
     <child location='http://czt.sourceforge.net/eclipse/updates/nightly/'/>
