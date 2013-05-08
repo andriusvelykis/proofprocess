@@ -12,6 +12,12 @@
 
   <name>ProofProcess Framework p2 Repository</name>
 
+  <properties>
+    <deploy.host>sftp://frs.sourceforge.net</deploy.host>
+    <deploy.dir>/home/frs/project/proofprocess</deploy.dir>
+  </properties>
+
+
   <dependencies>
     <dependency>
       <groupId>com.assembla.scala-incubator</groupId>
@@ -27,5 +33,127 @@
       <artifactId>diffutils</artifactId>
     </dependency>
   </dependencies>
+
+
+  <build>
+    <extensions>
+      <!-- extension to enable SCP use for deployment
+           (must be added to the main build configuration) -->
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh</artifactId>
+        <version>2.4</version>
+      </extension>
+    </extensions>
+
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-p2-repository-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+          <repositoryName>ProofProcess Updates</repositoryName>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+  <profiles>
+    <profile>
+      <!-- A profile to deploy nightly build artifacts to release area.
+           Deploy using `mvn clean deploy -P nightly` and provide the appropriate logins
+           in settings.xml. -->
+      <id>nightly</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+
+        <nightly.updates.path>updates/nightly/${timestamp}</nightly.updates.path>
+        <nightly.updates.url>http://sourceforge.net/projects/proofprocess/files/${nightly.updates.path}</nightly.updates.url>
+        <nightly.site.path>updates/nightly</nightly.site.path>
+
+        <github.global.server>github</github.global.server>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <!-- filter composite p2 repo definitions to insert nightly updates path and timestamp
+                 -->
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+              <execution>
+                <id>copy-p2-definition</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/composite-nightly</outputDirectory>
+                  <resources>          
+                    <resource>
+                      <directory>${project.basedir}/composite-nightly</directory>
+                      <filtering>true</filtering>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>wagon-maven-plugin</artifactId>
+            <version>1.0-beta-4</version>
+            <executions>
+              <execution>
+                <id>upload-p2-repo</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>upload</goal>
+                </goals>
+                <configuration>
+                  <fromDir>${project.build.directory}/repository</fromDir>
+                  <includes>**</includes>
+                  <url>${deploy.host}${deploy.dir}/${nightly.updates.path}</url>
+                  <serverId>sourceforge</serverId>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <!-- GitHub site plug-in for deployment to GitHub pages.
+                 Upload the new composite repository definition pointing to latest nightly
+                 update site. -->
+            <groupId>com.github.github</groupId>
+            <artifactId>site-maven-plugin</artifactId>
+            <version>0.8</version>
+            <executions>
+              <execution>
+                <id>upload-nightly-composite-github</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>site</goal>
+                </goals>
+                <configuration>
+                  <message>link to latest nightly update site</message>
+                  <outputDirectory>${project.build.directory}/composite-nightly</outputDirectory>
+                  <path>${nightly.site.path}</path>
+                  <merge>true</merge>
+                  <repositoryName>proofprocess</repositoryName>
+                  <repositoryOwner>andriusvelykis</repositoryOwner>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
