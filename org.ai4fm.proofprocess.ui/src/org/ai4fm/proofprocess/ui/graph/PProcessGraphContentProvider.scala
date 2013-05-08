@@ -2,13 +2,9 @@ package org.ai4fm.proofprocess.ui.graph
 
 import scala.collection.immutable.Map
 
-import org.ai4fm.proofprocess.Attempt
-import org.ai4fm.proofprocess.Proof
-import org.ai4fm.proofprocess.ProofElem
-import org.ai4fm.proofprocess.ProofStore
-import org.eclipse.emf.ecore.EObject
+import org.ai4fm.proofprocess.{Attempt, Proof, ProofElem, ProofStore}
+import org.eclipse.gef4.zest.core.viewers.IGraphEntityContentProvider
 import org.eclipse.jface.viewers.Viewer
-import org.eclipse.zest.core.viewers.IGraphEntityContentProvider
 
 
 /** ProofProcess data content provider for Zest GraphViewer.

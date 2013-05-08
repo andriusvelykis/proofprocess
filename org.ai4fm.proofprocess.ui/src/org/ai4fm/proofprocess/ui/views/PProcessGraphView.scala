@@ -3,42 +3,38 @@ package org.ai4fm.proofprocess.ui.views
 import scala.collection.JavaConversions._
 
 import org.ai4fm.proofprocess.ui.PProcessUIPlugin
-import org.ai4fm.proofprocess.ui.graph.PProcessFigureProvider
-import org.ai4fm.proofprocess.ui.graph.PProcessGraphContentProvider
+import org.ai4fm.proofprocess.ui.graph.{PProcessFigureProvider, PProcessGraphContentProvider}
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
-import org.eclipse.jface.action.Action
-import org.eclipse.jface.action.GroupMarker
-import org.eclipse.jface.action.IAction
-import org.eclipse.jface.action.MenuManager
+import org.eclipse.gef4.zest.core.viewers.{EntityConnectionData, GraphViewer}
+import org.eclipse.gef4.zest.core.widgets.ZestStyles
+import org.eclipse.gef4.zest.layouts.LayoutAlgorithm
+import org.eclipse.gef4.zest.layouts.algorithms.{
+  CompositeLayoutAlgorithm,
+  DirectedGraphLayoutAlgorithm,
+  HorizontalShiftAlgorithm
+}
+import org.eclipse.jface.action.{Action, GroupMarker, IAction, MenuManager}
 import org.eclipse.jface.commands.ActionHandler
-import org.eclipse.jface.layout.GridDataFactory
-import org.eclipse.jface.layout.GridLayoutFactory
-import org.eclipse.jface.resource.JFaceResources
-import org.eclipse.jface.resource.LocalResourceManager
-import org.eclipse.jface.viewers.ISelection
-import org.eclipse.jface.viewers.IStructuredSelection
+import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
+import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
+import org.eclipse.jface.viewers.{ISelection, IStructuredSelection}
 import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.widgets.Composite
-import org.eclipse.ui.IActionBars
-import org.eclipse.ui.IPartListener2
-import org.eclipse.ui.ISelectionListener
-import org.eclipse.ui.ISharedImages
-import org.eclipse.ui.IWorkbenchActionConstants
-import org.eclipse.ui.IWorkbenchCommandConstants
-import org.eclipse.ui.IWorkbenchPart
-import org.eclipse.ui.IWorkbenchPartReference
-import org.eclipse.ui.PlatformUI
+import org.eclipse.ui.{
+  IActionBars,
+  IPartListener2,
+  ISelectionListener,
+  ISharedImages,
+  IWorkbenchActionConstants,
+  IWorkbenchCommandConstants,
+  IWorkbenchPart,
+  IWorkbenchPartReference,
+  PlatformUI
+}
 import org.eclipse.ui.handlers.IHandlerService
 import org.eclipse.ui.part.ViewPart
-import org.eclipse.zest.core.viewers.EntityConnectionData
-import org.eclipse.zest.core.viewers.GraphViewer
-import org.eclipse.zest.core.widgets.ZestStyles
-import org.eclipse.zest.layouts.LayoutAlgorithm
-import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm
-import org.eclipse.zest.layouts.algorithms.DirectedGraphLayoutAlgorithm
-import org.eclipse.zest.layouts.algorithms.HorizontalShiftAlgorithm
 
 
 /** @author Andrius Velykis
