@@ -2,11 +2,11 @@
 <?compositeMetadataRepository version='1.0.0'?>
 <repository name='ProofProcess Nightly Updates' type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
   <properties size='1'>
-    <property name='p2.timestamp' value='201305081352'/>
+    <property name='p2.timestamp' value='201305090606'/>
   </properties>
   <children size='4'>
-    <child location='http://sourceforge.net/projects/proofprocess/files/updates/nightly/201305081352'/>
-    <child location='https://hudson.eclipse.org/hudson/job/gef-zest-integration/lastSuccessfulBuild/artifact/targetPlatform'/>
+    <child location='http://sourceforge.net/projects/proofprocess/files/updates/nightly/201305090606'/>
+    <child location='http://download.eclipse.org/tools/gef/gef4/updates/integration/'/>
     <child location='http://andriusvelykis.github.io/isabelle-eclipse/updates/isabelle2013/nightly/'/>
     <child location='http://czt.sourceforge.net/eclipse/updates/nightly/'/>
   </children>
