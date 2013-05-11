@@ -1,5 +1,6 @@
 package org.ai4fm.proofprocess.zeves.core.parse
 
+import java.util.Queue
 import java.util.concurrent.ConcurrentLinkedQueue
 
 import scala.collection.JavaConversions._
@@ -10,12 +11,13 @@ import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.error
 import org.eclipse.core.runtime.{CoreException, IProgressMonitor, IStatus, Status}
 import org.eclipse.core.runtime.jobs.{IJobChangeEvent, Job, JobChangeAdapter}
 
-import SnapshotUtil._
 import net.sourceforge.czt.session.SectionInfo
-import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
-import net.sourceforge.czt.zeves.snapshot.SnapshotChangedEvent
+import net.sourceforge.czt.zeves.snapshot.{ISnapshotEntry, SnapshotChangedEvent}
 import net.sourceforge.czt.zeves.snapshot.SnapshotChangedEvent.SnapshotChangeType._
 import net.sourceforge.czt.zeves.snapshot.ZEvesSnapshot
+
+import SnapshotUtil.{isError, isProof, proofEntries}
+
 
 /** @author Andrius Velykis
   */
@@ -61,24 +63,72 @@ class SnapshotTracker(snapshot: ZEvesSnapshot) {
 
     changed.getType match {
       case ADD => {
-        val sectInfo = snapshot.getSectionInfo
-        // filter out error entries, which will be ignored
-        val nonErrEntries = changed.getEntries.filterNot(isError)
-        nonErrEntries foreach { entry =>
-          // TODO collect entries from the same proof together?
-          pendingEvents.add(SnapshotAnalysisEvent(changed, sectInfo, entry, proofEntries(snapshot)(entry)))
+        // keep only non-error proof entries - the rest will be ignored
+        val validEntries = changed.getEntries.filter(e => !isError(e) && isProof(e))
+
+        if (!validEntries.isEmpty) {
+          pendingEvents.add(SnapshotAnalysisEvent(
+            snapshot.getSectionInfo,
+            snapshot.getEntries.toList,
+            validEntries.toList))
         }
       }
-      case REMOVE => {
+      case _ => {
+        // ignore removals in analysis - not handling them at the moment anyway..
         // for remove, use the last proof left, if any
-        // FIXME nulls
-        pendingEvents.add(SnapshotAnalysisEvent(changed, null, null, lastProof(snapshot)))
+//        pendingEvents.add(SnapshotAnalysisEvent(changed, null, null, lastProof(snapshot)))
       }
     }
 
     // wake up the analysis job
     analysisJob.schedule()
   }
+
+  /**
+   * Collects proof spans for the changed entries.
+   * 
+   * The `changed` list must be reversed, so that the later changed elements are captured first.
+   */
+  private def collectProofSpans(snapshotEntries: List[ISnapshotEntry],
+                                changed: List[ISnapshotEntry]): List[List[ISnapshotEntry]] =
+    changed match {
+      case Nil => Nil
+      case c :: cl => {
+        val proofSpan = proofEntries(snapshotEntries, c)
+        // drop the ones in the proof span
+        val restChanged = changed.filter(e => !proofSpan.contains(e))
+        val restSpans = collectProofSpans(snapshotEntries, restChanged)
+
+        proofSpan :: restSpans
+      }
+    }
+
+
+  /**
+   * Retrieves all pending events and merges them.
+   * 
+   * Uses the last available snapshot state and collects all changed entries
+   */
+  private def allPendingEvents(): Option[SnapshotAnalysisEvent] = {
+    val allPending = pollAll(pendingEvents)
+
+    if (allPending.isEmpty) {
+      None
+    } else {
+      val allChangedLists = allPending map (_.changedEntries)
+      // remove duplicates
+      val allChanged = allChangedLists.flatten.distinct
+
+      val lastPending = allPending.last
+      Some(SnapshotAnalysisEvent(lastPending.sectInfo, lastPending.snapshotState, allChanged))
+    }
+  }
+
+  private def pollAll[A](queue: Queue[A]): List[A] = Option(queue.poll()) match {
+    case None => Nil
+    case Some(elem) => elem :: pollAll(queue)
+  }
+
 
   private class AnalysisJob extends Job("Analysing proof process") {
 
@@ -87,7 +137,9 @@ class SnapshotTracker(snapshot: ZEvesSnapshot) {
 
     override protected def run(monitor: IProgressMonitor): IStatus = {
 
-      val nextEvent = Option(pendingEvents.poll())
+      // merge pending events for performance improvements
+//      val nextEvent = Option(pendingEvents.poll())
+      val nextEvent = allPendingEvents()
       nextEvent match {
         // nothing to execute
         case None => Status.OK_STATUS
@@ -110,24 +162,24 @@ class SnapshotTracker(snapshot: ZEvesSnapshot) {
   private def analyze(event: SnapshotAnalysisEvent)(implicit monitor: IProgressMonitor): IStatus = {
 
     val start = System.currentTimeMillis
+    
+    // collect proof spans (reverse entries as necessary)
+    val proofSpans = collectProofSpans(event.snapshotState, event.changedEntries.reverse)
 
-    val resultStatus = event.event.getType match {
-      case ADD => {
-        // delegate to the proof analyzer
-        ProofAnalyzer.analyze(event.sectInfo, event.entryProof, event.entry)
-      }
-      case _ => {
-        // do not support other types at the moment
-        Status.OK_STATUS
-      }
+    // reverse proof spans to try getting the original order..
+    val orderedSpans = proofSpans.reverse
+    orderedSpans foreach { proofSpan =>
+      // delegate to the proof analyzer
+      ProofAnalyzer.analyze(event.sectInfo, proofSpan)
     }
+    
+    println("Analysing event " + (System.currentTimeMillis - start))
 
-    println("Analysing event " + event.event.getType + " -- " + (System.currentTimeMillis - start))
-
-    resultStatus
+    Status.OK_STATUS
   }
 
 }
 
-case class SnapshotAnalysisEvent(event: SnapshotChangedEvent, sectInfo: SectionInfo,
-                                 entry: ISnapshotEntry, entryProof: List[ISnapshotEntry])
+case class SnapshotAnalysisEvent(sectInfo: SectionInfo,
+                                 snapshotState: List[ISnapshotEntry],
+                                 changedEntries: List[ISnapshotEntry])
