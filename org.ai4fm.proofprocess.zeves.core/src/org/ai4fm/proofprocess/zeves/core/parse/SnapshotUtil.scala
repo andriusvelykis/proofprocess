@@ -1,14 +1,13 @@
 package org.ai4fm.proofprocess.zeves.core.parse
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 import org.ai4fm.proofprocess.Term
 
-import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
-import net.sourceforge.czt.zeves.snapshot.ZEvesSnapshot
-import net.sourceforge.czt.zeves.snapshot.ZEvesSnapshot.ResultType
 import net.sourceforge.czt.session.SectionInfo
 import net.sourceforge.czt.zeves.response.ZEvesOutput
+import net.sourceforge.czt.zeves.snapshot.{ISnapshotEntry, ZEvesSnapshot}
+import net.sourceforge.czt.zeves.snapshot.ZEvesSnapshot.ResultType
 
 
 /** @author Andrius Velykis
@@ -28,25 +27,30 @@ object SnapshotUtil {
   /** Checks if the snapshot entry is erroneous */
   def isError(e: ISnapshotEntry): Boolean = e.getType == ResultType.ERROR
 
-  /** Finds the proof in the snapshot for the given entry (up to and including the given entry,
-    * but no more).
-    */
-  def proofEntries(snapshot: ZEvesSnapshot)(proofEndingWith: ISnapshotEntry): List[ISnapshotEntry] = {
+
+  /**
+   * Finds the proof in the snapshot entries for the given entry
+   * (up to and including the given entry, but no more).
+   */
+  def proofEntries(allEntries: List[ISnapshotEntry],
+                   proofEndingWith: ISnapshotEntry): List[ISnapshotEntry] = {
     
     proofEndingWith match {
       case ProofSnapshotEntry(_) => {
         // part of the proof - take everything up to (and including) the entry
         // to locate its full proof
-        
-        val entries = snapshot.getEntries
-        val endIndex = entries.lastIndexOf(proofEndingWith)
-//        // if the snapshot entry is in the snapshot, take the sublist, otherwise get everything
-//        val proofEntries = if (endIndex >= 0) entries.subList(0, endIndex + 1) else entries
-        val proofEntries = entries.subList(0, endIndex + 1)
-        
-        // find the last proof in the sublist,
-        // which will result in one ending with the required entry
-        lastProof(proofEntries)
+
+        val endIndex = allEntries.indexOf(proofEndingWith)
+        if (endIndex < 0) {
+          // the entry is no longer in the snapshot.. ignore
+          Nil
+        } else {
+          val allStartEntries = allEntries.take(endIndex + 1)
+          
+          // find the last proof in the sublist,
+          // which will result in one ending with the required entry
+          lastProof(allStartEntries)
+        }
       }
       case _ => {
         // entry is not part of the proof, so no proof entries for it
@@ -57,10 +61,10 @@ object SnapshotUtil {
 
   /** If the last snapshot entries constitute a proof, retrieves it whole */
   def lastProof(snapshot: ZEvesSnapshot): List[ISnapshotEntry] = {
-    lastProof(snapshot.getEntries)
+    lastProof(snapshot.getEntries.asScala)
   }
   
-  private def lastProof(entries: java.util.List[_ <: ISnapshotEntry]): List[ISnapshotEntry] = {
+  private def lastProof(entries: Seq[_ <: ISnapshotEntry]): List[ISnapshotEntry] = {
     
     val revEntries = entries.reverseIterator
     

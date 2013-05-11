@@ -8,10 +8,10 @@ import org.ai4fm.proofprocess.core.analysis.ProofAttemptMatcher._
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.project.core.{ProofHistoryManager, ProofManager}
 import org.ai4fm.proofprocess.project.core.util.{ProofProcessUtil, ResourceUtil}
-import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin._
+import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.{error, log}
 import org.ai4fm.proofprocess.zeves.core.parse.{ProofEntryData, ProofEntryReader}
 import org.eclipse.core.resources.IProject
-import org.eclipse.core.runtime.{CoreException, IPath, IProgressMonitor, IStatus, NullProgressMonitor, Path, Status}
+import org.eclipse.core.runtime.{CoreException, IPath, IProgressMonitor, NullProgressMonitor, Path, Status}
 import org.eclipse.emf.ecore.util.EcoreUtil
 
 import net.sourceforge.czt.session.{Key, SectionInfo, Source}
@@ -23,9 +23,11 @@ import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
 object ProofAnalyzer {
 
   @throws(classOf[CoreException])
-  def analyze(sectInfo: SectionInfo, proofSnapshot: List[ISnapshotEntry], activeEntry: ISnapshotEntry)
-             (implicit monitor: IProgressMonitor): IStatus = {
+  def analyze(sectInfo: SectionInfo, proofSnapshot: List[ISnapshotEntry])
+             (implicit monitor: IProgressMonitor) = if (!proofSnapshot.isEmpty) {
 
+    // take the last step as "active entry"
+    val activeEntry = proofSnapshot.last
     val proofEntriesOpt = readProofEntries(sectInfo, proofSnapshot, activeEntry)
 
     proofEntriesOpt foreach {
