@@ -62,8 +62,8 @@ class SnapshotTracker(snapshot: ZEvesSnapshot) {
     changed.getType match {
       case ADD => {
         val sectInfo = snapshot.getSectionInfo
-        // filter out error entries, which will be ignored
-        val nonErrEntries = changed.getEntries.filterNot(isError)
+        // keep only non-error proof entries - the rest will be ignored
+        val nonErrEntries = changed.getEntries.filter(e => !isError(e) && isProof(e))
         nonErrEntries foreach { entry =>
           // TODO collect entries from the same proof together?
           pendingEvents.add(SnapshotAnalysisEvent(changed, sectInfo, entry, proofEntries(snapshot)(entry)))

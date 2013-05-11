@@ -22,6 +22,8 @@ object SnapshotUtil {
   }
   
   def isGoal(e: ISnapshotEntry): Boolean = e.getData.getProofStepIndex == ZEvesSnapshot.GOAL_STEP_INDEX
+
+  def isProof(e: ISnapshotEntry): Boolean = ProofSnapshotEntry.unapply(e).isDefined
   
   /** Checks if the snapshot entry is erroneous */
   def isError(e: ISnapshotEntry): Boolean = e.getType == ResultType.ERROR
