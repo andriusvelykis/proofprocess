@@ -15,6 +15,10 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:org.ai4fm.proofprocess.ui.PProcessView">
+         <separator
+               name="org.ai4fm.proofprocess.isabelle.ui.separator"
+               visible="true">
+         </separator>
          <command
                commandId="org.ai4fm.proofprocess.isabelle.ui.exportPProcessToIsabelle"
                style="push">
