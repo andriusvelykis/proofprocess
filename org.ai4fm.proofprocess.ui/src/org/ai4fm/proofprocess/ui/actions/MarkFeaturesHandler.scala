@@ -39,7 +39,7 @@ class MarkFeaturesHandler extends AbstractHandler {
 
     val shell = HandlerUtil.getActiveShell(event)
     
-    val dialog = new MarkFeaturesDialog(shell)
+    val dialog = new MarkFeaturesDialog(shell, e)
     dialog.open()
     
   }
