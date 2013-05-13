@@ -20,6 +20,7 @@ object PProcessImages {
 
   lazy val GOAL_IN = create("goal_in.gif")
   lazy val GOAL_OUT = create("goal_out.gif")
+  lazy val SUCCESS = create("success.gif")
 
   private def create(iconPath: String) = {
     try {
