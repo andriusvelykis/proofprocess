@@ -57,6 +57,11 @@ object SWTUtil {
       def doubleClick(event: DoubleClickEvent) { p(event) }
     }
 
+  implicit def noArgFnToDoubleClickListener(p: () => Any): IDoubleClickListener =
+    new IDoubleClickListener {
+      def doubleClick(event: DoubleClickEvent) { p() }
+    }
+
   implicit def control2PimpedControl(control: Control): PimpedControl = new PimpedControl(control)
 
   class PimpedControl(control: Control) {
