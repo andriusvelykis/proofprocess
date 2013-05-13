@@ -48,6 +48,7 @@ class PProcessPage(viewPart: IViewPart,
     val mgr = new MenuManager();
 //    mgr.add(groupAttemptsAction);
     // add a placeholder for contributed actions
+    mgr.add(new GroupMarker("edit"))
     mgr.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS))
     val menu = mgr.createContextMenu(treeViewer.getTree)
     treeViewer.getTree.setMenu(menu)

@@ -89,7 +89,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.ai4fm.proofprocess.ui.PProcessView">
+            locationURI="popup:org.ai4fm.proofprocess.ui.PProcessView?after=edit">
          <command
                commandId="org.ai4fm.proofprocess.ui.markFeatures"
                style="push">
