@@ -10,6 +10,7 @@ package org.ai4fm.proofprocess.project.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.project.Position;
 import org.ai4fm.proofprocess.project.ProjectProofProcessFactory;
 import org.ai4fm.proofprocess.project.ProjectProofProcessPackage;
 import org.ai4fm.proofprocess.project.TextLoc;
@@ -139,14 +140,18 @@ public class TextLocItemProvider
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((TextLoc)object).getFilePath();
-		return label == null || label.length() == 0 ?
-			getString("_UI_TextLoc_type") :
-			getString("_UI_TextLoc_type") + " " + label;
+	  TextLoc loc = (TextLoc) object;
+	  String path = loc.getFilePath();
+	  Position pos = loc.getPosition();
+
+	  String file = path != null ? path : "?";
+	  String posStr = "[" +  (pos != null ? pos.getOffset() + ":" + pos.getLength() : "?") + "]";
+	  
+	  return posStr + " @ " + file;
 	}
 
 	/**
