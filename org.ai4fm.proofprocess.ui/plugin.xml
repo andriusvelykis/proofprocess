@@ -58,6 +58,12 @@
             </parameter>
          </defaultHandler>
       </command>
+      <command
+            defaultHandler="org.ai4fm.proofprocess.ui.actions.MarkFeaturesHandler"
+            description="Mark Proof Process Features"
+            id="org.ai4fm.proofprocess.ui.markFeatures"
+            name="Mark Features">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -80,6 +86,14 @@
                commandId="org.ai4fm.proofprocess.ui.trackLatestProofEntryToggle"
                icon="icons/synced.gif"
                style="toggle">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.ai4fm.proofprocess.ui.PProcessView">
+         <command
+               commandId="org.ai4fm.proofprocess.ui.markFeatures"
+               style="push">
          </command>
       </menuContribution>
    </extension>
