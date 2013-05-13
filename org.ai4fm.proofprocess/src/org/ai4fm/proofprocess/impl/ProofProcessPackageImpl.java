@@ -804,7 +804,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 
 		initEClass(proofInfoEClass, ProofInfo.class, "ProofInfo", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofInfo_Intent(), this.getIntent(), null, "intent", null, 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProofInfo_Narrative(), ecorePackage.getEString(), "narrative", "\"\"", 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProofInfo_Narrative(), ecorePackage.getEString(), "narrative", "", 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProofInfo_InFeatures(), this.getProofFeature(), null, "inFeatures", null, 0, -1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProofInfo_OutFeatures(), this.getProofFeature(), null, "outFeatures", null, 0, -1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
