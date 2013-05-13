@@ -136,7 +136,7 @@ class MarkFeaturesDialog(parent: Shell, entry: ProofEntry) extends StatusDialog(
     toolkit.createLabel(container, "Intent: ")
     val intentLink = toolkit.createImageHyperlink(container, SWT.NONE)
     intentLink.setImage(labelProvider.getImage(intent))
-    intentLink.setText(intent.getName)
+    intentLink.setText(labelProvider.getText(intent))
 
     val desc = entry.getInfo.getNarrative
     toolkit.createLabel(container, "Narrative: ")
