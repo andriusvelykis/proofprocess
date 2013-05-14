@@ -137,8 +137,12 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val intent = elem.getInfo.getIntent
     toolkit.createLabel(container, "Intent: ")
     val intentLink = toolkit.createImageHyperlink(container, SWT.NONE)
-    intentLink.setImage(labelProvider.getImage(intent))
-    intentLink.setText(labelProvider.getText(intent))
+    if (intent == null) {
+      intentLink.setText("(not set)")
+    } else {
+      intentLink.setImage(labelProvider.getImage(intent))
+      intentLink.setText(labelProvider.getText(intent))
+    }
 
     val desc = elem.getInfo.getNarrative
     toolkit.createLabel(container, "Narrative: ")
@@ -158,6 +162,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     container
   }
+
 
   private def createTermList(toolkit: FormToolkit,
                              parent: Composite,
