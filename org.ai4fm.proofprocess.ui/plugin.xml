@@ -118,7 +118,7 @@
                         ifEmpty="false"
                         operator="and">
                      <instanceof
-                           value="org.ai4fm.proofprocess.ProofEntry">
+                           value="org.ai4fm.proofprocess.ProofElem">
                      </instanceof>
                   </iterate>
                </and>

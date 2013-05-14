@@ -1,7 +1,8 @@
 package org.ai4fm.proofprocess.ui.actions
 
-import org.ai4fm.proofprocess.ProofEntry
+import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ui.features.MarkFeaturesDialog
+
 import org.eclipse.core.commands.{AbstractHandler, ExecutionEvent, ExecutionException}
 import org.eclipse.jface.viewers.IStructuredSelection
 import org.eclipse.ui.handlers.HandlerUtil
@@ -21,7 +22,7 @@ class MarkFeaturesHandler extends AbstractHandler {
     val selection = selectedElem(event)
 
     selection match {
-      case Some(e: ProofEntry) => handleProofEntrySelected(event, e)
+      case Some(e: ProofElem) => handleProofEntrySelected(event, e)
       case _ => // ignore
     }
 
@@ -35,7 +36,7 @@ class MarkFeaturesHandler extends AbstractHandler {
       case _ => None
     }
 
-  private def handleProofEntrySelected(event: ExecutionEvent, e: ProofEntry) {
+  private def handleProofEntrySelected(event: ExecutionEvent, e: ProofElem) {
 
     val shell = HandlerUtil.getActiveShell(event)
     

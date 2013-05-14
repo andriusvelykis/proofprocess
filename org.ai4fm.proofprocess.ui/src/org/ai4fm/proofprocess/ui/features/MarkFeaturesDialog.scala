@@ -1,16 +1,16 @@
 package org.ai4fm.proofprocess.ui.features
 
-import java.{util => ju}
-
-import org.ai4fm.proofprocess.{ProofEntry, Term}
+import org.ai4fm.proofprocess.{ProofElem, ProofEntry, Term}
+import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.ui.{PProcessImages, PProcessUIPlugin}
+import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
 import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
-import org.eclipse.jface.viewers.{ArrayContentProvider, TableViewer}
+import org.eclipse.jface.viewers.TableViewer
 import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.widgets.{Composite, Control, Shell}
@@ -24,12 +24,15 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite._
  * 
  * @author Andrius Velykis
  */
-class MarkFeaturesDialog(parent: Shell, entry: ProofEntry) extends StatusDialog(parent) {
+class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(parent) {
 
   private val adapterFactory =
     new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)
 
   private val labelProvider = new AdapterFactoryLabelProvider(adapterFactory)
+
+  lazy val inGoals = ProofElemComposition.composeInGoals(elem)
+  lazy val outGoals = ProofElemComposition.composeOutGoals(elem)
   
 
   setTitle("Mark Features")
@@ -86,7 +89,7 @@ class MarkFeaturesDialog(parent: Shell, entry: ProofEntry) extends StatusDialog(
       val container = toolkit.createComposite(parent, SWT.WRAP)
       container.setLayout(GridLayoutFactory.swtDefaults.create)
 
-      val inGoalsTable = createTermList(toolkit, container, entry.getProofStep.getInGoals)
+      val inGoalsTable = createTermList(toolkit, container, inGoals)
       inGoalsTable.setLayoutData(fillBoth.hint(100, 20).create)
       
       toolkit.paintBordersFor(container)
@@ -102,7 +105,6 @@ class MarkFeaturesDialog(parent: Shell, entry: ProofEntry) extends StatusDialog(
       val container = toolkit.createComposite(parent, SWT.WRAP)
       container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
 
-      val outGoals = entry.getProofStep.getOutGoals
       if (outGoals.isEmpty) {
         // no output goals - all proved
         toolkit.createLabel(container, "Results: ")
@@ -114,7 +116,7 @@ class MarkFeaturesDialog(parent: Shell, entry: ProofEntry) extends StatusDialog(
         val resultsLabel = toolkit.createLabel(container, "Results: ")
         resultsLabel.setLayoutData(GridDataFactory.swtDefaults.span(2, 1).create)
         
-        val inGoalsTable = createTermList(toolkit, container, entry.getProofStep.getOutGoals)
+        val inGoalsTable = createTermList(toolkit, container, outGoals)
         inGoalsTable.setLayoutData(fillBoth.hint(100, 20).span(2, 1).create)
       }
       
@@ -132,32 +134,39 @@ class MarkFeaturesDialog(parent: Shell, entry: ProofEntry) extends StatusDialog(
     val container = toolkit.createComposite(parent, SWT.WRAP)
     container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
 
-    val intent = entry.getInfo.getIntent
+    val intent = elem.getInfo.getIntent
     toolkit.createLabel(container, "Intent: ")
     val intentLink = toolkit.createImageHyperlink(container, SWT.NONE)
     intentLink.setImage(labelProvider.getImage(intent))
     intentLink.setText(labelProvider.getText(intent))
 
-    val desc = entry.getInfo.getNarrative
+    val desc = elem.getInfo.getNarrative
     toolkit.createLabel(container, "Narrative: ")
     toolkit.createLabel(container, desc, SWT.WRAP)
 
-    val source = entry.getProofStep.getSource 
-    toolkit.createLabel(container, "Source: ")
-    createLabelWithImage(toolkit, container,
-      labelProvider.getText(source), labelProvider.getImage(source))
+    elem match {
+      case entry: ProofEntry => {
+
+        val source = entry.getProofStep.getSource
+        toolkit.createLabel(container, "Source: ")
+        createLabelWithImage(toolkit, container,
+          labelProvider.getText(source), labelProvider.getImage(source))
+      }
+
+      case _ => // ignore
+    }
 
     container
   }
 
   private def createTermList(toolkit: FormToolkit,
                              parent: Composite,
-                             terms: ju.List[Term]): Control = {
+                             terms: Seq[Term]): Control = {
 
     val table = toolkit.createTable(parent, SWT.NONE)
 
     val viewer = new TableViewer(table)
-    viewer.setContentProvider(new ArrayContentProvider)
+    viewer.setContentProvider(ScalaArrayContentProvider)
     viewer.setLabelProvider(labelProvider)
 
     viewer.setInput(terms)
