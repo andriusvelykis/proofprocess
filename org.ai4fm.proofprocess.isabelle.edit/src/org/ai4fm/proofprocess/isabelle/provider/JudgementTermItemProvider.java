@@ -6,6 +6,8 @@ package org.ai4fm.proofprocess.isabelle.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.Term;
+import org.ai4fm.proofprocess.isabelle.DisplayTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.JudgementTerm;
@@ -107,15 +109,47 @@ public class JudgementTermItemProvider
 		return overlayImage(object, getResourceLocator().getImage("full/obj16/JudgementTerm"));
 	}
 
+
 	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_JudgementTerm_type");
+		JudgementTerm term = (JudgementTerm) object;
+		String goalText = getTermText(term.getGoal());
+
+		List<Term> assms = term.getAssms();
+		if (assms.isEmpty()) {
+			return goalText;
+		} else {
+
+			// output as (with symbols): [| assm; assm |] => goal
+			StringBuilder out = new StringBuilder("\u27E6");
+			String delimiter = "";
+
+			for (Term assm : assms) {
+				out.append(delimiter);
+				out.append(getTermText(assm));
+				delimiter = "; ";
+			}
+
+			out.append("\u27E7 \u27f9 ");
+			out.append(goalText);
+			return out.toString();
+		}
+	}
+
+	private String getTermText(Term term) {
+		if (term == null) {
+			return String.valueOf(term);
+		} else if (term instanceof DisplayTerm) {
+			return ((DisplayTerm) term).getDisplay();
+		} else {
+			return term.getClass().getSimpleName();
+		}
 	}
 
 	/**
