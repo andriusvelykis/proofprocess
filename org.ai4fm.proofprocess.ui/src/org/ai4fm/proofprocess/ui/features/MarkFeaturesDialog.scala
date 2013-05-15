@@ -1,21 +1,25 @@
 package org.ai4fm.proofprocess.ui.features
 
-import org.ai4fm.proofprocess.{ProofElem, ProofEntry, Term}
+import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofStore, Term}
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
+import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.{PProcessImages, PProcessUIPlugin}
+import org.ai4fm.proofprocess.ui.PProcessUIPlugin.{error, log}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
+import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
 import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
 import org.eclipse.jface.viewers.TableViewer
+import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.widgets.{Composite, Control, Shell}
-import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent}
-import org.eclipse.ui.forms.widgets.{FormToolkit, Section}
+import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
+import org.eclipse.ui.forms.widgets.{FormToolkit, ImageHyperlink, Section}
 import org.eclipse.ui.forms.widgets.ExpandableComposite._
 
 
@@ -33,6 +37,12 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   lazy val inGoals = ProofElemComposition.composeInGoals(elem)
   lazy val outGoals = ProofElemComposition.composeOutGoals(elem)
+
+  // set a savepoint to rollback on "cancel"
+  val transaction = PProcessUtil.cdoTransaction(elem)
+  val editSavePoint = transaction map (_.setSavepoint())
+
+  var intentLink: ImageHyperlink = _
   
 
   setTitle("Mark Features")
@@ -134,15 +144,14 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val container = toolkit.createComposite(parent, SWT.WRAP)
     container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
 
-    val intent = elem.getInfo.getIntent
     toolkit.createLabel(container, "Intent: ")
-    val intentLink = toolkit.createImageHyperlink(container, SWT.NONE)
-    if (intent == null) {
-      intentLink.setText("(not set)")
-    } else {
-      intentLink.setImage(labelProvider.getImage(intent))
-      intentLink.setText(labelProvider.getText(intent))
-    }
+    intentLink = toolkit.createImageHyperlink(container, SWT.NONE)
+    intentLink.setLayoutData(GridDataFactory.fillDefaults.grab(true, false).create)
+    intentLink.addHyperlinkListener(new HyperlinkAdapter {
+      override def linkActivated(e: HyperlinkEvent) = selectIntent()
+    })
+
+    updateIntentLink()
 
     val desc = elem.getInfo.getNarrative
     toolkit.createLabel(container, "Narrative: ")
@@ -162,6 +171,38 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     container
   }
+
+  private def updateIntentLink() = Option(elem.getInfo.getIntent) match {
+
+    case None => intentLink.setText("(not set)")
+
+    case Some(intent) => {
+      intentLink.setImage(labelProvider.getImage(intent))
+      intentLink.setText(labelProvider.getText(intent))
+    }
+  }
+
+  private def selectIntent() = proofStore match {
+    case Some(proofStore) => {
+      val intentDialog = IntentSelectionDialog(intentLink.getShell, proofStore)
+      // TODO use temporary value somewhere?
+      intentDialog.selectedIntent = Option(elem.getInfo.getIntent)
+
+      if (intentDialog.open() == Window.OK) {
+        val intentName = intentDialog.selectedIntentName
+
+        // locate the intent (or create a new one with the given name)
+        val intent = intentName map (PProcessUtil.getIntent(proofStore, _))
+        elem.getInfo.setIntent(intent.orNull)
+
+        updateIntentLink()
+      }
+    }
+
+    case None => log(error(msg = Some("Proof store is not available")))
+  }
+
+  private def proofStore: Option[ProofStore] = PProcessUtil.findProofStore(elem)
 
 
   private def createTermList(toolkit: FormToolkit,
@@ -204,7 +245,24 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       dispose()
     }
 
+    if (getReturnCode == Window.OK) {
+      saveChanges()
+    } else {
+      discardChanges()
+    }
+
     result
+  }
+
+  private def saveChanges() =
+    try {
+      transaction foreach { _.commit() }
+    } catch {
+      case ex: CommitException => log(error(Some(ex)))
+    }
+
+  private def discardChanges() {
+    editSavePoint foreach { _.rollback() }
   }
 
   private def dispose() {

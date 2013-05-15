@@ -3,6 +3,11 @@ package org.ai4fm.proofprocess.core.util
 import scala.collection.JavaConverters._
 
 import org.ai4fm.proofprocess.{Intent, ProofProcessFactory, ProofStore}
+import org.ai4fm.proofprocess.core.PProcessCorePlugin.{error, log}
+
+import org.eclipse.emf.cdo.CDOObject
+import org.eclipse.emf.cdo.transaction.CDOTransaction
+import org.eclipse.emf.ecore.EObject
 
 
 object PProcessUtil {
@@ -42,5 +47,28 @@ object PProcessUtil {
     // unpack the nested option
     chained andThen (_ getOrElse None)
   }
-  
+
+
+  /**
+   * Tries to find a ProofStore among the parents of the given EMF object.
+   */
+  def findProofStore(elem: EObject): Option[ProofStore] = elem match {
+
+    case store: ProofStore => Some(store)
+
+    case e => Option(e.eContainer) match {
+      case Some(parent) => findProofStore(parent)
+      case None => None
+    }
+  }
+
+
+  def cdoTransaction(elem: CDOObject): Option[CDOTransaction] = elem.cdoView match {
+    case tr: CDOTransaction => Some(tr)
+    case _ => {
+      log(error(msg = Some("Cannot commit transaction - object does not belong to one: " + elem)))
+      None
+    }
+  }
+
 }
