@@ -35,5 +35,11 @@
          </view>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.ai4fm.proofprocess.zeves.ui.internal.ZEvesPProcessUIStartup">
+      </startup>
+   </extension>
 
 </plugin>
