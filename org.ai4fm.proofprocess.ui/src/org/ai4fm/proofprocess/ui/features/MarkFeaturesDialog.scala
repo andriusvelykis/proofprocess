@@ -5,6 +5,7 @@ import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.{PProcessImages, PProcessUIPlugin}
 import org.ai4fm.proofprocess.ui.PProcessUIPlugin.{error, log}
+import org.ai4fm.proofprocess.ui.util.SWTUtil.fnToModifyListener
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
 import org.eclipse.emf.cdo.util.CommitException
@@ -16,8 +17,9 @@ import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
 import org.eclipse.jface.viewers.TableViewer
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
+import org.eclipse.swt.events.ModifyEvent
 import org.eclipse.swt.graphics.Image
-import org.eclipse.swt.widgets.{Composite, Control, Shell}
+import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
 import org.eclipse.ui.forms.widgets.{FormToolkit, ImageHyperlink, Section}
 import org.eclipse.ui.forms.widgets.ExpandableComposite._
@@ -43,6 +45,8 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   val editSavePoint = transaction map (_.setSavepoint())
 
   var intentLink: ImageHyperlink = _
+  var narrativeField: Text = _
+  var narrativeChanged = false
   
 
   setTitle("Mark Features")
@@ -72,30 +76,47 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val sectionListener = new ExpansionAdapter {
       override def expansionStateChanged(e: ExpansionEvent) = form.reflow(true)
     }
-    
-    def createSection(text: String, desc: String)(contents: Composite => Control) {
-      val section = toolkit.createSection(form.getBody,
-          Section.DESCRIPTION | TITLE_BAR | NO_TITLE_FOCUS_BOX | TWISTIE | EXPANDED)
+
+    def createSection(text: String,
+                      desc: Option[String],
+                      expanded: Boolean = false,
+                      grabSpace: Boolean = true)(
+                        contents: Composite => Control) {
+
+      val sectFlags = TITLE_BAR | NO_TITLE_FOCUS_BOX | TWISTIE |
+        (if (expanded) EXPANDED else 0) |
+        (if (desc.isDefined) Section.DESCRIPTION else 0)
+      
+      val section = toolkit.createSection(form.getBody, sectFlags)
       section.setText(text)
-      section.setDescription(desc)
-      val layoutData = fillBoth.create
+      desc foreach (section.setDescription)
+
+      val layoutData = GridDataFactory.fillDefaults.grab(true, false).create
       section.setLayoutData(layoutData)
 
-      // toggle grabbing vertical space when expanded/collapsed
-      section.addExpansionListener(new ExpansionAdapter {
-        override def expansionStateChanged(e: ExpansionEvent) =
-          // do not grab vertical space if collapsed
-          layoutData.grabExcessVerticalSpace = e.getState
-      })
-      
-      section.addExpansionListener(sectionListener)
+      if (grabSpace) {
+        layoutData.grabExcessVerticalSpace = expanded
+
+        // toggle grabbing vertical space when expanded/collapsed
+        section.addExpansionListener(new ExpansionAdapter {
+          override def expansionStateChanged(e: ExpansionEvent) =
+            // do not grab vertical space if collapsed
+            layoutData.grabExcessVerticalSpace = e.getState
+        })
+        
+        section.addExpansionListener(sectionListener)
+      }
       
       val control = contents(section)
       control.setLayoutData(fillBoth.create)
       section.setClient(control)
     }
 
-    createSection("Before step", "The state before step.") { parent =>
+    createSection("Intent && features", None, true, false) { parent =>
+      createWhyInfo(toolkit, parent)
+    }
+
+    createSection("Before step", Some("The state before step.")) { parent =>
       val container = toolkit.createComposite(parent, SWT.WRAP)
       container.setLayout(GridLayoutFactory.swtDefaults.create)
 
@@ -107,11 +128,11 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       container
     }
 
-    createSection("Proof step", "Information about the proof step.") { parent => 
+    createSection("Proof step", Some("Information about the proof step.")) { parent => 
       createStepInfo(toolkit, parent)
     }
 
-    createSection("After step", "Step results.") { parent =>
+    createSection("After step", Some("Step results.")) { parent =>
       val container = toolkit.createComposite(parent, SWT.WRAP)
       container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
 
@@ -139,24 +160,36 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   }
 
 
-  private def createStepInfo(toolkit: FormToolkit, parent: Composite): Control = {
+  private def createWhyInfo(toolkit: FormToolkit, parent: Composite): Control = {
     
     val container = toolkit.createComposite(parent, SWT.WRAP)
     container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
 
     toolkit.createLabel(container, "Intent: ")
     intentLink = toolkit.createImageHyperlink(container, SWT.NONE)
-    intentLink.setLayoutData(GridDataFactory.fillDefaults.grab(true, false).create)
+    intentLink.setLayoutData(fillHorizontal.create)
     intentLink.addHyperlinkListener(new HyperlinkAdapter {
       override def linkActivated(e: HyperlinkEvent) = selectIntent()
     })
 
     updateIntentLink()
 
-    val desc = elem.getInfo.getNarrative
-    toolkit.createLabel(container, "Narrative: ")
-    toolkit.createLabel(container, desc, SWT.WRAP)
+    val narr = elem.getInfo.getNarrative
+    narrativeField = createTextField(toolkit, container, "Narrative:", narr)
+    // record if narrative field has been changed, and set the value during save
+    narrativeField.addModifyListener { _: ModifyEvent => narrativeChanged = true }
+    
 
+    toolkit.paintBordersFor(container)
+    container
+  }
+
+
+  private def createStepInfo(toolkit: FormToolkit, parent: Composite): Control = {
+
+    val container = toolkit.createComposite(parent, SWT.WRAP)
+    container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
+    
     elem match {
       case entry: ProofEntry => {
 
@@ -219,8 +252,30 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     table
   }
 
-  private def fillBoth: GridDataFactory =
-    GridDataFactory.fillDefaults.grab(true, true)
+  private def createTextField(toolkit: FormToolkit,
+                              parent: Composite,
+                              label: String,
+                              initText: String): Text = {
+
+    val l = toolkit.createLabel(parent, label)
+    l.setLayoutData(GridDataFactory.swtDefaults.align(SWT.BEGINNING, SWT.BEGINNING).create)
+
+    val t = toolkit.createText(parent, initText, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL)
+
+    val lineHeight = t.getLineHeight + 2 // add a bit, otherwise it is too small
+    val minHeight = 30 max (2 * lineHeight)
+
+    val lines = initText.split("\\r?\\n").length
+    val height = lines * lineHeight
+
+    t.setLayoutData(fillHorizontal.hint(100, height max minHeight).create)
+
+    t
+  }
+
+  private def fillBoth: GridDataFactory = GridDataFactory.fillDefaults.grab(true, true)
+
+  private def fillHorizontal: GridDataFactory = GridDataFactory.fillDefaults.grab(true, false)
 
   private def createLabelWithImage(toolkit: FormToolkit,
                                    parent: Composite,
@@ -240,26 +295,33 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
 
   override def close(): Boolean = {
-    val result = super.close()
-    if (result) {
-      dispose()
-    }
 
     if (getReturnCode == Window.OK) {
       saveChanges()
     } else {
       discardChanges()
     }
+    
+    val result = super.close()
+    if (result) {
+      dispose()
+    }
 
     result
   }
 
-  private def saveChanges() =
+  private def saveChanges() = {
+    
+    if (narrativeChanged) {
+      elem.getInfo.setNarrative(narrativeField.getText)
+    }
+    
     try {
       transaction foreach { _.commit() }
     } catch {
       case ex: CommitException => log(error(Some(ex)))
     }
+  }
 
   private def discardChanges() {
     editSavePoint foreach { _.rollback() }
