@@ -52,5 +52,11 @@
             class="org.ai4fm.proofprocess.isabelle.ui.actions.PatchActionHandler">
       </handler>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.ai4fm.proofprocess.isabelle.ui.IsabellePProcessUIStartup">
+      </startup>
+   </extension>
 
 </plugin>
