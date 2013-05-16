@@ -1,5 +1,7 @@
 package org.ai4fm.proofprocess.ui.features
 
+import scala.collection.JavaConverters._
+
 import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofStore, Term}
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.core.util.PProcessUtil
@@ -22,7 +24,7 @@ import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
 import org.eclipse.ui.forms.widgets.{FormToolkit, ImageHyperlink, Section}
-import org.eclipse.ui.forms.widgets.ExpandableComposite._
+import org.eclipse.ui.forms.widgets.ExpandableComposite.{EXPANDED, NO_TITLE_FOCUS_BOX, TITLE_BAR, TWISTIE}
 
 
 /**
@@ -178,7 +180,19 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     narrativeField = createTextField(toolkit, container, "Narrative:", narr)
     // record if narrative field has been changed, and set the value during save
     narrativeField.addModifyListener { _: ModifyEvent => narrativeChanged = true }
-    
+
+
+    val featuresLabel = toolkit.createLabel(container, "Features:")
+    featuresLabel.setLayoutData(GridDataFactory.swtDefaults.align(SWT.BEGINNING, SWT.BEGINNING).create)
+    val featuresTable = toolkit.createTable(container, SWT.V_SCROLL)
+    featuresTable.setLayoutData(fillBoth.hint(100, 50).create)
+
+    val viewer = new TableViewer(featuresTable)
+    viewer.setContentProvider(ScalaArrayContentProvider)
+    viewer.setLabelProvider(labelProvider)
+
+    val allFeatures = elem.getInfo.getInFeatures.asScala ++ elem.getInfo.getOutFeatures.asScala
+    viewer.setInput(allFeatures)
 
     toolkit.paintBordersFor(container)
     container
@@ -242,7 +256,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
                              parent: Composite,
                              terms: Seq[Term]): Control = {
 
-    val table = toolkit.createTable(parent, SWT.NONE)
+    val table = toolkit.createTable(parent, SWT.V_SCROLL)
 
     val viewer = new TableViewer(table)
     viewer.setContentProvider(ScalaArrayContentProvider)
