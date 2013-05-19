@@ -5,6 +5,7 @@ import scala.collection.JavaConverters._
 import org.ai4fm.proofprocess.{Intent, ProofProcessFactory, ProofStore}
 import org.ai4fm.proofprocess.core.PProcessCorePlugin.{error, log}
 
+import org.eclipse.core.runtime.{IAdaptable, Platform}
 import org.eclipse.emf.cdo.CDOObject
 import org.eclipse.emf.cdo.transaction.CDOTransaction
 import org.eclipse.emf.ecore.EObject
@@ -69,6 +70,35 @@ object PProcessUtil {
       log(error(msg = Some("Cannot commit transaction - object does not belong to one: " + elem)))
       None
     }
+  }
+
+
+  /**
+   * Returns the specified adapter for the given element.
+   *
+   *
+   * @param element the model element
+   * @param adapterType the type of adapter to look up
+   * @param forceLoad `true` to force loading of the plug-in providing the adapter,
+   *                  `false` otherwise
+   * @return the adapter
+   */
+  // adapted from org.eclipse.ui.ide.ResourceUtil.getAdapter()
+  def getAdapter[T](element: AnyRef, adapterType: Class[T], forceLoad: Boolean = true): Option[T] = {
+
+    val directResult = element match {
+      case adaptable: IAdaptable => Option(adaptable.getAdapter(adapterType).asInstanceOf[T])
+      case _ => None
+    }
+
+    lazy val platformResult =
+      if (forceLoad) {
+        Option(Platform.getAdapterManager.loadAdapter(element, adapterType.getName).asInstanceOf[T])
+      } else {
+        Option(Platform.getAdapterManager.getAdapter(element, adapterType).asInstanceOf[T])
+      }
+
+    directResult orElse platformResult
   }
 
 }

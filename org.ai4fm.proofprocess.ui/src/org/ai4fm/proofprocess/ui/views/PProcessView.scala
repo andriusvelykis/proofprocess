@@ -1,6 +1,8 @@
 package org.ai4fm.proofprocess.ui.views
 
 import org.ai4fm.proofprocess.core.store.{IProofEntryTracker, IProofStoreProvider}
+import org.ai4fm.proofprocess.core.util.PProcessUtil
+
 import org.eclipse.core.resources.IResource
 import org.eclipse.ui.{IEditorPart, IWorkbenchPart}
 import org.eclipse.ui.ide.ResourceUtil
@@ -51,10 +53,9 @@ class PProcessView extends PageBookView {
     getResourceAdapter(part, classOf[IProofEntryTracker])
   
   private def getResourceAdapter[A](part: IWorkbenchPart, adapterClass: Class[A]): Option[A] =
-    getResource(part) flatMap { resource =>
-      // force load adapters (likely in different plugins, which may be not loaded yet)
-      Option(ResourceUtil.getAdapter(resource, adapterClass, true).asInstanceOf[A])
-    }
+    // force load adapters (likely in different plugins, which may be not loaded yet)
+    getResource(part) flatMap { resource => PProcessUtil.getAdapter(resource, adapterClass, true) }
+
   
   private def getResource(part: IWorkbenchPart): Option[IResource] =
     part match {
