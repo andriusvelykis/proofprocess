@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.ui
 
 import org.eclipse.core.runtime.{IStatus, Status}
+import org.eclipse.jface.dialogs.IDialogSettings
 import org.eclipse.ui.plugin.AbstractUIPlugin
 
 
@@ -35,5 +36,13 @@ class PProcessUIPlugin extends AbstractUIPlugin {
   
   // The plug-in ID
   def pluginId = "org.ai4fm.proofprocess.ui" //$NON-NLS-1$
-  
+
+  /**
+   * Retrieves dialog settings section for the given key.
+   * Initialises a new section if one does not exist.
+   */
+  def dialogSettings(key: String): IDialogSettings = {
+    val settings = getDialogSettings
+    Option(settings.getSection(key)) getOrElse settings.addNewSection(key)
+  }
 }

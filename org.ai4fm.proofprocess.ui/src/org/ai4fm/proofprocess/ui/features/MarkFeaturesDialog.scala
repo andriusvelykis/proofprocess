@@ -5,8 +5,8 @@ import scala.collection.JavaConverters._
 import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofStore, Term}
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.core.util.PProcessUtil
-import org.ai4fm.proofprocess.ui.{PProcessImages, PProcessUIPlugin}
-import org.ai4fm.proofprocess.ui.PProcessUIPlugin.{error, log}
+import org.ai4fm.proofprocess.ui.PProcessImages
+import org.ai4fm.proofprocess.ui.PProcessUIPlugin.{error, log, plugin}
 import org.ai4fm.proofprocess.ui.util.SWTUtil.fnToModifyListener
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
@@ -54,7 +54,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   setTitle("Mark Features")
   setShellStyle(getShellStyle() | SWT.MAX | SWT.RESIZE)
 
-  override def getDialogBoundsSettings = PProcessUIPlugin.plugin.getDialogSettings
+  override def getDialogBoundsSettings = plugin.dialogSettings("MarkFeaturesDialog")
 
   /**
    * Create the dialog area.
