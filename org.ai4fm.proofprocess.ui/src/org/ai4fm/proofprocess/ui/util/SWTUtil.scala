@@ -3,12 +3,7 @@ package org.ai4fm.proofprocess.ui.util
 import scala.language.implicitConversions
 
 import org.eclipse.jface.util.{IPropertyChangeListener, PropertyChangeEvent}
-import org.eclipse.jface.viewers.{
-  DoubleClickEvent,
-  IDoubleClickListener,
-  ISelectionChangedListener,
-  SelectionChangedEvent
-}
+import org.eclipse.jface.viewers._
 import org.eclipse.swt.events._
 import org.eclipse.swt.widgets.Control
 
@@ -85,5 +80,11 @@ object SWTUtil {
     }
 
   }
+
+  def selectionElement(sel: ISelection): Option[Any] =
+    Option(sel) match {
+      case Some(ss: IStructuredSelection) => Option(ss.getFirstElement)
+      case _ => None
+    }
 
 }

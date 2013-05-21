@@ -2,9 +2,9 @@ package org.ai4fm.proofprocess.ui.actions
 
 import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ui.features.MarkFeaturesDialog
+import org.ai4fm.proofprocess.ui.util.SWTUtil.selectionElement
 
 import org.eclipse.core.commands.{AbstractHandler, ExecutionEvent, ExecutionException}
-import org.eclipse.jface.viewers.IStructuredSelection
 import org.eclipse.ui.handlers.HandlerUtil
 
 
@@ -19,7 +19,7 @@ class MarkFeaturesHandler extends AbstractHandler {
   override def execute(event: ExecutionEvent): AnyRef = {
 
     // get the selected element if available
-    val selection = selectedElem(event)
+    val selection = selectionElement(HandlerUtil.getCurrentSelection(event))
 
     selection match {
       case Some(e: ProofElem) => handleProofEntrySelected(event, e)
@@ -30,11 +30,6 @@ class MarkFeaturesHandler extends AbstractHandler {
     null
   }
 
-  private def selectedElem(event: ExecutionEvent): Option[Any] =
-    Option(HandlerUtil.getCurrentSelection(event)) match {
-      case Some(ss: IStructuredSelection) => Option(ss.getFirstElement)
-      case _ => None
-    }
 
   private def handleProofEntrySelected(event: ExecutionEvent, e: ProofElem) {
 
