@@ -1,7 +1,8 @@
-package org.ai4fm.proofprocess.ui
+package org.ai4fm.proofprocess.ui.internal
 
-import java.net.MalformedURLException
-import java.net.URL
+import java.net.{MalformedURLException, URL}
+
+import org.ai4fm.proofprocess.ui.PProcessUIPlugin
 
 import org.eclipse.jface.resource.ImageDescriptor
 

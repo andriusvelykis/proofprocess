@@ -5,7 +5,7 @@ import scala.collection.JavaConverters._
 import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofStore, Term}
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.core.util.PProcessUtil
-import org.ai4fm.proofprocess.ui.PProcessImages
+import org.ai4fm.proofprocess.ui.internal.PProcessImages
 import org.ai4fm.proofprocess.ui.PProcessUIPlugin.{error, log, plugin}
 import org.ai4fm.proofprocess.ui.util.SWTUtil.fnToModifyListener
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
