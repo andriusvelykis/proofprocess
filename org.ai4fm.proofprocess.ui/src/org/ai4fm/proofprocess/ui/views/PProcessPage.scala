@@ -6,7 +6,7 @@ import scala.language.implicitConversions
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.core.prefs.PreferenceTracker
 import org.ai4fm.proofprocess.core.store.{IProofEntryTracker, IProofStoreProvider}
-import org.ai4fm.proofprocess.ui.PProcessUIPlugin.{error, log}
+import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log}
 import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences._
 import org.ai4fm.proofprocess.ui.util.SWTUtil.noArgFnToDoubleClickListener
 import org.eclipse.core.runtime.{IProgressMonitor, IStatus, Status}

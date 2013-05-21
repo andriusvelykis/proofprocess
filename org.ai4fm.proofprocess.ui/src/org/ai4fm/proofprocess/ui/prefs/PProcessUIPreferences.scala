@@ -1,6 +1,6 @@
 package org.ai4fm.proofprocess.ui.prefs
 
-import org.ai4fm.proofprocess.ui.PProcessUIPlugin
+import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin
 import org.eclipse.core.runtime.Platform
 import org.eclipse.core.runtime.preferences.{AbstractPreferenceInitializer, DefaultScope, IScopeContext, InstanceScope}
 

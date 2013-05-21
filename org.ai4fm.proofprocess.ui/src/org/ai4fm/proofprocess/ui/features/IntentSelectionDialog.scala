@@ -1,7 +1,7 @@
 package org.ai4fm.proofprocess.ui.features
 
 import org.ai4fm.proofprocess.{Intent, ProofStore}
-import org.ai4fm.proofprocess.ui.PProcessUIPlugin.{error, plugin}
+import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, plugin}
 import org.ai4fm.proofprocess.ui.util.FilteredEntryDialog
 
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory

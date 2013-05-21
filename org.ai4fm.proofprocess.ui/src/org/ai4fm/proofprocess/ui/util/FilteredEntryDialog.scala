@@ -1,6 +1,6 @@
 package org.ai4fm.proofprocess.ui.util
 
-import org.ai4fm.proofprocess.ui.PProcessUIPlugin.plugin
+import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.plugin
 
 import org.eclipse.core.runtime.{IStatus, Status}
 import org.eclipse.jface.viewers.ILabelProvider

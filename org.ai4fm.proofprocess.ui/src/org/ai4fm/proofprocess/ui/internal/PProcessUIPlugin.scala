@@ -1,4 +1,4 @@
-package org.ai4fm.proofprocess.ui
+package org.ai4fm.proofprocess.ui.internal
 
 import org.eclipse.core.runtime.{IStatus, Status}
 import org.eclipse.jface.dialogs.IDialogSettings
