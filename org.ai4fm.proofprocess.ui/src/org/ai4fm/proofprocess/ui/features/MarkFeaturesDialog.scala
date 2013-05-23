@@ -2,12 +2,12 @@ package org.ai4fm.proofprocess.ui.features
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofStore, Term}
+import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofStep, ProofStore, Term}
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.internal.PProcessImages
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
-import org.ai4fm.proofprocess.ui.util.SWTUtil.fnToModifyListener
+import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, selectionElement}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
 import org.eclipse.emf.cdo.util.CommitException
@@ -16,7 +16,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
 import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
-import org.eclipse.jface.viewers.TableViewer
+import org.eclipse.jface.viewers.{DoubleClickEvent, TableViewer}
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
 import org.eclipse.swt.events.ModifyEvent
@@ -262,9 +262,31 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     viewer.setContentProvider(ScalaArrayContentProvider)
     viewer.setLabelProvider(labelProvider)
 
+    viewer.addDoubleClickListener { e: DoubleClickEvent =>
+      elem match {
+        case proofEntry: ProofEntry => selectionElement(e.getSelection) match {
+          // FIXME
+          case Some(t: Term) => selectSubTerm(t, proofEntry.getProofStep)
+          case _ => // ignore
+        }
+        case _ => // ignore
+      }
+    }
+
     viewer.setInput(terms)
     table
   }
+
+
+  private def selectSubTerm(term: Term, context: ProofStep): Term = {
+    
+    val subTermDialog = new SubTermSelectionDialog(intentLink.getShell, term, context)
+    subTermDialog.open()
+
+    // FIXME
+    null
+  }
+
 
   private def createTextField(toolkit: FormToolkit,
                               parent: Composite,
