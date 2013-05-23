@@ -118,7 +118,10 @@ public class JudgementTermItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		JudgementTerm term = (JudgementTerm) object;
+		return renderTerm((JudgementTerm) object);
+	}
+
+	public static String renderTerm(JudgementTerm term) {
 		String goalText = getTermText(term.getGoal());
 
 		List<Term> assms = term.getAssms();
@@ -142,7 +145,7 @@ public class JudgementTermItemProvider
 		}
 	}
 
-	private String getTermText(Term term) {
+	private static String getTermText(Term term) {
 		if (term == null) {
 			return String.valueOf(term);
 		} else if (term instanceof DisplayTerm) {
