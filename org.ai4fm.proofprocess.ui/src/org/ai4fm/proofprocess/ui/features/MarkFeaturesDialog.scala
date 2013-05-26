@@ -256,7 +256,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
                              parent: Composite,
                              terms: Seq[Term]): Control = {
 
-    val table = toolkit.createTable(parent, SWT.V_SCROLL)
+    val table = toolkit.createTable(parent, SWT.V_SCROLL | SWT.H_SCROLL)
 
     val viewer = new TableViewer(table)
     viewer.setContentProvider(ScalaArrayContentProvider)

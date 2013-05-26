@@ -67,7 +67,7 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
     toolkit.createLabel(form.getBody, "Term:", SWT.NONE)
     renderedTermField = new StyledText(form.getBody,
       SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL)
-    renderedTermField.setLayoutData(fillBoth.create)
+    renderedTermField.setLayoutData(fillBoth.hint(100, 40).create)
 
     toolkit.adapt(renderedTermField)
 
@@ -172,7 +172,7 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
   private def createTermList(toolkit: FormToolkit,
                              parent: Composite): TableViewer = {
 
-    val table = toolkit.createTable(parent, SWT.V_SCROLL)
+    val table = toolkit.createTable(parent, SWT.V_SCROLL | SWT.H_SCROLL)
 
     val viewer = new TableViewer(table)
     viewer.setContentProvider(ScalaArrayContentProvider)
