@@ -111,7 +111,15 @@ public class CztTermItemProvider
 		return label == null || label.length() == 0 ?
 			getString("_UI_CztTerm_type") :
 			// label only if display is available
-			/*getString("_UI_CztTerm_type") + " " + */label;
+			/*getString("_UI_CztTerm_type") + " " + */flattenTrim(label);
+	}
+
+	/**
+	 * Trims the text of whitespace and compacts/replaces all consecutive whitespace (including
+	 * linebreaks) with single space - flattens the text.
+	 */
+	private String flattenTrim(String text) {
+		return text.trim().replaceAll("\\s+", " ");
 	}
 
 	/**
