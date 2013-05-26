@@ -4,6 +4,7 @@ import org.ai4fm.proofprocess.{ProofStep, Term}
 import org.ai4fm.proofprocess.core.util.PProcessUtil.getAdapter
 import org.ai4fm.proofprocess.ui.TermSelectionSourceProvider
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.plugin
+import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, selectionElement}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
@@ -11,7 +12,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
 import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
-import org.eclipse.jface.viewers.{StructuredSelection, TableViewer}
+import org.eclipse.jface.viewers.{DoubleClickEvent, StructuredSelection, StyledString, TableViewer}
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.StyledText
 import org.eclipse.swt.graphics.Image
@@ -32,6 +33,12 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
     new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)
 
   private val labelProvider = new AdapterFactoryLabelProvider(adapterFactory)
+
+  private var renderedTermField: StyledText = _
+
+  private var subTermsTable: TableViewer = _
+
+  private var schemaTermsTable: TableViewer = _
 
   setTitle("Select Sub-term")
   setShellStyle(getShellStyle() | SWT.MAX | SWT.RESIZE)
@@ -58,24 +65,11 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
     toolkit.createLabel(form.getBody, "Some more information", SWT.NONE)
 
     toolkit.createLabel(form.getBody, "Term:", SWT.NONE)
-    val renderedTermField = new StyledText(form.getBody,
+    renderedTermField = new StyledText(form.getBody,
       SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL)
     renderedTermField.setLayoutData(fillBoth.create)
 
     toolkit.adapt(renderedTermField)
-
-    val termSourceProvider = getAdapter(term, classOf[TermSelectionSourceProvider], true)
-    val termSource = termSourceProvider map (_.getTermSource(context))
-
-    termSource match {
-      case Some(source) => {
-        val rendered = source.rendered
-        renderedTermField.setText(rendered.getString)
-        renderedTermField.setStyleRanges(rendered.getStyleRanges)
-      }
-
-      case None => renderedTermField.setText("Fooo") // ignore
-    }
 
     val sectionListener = new ExpansionAdapter {
       override def expansionStateChanged(e: ExpansionEvent) = form.reflow(true)
@@ -120,12 +114,10 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
       val container = toolkit.createComposite(parent, SWT.WRAP)
       container.setLayout(GridLayoutFactory.swtDefaults.create)
 
-      val subTerms = termSource map (_.subTerms) getOrElse Nil
 
-      val allSubTerms = term :: subTerms
 
-      val subTermsTable = createTermList(toolkit, container, allSubTerms)
-      subTermsTable.setLayoutData(fillBoth.hint(100, 20).create)
+      subTermsTable = createTermList(toolkit, container)
+      subTermsTable.getTable.setLayoutData(fillBoth.hint(100, 20).create)
 
       toolkit.paintBordersFor(container)
 
@@ -136,10 +128,8 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
       val container = toolkit.createComposite(parent, SWT.WRAP)
       container.setLayout(GridLayoutFactory.swtDefaults.create)
 
-      val termSchemas = termSource map (_.schemaTerms) getOrElse Nil
-
-      val subTermsTable = createTermList(toolkit, container, termSchemas)
-      subTermsTable.setLayoutData(fillBoth.hint(100, 20).create)
+      schemaTermsTable = createTermList(toolkit, container)
+      schemaTermsTable.getTable.setLayoutData(fillBoth.hint(100, 20).create)
 
       toolkit.paintBordersFor(container)
 
@@ -174,13 +164,13 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
 //      container
 //    }
 
+    showTerm(term)
     form
   }
 
 
   private def createTermList(toolkit: FormToolkit,
-                             parent: Composite,
-                             terms: Seq[Term]): Control = {
+                             parent: Composite): TableViewer = {
 
     val table = toolkit.createTable(parent, SWT.V_SCROLL)
 
@@ -188,14 +178,14 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
     viewer.setContentProvider(ScalaArrayContentProvider)
     viewer.setLabelProvider(labelProvider)
 
-    viewer.setInput(terms)
-
-    terms match {
-      case first :: _ => viewer.setSelection(new StructuredSelection(first), true)
-      case _ => // nothing
+    viewer.addDoubleClickListener { e: DoubleClickEvent =>
+      selectionElement(e.getSelection) match {
+        case Some(t: Term) => showTerm(t)
+        case _ => // ignore
+      }
     }
 
-    table
+    viewer
   }
 
   private def createTextField(toolkit: FormToolkit,
@@ -237,6 +227,27 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
     toolkit.createLabel(composite, text)
 
     composite
+  }
+
+  private def showTerm(t: Term) {
+
+    val termSourceProvider = getAdapter(t, classOf[TermSelectionSourceProvider], true)
+    val termSource = termSourceProvider map (_.getTermSource(context))
+
+    val (rendered, subTerms, termSchemas) = termSource match {
+      case Some(source) => (source.rendered, source.subTerms, source.schemaTerms)
+
+      case None => (new StyledString(""), Nil, Nil)
+    }
+
+    renderedTermField.setText(rendered.getString)
+    renderedTermField.setStyleRanges(rendered.getStyleRanges)
+
+    val allSubTerms = t :: subTerms
+    subTermsTable.setInput(allSubTerms.distinct)
+    subTermsTable.setSelection(new StructuredSelection(t), true)
+
+    schemaTermsTable.setInput(termSchemas.distinct)
   }
 
 
