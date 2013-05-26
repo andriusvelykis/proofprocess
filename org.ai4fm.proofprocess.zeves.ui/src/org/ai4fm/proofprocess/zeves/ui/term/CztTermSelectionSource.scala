@@ -6,7 +6,7 @@ import net.sourceforge.czt.base.{ast => z}
 import net.sourceforge.czt.eclipse.core.document.DocumentUtil
 import net.sourceforge.czt.eclipse.zeves.core.ZEvesCore
 import net.sourceforge.czt.session.{Markup, SectionInfo, SectionManager}
-import net.sourceforge.czt.z.ast.{Expr, ExprPred, Pred}
+import net.sourceforge.czt.z.ast.{AndPred, Expr, ExprPred, Pred}
 import net.sourceforge.czt.zeves.util.PrintVisitor
 
 import org.ai4fm.proofprocess.{ProofStep, Term}
@@ -28,6 +28,8 @@ import org.eclipse.ui.{IEditorPart, PlatformUI}
 class CztTermSelectionSource(term: CztTerm, context: ProofStep)
   extends TermSelectionSource {
 
+  def SUBTERM_DEPTH = 2
+
   override val rendered: StyledString = {
     val text = term.getDisplay
     new StyledString(text, CztFontStyler)
@@ -35,7 +37,7 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
 
   override lazy val subTerms: List[Term] = {
     // collect the subterms and reverse the result (it is accummulated backwards)
-    val ts = collectSubTerms(Nil, term.getTerm).distinct.reverse
+    val ts = collectSubTerms(0)(Nil, term.getTerm).distinct.reverse
 
     val sectInfo = currentSectionInfo
     lazy val printVisitor = new PrintVisitor(true)
@@ -50,18 +52,26 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
     ts map (t => CztPPTerm(t, printZ(t)))
   }
 
+  private def collectSubTerms(depth: Int)(
+                                acc: List[z.Term],
+                                obj: AnyRef): List[z.Term] =
+    if (depth > SUBTERM_DEPTH) {
+      acc
+    } else obj match {
+  
+      case AndTerm(andPred, andTerms) => collectSubTermList(andPred :: acc, andTerms, depth)
+  
+      case SubTerm(zTerm) => collectSubTermList(zTerm :: acc, zTerm.getChildren, depth)
+  
+      case zObj: z.Term => collectSubTermList(acc, zObj.getChildren, depth)
+  
+      case _ => acc
+    }
 
-  private def collectSubTerms(acc: List[z.Term], obj: AnyRef): List[z.Term] = obj match {
-
-    case SubTerm(zTerm) => collectSubTerms(zTerm :: acc, zTerm.getChildren)
-
-    case zObj: z.Term => collectSubTerms(acc, zObj.getChildren)
-
-    case _ => acc
-  }
-
-  private def collectSubTerms(acc: List[z.Term], objs: Array[AnyRef]): List[z.Term] =
-    (objs foldLeft acc)(collectSubTerms)
+  private def collectSubTermList(acc: List[z.Term],
+                                 objs: Seq[AnyRef],
+                                 depth: Int): List[z.Term] =
+    (objs foldLeft acc)(collectSubTerms(depth + 1))
 
 
   private def currentSectionInfo: Option[(SectionInfo, String)] = {
@@ -98,6 +108,22 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
 
 
   override def schemaTerms: List[Term] = Nil
+
+}
+
+object AndTerm {
+
+  def unapply(zObj: z.Term): Option[(z.Term, List[z.Term])] = zObj match {
+    case andPred: AndPred => Some((andPred, unfoldAndPred(andPred)))
+    case _ => None
+  }
+
+  private def unfoldAndPred(zObj: z.Term): List[z.Term] = zObj match {
+    case andPred: AndPred =>
+      unfoldAndPred(andPred.getLeftPred) ::: unfoldAndPred(andPred.getRightPred)
+
+    case _ => List(zObj)
+  }
 
 }
 
