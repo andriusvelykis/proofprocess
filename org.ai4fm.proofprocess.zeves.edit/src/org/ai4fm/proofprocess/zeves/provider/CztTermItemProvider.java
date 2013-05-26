@@ -103,14 +103,15 @@ public class CztTermItemProvider
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
 		String label = ((CztTerm)object).getDisplay();
 		return label == null || label.length() == 0 ?
 			getString("_UI_CztTerm_type") :
-			getString("_UI_CztTerm_type") + " " + label;
+			// label only if display is available
+			/*getString("_UI_CztTerm_type") + " " + */label;
 	}
 
 	/**
