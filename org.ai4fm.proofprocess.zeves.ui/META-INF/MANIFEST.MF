@@ -14,8 +14,22 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.databinding.edit;bundle-version="1.2.0",
  org.eclipse.core.databinding.property;bundle-version="1.4.0",
  org.ai4fm.proofprocess.edit;bundle-version="1.0.0",
- org.ai4fm.proofprocess.project.core;bundle-version="1.0.0"
+ org.ai4fm.proofprocess.project.core;bundle-version="1.0.0",
+ org.ai4fm.proofprocess.ui;bundle-version="1.1.0",
+ net.sourceforge.czt.eclipse.core;bundle-version="1.6.0",
+ net.sourceforge.czt.eclipse.zeves.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: scala;version="2.10.0",
+Import-Package: net.sourceforge.czt.base.ast;version="1.6.0",
+ net.sourceforge.czt.session;version="1.6.0",
+ net.sourceforge.czt.util;version="1.6.0",
+ net.sourceforge.czt.z.ast;version="1.6.0",
+ net.sourceforge.czt.zeves.snapshot;version="1.6.0",
+ net.sourceforge.czt.zeves.util;version="1.6.0",
+ org.eclipse.help,
+ scala;version="2.10.0",
+ scala.collection;version="2.10.0",
+ scala.collection.convert;version="2.10.0",
+ scala.collection.immutable;version="2.10.0",
+ scala.collection.mutable;version="2.10.0",
  scala.runtime;version="2.10.0"
