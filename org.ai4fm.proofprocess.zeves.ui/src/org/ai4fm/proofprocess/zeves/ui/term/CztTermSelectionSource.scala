@@ -36,7 +36,7 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
   }
 
   override lazy val subTerms: List[Term] = {
-    // collect the subterms and reverse the result (it is accummulated backwards)
+    // collect the subterms and reverse the result (it is accumulated backwards)
     val ts = collectSubTerms(0)(Nil, term.getTerm).distinct.reverse
 
     val sectInfo = currentSectionInfo
