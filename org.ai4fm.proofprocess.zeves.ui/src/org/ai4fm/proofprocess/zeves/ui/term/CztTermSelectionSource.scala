@@ -31,20 +31,21 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
     new StyledString(text, CztFontStyler)
   }
 
+  private lazy val sectInfo = CztUtil.currentSectionInfo
+  private lazy val printVisitor = new PrintVisitor(true)
+
+  private def printZ(t: z.Term): String = sectInfo match {
+
+    case Some((sectMan: SectionManager, sectName)) =>
+      DocumentUtil.print(t, sectMan, sectName, Markup.UNICODE, 100, true)
+
+    case _ => t.accept(printVisitor)
+  }
+  
 
   override lazy val subTerms: List[Term] = {
     val ts = CztSubTerms.subTerms(term.getTerm, SUBTERM_DEPTH)
 
-    val sectInfo = CztUtil.currentSectionInfo
-    lazy val printVisitor = new PrintVisitor(true)
-
-    def printZ(t: z.Term) = sectInfo match {
-      case Some((sectMan: SectionManager, sectName)) =>
-        DocumentUtil.print(t, sectMan, sectName, Markup.UNICODE, 100, true)
-
-      case _ => t.accept(printVisitor)
-    }
-    
     ts map (t => CztPPTerm(t, printZ(t)))
   }
 
