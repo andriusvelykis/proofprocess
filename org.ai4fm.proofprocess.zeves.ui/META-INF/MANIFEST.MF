@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ai4fm.proofprocess.project.core;bundle-version="1.0.0",
  org.ai4fm.proofprocess.ui;bundle-version="1.1.0",
  net.sourceforge.czt.eclipse.core;bundle-version="1.6.0",
- net.sourceforge.czt.eclipse.zeves.core;bundle-version="1.0.0"
+ net.sourceforge.czt.eclipse.zeves.core;bundle-version="1.0.0",
+ org.ai4fm.proofprocess.zeves.core;bundle-version="1.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: net.sourceforge.czt.base.ast;version="1.6.0",
