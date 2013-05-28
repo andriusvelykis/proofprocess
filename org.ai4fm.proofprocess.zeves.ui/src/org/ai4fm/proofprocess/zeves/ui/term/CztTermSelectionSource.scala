@@ -9,6 +9,7 @@ import org.ai4fm.proofprocess.{ProofStep, Term}
 import org.ai4fm.proofprocess.ui.{TermSelectionSource, TermSelectionSourceProvider}
 import org.ai4fm.proofprocess.zeves.CztTerm
 import org.ai4fm.proofprocess.zeves.core.analysis.{CztSchemaTerms, CztSubTerms}
+import org.ai4fm.proofprocess.zeves.ui.internal.ZEvesPProcessUIPlugin.{error, log}
 
 import org.eclipse.core.runtime.IAdapterFactory
 import org.eclipse.jface.viewers.StyledString
@@ -51,7 +52,18 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
 
   override def schemaTerms: List[Term] = {
     val ts = CztSchemaTerms.schemaTerms(term.getTerm)
-    ts map (t => CztPPTerm(t, printZ(t)))
+    val printed = ts map { t =>
+      try {
+        Some(CztPPTerm(t, printZ(t)))
+      } catch {
+        case ex: Exception => {
+          log(error(Some(ex), Some("Invalid schema term: " + ex.getMessage)))
+          None
+        }
+      }
+    }
+    
+    printed.flatten
   }
 
 }
