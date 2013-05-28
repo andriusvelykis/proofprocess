@@ -58,28 +58,36 @@ object CztSubTerms {
         case (AndTerm(_, al1), AndTerm(_, al2)) => {
           val (same, diff1, diff2) = diffs(al1, al2)
 
+          // add placeholder if there are same assumptions that will be hidden
           val sameAnds = if (same.isEmpty) Nil else List(CztSchemaTerms.createPredPlaceholder())
           
-          // TODO add schema placeholders?
           (AndTerm(sameAnds ::: diff1), AndTerm(sameAnds ::: diff2))
         }
 
-        case (a1, a2) => if (a1.equals(a2)) {
-          val tempPred = CztSchemaTerms.createPredPlaceholder()
-          (Some(tempPred), Some(tempPred))
-        } else {
-          (Some(a1), Some(a2))
-        }
+        case (a1, a2) => diffPred(a1, a2)
       }
 
-      val newImp1 = impPred(assmDiff1, goal1)
-      val newImp2 = impPred(assmDiff2, goal2)
+      val (goalDiff1, goalDiff2) = diffPred(goal1, goal2)
+
+      val newImp1 = impPred(assmDiff1, goalDiff1.get)
+      val newImp2 = impPred(assmDiff2, goalDiff2.get)
 
       (newImp1, newImp2)
     }
 
     case (unknown1, unknown2) => (unknown1, unknown2)
   }
+
+  private def diffPred(e1: Pred, e2: Pred): (Option[Pred], Option[Pred]) =
+    diffSingle(e1, e2, CztSchemaTerms.createPredPlaceholder)
+  
+  private def diffSingle[A](e1: A, e2: A, placeholder: => A): (Option[A], Option[A]) =
+    if (e1 == e2) {
+      val p = placeholder
+      (Some(p), Some(p))
+    } else {
+      (Some(e1), Some(e2))
+    }
 
   private def diffs[A](l1: List[A], l2: List[A]): (List[A], List[A], List[A]) = {
     val same = l1 intersect l2
