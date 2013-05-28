@@ -16,6 +16,8 @@ import net.sourceforge.czt.zeves.util.Factory
  */
 object CztSchemaTerms {
 
+  var counter = 1
+
   def schemaTerms(obj: AnyRef): List[z.Term] = obj match {
     case memPred: MemPred if memPred.getMixfix() => {
       val copy = memPred.create(memPred.getChildren).asInstanceOf[MemPred]
@@ -35,6 +37,12 @@ object CztSchemaTerms {
 
   lazy val factory = new Factory
 
+  private def nextCounter: Int = {
+    val c = counter
+    counter = counter + 1
+    c
+  }
+
   private def createReplacement[T](obj: T): T = obj match {
     case list: z.Term with ju.List[_] => createChildReplacements(list).asInstanceOf[T]
 
@@ -43,19 +51,21 @@ object CztSchemaTerms {
     case and: AndPred => createChildReplacements(and).asInstanceOf[T]
 
     case expr: Expr => {
-      val tempName = factory.createZName("?a")
+      val tempName = factory.createZName("?e" + nextCounter)
       val tempExpr = factory.createRefExpr(tempName)
       tempExpr.asInstanceOf[T]
     }
 
-    case pred: Pred => {
-      val tempName = factory.createZName("?b")
-      val tempExpr = factory.createRefExpr(tempName)
-      val tempPred = factory.createExprPred(tempExpr)
-      tempPred.asInstanceOf[T]
-    }
+    case pred: Pred => createPredPlaceholder().asInstanceOf[T]
 
     case other => other
+  }
+
+  def createPredPlaceholder(): Pred = {
+    val tempName = factory.createZName("?p" + nextCounter)
+    val tempExpr = factory.createRefExpr(tempName)
+    val tempPred = factory.createExprPred(tempExpr)
+    tempPred
   }
 
   private def createChildReplacements[T <: z.Term](zObj: T): T = {
