@@ -56,12 +56,20 @@ object CztSubTerms {
 
       val (assmDiff1, assmDiff2) = (assms1, assms2) match {
         case (AndTerm(_, al1), AndTerm(_, al2)) => {
-          val (_, diff1, diff2) = diffs(al1, al2)
+          val (same, diff1, diff2) = diffs(al1, al2)
+
+          val sameAnds = if (same.isEmpty) Nil else List(CztSchemaTerms.createPredPlaceholder())
+          
           // TODO add schema placeholders?
-          (AndTerm(diff1), AndTerm(diff2))
+          (AndTerm(sameAnds ::: diff1), AndTerm(sameAnds ::: diff2))
         }
 
-        case (a1, a2) => if (a1.equals(a2)) (None, None) else (Some(a1), Some(a2))
+        case (a1, a2) => if (a1.equals(a2)) {
+          val tempPred = CztSchemaTerms.createPredPlaceholder()
+          (Some(tempPred), Some(tempPred))
+        } else {
+          (Some(a1), Some(a2))
+        }
       }
 
       val newImp1 = impPred(assmDiff1, goal1)
