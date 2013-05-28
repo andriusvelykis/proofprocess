@@ -42,7 +42,18 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
 
     case _ => t.accept(printVisitor)
   }
-  
+
+
+  private def printZSafe(t: z.Term): Option[String] =
+    try {
+      Some(printZ(t))
+    } catch {
+      case ex: Exception => {
+        log(error(Some(ex), Some("Invalid schema term: " + ex.getMessage)))
+        None
+      }
+    }
+
 
   override lazy val subTerms: List[Term] = {
     val ts = CztSubTerms.subTerms(term.getTerm, SUBTERM_DEPTH)
@@ -52,17 +63,7 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
 
   override def schemaTerms: List[Term] = {
     val ts = CztSchemaTerms.schemaTerms(term.getTerm)
-    val printed = ts map { t =>
-      try {
-        Some(CztPPTerm(t, printZ(t)))
-      } catch {
-        case ex: Exception => {
-          log(error(Some(ex), Some("Invalid schema term: " + ex.getMessage)))
-          None
-        }
-      }
-    }
-    
+    val printed = ts map { t => printZSafe(t) map (CztPPTerm(t, _)) }
     printed.flatten
   }
 
