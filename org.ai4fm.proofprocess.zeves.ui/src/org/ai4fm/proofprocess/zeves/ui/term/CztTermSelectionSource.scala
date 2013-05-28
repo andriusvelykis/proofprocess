@@ -31,7 +31,16 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
   private val schemaVarsMatch = """(\?\w+)""".r
 
   override val rendered: StyledString = {
-    val text = term.getDisplay
+    val text0 = term.getDisplay
+
+    val text =
+      if (!text0.contains("\n")) {
+        // no newlines, thus possibly having the direct-from-Z/EVES rendering
+        // re-render with CZT using nice formatting
+        printZ(term.getTerm)
+      } else {
+        text0
+      }
 
     // match schema variables
     val matches = schemaVarsMatch.findAllMatchIn(text)
