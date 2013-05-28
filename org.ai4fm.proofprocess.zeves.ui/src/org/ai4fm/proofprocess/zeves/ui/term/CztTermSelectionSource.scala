@@ -27,9 +27,22 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
 
   def SUBTERM_DEPTH = 2
 
+  // matcher for schema variables, e.g. `?a`
+  private val schemaVarsMatch = """(\?\w+)""".r
+
   override val rendered: StyledString = {
     val text = term.getDisplay
-    new StyledString(text, CztFontStyler)
+
+    // match schema variables
+    val matches = schemaVarsMatch.findAllMatchIn(text)
+    val matchRanges = matches map (m => (m.start, m.end))
+
+    val result = new StyledString(text, CztFontStyler)
+
+    matchRanges foreach {
+      case (start, end) => result.setStyle(start, end - start, CztFontStyler.BLUE)
+    }
+    result
   }
 
   private lazy val sectInfo = CztUtil.currentSectionInfo
