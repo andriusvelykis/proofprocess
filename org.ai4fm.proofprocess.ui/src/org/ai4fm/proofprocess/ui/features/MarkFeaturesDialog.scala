@@ -5,6 +5,7 @@ import scala.collection.JavaConverters._
 import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofStep, ProofStore, Term}
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.core.util.PProcessUtil
+import org.ai4fm.proofprocess.ui.{TermSelectionSource, TermSelectionSourceProvider}
 import org.ai4fm.proofprocess.ui.internal.PProcessImages
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
 import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, selectionElement}
@@ -16,9 +17,10 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
 import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
-import org.eclipse.jface.viewers.{DoubleClickEvent, TableViewer}
+import org.eclipse.jface.viewers.{DoubleClickEvent, StyledString, TableViewer}
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
+import org.eclipse.swt.custom.StyledText
 import org.eclipse.swt.events.ModifyEvent
 import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
@@ -122,6 +124,9 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       val container = toolkit.createComposite(parent, SWT.WRAP)
       container.setLayout(GridLayoutFactory.swtDefaults.create)
 
+      val inGoalDisplay = createTermDisplay(toolkit, container)
+      showTermDisplay(inGoalDisplay, inGoals.headOption)
+
       val inGoalsTable = createTermList(toolkit, container, inGoals)
       inGoalsTable.setLayoutData(fillBoth.hint(100, 20).create)
       
@@ -146,11 +151,15 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
           resourceManager.createImageWithDefault(PProcessImages.SUCCESS))
 
       } else {
+
+        val outGoalDisplay = createTermDisplay(toolkit, container)
+        showTermDisplay(outGoalDisplay, outGoals.headOption)
+
         val resultsLabel = toolkit.createLabel(container, "Results: ")
         resultsLabel.setLayoutData(GridDataFactory.swtDefaults.span(2, 1).create)
         
-        val inGoalsTable = createTermList(toolkit, container, outGoals)
-        inGoalsTable.setLayoutData(fillBoth.hint(100, 20).span(2, 1).create)
+        val outGoalsTable = createTermList(toolkit, container, outGoals)
+        outGoalsTable.setLayoutData(fillBoth.hint(100, 20).span(2, 1).create)
       }
       
       toolkit.paintBordersFor(container)
@@ -251,6 +260,49 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   private def proofStore: Option[ProofStore] = PProcessUtil.findProofStore(elem)
 
+  private def createTermDisplay(toolkit: FormToolkit, parent: Composite): StyledText = {
+
+    val termDisplayField = new StyledText(parent,
+      SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL)
+    termDisplayField.setLayoutData(fillBoth.hint(100, 40).create)
+
+    toolkit.adapt(termDisplayField)
+
+    termDisplayField
+  }
+
+  private def showTermDisplay(displayField: StyledText, term: Option[Term]) = {
+    val rendered = term flatMap termSelectionSource map (_.rendered)
+    displayField.setStyledText(rendered)
+  }
+
+
+  /**
+   * Implicit wrapper for StyledText to support StyledString
+   */
+  private implicit class FancyStyledText(textField: StyledText) {
+    def setStyledText(text: Option[StyledString]) = text match {
+      case Some(text) => {
+        textField.setText(text.getString)
+        textField.setStyleRanges(text.getStyleRanges)
+      }
+
+      case None => textField.setText("")
+    }
+  }
+
+
+  private def termSelectionSource(t: Term): Option[TermSelectionSource] = elem match {
+    case proofEntry: ProofEntry => {
+      val termSourceProvider =
+        PProcessUtil.getAdapter(t, classOf[TermSelectionSourceProvider], true)
+      val context = proofEntry.getProofStep
+      val termSource = termSourceProvider map (_.getTermSource(context))
+      termSource
+    }
+
+    case _ => None
+  }
 
   private def createTermList(toolkit: FormToolkit,
                              parent: Composite,
