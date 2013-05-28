@@ -21,4 +21,6 @@ trait TermSelectionSource {
 
   def schemaTerms: List[Term]
 
+  def diff(other: Term): (Term, Term)
+
 }

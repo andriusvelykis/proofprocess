@@ -80,6 +80,20 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
     printed.flatten
   }
 
+  override def diff(other: Term): (Term, Term) = other match {
+    case otherZ: CztTerm => {
+      val (diff1, diff2) = CztSubTerms.diffSubTerms(term.getTerm, otherZ.getTerm)
+
+      def newIfDifferent(t: CztTerm, diff: z.Term): Term =
+        if (diff == t.getTerm) t else CztPPTerm(diff, printZ(diff))
+
+      (newIfDifferent(term, diff1), newIfDifferent(otherZ, diff2))
+    }
+
+    case _ => (term, other)
+
+  }
+
 }
 
 

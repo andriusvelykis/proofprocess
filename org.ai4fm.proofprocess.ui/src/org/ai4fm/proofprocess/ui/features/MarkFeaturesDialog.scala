@@ -8,12 +8,14 @@ import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.{TermSelectionSource, TermSelectionSourceProvider}
 import org.ai4fm.proofprocess.ui.internal.PProcessImages
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
+import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences
 import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, selectionElement}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
 import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.jface.action.Action
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
 import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
@@ -51,6 +53,13 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   var intentLink: ImageHyperlink = _
   var narrativeField: Text = _
   var narrativeChanged = false
+
+  var inGoalDisplay: StyledText = _
+  var outGoalDisplay: StyledText = _
+
+  lazy val (inGoalFiltered, outGoalFiltered) = createFilteredGoals()
+
+  var filterAffectedGoal: Boolean = _
   
 
   setTitle("Mark Features")
@@ -69,7 +78,11 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val form = toolkit.createScrolledForm(parent)
     form.setLayoutData(GridDataFactory.fillDefaults.grab(true, true).create)
     form.setText("Mark proof process features")
+    val toolbar = form.getToolBarManager
     toolkit.decorateFormHeading(form.getForm)
+
+    toolbar.add(new FilterAffectedGoal)
+    toolbar.update(true)
 
     val resourceManager = new LocalResourceManager(JFaceResources.getResources, form)
     
@@ -124,8 +137,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       val container = toolkit.createComposite(parent, SWT.WRAP)
       container.setLayout(GridLayoutFactory.swtDefaults.create)
 
-      val inGoalDisplay = createTermDisplay(toolkit, container)
-      showTermDisplay(inGoalDisplay, inGoals.headOption)
+      inGoalDisplay = createTermDisplay(toolkit, container)
 
       val inGoalsTable = createTermList(toolkit, container, inGoals)
       inGoalsTable.setLayoutData(fillBoth.hint(100, 20).create)
@@ -152,8 +164,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
       } else {
 
-        val outGoalDisplay = createTermDisplay(toolkit, container)
-        showTermDisplay(outGoalDisplay, outGoals.headOption)
+        outGoalDisplay = createTermDisplay(toolkit, container)
 
         val resultsLabel = toolkit.createLabel(container, "Results: ")
         resultsLabel.setLayoutData(GridDataFactory.swtDefaults.span(2, 1).create)
@@ -167,6 +178,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       container
     }
 
+    showTermDisplays()
     form
   }
 
@@ -275,6 +287,30 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val rendered = term flatMap termSelectionSource map (_.rendered)
     displayField.setStyledText(rendered)
   }
+
+  private def showTermDisplays() = if (filterAffectedGoal) {
+    showTermDisplay(inGoalDisplay, inGoalFiltered)
+    showTermDisplay(outGoalDisplay, outGoalFiltered)
+  } else {
+    showTermDisplay(inGoalDisplay, inGoals.headOption)
+    showTermDisplay(outGoalDisplay, outGoals.headOption)
+  }
+
+  private def createFilteredGoals(): (Option[Term], Option[Term]) =
+    (inGoals.headOption, outGoals.headOption) match {
+      case (Some(in), Some(out)) => termSelectionSource(in) match {
+        
+        case Some(inSource) => {
+          val (in1, out1) = inSource.diff(out)
+          (Some(in1), Some(out1))
+        }
+
+        // unsupported
+        case _ => (Some(in), Some(out))
+      }
+
+      case (i, o) => (i, o)
+    }
 
 
   /**
@@ -417,6 +453,33 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   private def dispose() {
     adapterFactory.dispose
+  }
+
+
+  private class FilterAffectedGoal extends Action("Filter Affected Goal", SWT.TOGGLE) {
+
+    setToolTipText("Filter Affected Goal")
+//    setDescription("?")
+    setImageDescriptor(PProcessImages.FILTER)
+
+    {
+      val prefRawTree = PProcessUIPreferences.getBoolean(prefKey, false)
+      setFilterAffectedGoal(prefRawTree, true)
+    }
+
+    def prefKey = PProcessUIPreferences.FILTER_AFFECTED_GOAL
+
+    override def run() {
+      setFilterAffectedGoal(!filterAffectedGoal)
+      showTermDisplays()
+    }
+
+    def setFilterAffectedGoal(doFilter: Boolean, init: Boolean = false) {
+      filterAffectedGoal = doFilter
+      setChecked(doFilter)
+
+      PProcessUIPreferences.prefs.putBoolean(prefKey, doFilter)
+    }
   }
 
 }

@@ -22,6 +22,8 @@ object PProcessImages {
   lazy val GOAL_OUT = create("goal_out.gif")
   lazy val SUCCESS = create("success.gif")
 
+  lazy val FILTER = create("filter.gif")
+
   private def create(iconPath: String) = {
     try {
       val url = new URL(ICON_BASE_URL, iconPath)

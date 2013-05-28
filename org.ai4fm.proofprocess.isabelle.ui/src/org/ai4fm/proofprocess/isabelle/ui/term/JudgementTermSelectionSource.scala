@@ -30,6 +30,9 @@ class JudgementTermSelectionSource(term: JudgementTerm, context: ProofStep)
 
   override def schemaTerms: List[Term] = Nil
 
+  // do nothing for now (no diff)
+  override def diff(other: Term): (Term, Term) = (term, other)
+
 }
 
 

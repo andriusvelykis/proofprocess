@@ -1,7 +1,9 @@
 package org.ai4fm.proofprocess.zeves.core.analysis
 
 import net.sourceforge.czt.base.{ast => z}
-import net.sourceforge.czt.z.ast.{AndPred, Expr, ExprPred, Pred}
+import net.sourceforge.czt.z.ast.{And, AndPred, Expr, ExprPred, ImpliesPred, Pred}
+import net.sourceforge.czt.zeves.util.Factory
+
 
 /**
  * Sub-term computation utilities for CZT terms.
@@ -9,6 +11,8 @@ import net.sourceforge.czt.z.ast.{AndPred, Expr, ExprPred, Pred}
  * @author Andrius Velykis
  */
 object CztSubTerms {
+
+  lazy val factory = new Factory
 
   def subTerms(obj: AnyRef, maxDepth: Int): List[z.Term] =
     // collect the subterms and reverse the result (it is accumulated backwards)
@@ -41,19 +45,73 @@ object CztSubTerms {
     (objs foldLeft acc)(collectSubTerms(maxDepth, depth + 1))
 
 
+  def diffSubTerms(t1: z.Term, t2: z.Term): (z.Term, z.Term) = (t1, t2) match {
+
+    case (imp1: ImpliesPred, imp2: ImpliesPred) => {
+      val assms1 = imp1.getLeftPred
+      val assms2 = imp2.getLeftPred
+
+      val goal1 = imp1.getRightPred
+      val goal2 = imp2.getRightPred
+
+      val (assmDiff1, assmDiff2) = (assms1, assms2) match {
+        case (AndTerm(_, al1), AndTerm(_, al2)) => {
+          val (_, diff1, diff2) = diffs(al1, al2)
+          // TODO add schema placeholders?
+          (AndTerm(diff1), AndTerm(diff2))
+        }
+
+        case (a1, a2) => if (a1.equals(a2)) (None, None) else (Some(a1), Some(a2))
+      }
+
+      val newImp1 = impPred(assmDiff1, goal1)
+      val newImp2 = impPred(assmDiff2, goal2)
+
+      (newImp1, newImp2)
+    }
+
+    case (unknown1, unknown2) => (unknown1, unknown2)
+  }
+
+  private def diffs[A](l1: List[A], l2: List[A]): (List[A], List[A], List[A]) = {
+    val same = l1 intersect l2
+    val diffL1 = l1 diff same
+    val diffL2 = l2 diff same
+
+    (same, diffL1, diffL2)
+  }
+
+  private def impPred(assms: Option[Pred], goal: Pred): Pred =
+    if (assms.isEmpty) goal
+    else factory.createImpliesPred(assms.get, goal)
+
+
   object AndTerm {
 
-    def unapply(zObj: z.Term): Option[(z.Term, List[z.Term])] = zObj match {
+    def unapply(zObj: z.Term): Option[(AndPred, List[Pred])] = zObj match {
       case andPred: AndPred => Some((andPred, unfoldAndPred(andPred)))
       case _ => None
     }
 
-    private def unfoldAndPred(zObj: z.Term): List[z.Term] = zObj match {
+    private def unfoldAndPred(zObj: Pred): List[Pred] = zObj match {
       case andPred: AndPred =>
         unfoldAndPred(andPred.getLeftPred) ::: unfoldAndPred(andPred.getRightPred)
 
       case _ => List(zObj)
     }
+
+    def apply(andTerms: List[Pred]): Option[Pred] = andTerms match {
+      case Nil => None
+      case single :: Nil => Some(single)
+      case first :: rest => {
+        val joined = (rest foldLeft first)(andPred)
+        Some(joined)
+      }
+    }
+
+    // TODO review And type
+    private def andPred(left: Pred, right: Pred): AndPred =
+      factory.createAndPred(left, right, And.Wedge)
 
   }
 
