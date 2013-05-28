@@ -8,7 +8,7 @@ import net.sourceforge.czt.zeves.util.PrintVisitor
 import org.ai4fm.proofprocess.{ProofStep, Term}
 import org.ai4fm.proofprocess.ui.{TermSelectionSource, TermSelectionSourceProvider}
 import org.ai4fm.proofprocess.zeves.CztTerm
-import org.ai4fm.proofprocess.zeves.core.analysis.CztSubTerms
+import org.ai4fm.proofprocess.zeves.core.analysis.{CztSchemaTerms, CztSubTerms}
 
 import org.eclipse.core.runtime.IAdapterFactory
 import org.eclipse.jface.viewers.StyledString
@@ -45,12 +45,14 @@ class CztTermSelectionSource(term: CztTerm, context: ProofStep)
 
   override lazy val subTerms: List[Term] = {
     val ts = CztSubTerms.subTerms(term.getTerm, SUBTERM_DEPTH)
-
     ts map (t => CztPPTerm(t, printZ(t)))
   }
 
 
-  override def schemaTerms: List[Term] = Nil
+  override def schemaTerms: List[Term] = {
+    val ts = CztSchemaTerms.schemaTerms(term.getTerm)
+    ts map (t => CztPPTerm(t, printZ(t)))
+  }
 
 }
 
