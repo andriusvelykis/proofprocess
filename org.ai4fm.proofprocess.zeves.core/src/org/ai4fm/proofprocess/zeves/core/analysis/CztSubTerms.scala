@@ -49,39 +49,46 @@ object CztSubTerms {
 
   def diffSubTerms(t1: z.Term, t2: z.Term): (z.Term, z.Term) = (t1, t2) match {
 
-    case (imp1: ImpliesPred, imp2: ImpliesPred) => {
-      val assms1 = imp1.getLeftPred
-      val assms2 = imp2.getLeftPred
+    case (AndTerm(_, al1), AndTerm(_, al2)) => {
+      val (same, diff1, diff2) = diffsQnt(al1, al2)
 
-      val goal1 = imp1.getRightPred
-      val goal2 = imp2.getRightPred
+      // add placeholder if there are same assumptions that will be hidden
+      val sameAnds = if (same.isEmpty) Nil else List(CztSchemaTerms.createPredPlaceholder())
 
-      val (assmDiff1, assmDiff2) = (assms1, assms2) match {
-        case (AndTerm(_, al1), AndTerm(_, al2)) => {
-          val (same, diff1, diff2) = diffsQnt(al1, al2)
+      (AndTerm(sameAnds ::: diff1).get, AndTerm(sameAnds ::: diff2).get)
+    }
 
-          // add placeholder if there are same assumptions that will be hidden
-          val sameAnds = if (same.isEmpty) Nil else List(CztSchemaTerms.createPredPlaceholder())
-          
-          (AndTerm(sameAnds ::: diff1), AndTerm(sameAnds ::: diff2))
-        }
+    case (p1: Pred, p2: Pred) if sameClass(p1, p2) && (qntEq(p1) == qntEq(p2)) => {
+      // match - use placeholders
+      val p = CztSchemaTerms.createPredPlaceholder
+      (p, p)
+    }
 
-        case (a1, a2) => diffPred(a1, a2)
+    case (t1: z.Term, t2: z.Term) if sameClass(t1, t2) => {
+
+      // decompose
+      val children1 = t1.getChildren
+      val children2 = t2.getChildren
+
+      if (children1.length == children2.length) {
+        val newChildren = (children1.toList zip children2.toList) map diffAny
+        val (new1, new2) = newChildren.unzip
+        (t1.create(new1.toArray), t2.create(new2.toArray))
+      } else {
+        (t1, t2)
       }
-
-      val (goalDiff1, goalDiff2) = diffPred(goal1, goal2)
-
-      val goalQnts1 = findQuantifiedNames(goal1)
-      val goalQnts2 = findQuantifiedNames(goal2)
-
-      val newImp1 = impPred(assmDiff1, goalDiff1.get)
-      val newImp2 = impPred(assmDiff2, goalDiff2.get)
-
-      (newImp1, newImp2)
     }
 
     case (unknown1, unknown2) => (unknown1, unknown2)
   }
+
+  private def diffAny(objPair: (AnyRef, AnyRef)): (AnyRef, AnyRef) = objPair match {
+    case (t1: z.Term, t2: z.Term) => diffSubTerms(t1, t2)
+    case other => other
+  }
+
+  private def sameClass(o1: AnyRef, o2: AnyRef): Boolean = o1.getClass == o2.getClass
+
 
   private def diffPred(e1: Pred, e2: Pred): (Option[Pred], Option[Pred]) =
     if (qntEq(e1) == qntEq(e2)) {
