@@ -1,7 +1,9 @@
 package org.ai4fm.proofprocess.zeves.core.analysis
 
+import scala.collection.JavaConverters._
+
 import net.sourceforge.czt.base.{ast => z}
-import net.sourceforge.czt.z.ast.{And, AndPred, Expr, ExprPred, ImpliesPred, Pred}
+import net.sourceforge.czt.z.ast._
 import net.sourceforge.czt.zeves.util.Factory
 
 
@@ -56,7 +58,7 @@ object CztSubTerms {
 
       val (assmDiff1, assmDiff2) = (assms1, assms2) match {
         case (AndTerm(_, al1), AndTerm(_, al2)) => {
-          val (same, diff1, diff2) = diffs(al1, al2)
+          val (same, diff1, diff2) = diffsQnt(al1, al2)
 
           // add placeholder if there are same assumptions that will be hidden
           val sameAnds = if (same.isEmpty) Nil else List(CztSchemaTerms.createPredPlaceholder())
@@ -69,6 +71,9 @@ object CztSubTerms {
 
       val (goalDiff1, goalDiff2) = diffPred(goal1, goal2)
 
+      val goalQnts1 = findQuantifiedNames(goal1)
+      val goalQnts2 = findQuantifiedNames(goal2)
+
       val newImp1 = impPred(assmDiff1, goalDiff1.get)
       val newImp2 = impPred(assmDiff2, goalDiff2.get)
 
@@ -79,15 +84,26 @@ object CztSubTerms {
   }
 
   private def diffPred(e1: Pred, e2: Pred): (Option[Pred], Option[Pred]) =
-    diffSingle(e1, e2, CztSchemaTerms.createPredPlaceholder)
-  
-  private def diffSingle[A](e1: A, e2: A, placeholder: => A): (Option[A], Option[A]) =
-    if (e1 == e2) {
-      val p = placeholder
+    if (qntEq(e1) == qntEq(e2)) {
+      val p = CztSchemaTerms.createPredPlaceholder
       (Some(p), Some(p))
     } else {
       (Some(e1), Some(e2))
     }
+
+  private def diffsQnt[T <: z.Term](l1: List[T], l2: List[T]): (List[T], List[T], List[T]) = {
+
+    val qntL1 = l1 map qntEq
+    val qntL2 = l2 map qntEq
+
+    val (sameQnt, diffQnt1, diffQnt2) = diffs(qntL1, qntL2)
+
+    val same = sameQnt map (_.term)
+    val diff1 = diffQnt1 map (_.term)
+    val diff2 = diffQnt2 map (_.term)
+
+    (same, diff1, diff2)
+  }
 
   private def diffs[A](l1: List[A], l2: List[A]): (List[A], List[A], List[A]) = {
     val same = l1 intersect l2
@@ -100,6 +116,88 @@ object CztSubTerms {
   private def impPred(assms: Option[Pred], goal: Pred): Pred =
     if (assms.isEmpty) goal
     else factory.createImpliesPred(assms.get, goal)
+
+
+  def findQuantifiedNames(t: AnyRef): List[ZName] = t match {
+    case qp: QntPred => findQntQuantifiedNames(qp.getZSchText, qp.getPred)
+
+    case qe: QntExpr => findQntQuantifiedNames(qe.getZSchText, qe.getExpr)
+
+    case zObj: z.Term => (zObj.getChildren.toList map findQuantifiedNames).flatten
+
+    case _ => Nil
+  }
+
+  private def findQntQuantifiedNames(schText: ZSchText, body: AnyRef): List[ZName] = {
+    val declList = schText.getZDeclList
+
+    val declNames = declList.asScala.toList map {
+      case (v: VarDecl) => {
+        val declNames = v.getZNameList.asScala.toList map { case zn: ZName => zn }
+        val exprNames = findQuantifiedNames(v.getExpr)
+
+        declNames ::: exprNames
+      }
+      case unknown => findQuantifiedNames(unknown)
+    }
+
+    val qSchPredNames = findQuantifiedNames(schText.getPred)
+    val bodyNames = findQuantifiedNames(body)
+
+    declNames.flatten ::: qSchPredNames ::: bodyNames
+  }
+
+  private def replaceNames(t: z.Term, names: Map[ZName, ZName]): z.Term = {
+    val children = t.getChildren
+    val replaced = children map { c =>
+      c match {
+        case name: ZName => names.getOrElse(name, name)
+        case zObj: z.Term => replaceNames(zObj, names)
+        case obj => obj
+      }
+    }
+    t.create(replaced)
+  }
+
+  private def qntEq[T <: z.Term](term: T): QntEquals[T] = new QntEquals(term)
+
+  /**
+   * A wrapper to perform quantifier-equals operations on the term.
+   * 
+   * Quantifier-equals normalises quantified names to match semantically-same expressions.
+   */
+  sealed class QntEquals[T <: z.Term](val term: T) {
+
+    lazy val qntNames = findQuantifiedNames(term)
+    
+    override def equals(other0: Any): Boolean = other0 match {
+      case other: QntEquals[_] =>
+        if (qntNames.isEmpty && other.qntNames.isEmpty) {
+          // no quantifiers - just perform term equality
+          term == other.term
+        } else if (qntNames.size == other.qntNames.size) {
+          // same quantifier count - map to the same ones and compare
+          val newNames = List.fill(qntNames.size)(CztSchemaTerms.createNamePlaceholder())
+
+          val map1 = qntNames zip newNames
+          val map2 = other.qntNames zip newNames
+          
+          val new1 = replaceNames(term, map1.toMap)
+          val new2 = replaceNames(other.term, map2.toMap)
+
+          // try checking equality after normalising the names
+          new1 == new2
+
+        } else {
+          // different quantifier count - different terms
+          false
+        }
+
+      case _ => false
+    }
+
+    override lazy val hashCode: Int = term.hashCode
+  }
 
 
   object AndTerm {

@@ -3,7 +3,7 @@ package org.ai4fm.proofprocess.zeves.core.analysis
 import java.{util => ju}
 
 import net.sourceforge.czt.base.{ast => z}
-import net.sourceforge.czt.z.ast.{AndPred, Expr, MemPred, Pred, TupleExpr}
+import net.sourceforge.czt.z.ast.{AndPred, Expr, MemPred, Pred, TupleExpr, ZName}
 import net.sourceforge.czt.zeves.util.Factory
 
 
@@ -60,6 +60,9 @@ object CztSchemaTerms {
 
     case other => other
   }
+
+  def createNamePlaceholder(): ZName =
+    factory.createZName("?n" + nextCounter)
 
   def createPredPlaceholder(): Pred = {
     val tempName = factory.createZName("?p" + nextCounter)
