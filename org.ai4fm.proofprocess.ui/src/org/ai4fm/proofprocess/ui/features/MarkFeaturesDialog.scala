@@ -55,7 +55,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   var narrativeChanged = false
 
   var inGoalDisplay: StyledText = _
-  var outGoalDisplay: StyledText = _
+  var outGoalDisplay: Option[StyledText] = None
 
   lazy val (inGoalFiltered, outGoalFiltered) = createFilteredGoals()
 
@@ -164,7 +164,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
       } else {
 
-        outGoalDisplay = createTermDisplay(toolkit, container)
+        outGoalDisplay = Some(createTermDisplay(toolkit, container))
 
         val resultsLabel = toolkit.createLabel(container, "Results: ")
         resultsLabel.setLayoutData(GridDataFactory.swtDefaults.span(2, 1).create)
@@ -290,10 +290,10 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   private def showTermDisplays() = if (filterAffectedGoal) {
     showTermDisplay(inGoalDisplay, inGoalFiltered)
-    showTermDisplay(outGoalDisplay, outGoalFiltered)
+    outGoalDisplay foreach (showTermDisplay(_, outGoalFiltered))
   } else {
     showTermDisplay(inGoalDisplay, inGoals.headOption)
-    showTermDisplay(outGoalDisplay, outGoals.headOption)
+    outGoalDisplay foreach (showTermDisplay(_, outGoals.headOption))
   }
 
   private def createFilteredGoals(): (Option[Term], Option[Term]) =
