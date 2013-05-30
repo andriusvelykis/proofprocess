@@ -9,6 +9,7 @@ import org.ai4fm.proofprocess.ui.{TermSelectionSource, TermSelectionSourceProvid
 import org.ai4fm.proofprocess.ui.internal.PProcessImages
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
 import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences
+import org.ai4fm.proofprocess.ui.util.{AdaptingLabelProvider, AdaptingTableLabelProvider}
 import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, selectionElement}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
@@ -19,7 +20,7 @@ import org.eclipse.jface.action.Action
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
 import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
-import org.eclipse.jface.viewers.{DoubleClickEvent, StyledString, TableViewer}
+import org.eclipse.jface.viewers.{DoubleClickEvent, ILabelProvider, ITableLabelProvider, StyledString, TableViewer}
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.StyledText
@@ -288,8 +289,8 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     termDisplayField
   }
 
-  private def showTermDisplay(displayField: StyledText, term: Option[Term]) = {
-    val rendered = term flatMap termSelectionSource map (_.rendered)
+  private def showTermDisplay(displayField: StyledText, term: Option[(Term, ProofEntry)]) = {
+    val rendered = term flatMap Function.tupled(termSelectionSource) map (_.rendered)
     displayField.setStyledText(rendered)
   }
 
@@ -311,18 +312,20 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     if (list.isEmpty) elem.toList else elem.toList ++ list.tail
 
 
-  private def createFilteredGoals(): (Option[Term], Option[Term]) =
+  private def createFilteredGoals(): (Option[(Term, ProofEntry)], Option[(Term, ProofEntry)]) =
     (inGoals.headOption, outGoals.headOption) match {
-      case (Some(in), Some(out)) => termSelectionSource(in) match {
-        
-        case Some(inSource) => {
-          val (in1, out1) = inSource.diff(out)
-          (Some(in1), Some(out1))
-        }
 
-        // unsupported
-        case _ => (Some(in), Some(out))
-      }
+      case (Some((in, inEntry)), Some((out, outEntry))) =>
+        termSelectionSource(in, inEntry) match {
+
+          case Some(inSource) => {
+            val (in1, out1) = inSource.diff(out)
+            (Some(in1, inEntry), Some(out1, outEntry))
+          }
+
+          // unsupported
+          case _ => (Some((in, inEntry)), Some((out, outEntry)))
+        }
 
       case (i, o) => (i, o)
     }
@@ -342,17 +345,13 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     }
   }
 
-
-  private def termSelectionSource(t: Term): Option[TermSelectionSource] = elem match {
-    case proofEntry: ProofEntry => {
-      val termSourceProvider =
-        PProcessUtil.getAdapter(t, classOf[TermSelectionSourceProvider], true)
-      val context = proofEntry.getProofStep
-      val termSource = termSourceProvider map (_.getTermSource(context))
-      termSource
-    }
-
-    case _ => None
+  private def termSelectionSource(t: Term,
+                                  sourceEntry: ProofEntry): Option[TermSelectionSource] = {
+    val termSourceProvider =
+      PProcessUtil.getAdapter(t, classOf[TermSelectionSourceProvider], true)
+    val context = sourceEntry.getProofStep
+    val termSource = termSourceProvider map (_.getTermSource(context))
+    termSource
   }
 
   private def createTermList(toolkit: FormToolkit,
@@ -368,15 +367,11 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     val viewer = new TableViewer(table)
     viewer.setContentProvider(ScalaArrayContentProvider)
-    viewer.setLabelProvider(labelProvider)
+    viewer.setLabelProvider(new FirstElemLabelProvider(labelProvider))
 
     viewer.addDoubleClickListener { e: DoubleClickEvent =>
-      elem match {
-        case proofEntry: ProofEntry => selectionElement(e.getSelection) match {
-          // FIXME
-          case Some(t: Term) => selectSubTerm(t, proofEntry.getProofStep)
-          case _ => // ignore
-        }
+      selectionElement(e.getSelection) match {
+        case Some((t: Term, source: ProofEntry)) => selectSubTerm(t, source.getProofStep)
         case _ => // ignore
       }
     }
@@ -500,5 +495,10 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       PProcessUIPreferences.prefs.putBoolean(prefKey, doFilter)
     }
   }
+
+  private val fst: PartialFunction[Any, Any] = { case (first, _) => first }
+
+  private class FirstElemLabelProvider(base: ILabelProvider with ITableLabelProvider)
+      extends AdaptingLabelProvider(base)(fst) with AdaptingTableLabelProvider
 
 }

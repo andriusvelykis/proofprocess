@@ -14,9 +14,9 @@ import org.ai4fm.proofprocess.{ProofDecor, ProofElem, ProofEntry, ProofParallel,
 object ProofElemComposition {
 
   def composeEntries[A](elem: ProofElem, before: Boolean)(
-      f: ProofEntry => Seq[A]): Seq[A] = elem match {
+      f: ProofEntry => Seq[A]): Seq[(A, ProofEntry)] = elem match {
 
-    case entry: ProofEntry => f(entry)
+    case entry: ProofEntry => f(entry) map ((_, entry))
 
     case decor: ProofDecor => composeEntries(decor.getEntry, before)(f)
 
@@ -45,10 +45,10 @@ object ProofElemComposition {
     }
   }
 
-  def composeInGoals(elem: ProofElem): Seq[Term] =
+  def composeInGoals(elem: ProofElem): Seq[(Term, ProofEntry)] =
     composeEntries(elem, true) { entry => entry.getProofStep.getInGoals.asScala }
 
-  def composeOutGoals(elem: ProofElem): Seq[Term] =
+  def composeOutGoals(elem: ProofElem): Seq[(Term, ProofEntry)] =
     composeEntries(elem, false) { entry => entry.getProofStep.getOutGoals.asScala }
 
 }
