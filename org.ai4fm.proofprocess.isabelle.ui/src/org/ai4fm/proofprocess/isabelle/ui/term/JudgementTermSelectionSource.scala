@@ -26,7 +26,8 @@ class JudgementTermSelectionSource(term: JudgementTerm, context: ProofStep)
     new StyledString(text, IsabelleFontStyler)
   }
 
-  override def subTerms: List[Term] = term.getAssms.asScala.toList ++ List(term.getGoal)
+  // add the term itself to subterms
+  override def subTerms: List[Term] = term :: (term.getAssms.asScala.toList ++ List(term.getGoal))
 
   override def schemaTerms: List[Term] = Nil
 

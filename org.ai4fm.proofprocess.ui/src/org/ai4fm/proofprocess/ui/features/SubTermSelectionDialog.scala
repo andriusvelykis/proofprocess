@@ -243,11 +243,10 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
     renderedTermField.setText(rendered.getString)
     renderedTermField.setStyleRanges(rendered.getStyleRanges)
 
-    val allSubTerms = t :: subTerms
-    subTermsTable.setInput(allSubTerms.distinct)
+    subTermsTable.setInput(subTerms)
     subTermsTable.setSelection(new StructuredSelection(t), true)
 
-    schemaTermsTable.setInput(termSchemas.distinct)
+    schemaTermsTable.setInput(termSchemas)
   }
 
 
