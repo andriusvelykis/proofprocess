@@ -55,7 +55,9 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   var narrativeChanged = false
 
   var inGoalDisplay: StyledText = _
+  var inGoalsTable: TableViewer = _
   var outGoalDisplay: Option[StyledText] = None
+  var outGoalsTable: Option[TableViewer] = None
 
   lazy val (inGoalFiltered, outGoalFiltered) = createFilteredGoals()
 
@@ -139,8 +141,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
       inGoalDisplay = createTermDisplay(toolkit, container)
 
-      val inGoalsTable = createTermList(toolkit, container, inGoals)
-      inGoalsTable.setLayoutData(fillBoth.hint(100, 20).create)
+      inGoalsTable = createTermList(toolkit, container, inGoals.size > 1)
       
       toolkit.paintBordersFor(container)
 
@@ -152,33 +153,37 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     }
 
     createSection("After step", Some("Step results.")) { parent =>
-      val container = toolkit.createComposite(parent, SWT.WRAP)
-      container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
-
       if (outGoals.isEmpty) {
+
+        val container = toolkit.createComposite(parent, SWT.WRAP)
+        container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
+
         // no output goals - all proved
         toolkit.createLabel(container, "Results: ")
         val allProvedLabel = createLabelWithImage(
           toolkit, container, "All proved!",
           resourceManager.createImageWithDefault(PProcessImages.SUCCESS))
 
+        container
+
       } else {
+
+        val container = toolkit.createComposite(parent, SWT.WRAP)
+        container.setLayout(GridLayoutFactory.swtDefaults.create)
 
         outGoalDisplay = Some(createTermDisplay(toolkit, container))
 
         val resultsLabel = toolkit.createLabel(container, "Results: ")
-        resultsLabel.setLayoutData(GridDataFactory.swtDefaults.span(2, 1).create)
-        
-        val outGoalsTable = createTermList(toolkit, container, outGoals)
-        outGoalsTable.setLayoutData(fillBoth.hint(100, 20).span(2, 1).create)
-      }
-      
-      toolkit.paintBordersFor(container)
+        resultsLabel.setLayoutData(GridDataFactory.swtDefaults.create)
 
-      container
+        outGoalsTable = Some(createTermList(toolkit, container, outGoals.size > 1))
+
+        toolkit.paintBordersFor(container)
+        container
+      }
     }
 
-    showTermDisplays()
+    showTerms()
     form
   }
 
@@ -288,13 +293,23 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     displayField.setStyledText(rendered)
   }
 
-  private def showTermDisplays() = if (filterAffectedGoal) {
+  private def showTerms() = if (filterAffectedGoal) {
     showTermDisplay(inGoalDisplay, inGoalFiltered)
+    inGoalsTable.setInput(replaceFirst(inGoalFiltered, inGoals))
+
     outGoalDisplay foreach (showTermDisplay(_, outGoalFiltered))
+    outGoalsTable foreach (_.setInput(replaceFirst(outGoalFiltered, outGoals)))
   } else {
     showTermDisplay(inGoalDisplay, inGoals.headOption)
+    inGoalsTable.setInput(inGoals)
+
     outGoalDisplay foreach (showTermDisplay(_, outGoals.headOption))
+    outGoalsTable foreach (_.setInput(outGoals))
   }
+
+  private def replaceFirst[A](elem: Option[A], list: Seq[A]): Seq[A] =
+    if (list.isEmpty) elem.toList else elem.toList ++ list.tail
+
 
   private def createFilteredGoals(): (Option[Term], Option[Term]) =
     (inGoals.headOption, outGoals.headOption) match {
@@ -342,9 +357,14 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   private def createTermList(toolkit: FormToolkit,
                              parent: Composite,
-                             terms: Seq[Term]): Control = {
+                             multi: Boolean): TableViewer = {
 
     val table = toolkit.createTable(parent, SWT.V_SCROLL | SWT.H_SCROLL)
+    val hhint = 100
+    val layoutData = if (multi) fillBoth.hint(hhint, 20)
+                     else fillHorizontal.hint(hhint, SWT.DEFAULT)
+
+    table.setLayoutData(layoutData.create)
 
     val viewer = new TableViewer(table)
     viewer.setContentProvider(ScalaArrayContentProvider)
@@ -361,8 +381,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       }
     }
 
-    viewer.setInput(terms)
-    table
+    viewer
   }
 
 
@@ -471,7 +490,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     override def run() {
       setFilterAffectedGoal(!filterAffectedGoal)
-      showTermDisplays()
+      showTerms()
     }
 
     def setFilterAffectedGoal(doFilter: Boolean, init: Boolean = false) {
