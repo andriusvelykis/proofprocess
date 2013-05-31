@@ -15,7 +15,6 @@ import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
 import org.eclipse.jface.viewers.{DoubleClickEvent, StructuredSelection, StyledString, TableViewer}
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.StyledText
-import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent}
 import org.eclipse.ui.forms.widgets.{FormToolkit, Section}
@@ -136,34 +135,6 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
       container
     }
 
-//    createSection("Proof step", Some("Information about the proof step.")) { parent => 
-//      createStepInfo(toolkit, parent)
-//    }
-//
-//    createSection("After step", Some("Step results.")) { parent =>
-//      val container = toolkit.createComposite(parent, SWT.WRAP)
-//      container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
-//
-//      if (outGoals.isEmpty) {
-//        // no output goals - all proved
-//        toolkit.createLabel(container, "Results: ")
-//        val allProvedLabel = createLabelWithImage(
-//          toolkit, container, "All proved!",
-//          resourceManager.createImageWithDefault(PProcessImages.SUCCESS))
-//
-//      } else {
-//        val resultsLabel = toolkit.createLabel(container, "Results: ")
-//        resultsLabel.setLayoutData(GridDataFactory.swtDefaults.span(2, 1).create)
-//        
-//        val inGoalsTable = createTermList(toolkit, container, outGoals)
-//        inGoalsTable.setLayoutData(fillBoth.hint(100, 20).span(2, 1).create)
-//      }
-//      
-//      toolkit.paintBordersFor(container)
-//
-//      container
-//    }
-
     showTerm(term)
     form
   }
@@ -212,22 +183,6 @@ class SubTermSelectionDialog(parent: Shell, term: Term, context: ProofStep) exte
   private def fillBoth: GridDataFactory = GridDataFactory.fillDefaults.grab(true, true)
 
   private def fillHorizontal: GridDataFactory = GridDataFactory.fillDefaults.grab(true, false)
-
-  private def createLabelWithImage(toolkit: FormToolkit,
-                                   parent: Composite,
-                                   text: String,
-                                   image: Image): Control = {
-
-    val composite = toolkit.createComposite(parent)
-    composite.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).margins(0, 0).create)
-
-    val img = toolkit.createLabel(composite, "")
-    img.setImage(image)
-
-    toolkit.createLabel(composite, text)
-
-    composite
-  }
 
   private def showTerm(t: Term) {
 
