@@ -32,7 +32,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 */
 	public static ProofProcessFactory init() {
 		try {
-			ProofProcessFactory theProofProcessFactory = (ProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/v1.0.0"); 
+			ProofProcessFactory theProofProcessFactory = (ProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/v1.0.0.10"); 
 			if (theProofProcessFactory != null) {
 				return theProofProcessFactory;
 			}

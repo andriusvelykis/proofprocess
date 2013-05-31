@@ -83,6 +83,7 @@ public class ProofStoreItemProvider
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_STORE__PROOFS);
 			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_STORE__INTENTS);
+			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_STORE__FEATURES);
 		}
 		return childrenFeatures;
 	}
@@ -136,6 +137,7 @@ public class ProofStoreItemProvider
 		switch (notification.getFeatureID(ProofStore.class)) {
 			case ProofProcessPackage.PROOF_STORE__PROOFS:
 			case ProofProcessPackage.PROOF_STORE__INTENTS:
+			case ProofProcessPackage.PROOF_STORE__FEATURES:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -162,6 +164,11 @@ public class ProofStoreItemProvider
 			(createChildParameter
 				(ProofProcessPackage.Literals.PROOF_STORE__INTENTS,
 				 ProofProcessFactory.eINSTANCE.createIntent()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProofProcessPackage.Literals.PROOF_STORE__FEATURES,
+				 ProofProcessFactory.eINSTANCE.createProofFeatureDef()));
 	}
 
 	/**

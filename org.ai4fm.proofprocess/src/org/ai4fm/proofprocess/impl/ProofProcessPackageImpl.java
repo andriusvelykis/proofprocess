@@ -655,6 +655,15 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getProofStore_Features() {
+		return (EReference)proofStoreEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public EEnum getProofFeatureType() {
 		return proofFeatureTypeEEnum;
@@ -747,6 +756,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		proofStoreEClass = createEClass(PROOF_STORE);
 		createEReference(proofStoreEClass, PROOF_STORE__PROOFS);
 		createEReference(proofStoreEClass, PROOF_STORE__INTENTS);
+		createEReference(proofStoreEClass, PROOF_STORE__FEATURES);
 
 		// Create enums
 		proofFeatureTypeEEnum = createEEnum(PROOF_FEATURE_TYPE);
@@ -844,6 +854,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		initEClass(proofStoreEClass, ProofStore.class, "ProofStore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofStore_Proofs(), this.getProof(), null, "proofs", null, 0, -1, ProofStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProofStore_Intents(), this.getIntent(), null, "intents", null, 0, -1, ProofStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getProofStore_Features(), this.getProofFeatureDef(), null, "features", null, 0, -1, ProofStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(proofFeatureTypeEEnum, ProofFeatureType.class, "ProofFeatureType");

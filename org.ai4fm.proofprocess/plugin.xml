@@ -12,7 +12,7 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://org/ai4fm/proofprocess/v1.0.0"
+            uri="http://org/ai4fm/proofprocess/v1.0.0.10"
             class="org.ai4fm.proofprocess.ProofProcessPackage"
             genModel="model/ProofProcess.genmodel"/>
    </extension>

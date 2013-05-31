@@ -10,6 +10,7 @@ import java.util.Collection;
 
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Proof;
+import org.ai4fm.proofprocess.ProofFeatureDef;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.ProofStore;
 
@@ -32,6 +33,7 @@ import org.eclipse.emf.internal.cdo.CDOObjectImpl;
  * <ul>
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofStoreImpl#getProofs <em>Proofs</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofStoreImpl#getIntents <em>Intents</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofStoreImpl#getFeatures <em>Features</em>}</li>
  * </ul>
  * </p>
  *
@@ -94,6 +96,16 @@ public class ProofStoreImpl extends CDOObjectImpl implements ProofStore {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+	public EList<ProofFeatureDef> getFeatures() {
+		return (EList<ProofFeatureDef>)eDynamicGet(ProofProcessPackage.PROOF_STORE__FEATURES, ProofProcessPackage.Literals.PROOF_STORE__FEATURES, true, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -101,6 +113,8 @@ public class ProofStoreImpl extends CDOObjectImpl implements ProofStore {
 				return ((InternalEList<?>)getProofs()).basicRemove(otherEnd, msgs);
 			case ProofProcessPackage.PROOF_STORE__INTENTS:
 				return ((InternalEList<?>)getIntents()).basicRemove(otherEnd, msgs);
+			case ProofProcessPackage.PROOF_STORE__FEATURES:
+				return ((InternalEList<?>)getFeatures()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -117,6 +131,8 @@ public class ProofStoreImpl extends CDOObjectImpl implements ProofStore {
 				return getProofs();
 			case ProofProcessPackage.PROOF_STORE__INTENTS:
 				return getIntents();
+			case ProofProcessPackage.PROOF_STORE__FEATURES:
+				return getFeatures();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -138,6 +154,10 @@ public class ProofStoreImpl extends CDOObjectImpl implements ProofStore {
 				getIntents().clear();
 				getIntents().addAll((Collection<? extends Intent>)newValue);
 				return;
+			case ProofProcessPackage.PROOF_STORE__FEATURES:
+				getFeatures().clear();
+				getFeatures().addAll((Collection<? extends ProofFeatureDef>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -156,6 +176,9 @@ public class ProofStoreImpl extends CDOObjectImpl implements ProofStore {
 			case ProofProcessPackage.PROOF_STORE__INTENTS:
 				getIntents().clear();
 				return;
+			case ProofProcessPackage.PROOF_STORE__FEATURES:
+				getFeatures().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -172,6 +195,8 @@ public class ProofStoreImpl extends CDOObjectImpl implements ProofStore {
 				return !getProofs().isEmpty();
 			case ProofProcessPackage.PROOF_STORE__INTENTS:
 				return !getIntents().isEmpty();
+			case ProofProcessPackage.PROOF_STORE__FEATURES:
+				return !getFeatures().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
