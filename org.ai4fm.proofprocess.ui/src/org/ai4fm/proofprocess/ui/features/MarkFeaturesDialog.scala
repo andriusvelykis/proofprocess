@@ -381,8 +381,12 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
 
   private def selectSubTerm(term: Term, context: ProofStep): Term = {
+
+    val editingFeature = false
+    val okLabel = if (editingFeature) "Mark Feature Term" else "Create New Feature With Term"
     
-    val subTermDialog = new SubTermSelectionDialog(intentLink.getShell, term, context)
+    val subTermDialog =
+      new SubTermSelectionDialog(intentLink.getShell, term, context, Some(okLabel))
     subTermDialog.open()
 
     // FIXME
