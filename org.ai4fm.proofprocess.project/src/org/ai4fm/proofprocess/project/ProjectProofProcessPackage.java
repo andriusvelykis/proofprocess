@@ -43,7 +43,7 @@ public interface ProjectProofProcessPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://org/ai4fm/proofprocess/project/v1.0.0";
+	String eNS_URI = "http://org/ai4fm/proofprocess/project/v1.0.0.10";
 
 	/**
 	 * The package namespace name.
@@ -88,6 +88,15 @@ public interface ProjectProofProcessPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROJECT__INTENTS = ProofProcessPackage.PROOF_STORE__INTENTS;
+
+	/**
+	 * The feature id for the '<em><b>Features</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROJECT__FEATURES = ProofProcessPackage.PROOF_STORE__FEATURES;
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute.
