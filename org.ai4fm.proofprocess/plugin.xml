@@ -16,5 +16,12 @@
             class="org.ai4fm.proofprocess.ProofProcessPackage"
             genModel="model/ProofProcess.genmodel"/>
    </extension>
+   <extension
+         point="org.eclipse.emf.ecore.dynamic_package">
+      <resource
+            location="model/history/ProofProcess-v1.0.0.ecore"
+            uri="http://org/ai4fm/proofprocess/v1.0.0">
+      </resource>
+   </extension>
 
 </plugin>
