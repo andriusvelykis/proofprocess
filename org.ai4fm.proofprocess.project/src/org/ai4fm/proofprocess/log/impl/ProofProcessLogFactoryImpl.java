@@ -31,7 +31,7 @@ public class ProofProcessLogFactoryImpl extends EFactoryImpl implements ProofPro
 	 */
 	public static ProofProcessLogFactory init() {
 		try {
-			ProofProcessLogFactory theProofProcessLogFactory = (ProofProcessLogFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/log/v1.0.0"); 
+			ProofProcessLogFactory theProofProcessLogFactory = (ProofProcessLogFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/log/v1.0.0.10"); 
 			if (theProofProcessLogFactory != null) {
 				return theProofProcessLogFactory;
 			}
