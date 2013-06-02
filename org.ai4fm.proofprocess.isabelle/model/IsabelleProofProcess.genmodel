@@ -1,51 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.ai4fm.proofprocess.isabelle/src" modelPluginID="org.ai4fm.proofprocess.isabelle" modelName="IsabelleProofProcess" rootExtendsInterface="org.eclipse.emf.cdo.CDOObject" rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl" importerID="org.eclipse.emf.importer.ecore" featureDelegation="Dynamic" complianceLevel="6.0" copyrightFields="false">
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.ai4fm.proofprocess.isabelle/src" modelPluginID="org.ai4fm.proofprocess.isabelle"
+    modelName="IsabelleProofProcess" rootExtendsInterface="org.eclipse.emf.cdo.CDOObject"
+    rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl" importerID="org.eclipse.emf.importer.ecore"
+    featureDelegation="Dynamic" complianceLevel="6.0" copyrightFields="false" usedGenPackages="../../org.ai4fm.proofprocess/model/ProofProcess.genmodel#//proofprocess">
   <foreignModel>IsabelleProofProcess.ecore</foreignModel>
   <modelPluginVariables>CDO=org.eclipse.emf.cdo</modelPluginVariables>
-  <genPackages prefix="IsabelleProofProcess" basePackage="org.ai4fm.proofprocess" disposableProviderFactory="true">
-    <ecorePackage href="IsabelleProofProcess.ecore#/"/>
-    <genDataTypes>
-      <ecoreDataType href="IsabelleProofProcess.ecore#//YXmlTerm"/>
-    </genDataTypes>
-    <genClasses image="false">
-      <ecoreClass href="IsabelleProofProcess.ecore#//DisplayTerm"/>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="IsabelleProofProcess.ecore#//DisplayTerm/display"/>
-      </genFeatures>
+  <genPackages prefix="IsabelleProofProcess" basePackage="org.ai4fm.proofprocess"
+      disposableProviderFactory="true" ecorePackage="IsabelleProofProcess.ecore#/">
+    <genDataTypes ecoreDataType="IsabelleProofProcess.ecore#//IsabelleXML"/>
+    <genDataTypes ecoreDataType="IsabelleProofProcess.ecore#//IsabelleTerm"/>
+    <genClasses image="false" ecoreClass="IsabelleProofProcess.ecore#//DisplayTerm">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//DisplayTerm/display"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="IsabelleProofProcess.ecore#//IsaTerm"/>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="IsabelleProofProcess.ecore#//IsaTerm/term"/>
-      </genFeatures>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//MarkupTerm">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//MarkupTerm/term"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="IsabelleProofProcess.ecore#//IsabelleTrace"/>
-      <genFeatures children="true" createChild="false" propertyCategory="">
-        <ecoreFeature xsi:type="ecore:EReference" href="IsabelleProofProcess.ecore#//IsabelleTrace/command"/>
-      </genFeatures>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="IsabelleProofProcess.ecore#//IsabelleTrace/simpLemmas"/>
-      </genFeatures>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//IsaTerm">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsaTerm/term"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="IsabelleProofProcess.ecore#//NamedTermTree"/>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="IsabelleProofProcess.ecore#//NamedTermTree/name"/>
-      </genFeatures>
-      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="IsabelleProofProcess.ecore#//NamedTermTree/terms"/>
-      </genFeatures>
-      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="IsabelleProofProcess.ecore#//NamedTermTree/branches"/>
-      </genFeatures>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//NameTerm">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//NameTerm/name"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="IsabelleProofProcess.ecore#//IsabelleCommand"/>
-      <genFeatures children="true" createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="IsabelleProofProcess.ecore#//IsabelleCommand/source"/>
-      </genFeatures>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//NamedTerm">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//NamedTerm/term"/>
+    </genClasses>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//InstTerm">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//InstTerm/term"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//InstTerm/insts"/>
+    </genClasses>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//Inst">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//Inst/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//Inst/index"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//Inst/term"/>
+    </genClasses>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//IsabelleTrace">
+      <genFeatures children="true" createChild="false" propertyCategory="" ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//IsabelleTrace/command"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsabelleTrace/simpLemmas"/>
+    </genClasses>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//NamedTermTree">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//NamedTermTree/name"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//NamedTermTree/terms"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//NamedTermTree/branches"/>
+    </genClasses>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//IsabelleCommand">
+      <genFeatures children="true" createChild="false" ecoreFeature="ecore:EAttribute IsabelleProofProcess.ecore#//IsabelleCommand/source"/>
+    </genClasses>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//AssumptionTerm">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//AssumptionTerm/term"/>
+    </genClasses>
+    <genClasses ecoreClass="IsabelleProofProcess.ecore#//JudgementTerm">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//JudgementTerm/assms"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference IsabelleProofProcess.ecore#//JudgementTerm/goal"/>
     </genClasses>
   </genPackages>
-  <usedGenPackages href="../../org.ai4fm.proofprocess/model/ProofProcess.genmodel#//proofprocess"/>
 </genmodel:GenModel>
