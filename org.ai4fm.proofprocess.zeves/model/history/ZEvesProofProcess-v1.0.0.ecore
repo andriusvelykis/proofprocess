@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="zeves" nsURI="http://org/ai4fm/proofprocess/zeves/v1.0.0.10"
-    nsPrefix="zeves">
-  <eClassifiers xsi:type="ecore:EClass" name="DisplayTerm" abstract="true" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="zeves" nsURI="http://org/ai4fm/proofprocess/zeves/v1.0.0" nsPrefix="zeves">
+  <eClassifiers xsi:type="ecore:EClass" name="DisplayTerm" abstract="true" eSuperTypes="platform:/plugin/org.ai4fm.proofprocess/model/history/ProofProcess-v1.0.0.ecore#//Term">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UnparsedTerm" eSuperTypes="#//DisplayTerm"/>
@@ -14,7 +13,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="ZmlTerm" instanceClassName="net.sourceforge.czt.base.ast.Term"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ZEvesTrace" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Trace">
+  <eClassifiers xsi:type="ecore:EClass" name="ZEvesTrace" eSuperTypes="platform:/plugin/org.ai4fm.proofprocess/model/history/ProofProcess-v1.0.0.ecore#//Trace">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="usedLemmas" upperBound="-1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
