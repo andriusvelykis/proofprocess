@@ -3,9 +3,7 @@ package org.ai4fm.proofprocess.cdo.internal.db
 import java.io.{File, FileInputStream, FileOutputStream, IOException}
 import java.util.Collections
 
-import scala.Option.option2Iterable
 import scala.collection.JavaConverters._
-import scala.collection.TraversableOnce.flattenTraversableOnce
 import scala.collection.mutable
 
 import org.ai4fm.proofprocess.cdo.internal.PProcessCDOPlugin.{error, info, log}
@@ -18,6 +16,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.{EClass, EClassifier, EObject, EPackage, EStructuralFeature}
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.net4j.util.lifecycle.LifecycleUtil
 
 
 /**
@@ -39,17 +38,23 @@ object RepositoryUtil {
    * CDO currently does not support proper model evolution (data upgrade when the meta-model
    * changes). See https://bugs.eclipse.org/bugs/show_bug.cgi?id=256856 for details.
    */
-  def upgradeRepository(repo: IRepository, session: CDOSession) = {
+  def upgradeRepository(repoInfo: PProcessRepository) = {
+
+    val repo = repoInfo.repository
 
     println("Needs upgrade: " + needsUpgrade(repo))
 
     log(info("Upgrading repository " + repo.getName))
 
-    exportSnapshots(repo, session)
+    exportSnapshots(repo, repoInfo.session)
 
     val repoBackup = exportRepository(repo)
     log(info("Backed up the repository to " + repoBackup))
 
+    wipeRepository(repoInfo)
+    log(info("Wiped repository " + repo.getName + ". Importing converted data..."))
+
+    
   }
 
   def needsUpgrade(repo: IRepository): Boolean = {
@@ -169,12 +174,35 @@ object RepositoryUtil {
     }
   }
 
+  private def wipeRepository(repoInfo: PProcessRepository) {
+    val repo = repoInfo.repository
+    
+    val sessionActive = LifecycleUtil.isActive(repoInfo.session)
+    if (sessionActive) {
+      repoInfo.deactivate()
+    }
+    
+    val active = LifecycleUtil.isActive(repo)
+    if (active) {
+      LifecycleUtil.deactivate(repo)
+    }
+
+    val dropOnActivate = repo.getStore.isDropAllDataOnActivate
+
+    repo.getStore.setDropAllDataOnActivate(true)
+    LifecycleUtil.activate(repo)
+
+    LifecycleUtil.deactivate(repo)
+    repo.getStore.setDropAllDataOnActivate(dropOnActivate)
+  }
+
 
   /**
    * An EMF copy utility that maps data to corresponding EMF classes in the latest corresponding
    * packages.
    * 
    * @author Andrius Velykis
+   * @see http://wiki.eclipse.org/EMF/Recipes#Recipe:_Copying_models_from_an_EPackage_implementation_to_another_one
    */
   private class PackageUpgradeCopier extends EcoreUtil.Copier {
 
