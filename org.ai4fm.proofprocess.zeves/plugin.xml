@@ -23,5 +23,12 @@
             uri="http://org/ai4fm/proofprocess/zeves/v1.0.0">
       </resource>
    </extension>
+   <extension
+         point="org.eclipse.emf.ecore.conversion_delegate">
+      <factory
+            class="org.ai4fm.proofprocess.zeves.parse.ZEvesConversionDelegateFactory"
+            uri="http://org/ai4fm/proofprocess/zeves/conversion/v1.0.0">
+      </factory>
+   </extension>
 
 </plugin>

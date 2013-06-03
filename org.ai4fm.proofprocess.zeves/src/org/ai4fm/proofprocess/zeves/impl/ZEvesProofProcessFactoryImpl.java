@@ -8,9 +8,7 @@ package org.ai4fm.proofprocess.zeves.impl;
 
 import net.sourceforge.czt.base.ast.Term;
 
-import org.ai4fm.proofprocess.parse.StringCompression;
 import org.ai4fm.proofprocess.zeves.*;
-import org.ai4fm.proofprocess.zeves.parse.ZmlTermParser;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -139,32 +137,19 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public Term createZmlTermFromString(EDataType eDataType, String initialValue) {
-		
-		// check if uncompressed ZML value (backwards compatibility) or a compressed one
-		String zml;
-		if (initialValue.startsWith("<?xml")) {
-			zml = initialValue;
-		} else {
-			// compressed
-			zml = StringCompression.decompress(initialValue);
-		}
-		
-		return ZmlTermParser.parseZml(zml);
+		return (Term)super.createFromString(eDataType, initialValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public String convertZmlTermToString(EDataType eDataType, Object instanceValue) {
-		String zml = ZmlTermParser.convertToZml((Term) instanceValue);
-		// compress the ZML string, since it tends to occupy the majority of storage space
-		// the compression can be up to 95% efficient on large Strings
-		return StringCompression.compress(zml);
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**
