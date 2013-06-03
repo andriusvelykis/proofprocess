@@ -23,5 +23,12 @@
             uri="http://org/ai4fm/proofprocess/isabelle/v1.0.0">
       </resource>
    </extension>
+   <extension
+         point="org.eclipse.emf.ecore.conversion_delegate">
+      <factory
+            class="org.ai4fm.proofprocess.isabelle.parse.IsabelleConversionDelegateFactory"
+            uri="http://org/ai4fm/proofprocess/isabelle/conversion/v1.0.0">
+      </factory>
+   </extension>
 
 </plugin>

@@ -10,9 +10,6 @@ import isabelle.Term.Term;
 import isabelle.XML.Tree;
 
 import org.ai4fm.proofprocess.isabelle.*;
-import org.ai4fm.proofprocess.isabelle.parse.IsabelleTermParser;
-import org.ai4fm.proofprocess.isabelle.parse.YXmlParser;
-import org.ai4fm.proofprocess.parse.StringCompression;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -239,62 +236,37 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public Tree createIsabelleXMLFromString(EDataType eDataType, String initialValue) {
-		String yxml = decompressYXml(initialValue);
-		return YXmlParser.parseYXml(yxml);
+		return (Tree)super.createFromString(eDataType, initialValue);
 	}
 	
 	/**
-	 * Decompresses YXML String. Does nothing if already uncompressed.
-	 *  
-	 * @param initialValue
-	 * @return
-	 * @generated NOT
-	 */
-	private String decompressYXml(String initialValue) {
-		if (YXmlParser.isYXml(initialValue)) {
-			// already uncompressed
-			return initialValue;
-		} else {
-			// compressed
-			return StringCompression.decompress(initialValue);
-		}
-	}
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public String convertIsabelleXMLToString(EDataType eDataType, Object instanceValue) {
-		String yxml = YXmlParser.convertToYXml((Tree) instanceValue);
-		// compress the YXML string, since it tends to occupy the majority of storage space
-		// the compression can be up to 95% efficient on large Strings
-		return StringCompression.compress(yxml);
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public Term createIsabelleTermFromString(EDataType eDataType, String initialValue) {
-		String yxml = decompressYXml(initialValue);
-		return IsabelleTermParser.parseYXml(yxml);
+		return (Term)super.createFromString(eDataType, initialValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public String convertIsabelleTermToString(EDataType eDataType, Object instanceValue) {
-		String yxml = IsabelleTermParser.convertToYXml((Term) instanceValue);
-		// compress the YXML string, since it tends to occupy the majority of storage space
-		// the compression can be up to 95% efficient on large Strings
-		return StringCompression.compress(yxml);
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

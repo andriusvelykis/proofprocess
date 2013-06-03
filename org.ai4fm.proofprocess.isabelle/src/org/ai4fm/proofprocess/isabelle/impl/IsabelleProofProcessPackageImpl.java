@@ -699,8 +699,28 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 		createResource(eNS_URI);
 
 		// Create annotations
+		// http://www.eclipse.org/emf/2002/Ecore
+		createEcoreAnnotations();
 		// http://www.eclipse.org/CDO/DBStore
 		createDBStoreAnnotations();
+		// http://org/ai4fm/proofprocess/isabelle/conversion/v1.0.0
+		createV1Annotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/emf/2002/Ecore</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createEcoreAnnotations() {
+		String source = "http://www.eclipse.org/emf/2002/Ecore";		
+		addAnnotation
+		  (this, 
+		   source, 
+		   new String[] {
+			 "conversionDelegates", "http://org/ai4fm/proofprocess/isabelle/conversion/v1.0.0"
+		   });				
 	}
 
 	/**
@@ -710,18 +730,38 @@ public class IsabelleProofProcessPackageImpl extends EPackageImpl implements Isa
 	 * @generated
 	 */
 	protected void createDBStoreAnnotations() {
-		String source = "http://www.eclipse.org/CDO/DBStore";		
+		String source = "http://www.eclipse.org/CDO/DBStore";			
 		addAnnotation
 		  (getMarkupTerm_Term(), 
 		   source, 
 		   new String[] {
 			 "columnType", "CLOB"
-		   });		
+		   });			
 		addAnnotation
 		  (getIsaTerm_Term(), 
 		   source, 
 		   new String[] {
 			 "columnType", "CLOB"
+		   });	
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://org/ai4fm/proofprocess/isabelle/conversion/v1.0.0</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createV1Annotations() {
+		String source = "http://org/ai4fm/proofprocess/isabelle/conversion/v1.0.0";				
+		addAnnotation
+		  (isabelleXMLEDataType, 
+		   source, 
+		   new String[] {
+		   });			
+		addAnnotation
+		  (isabelleTermEDataType, 
+		   source, 
+		   new String[] {
 		   });
 	}
 
