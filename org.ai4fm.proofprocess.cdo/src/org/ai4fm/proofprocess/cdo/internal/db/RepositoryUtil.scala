@@ -11,6 +11,8 @@ import org.ai4fm.proofprocess.cdo.internal.PProcessCDOPlugin.{error, info, log}
 import org.eclipse.emf.cdo.eresource.CDOResourceNode
 import org.eclipse.emf.cdo.server.{CDOServerExporter, CDOServerImporter, IRepository}
 import org.eclipse.emf.cdo.session.CDOSession
+import org.eclipse.emf.cdo.transaction.CDOTransaction
+import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.cdo.view.CDOView
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.{EClass, EClassifier, EObject, EPackage, EStructuralFeature}
@@ -44,9 +46,9 @@ object RepositoryUtil {
 
     println("Needs upgrade: " + needsUpgrade(repo))
 
-    log(info("Upgrading repository " + repo.getName))
+    log(info("Upgrading repository " + repo.getName + "."))
 
-    exportSnapshots(repo, repoInfo.session)
+    val exported = exportSnapshots(repo, repoInfo.session)
 
     val repoBackup = exportRepository(repo)
     log(info("Backed up the repository to " + repoBackup))
@@ -54,7 +56,12 @@ object RepositoryUtil {
     wipeRepository(repoInfo)
     log(info("Wiped repository " + repo.getName + ". Importing converted data..."))
 
-    
+    // create a new repo access - the old one is invalid (gives exceptions)
+    withRepoSession(repoInfo.databaseLoc, repoInfo.name) { session =>
+      importData(session, exported)
+    }
+
+    log(info("Finished upgrading repository " + repo.getName + "."))
   }
 
   def needsUpgrade(repo: IRepository): Boolean = {
@@ -77,20 +84,20 @@ object RepositoryUtil {
 
   private def isDynamic(eObj: EObject): Boolean = isDynamic(eObj.eClass)
 
-  private def exportSnapshots(repo: IRepository, session: CDOSession) = {
+  private def exportSnapshots(repo: IRepository, session: CDOSession): Map[String, File] = {
     val repoView = session.openView
 
     val resourcePaths = collectResourcePaths(repoView)
-    println("Resources: " + resourcePaths)
 
     val resourceContents = resourcePaths flatMap resourceContent(repoView)
-    val exportFiles = resourceContents.toMap mapValues upgradeExport
+    // note that Map.mapValues is lazy!
+    val exportFiles = resourceContents map { case (path, eObj) => (path, upgradeExport(eObj)) }
 
     exportFiles foreach {
       case (path, file) => log(info("Exported converted data for " + path + " to " + file))
     }
 
-    println("Exported: " + exportFiles)
+    exportFiles.toMap
   }
 
   private def collectResourcePaths(view: CDOView): Seq[String] = {
@@ -194,6 +201,76 @@ object RepositoryUtil {
 
     LifecycleUtil.deactivate(repo)
     repo.getStore.setDropAllDataOnActivate(dropOnActivate)
+
+  }
+
+  def importData(session: CDOSession, resources: Map[String, File]) {
+    val transaction = session.openTransaction()
+
+    try {
+      resources foreach Function.tupled(importResource(transaction))
+    } finally {
+      transaction.close()
+    }
+  }
+
+  private def importResource(transaction: CDOTransaction)(path: String, file: File) {
+
+    loadXMLFile(file) match {
+      case None => // ignore
+      case Some(rootObj) => {
+        createResourceContents(transaction)(path, rootObj)
+      }
+    }
+  }
+
+  private def loadXMLFile(file: File): Option[EObject] = {
+    val fileUri = URI.createFileURI(file.getAbsolutePath)
+
+    // Obtain a new resource set
+    val resSet = new ResourceSetImpl
+
+    // Create a resource
+    val emfResource = resSet.createResource(fileUri)
+
+    if (file.exists) {
+      try {
+        // load EMF resource
+        emfResource.load(null)
+      } catch {
+        case e: IOException => log(error(Some(e)))
+      }
+
+      emfResource.getContents.asScala.headOption
+    } else {
+      log(error(msg = Some("Cannot locate data file to import: " + file.getAbsolutePath)))
+      None
+    }
+  }
+
+  private def createResourceContents(transaction: CDOTransaction)(path: String, root: EObject) {
+    val emfResource = transaction.getOrCreateResource(path)
+    emfResource.getContents.add(root)
+    // FIXME
+    val monitor = null
+
+    try {
+      transaction.commit(monitor)
+      log(info("Imported " + path))
+    } catch {
+      case e: CommitException => log(error(Some(e)))
+    }
+  }
+
+  private def withRepoSession(dbLoc: java.net.URI, repoName: String)(f: CDOSession => Unit) {
+    val repoInfo = new PProcessRepository(dbLoc, repoName)
+    val session = repoInfo.session
+
+    try {
+      f(session)
+    } finally {
+      repoInfo.deactivate()
+    }
   }
 
 
