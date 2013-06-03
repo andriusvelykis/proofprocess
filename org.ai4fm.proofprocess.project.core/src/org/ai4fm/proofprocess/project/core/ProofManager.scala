@@ -2,36 +2,34 @@ package org.ai4fm.proofprocess.project.core
 
 import java.io.IOException
 
-import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConverters._
 
 import org.ai4fm.proofprocess.cdo.PProcessCDO
-import org.ai4fm.proofprocess.log.ProofLog
-import org.ai4fm.proofprocess.log.ProofProcessLogFactory
-import org.ai4fm.proofprocess.project.Project
-import org.ai4fm.proofprocess.project.ProjectProofProcessFactory
-import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.error
-import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.log
-import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.plugin
+import org.ai4fm.proofprocess.log.{ProofLog, ProofProcessLogFactory}
+import org.ai4fm.proofprocess.project.{Project, ProjectProofProcessFactory}
+import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.{error, log, plugin}
+
 import org.eclipse.core.filesystem.URIUtil
-import org.eclipse.core.resources.IFile
-import org.eclipse.core.resources.IProject
-import org.eclipse.core.runtime.CoreException
-import org.eclipse.core.runtime.IProgressMonitor
-import org.eclipse.core.runtime.NullProgressMonitor
-import org.eclipse.core.runtime.QualifiedName
-import org.eclipse.core.runtime.SubProgressMonitor
+import org.eclipse.core.resources.{IFile, IProject}
+import org.eclipse.core.runtime.{
+  CoreException,
+  IProgressMonitor,
+  NullProgressMonitor,
+  QualifiedName,
+  SubProgressMonitor
+}
 import org.eclipse.core.runtime.jobs.Job
 import org.eclipse.emf.cdo.CDOObject
 import org.eclipse.emf.cdo.transaction.CDOTransaction
 import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.common.command.BasicCommandStack
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.common.util.{EList, URI}
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
+
 
 /**
  * @author Andrius Velykis
@@ -100,7 +98,7 @@ object ProofManager {
     val databaseLocPath = plugin.getStateLocation.append("database")
     val databaseLocUri = URIUtil.toURI(databaseLocPath)
 
-    val session = PProcessCDO.session(databaseLocUri, repositoryName)
+    val session = PProcessCDO.session(databaseLocUri, repositoryName, monitor)
     val transaction = session.openTransaction(editingDomain.getResourceSet)
 
     // resolve the "proof" and "prooflog" resources in the CDO repository
@@ -146,7 +144,7 @@ object ProofManager {
 
     // resolve the resource in the CDO repository
     val proofResource = loadResource(transaction, repositoryName)
-    val proofRoot = proofResource.headOption.flatMap(convert) match {
+    val proofRoot = proofResource.asScala.headOption.flatMap(convert) match {
       case Some(p) => p
       case None => {
         // the root project is not available - allocate a new one
@@ -180,7 +178,7 @@ object ProofManager {
 
     emfResource.getContents
   }
-  
+
   def commitTransaction(cdoObj: CDOObject, monitor: IProgressMonitor) {
     cdoObj.cdoView match {
       case tr: CDOTransaction => commitTransaction(tr, monitor)
@@ -224,7 +222,7 @@ object ProofManager {
         case e: IOException => log(error(Some(e)))
       }
 
-      emfResource.getContents.headOption
+      emfResource.getContents.asScala.headOption
     } else {
       None
     }

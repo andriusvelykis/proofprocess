@@ -8,6 +8,7 @@ import scala.collection.mutable
 
 import org.ai4fm.proofprocess.cdo.internal.PProcessCDOPlugin.{error, info, log}
 
+import org.eclipse.core.runtime.{IProgressMonitor, NullProgressMonitor}
 import org.eclipse.emf.cdo.eresource.CDOResourceNode
 import org.eclipse.emf.cdo.server.{CDOServerExporter, CDOServerImporter, IRepository}
 import org.eclipse.emf.cdo.session.CDOSession
@@ -30,17 +31,18 @@ object RepositoryUtil {
 
   /**
    * Upgrades the repository to latest EMF packages.
-   * 
+   *
    * The upgrade is performed by converting the current data snapshot and exporting it to disk.
    * The repository is then cleaned and converted data is re-exported back to the repository.
-   * 
+   *
    * Note that this loses CDO database revisions and other DB data, however we are not using it
    * at the moment anyway.
-   * 
+   *
    * CDO currently does not support proper model evolution (data upgrade when the meta-model
    * changes). See https://bugs.eclipse.org/bugs/show_bug.cgi?id=256856 for details.
    */
-  def upgradeRepository(repoInfo: PProcessRepository) = {
+  def upgradeRepository(repoInfo: PProcessRepository,
+                        monitor: IProgressMonitor = new NullProgressMonitor) {
 
     val repo = repoInfo.repository
 
