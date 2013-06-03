@@ -2,9 +2,13 @@ package org.ai4fm.proofprocess.cdo.internal.db
 
 import java.net.URI
 
-import scala.actors.Future
-import scala.actors.Futures.future
 import scala.collection.mutable.{HashMap, SynchronizedMap}
+import scala.concurrent.{Await, Future, future}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.util.{Failure, Success}
+
+import org.ai4fm.proofprocess.cdo.internal.PProcessCDOPlugin.{error, log}
 
 import org.eclipse.core.runtime.{IProgressMonitor, NullProgressMonitor}
 import org.eclipse.emf.cdo.session.CDOSession
@@ -28,16 +32,17 @@ class PProcessRepositoryManager {
    * Retrieves a Proof Process repository with a given name.
    * Initializes a new one if no such repository exists currently.
    */
-  private def repository(repoId: RepositoryId, monitor: IProgressMonitor) = {
+  private def repository(repoId: RepositoryId, monitor: IProgressMonitor): PProcessRepository = {
     // get the repository future from the map, or create new one if not exists
     val repoFuture = repositories.getOrElseUpdate(repoId, future {
       initRepository(repoId, monitor)
     })
-    
+
     // block until the future is resolved (repository is connected initially)
-    val r = repoFuture();
-    r
+    getBlocking(repoFuture)
+
   }
+
 
   private def initRepository(repoId: RepositoryId,
                              monitor: IProgressMonitor): PProcessRepository = {
@@ -64,6 +69,25 @@ class PProcessRepositoryManager {
     monitor
   }
 
+  private def getBlocking[A](future: Future[A]): A = {
+    val result =
+      future.value match {
+        case Some(r) => r
+        case None => {
+          Await.result(future, Duration.Inf)
+          future.value.get
+        }
+      }
+
+    result match {
+      case Success(r) => r
+      case Failure(ex) => {
+        log(error(Some(ex)))
+        throw ex
+      }
+    }
+  }
+
   /**
    * Retrieves an open session for the given repository.
    *
@@ -80,7 +104,7 @@ class PProcessRepositoryManager {
 
   def dispose() {
     // deactivate each repository
-    repositories.values.foreach(_().deactivate)
+    repositories.values.foreach(f => getBlocking(f).deactivate)
   }
 
 }
