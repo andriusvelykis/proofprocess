@@ -3,11 +3,12 @@ package org.ai4fm.proofprocess.isabelle.parse
 import isabelle.Term.Term
 import isabelle.Term_XML
 
-/** Encodes/decodes Isabelle Term into YXML.
- * <p>
+
+/** 
+ * Encodes/decodes Isabelle Term into YXML.
+ * 
  * The produced YXML is safe to embed into XML1.0 documents.
- * See {@link org.ai4fm.proofprocess.isabelle.parse.YXmlParser} for more info.
- * </p>
+ * See [[org.ai4fm.proofprocess.isabelle.parse.YXmlParser]] for more info.
  * 
  * @author Andrius Velykis
  */
