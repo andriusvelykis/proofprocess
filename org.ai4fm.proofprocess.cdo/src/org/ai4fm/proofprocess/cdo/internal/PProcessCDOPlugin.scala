@@ -7,8 +7,10 @@ import scala.actors.Futures.future
 import scala.collection.mutable.{HashMap, SynchronizedMap}
 
 import org.ai4fm.proofprocess.cdo.internal.db.PProcessRepository
+
 import org.eclipse.core.runtime.{IStatus, Plugin, Status}
 import org.eclipse.emf.cdo.session.CDOSession
+
 import org.osgi.framework.BundleContext
 
 
@@ -34,8 +36,14 @@ object PProcessCDOPlugin {
     // if message is not given, try to use exception's
     val message = msg orElse { ex.flatMap(ex => Option(ex.getMessage)) }
     
-    new Status(IStatus.ERROR, plugin.pluginId, 0, message.orNull, ex.orNull);
+    new Status(IStatus.ERROR, plugin.pluginId, 0, message.orNull, ex.orNull)
   }
+
+  /** 
+   * Creates a new information `IStatus` for this plug-in with the given message.
+   */
+  def info(msg: String): IStatus = new Status(IStatus.INFO, plugin.pluginId, 0, msg, null)
+
 }
 
 class PProcessCDOPlugin extends Plugin {
