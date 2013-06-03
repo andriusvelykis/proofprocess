@@ -61,15 +61,15 @@ object ProofManager {
 
       try {
         // start a rule on the resource to block when loading the manager
-        Job.getJobManager.beginRule(projectResource, monitor)
+        Job.getJobManager.beginRule(projectResource, submonitor)
 
         // check maybe the manager has already been loaded (double-checked locking)
         storedManager(projectResource) getOrElse {
 
-          monitor.beginTask("Initialising proof manager", IProgressMonitor.UNKNOWN)
+          submonitor.beginTask("Initialising proof manager", IProgressMonitor.UNKNOWN)
 
           // TODO what if the project gets renamed?
-          val projectProofMan = loadProofProcess(projectResource, monitor)
+          val projectProofMan = loadProofProcess(projectResource, submonitor)
 
           projectResource.setSessionProperty(PROP_PROOF_PROCESS, projectProofMan)
 
@@ -83,7 +83,8 @@ object ProofManager {
     }
   }
 
-  private def loadProofProcess(projectResource: IProject, monitor: IProgressMonitor): ProjectProofManager = {
+  private def loadProofProcess(projectResource: IProject,
+                               monitor: IProgressMonitor): ProjectProofManager = {
 
     // Create a ComposedAdapterFactory for all registered models
     val adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)
