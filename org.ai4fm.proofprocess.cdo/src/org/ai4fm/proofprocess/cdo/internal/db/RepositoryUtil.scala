@@ -302,11 +302,15 @@ object RepositoryUtil {
 
 
     private def findNewestClass(eClass: EClass): EClass = {
-      val matchClasses = allPackages flatMap findNamedClass(eClass.getName)
+      val matchClasses = allPackages.toStream flatMap findNamedClass(eClass.getName)
+      // only take non-dynamic classes (generated classes - non-history)
+      val generatedClasses = matchClasses filterNot isDynamicClass
 
-      // take the last class - its package has the biggest namespace URI (latest version)
-      val sorted = matchClasses.toSeq.sortBy(_.getEPackage.getNsURI)
-      sorted.last
+      generatedClasses.headOption match {
+        case Some(generatedClass) => generatedClass
+        // cannot find a generated class (only dynamic ones are available) - use the original one
+        case None => eClass
+      }
     }
 
     private def findNamedClass(name: String)(pkg: EPackage): Option[EClass] =
