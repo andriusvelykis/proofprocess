@@ -11,13 +11,19 @@ import org.eclipse.swt.widgets.Shell
 
 /**
  * A dialog to select available intent or enter a new one.
- * 
+ *
  * @author Andrius Velykis
  */
-class IntentSelectionDialog(parent: Shell,
-                            adapterFactory: ComposedAdapterFactory,
-                            proofStore: ProofStore)
+class IntentSelectionDialog private (parent: Shell,
+                                     proofStore: ProofStore,
+                                     adapterFactory: ComposedAdapterFactory)
     extends FilteredEntryDialog(parent, new AdapterFactoryLabelProvider(adapterFactory)) {
+
+  /**
+   * A constructor for the dialog that instantiates the adapter factory.
+   */
+  def this(parent: Shell, proofStore: ProofStore) = this(parent, proofStore,
+    new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE))
 
   setTitle("Select Intent")
   setMessage("Enter or select the intent:")
@@ -65,15 +71,4 @@ class IntentSelectionDialog(parent: Shell,
     result
   }
 
-}
-
-/**
- * Factory method to allow instantiating adapter factory for the dialog.
- */
-object IntentSelectionDialog {
-  def apply(parent: Shell, proofStore: ProofStore): IntentSelectionDialog = {
-    val adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)
-
-    new IntentSelectionDialog(parent, adapterFactory, proofStore)
-  }
 }

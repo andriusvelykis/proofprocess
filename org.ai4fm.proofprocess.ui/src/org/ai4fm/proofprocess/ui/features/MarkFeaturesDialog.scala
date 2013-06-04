@@ -258,7 +258,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   private def selectIntent() = proofStore match {
     case Some(proofStore) => {
-      val intentDialog = IntentSelectionDialog(intentLink.getShell, proofStore)
+      val intentDialog = new IntentSelectionDialog(intentLink.getShell, proofStore)
       // TODO use temporary value somewhere?
       intentDialog.selectedIntent = Option(elem.getInfo.getIntent)
 
