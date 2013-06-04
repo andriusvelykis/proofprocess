@@ -2,7 +2,7 @@ package org.ai4fm.proofprocess.core.util
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.{Intent, ProofProcessFactory, ProofStore}
+import org.ai4fm.proofprocess.{Intent, ProofFeatureDef, ProofProcessFactory, ProofStore}
 import org.ai4fm.proofprocess.core.PProcessCorePlugin.{error, log}
 
 import org.eclipse.core.runtime.{IAdaptable, Platform}
@@ -15,14 +15,27 @@ object PProcessUtil {
   
   /** Finds the intent in the proof store or creates a new one if not found. */
   def getIntent(store: ProofStore, intentName: String): Intent = {
-    val found = store.getIntents.asScala.find(_.getName() == intentName)
+    val found = store.getIntents.asScala.find(_.getName == intentName)
     
     found getOrElse {
         // create new
-		val intent = ProofProcessFactory.eINSTANCE.createIntent();
-		intent.setName(intentName);
-		store.getIntents().add(intent);
+		val intent = ProofProcessFactory.eINSTANCE.createIntent()
+		intent.setName(intentName)
+		store.getIntents.add(intent)
 		intent
+    }
+  }
+
+  /** Finds the proof feature definition in the proof store or creates a new one if not found. */
+  def getProofFeatureDef(store: ProofStore, featureName: String): ProofFeatureDef = {
+    val found = store.getFeatures.asScala.find(_.getName == featureName)
+    
+    found getOrElse {
+        // create new
+		val feature = ProofProcessFactory.eINSTANCE.createProofFeatureDef()
+		feature.setName(featureName)
+		store.getFeatures.add(feature)
+		feature
     }
   }
 
