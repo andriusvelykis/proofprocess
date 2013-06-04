@@ -2,7 +2,7 @@ package org.ai4fm.proofprocess.ui.features
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofStep, ProofStore, Term}
+import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofProcessFactory, ProofStep, ProofStore, Term}
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.{TermSelectionSource, TermSelectionSourceProvider}
@@ -10,7 +10,7 @@ import org.ai4fm.proofprocess.ui.internal.PProcessImages
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
 import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences
 import org.ai4fm.proofprocess.ui.util.{AdaptingLabelProvider, AdaptingTableLabelProvider}
-import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, selectionElement}
+import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, noArgFnToSelectionAdapter, selectionElement}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
 import org.eclipse.emf.cdo.util.CommitException
@@ -44,6 +44,8 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   private val labelProvider = new AdapterFactoryLabelProvider(adapterFactory)
 
+  private lazy val ppFactory = ProofProcessFactory.eINSTANCE
+
   private lazy val inGoals = ProofElemComposition.composeInGoals(elem)
   private lazy val outGoals = ProofElemComposition.composeOutGoals(elem)
 
@@ -54,6 +56,8 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   private var intentLink: ImageHyperlink = _
   private var narrativeField: Text = _
   private var narrativeChanged = false
+
+  private var featuresTable: TableViewer = _
 
   private var inGoalDisplay: StyledText = _
   private var inGoalsTable: TableViewer = _
@@ -224,15 +228,12 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val container = toolkit.createComposite(parent, SWT.NONE)
     container.setLayout(GridLayoutFactory.fillDefaults.numColumns(2).create)
 
-    val featuresTable = toolkit.createTable(container, SWT.V_SCROLL)
-    featuresTable.setLayoutData(fillBoth.hint(100, 50).create)
+    val table = toolkit.createTable(container, SWT.V_SCROLL)
+    table.setLayoutData(fillBoth.hint(100, 50).create)
 
-    val viewer = new TableViewer(featuresTable)
-    viewer.setContentProvider(ScalaArrayContentProvider)
-    viewer.setLabelProvider(labelProvider)
-
-    val allFeatures = elem.getInfo.getInFeatures.asScala ++ elem.getInfo.getOutFeatures.asScala
-    viewer.setInput(allFeatures)
+    featuresTable = new TableViewer(table)
+    featuresTable.setContentProvider(ScalaArrayContentProvider)
+    featuresTable.setLabelProvider(labelProvider)
 
     val buttons = toolkit.createComposite(container, SWT.NONE)
     buttons.setLayout(GridLayoutFactory.fillDefaults.create)
@@ -241,7 +242,25 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val addButton = toolkit.createButton(buttons, "Add...", SWT.PUSH)
     addButton.setLayoutData(fillHorizontal.create)
 
+    addButton.addSelectionListener { () =>
+      val newFeature = ppFactory.createProofFeature
+      val featureDialog = new FeatureInfoDialog(addButton.getShell, proofStore, newFeature)
+
+      if (featureDialog.open() == Window.OK) {
+        // TODO how about OutFeatures?
+        elem.getInfo.getInFeatures.add(newFeature)
+        updateFeaturesTable()
+      }
+    }
+
+    updateFeaturesTable()
+
     container
+  }
+
+  private def updateFeaturesTable() {
+    val allFeatures = elem.getInfo.getInFeatures.asScala ++ elem.getInfo.getOutFeatures.asScala
+    featuresTable.setInput(allFeatures)
   }
 
 
