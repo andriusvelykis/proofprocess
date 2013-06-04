@@ -44,25 +44,25 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   private val labelProvider = new AdapterFactoryLabelProvider(adapterFactory)
 
-  lazy val inGoals = ProofElemComposition.composeInGoals(elem)
-  lazy val outGoals = ProofElemComposition.composeOutGoals(elem)
+  private lazy val inGoals = ProofElemComposition.composeInGoals(elem)
+  private lazy val outGoals = ProofElemComposition.composeOutGoals(elem)
 
   // set a savepoint to rollback on "cancel"
-  val transaction = PProcessUtil.cdoTransaction(elem)
-  val editSavePoint = transaction map (_.setSavepoint())
+  private val transaction = PProcessUtil.cdoTransaction(elem)
+  private val editSavePoint = transaction map (_.setSavepoint())
 
-  var intentLink: ImageHyperlink = _
-  var narrativeField: Text = _
-  var narrativeChanged = false
+  private var intentLink: ImageHyperlink = _
+  private var narrativeField: Text = _
+  private var narrativeChanged = false
 
-  var inGoalDisplay: StyledText = _
-  var inGoalsTable: TableViewer = _
-  var outGoalDisplay: Option[StyledText] = None
-  var outGoalsTable: Option[TableViewer] = None
+  private var inGoalDisplay: StyledText = _
+  private var inGoalsTable: TableViewer = _
+  private var outGoalDisplay: Option[StyledText] = None
+  private var outGoalsTable: Option[TableViewer] = None
 
-  lazy val (inGoalFiltered, outGoalFiltered) = createFilteredGoals()
+  private lazy val (inGoalFiltered, outGoalFiltered) = createFilteredGoals()
 
-  var filterAffectedGoal: Boolean = _
+  private var filterAffectedGoal: Boolean = _
   
 
   setTitle("Mark Features")
