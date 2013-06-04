@@ -1,10 +1,12 @@
 package org.ai4fm.proofprocess.ui.util
 
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.plugin
+import org.ai4fm.proofprocess.ui.util.SWTUtil.fnToModifyListener
 
 import org.eclipse.core.runtime.{IStatus, Status}
 import org.eclipse.jface.viewers.ILabelProvider
-import org.eclipse.swt.widgets.Shell
+import org.eclipse.swt.events.ModifyEvent
+import org.eclipse.swt.widgets.{Composite, Shell, Text}
 import org.eclipse.ui.dialogs.ElementListSelectionDialog
 
 
@@ -45,4 +47,23 @@ class FilteredEntryDialog(parent: Shell, renderer: ILabelProvider)
     super.computeResult()
   }
 
+  /* Avoid disabling controls for empty list */
+  override protected def handleElementsChanged() = updateOkState()
+
+  /* Avoid disabling controls for empty list */
+  override protected def handleEmptyList() = updateOkState()
+
+  /* Avoid disabling controls for empty list */
+  override protected def updateOkState() = Option(getOkButton) foreach { button =>
+    val enabled = getSelectedElements.length > 0 || !getFilter.isEmpty
+    button.setEnabled(enabled)
+  }
+
+  /* React to edit events and enable buttons */
+  override protected def createFilterText(parent: Composite): Text = {
+    val textField = super.createFilterText(parent)
+    textField.addModifyListener { _: ModifyEvent => updateOkState() }
+    textField
+  }
+  
 }
