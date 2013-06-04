@@ -2,7 +2,7 @@ package org.ai4fm.proofprocess.ui.features
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofProcessFactory, ProofStep, ProofStore, Term}
+import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofFeature, ProofProcessFactory, ProofStep, ProofStore, Term}
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.{TermSelectionSource, TermSelectionSourceProvider}
@@ -217,7 +217,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     featuresLabel.setLayoutData(GridDataFactory.swtDefaults.align(SWT.BEGINNING, SWT.BEGINNING).create)
 
     val featuresTableControl = createFeaturesTable(toolkit, container)
-    featuresTableControl.setLayoutData(fillBoth.hint(100, 50).create)
+    featuresTableControl.setLayoutData(fillBoth.create)
     
     toolkit.paintBordersFor(container)
     container
@@ -250,6 +250,24 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
         // TODO how about OutFeatures?
         elem.getInfo.getInFeatures.add(newFeature)
         updateFeaturesTable()
+      }
+    }
+
+    val editButton = toolkit.createButton(buttons, "Edit...", SWT.PUSH)
+    editButton.setLayoutData(fillHorizontal.create)
+
+    editButton.addSelectionListener { () =>
+      selectionElement(featuresTable.getSelection) match {
+        case Some(feature: ProofFeature) => {
+          val featureDialog = new FeatureInfoDialog(addButton.getShell, proofStore, feature)
+
+          if (featureDialog.open() == Window.OK) {
+            // TODO handle cancel?
+            updateFeaturesTable()
+          }
+        }
+
+        case _ =>
       }
     }
 
