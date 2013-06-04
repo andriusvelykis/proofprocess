@@ -28,10 +28,8 @@ class IntentSelectionDialog(parent: Shell,
   override def getDialogBoundsSettings = plugin.dialogSettings("IntentSelectionDialog")
 
   // adapt for convenience
-  def selectedIntent: Option[Intent] = Option(super.getResult) match {
-    case Some(results) if !results.isEmpty => Some(results.head.asInstanceOf[Intent])
-    case _ => None
-  }
+  def selectedIntent: Option[Intent] =
+    Option(super.getResult) flatMap (_.headOption) map { case i: Intent => i }
 
   def selectedIntent_=(intentOpt: Option[Intent]) =
     intentOpt foreach { intent => setInitialSelections(Array(intent)) }
