@@ -211,6 +211,19 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     val featuresLabel = toolkit.createLabel(container, "Features:")
     featuresLabel.setLayoutData(GridDataFactory.swtDefaults.align(SWT.BEGINNING, SWT.BEGINNING).create)
+
+    val featuresTableControl = createFeaturesTable(toolkit, container)
+    featuresTableControl.setLayoutData(fillBoth.hint(100, 50).create)
+    
+    toolkit.paintBordersFor(container)
+    container
+  }
+
+  private def createFeaturesTable(toolkit: FormToolkit, parent: Composite) = {
+
+    val container = toolkit.createComposite(parent, SWT.NONE)
+    container.setLayout(GridLayoutFactory.fillDefaults.numColumns(2).create)
+
     val featuresTable = toolkit.createTable(container, SWT.V_SCROLL)
     featuresTable.setLayoutData(fillBoth.hint(100, 50).create)
 
@@ -221,7 +234,13 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val allFeatures = elem.getInfo.getInFeatures.asScala ++ elem.getInfo.getOutFeatures.asScala
     viewer.setInput(allFeatures)
 
-    toolkit.paintBordersFor(container)
+    val buttons = toolkit.createComposite(container, SWT.NONE)
+    buttons.setLayout(GridLayoutFactory.fillDefaults.create)
+    buttons.setLayoutData(GridDataFactory.fillDefaults.hint(50, SWT.DEFAULT).create)
+
+    val addButton = toolkit.createButton(buttons, "Add...", SWT.PUSH)
+    addButton.setLayoutData(fillHorizontal.create)
+
     container
   }
 
@@ -259,7 +278,6 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   private def selectIntent() = proofStore match {
     case Some(proofStore) => {
       val intentDialog = new IntentSelectionDialog(intentLink.getShell, proofStore)
-      // TODO use temporary value somewhere?
       intentDialog.selectedIntent = Option(elem.getInfo.getIntent)
 
       if (intentDialog.open() == Window.OK) {
