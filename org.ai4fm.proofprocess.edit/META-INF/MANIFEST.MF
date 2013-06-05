@@ -11,5 +11,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.ai4fm.proofprocess.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.ai4fm.proofprocess;visibility:=reexport,
- org.eclipse.emf.edit;visibility:=reexport
+ org.eclipse.emf.edit;visibility:=reexport,
+ org.eclipse.emf.edit.ui
 Bundle-ActivationPolicy: lazy
