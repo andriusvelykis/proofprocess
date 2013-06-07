@@ -45,6 +45,9 @@ class SubTermSelectionDialog(parent: Shell,
   setTitle("Select Sub-term")
   setShellStyle(getShellStyle() | SWT.MAX | SWT.RESIZE)
 
+  private var _selectedTerm: Term = term
+  def selectedTerm: Term = _selectedTerm
+
   override def getDialogBoundsSettings = plugin.dialogSettings("SubTermSelectionDialog")
 
   override protected def createButtonsForButtonBar(parent: Composite) {
@@ -198,6 +201,8 @@ class SubTermSelectionDialog(parent: Shell,
   private def fillHorizontal: GridDataFactory = GridDataFactory.fillDefaults.grab(true, false)
 
   private def showTerm(t: Term) {
+
+    _selectedTerm = t
 
     val termSourceProvider = getAdapter(t, classOf[TermSelectionSourceProvider], true)
     val termSource = termSourceProvider map (_.getTermSource(context))

@@ -20,13 +20,13 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.action.Action
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
-import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
+import org.eclipse.jface.resource.{FontDescriptor, JFaceResources, LocalResourceManager, ResourceManager}
 import org.eclipse.jface.viewers.{DoubleClickEvent, ILabelProvider, ITableLabelProvider, StyledString, TableViewer}
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.StyledText
 import org.eclipse.swt.events.ModifyEvent
-import org.eclipse.swt.graphics.Image
+import org.eclipse.swt.graphics.{Font, Image}
 import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
 import org.eclipse.ui.forms.widgets.{FormToolkit, ImageHyperlink, Section}
@@ -43,7 +43,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   private val adapterFactory =
     new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)
 
-  private val labelProvider = new AdapterFactoryLabelProvider(adapterFactory)
+  private val labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
 
   private lazy val ppFactory = ProofProcessFactory.eINSTANCE
 
@@ -60,6 +60,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   private var featuresTable: TableViewer = _
   private var featureInfoDialog: Option[FeatureInfoDialog] = None
+  private var editFeature: Option[ProofFeature] = None
 
   private var inGoalDisplay: StyledText = _
   private var inGoalsTable: TableViewer = _
@@ -139,7 +140,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     }
 
     createSection("Intent && features", None, true, false) { parent =>
-      createWhyInfo(toolkit, parent)
+      createWhyInfo(toolkit, parent, resourceManager)
     }
 
     createSection("Before step", Some("The state before step.")) { parent =>
@@ -194,8 +195,9 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     form
   }
 
-
-  private def createWhyInfo(toolkit: FormToolkit, parent: Composite): Control = {
+  private def createWhyInfo(toolkit: FormToolkit,
+                            parent: Composite,
+                            resourceManager: ResourceManager): Control = {
     
     val container = toolkit.createComposite(parent, SWT.WRAP)
     container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
@@ -218,14 +220,16 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val featuresLabel = toolkit.createLabel(container, "Features:")
     featuresLabel.setLayoutData(GridDataFactory.swtDefaults.align(SWT.BEGINNING, SWT.BEGINNING).create)
 
-    val featuresTableControl = createFeaturesTable(toolkit, container)
+    val featuresTableControl = createFeaturesTable(toolkit, container, resourceManager)
     featuresTableControl.setLayoutData(fillBoth.create)
     
     toolkit.paintBordersFor(container)
     container
   }
 
-  private def createFeaturesTable(toolkit: FormToolkit, parent: Composite) = {
+  private def createFeaturesTable(toolkit: FormToolkit,
+                                  parent: Composite,
+                                  resourceManager: ResourceManager) = {
 
     val container = toolkit.createComposite(parent, SWT.NONE)
     container.setLayout(GridLayoutFactory.fillDefaults.numColumns(2).create)
@@ -235,7 +239,30 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     featuresTable = new TableViewer(table)
     featuresTable.setContentProvider(ScalaArrayContentProvider)
-    featuresTable.setLabelProvider(labelProvider)
+
+    def bold(font: Font): Font = {
+      val fontDescriptor = FontDescriptor.createFrom(font)
+      val boldFont = fontDescriptor.withStyle(SWT.BOLD)
+      resourceManager.createFont(boldFont)
+    }
+
+    lazy val boldFont = bold(featuresTable.getTable.getFont)
+
+    val featureLabelProvider =
+      new AdapterFactoryLabelProvider.FontProvider(adapterFactory, featuresTable) {
+
+        override def getFont(obj: AnyRef, col: Int): Font =
+          if (Some(obj) == editFeature) {
+            // bold currently edited feature
+            Option(super.getFont(obj, col)) map (bold) getOrElse boldFont
+          } else {
+            super.getFont(obj, col)
+          }
+          
+      }
+
+    featuresTable.setLabelProvider(featureLabelProvider)
+    
 
     val buttons = toolkit.createComposite(container, SWT.NONE)
     buttons.setLayout(GridLayoutFactory.fillDefaults.create)
@@ -264,6 +291,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   private def updateFeaturesTable() {
     val allFeatures = elem.getInfo.getInFeatures.asScala ++ elem.getInfo.getOutFeatures.asScala
     featuresTable.setInput(allFeatures)
+    featuresTable.refresh()
   }
 
   private def addNewFeature() {
@@ -274,45 +302,40 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     // add immediately
     // TODO how about OutFeatures?
     elem.getInfo.getInFeatures.add(newFeature)
-    updateFeaturesTable()
 
-    openFeatureInfo(newFeature)(cancelOrRefreshFeatures(addSavePoint))
+    openFeatureInfo(newFeature, addSavePoint)
   }
 
   private def editFeature(feature: ProofFeature) {
     val editSavePoint = transaction map (_.setSavepoint())
-    openFeatureInfo(feature)(cancelOrRefreshFeatures(editSavePoint))
+    openFeatureInfo(feature, editSavePoint)
   }
 
-  private def cancelOrRefreshFeatures(savePoint: Option[CDOSavepoint]): Int => Unit =
-    cancelOrElse(savePoint, updateFeaturesTable)(updateFeaturesTable)
-
-  private def cancelOrElse(savePoint: Option[CDOSavepoint],
-                           onCancel: => Unit = {})(onOk: => Unit): Int => Unit = {
-    returnCode =>
-      if (returnCode == Window.OK) {
-        onOk
-      } else {
-        savePoint foreach (_.rollback())
-        onCancel
-      }
-  }
-
-  private def openFeatureInfo(feature: ProofFeature)(callback: Int => Unit) {
+  private def openFeatureInfo(feature: ProofFeature,
+                              savePoint: Option[CDOSavepoint]) {
     featureInfoDialog match {
       case Some(openDialog) => openDialog.close()
       case None => // ignore
     }
 
+    editFeature = Some(feature)
+    updateFeaturesTable()
+
     val newDialog = new FeatureInfoDialog(intentLink.getShell, proofStore, feature,
-      Some(handleClosedAnd(callback)))
+      Some(stopEditFeature(savePoint)))
     featureInfoDialog = Some(newDialog)
     newDialog.open()
   }
 
-  private def handleClosedAnd(f: Int => Unit)(returnCode: Int) {
+  private def stopEditFeature(savePoint: Option[CDOSavepoint])(returnCode: Int) {
     featureInfoDialog = None
-    f(returnCode)
+    editFeature = None
+
+    if (returnCode != Window.OK) {
+      savePoint foreach (_.rollback())
+    }
+
+    updateFeaturesTable()
   }
 
   private def createStepInfo(toolkit: FormToolkit, parent: Composite): Control = {
@@ -468,17 +491,24 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   }
 
 
-  private def selectSubTerm(term: Term, context: ProofStep): Term = {
+  private def selectSubTerm(term: Term, context: ProofStep) {
 
-    val editingFeature = false
+    val editingFeature = editFeature.isDefined
     val okLabel = if (editingFeature) "Mark Feature Term" else "Create New Feature With Term"
     
     val subTermDialog =
       new SubTermSelectionDialog(intentLink.getShell, term, context, Some(okLabel))
-    subTermDialog.open()
 
-    // FIXME
-    null
+    if (subTermDialog.open() == Window.OK) {
+      val selectedTerm = subTermDialog.selectedTerm
+      editFeature match {
+        case Some(feature) => feature.getParams.add(selectedTerm)
+        case None => {
+          // create new feature
+        }
+      }
+      updateFeaturesTable()
+    }
   }
 
 
