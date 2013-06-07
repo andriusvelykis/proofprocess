@@ -50,7 +50,7 @@ class IsabellePatcher {
 
   private def doCheckPatched(): Boolean = {
 
-    val isabelleHome = Isabelle_System.getenv_strict("ISABELLE_HOME")
+    val isabelleHome = Isabelle_System.jvm_path(Isabelle_System.getenv_strict("ISABELLE_HOME"))
 
     val unpatchedTest = IsabellePatches.findUnpatched(isabelleHome)
 
