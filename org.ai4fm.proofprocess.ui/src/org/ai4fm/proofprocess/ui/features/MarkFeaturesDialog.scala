@@ -10,7 +10,7 @@ import org.ai4fm.proofprocess.ui.internal.PProcessImages
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
 import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences
 import org.ai4fm.proofprocess.ui.util.{AdaptingLabelProvider, AdaptingTableLabelProvider}
-import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, noArgFnToSelectionAdapter, selectionElement}
+import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, fnToOpenListener, noArgFnToSelectionAdapter, selectionElement}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
 import org.eclipse.core.databinding.observable.list.MultiList
@@ -24,7 +24,7 @@ import org.eclipse.jface.databinding.viewers.ObservableListContentProvider
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
 import org.eclipse.jface.resource.{FontDescriptor, JFaceResources, LocalResourceManager, ResourceManager}
-import org.eclipse.jface.viewers.{DoubleClickEvent, ILabelProvider, ITableLabelProvider, StyledString, TableViewer}
+import org.eclipse.jface.viewers.{DoubleClickEvent, ILabelProvider, ITableLabelProvider, OpenEvent, StyledString, TableViewer}
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.StyledText
@@ -275,11 +275,19 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     val multiListObs = new MultiList(Array(inFeaturesObs, outFeaturesObs))
     featuresTable.setInput(multiListObs)
+
+    // edit on open (double-click)
+    featuresTable.addOpenListener { e: OpenEvent =>
+      selectionElement(e.getSelection) match {
+        case Some(feature: ProofFeature) => editFeature(feature)
+        case _ =>
+      }
+    }
     
 
     val buttons = toolkit.createComposite(container, SWT.NONE)
     buttons.setLayout(GridLayoutFactory.fillDefaults.create)
-    buttons.setLayoutData(GridDataFactory.fillDefaults.hint(50, SWT.DEFAULT).create)
+    buttons.setLayoutData(GridDataFactory.fillDefaults.hint(70, SWT.DEFAULT).create)
 
     val addButton = toolkit.createButton(buttons, "Add...", SWT.PUSH)
     addButton.setLayoutData(fillHorizontal.create)
