@@ -296,6 +296,16 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       }
     }
 
+    val removeButton = toolkit.createButton(buttons, "Remove", SWT.PUSH)
+    removeButton.setLayoutData(fillHorizontal.create)
+
+    removeButton.addSelectionListener { () =>
+      selectionElement(featuresTable.getSelection) match {
+        case Some(feature: ProofFeature) => removeFeature(feature)
+        case _ =>
+      }
+    }
+
     updateFeaturesTable()
 
     container
@@ -322,6 +332,12 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   private def editFeature(feature: ProofFeature) {
     val editSavePoint = transaction map (_.setSavepoint())
     openFeatureInfo(feature, editSavePoint)
+  }
+
+  private def removeFeature(feature: ProofFeature) {
+    val proofInfo = elem.getInfo
+    proofInfo.getInFeatures.remove(feature)
+    proofInfo.getOutFeatures.remove(feature)
   }
 
   private def openFeatureInfo(feature: ProofFeature,
