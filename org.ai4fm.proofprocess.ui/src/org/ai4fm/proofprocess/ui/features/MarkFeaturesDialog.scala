@@ -294,11 +294,13 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     featuresTable.refresh()
   }
 
-  private def addNewFeature() {
+  private def addNewFeature(initialTerms: List[Term] = Nil) {
 
     val addSavePoint = transaction map (_.setSavepoint())
 
     val newFeature = ppFactory.createProofFeature
+    newFeature.getParams.addAll(initialTerms.asJava)
+
     // add immediately
     // TODO how about OutFeatures?
     elem.getInfo.getInFeatures.add(newFeature)
@@ -503,9 +505,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       val selectedTerm = subTermDialog.selectedTerm
       editFeature match {
         case Some(feature) => feature.getParams.add(selectedTerm)
-        case None => {
-          // create new feature
-        }
+        case None => addNewFeature(List(selectedTerm))
       }
       updateFeaturesTable()
     }
