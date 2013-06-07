@@ -1,13 +1,15 @@
 package org.ai4fm.proofprocess.ui.features
 
-import org.ai4fm.proofprocess.{ProofFeature, ProofStore}
+import org.ai4fm.proofprocess.{ProofFeature, ProofProcessPackage, ProofStore}
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
 import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, selectionElement}
 
-import org.eclipse.emf.common.util.EList
+import org.eclipse.core.databinding.observable.list.IObservableList
+import org.eclipse.emf.databinding.EMFObservables
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
-import org.eclipse.emf.edit.ui.provider.{AdapterFactoryContentProvider, AdapterFactoryLabelProvider}
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
 import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
@@ -70,8 +72,11 @@ class FeatureInfoDialog(parent: Shell,
     val featureInfoControl = createFeatureInfo(toolkit, form.getBody)
     featureInfoControl.setLayoutData(fillHorizontal.create)
 
+    val paramsObservable =
+      EMFObservables.observeList(feature, ProofProcessPackage.Literals.PROOF_FEATURE__PARAMS)
+
     toolkit.createLabel(form.getBody, "Parameter terms: ")
-    paramTermsTable = createTermList(toolkit, form.getBody, feature.getParams)
+    paramTermsTable = createTermList(toolkit, form.getBody, paramsObservable)
     paramTermsTable.getTable.setLayoutData(fillBoth.hint(100, 20).create)
 
     form
@@ -138,13 +143,12 @@ class FeatureInfoDialog(parent: Shell,
 
   private def createTermList(toolkit: FormToolkit,
                              parent: Composite,
-                             terms: EList[_]): TableViewer = {
+                             terms: IObservableList): TableViewer = {
 
     val table = toolkit.createTable(parent, SWT.V_SCROLL | SWT.H_SCROLL)
 
     val viewer = new TableViewer(table)
-    // use adapter content provider, because it reacts to EList changes
-    viewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory))
+    viewer.setContentProvider(new ObservableListContentProvider)
     viewer.setLabelProvider(labelProvider)
 
     viewer.addDoubleClickListener { e: DoubleClickEvent =>
