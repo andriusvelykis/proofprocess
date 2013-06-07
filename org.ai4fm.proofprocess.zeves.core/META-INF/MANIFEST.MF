@@ -14,7 +14,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ai4fm.proofprocess.zeves;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/tracker.xml
 Import-Package: net.sourceforge.czt.base.ast;version="1.6.0",
  net.sourceforge.czt.eclipse.zeves.core,
  net.sourceforge.czt.session;version="1.6.0",
@@ -40,4 +39,5 @@ Import-Package: net.sourceforge.czt.base.ast;version="1.6.0",
  scalax.collection;version="1.6.1",
  scalax.collection.generic;version="1.6.1",
  scalax.collection.immutable;version="1.6.1"
-Export-Package: org.ai4fm.proofprocess.zeves.core.analysis;x-friends:="org.ai4fm.proofprocess.zeves.ui"
+Export-Package: org.ai4fm.proofprocess.zeves.core,
+ org.ai4fm.proofprocess.zeves.core.analysis;x-friends:="org.ai4fm.proofprocess.zeves.ui"

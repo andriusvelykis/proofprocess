@@ -36,6 +36,12 @@
       </perspectiveExtension>
    </extension>
    <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.ai4fm.proofprocess.zeves.ui.internal.ZEvesPProcessUIStartup">
+      </startup>
+   </extension>
+   <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="org.ai4fm.proofprocess.zeves.CztTerm"
