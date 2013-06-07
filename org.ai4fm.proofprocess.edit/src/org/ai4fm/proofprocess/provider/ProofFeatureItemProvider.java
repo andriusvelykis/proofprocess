@@ -213,18 +213,18 @@ public class ProofFeatureItemProvider
 	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(ProofFeature.class)) {
-			case ProofProcessPackage.PROOF_FEATURE__TYPE:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+			case ProofProcessPackage.PROOF_FEATURE__NAME:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
 				return;
 			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
 				return;
 		}
 		super.notifyChanged(notification);
