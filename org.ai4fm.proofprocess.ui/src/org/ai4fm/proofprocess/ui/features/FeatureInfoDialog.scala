@@ -26,7 +26,8 @@ import org.eclipse.ui.forms.widgets.{FormToolkit, ImageHyperlink}
  */
 class FeatureInfoDialog(parent: Shell,
                         proofStore: => Option[ProofStore],
-                        feature: ProofFeature)
+                        feature: ProofFeature,
+                        callback: Option[Int => Unit] = None)
     extends StatusDialog(parent) {
 
   private val adapterFactory =
@@ -40,7 +41,9 @@ class FeatureInfoDialog(parent: Shell,
   private var paramTermsTable: TableViewer = _
 
   setTitle("Proof Feature")
-  setShellStyle(getShellStyle() | SWT.MAX | SWT.RESIZE)
+  // non-modal dialog
+  setShellStyle(SWT.DIALOG_TRIM | SWT.MAX | SWT.RESIZE | SWT.MODELESS | Window.getDefaultOrientation)
+  setBlockOnOpen(false)
 
   override def getDialogBoundsSettings = plugin.dialogSettings("FeatureInfoDialog")
 
@@ -165,6 +168,11 @@ class FeatureInfoDialog(parent: Shell,
     val result = super.close()
     if (result) {
       dispose()
+    }
+
+    callback match {
+      case Some(f) => f(getReturnCode)
+      case None => // ignore
     }
 
     result

@@ -13,6 +13,7 @@ import org.ai4fm.proofprocess.ui.util.{AdaptingLabelProvider, AdaptingTableLabel
 import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, noArgFnToSelectionAdapter, selectionElement}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
+import org.eclipse.emf.cdo.transaction.CDOSavepoint
 import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
@@ -58,6 +59,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   private var narrativeChanged = false
 
   private var featuresTable: TableViewer = _
+  private var featureInfoDialog: Option[FeatureInfoDialog] = None
 
   private var inGoalDisplay: StyledText = _
   private var inGoalsTable: TableViewer = _
@@ -242,31 +244,14 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val addButton = toolkit.createButton(buttons, "Add...", SWT.PUSH)
     addButton.setLayoutData(fillHorizontal.create)
 
-    addButton.addSelectionListener { () =>
-      val newFeature = ppFactory.createProofFeature
-      val featureDialog = new FeatureInfoDialog(addButton.getShell, proofStore, newFeature)
-
-      if (featureDialog.open() == Window.OK) {
-        // TODO how about OutFeatures?
-        elem.getInfo.getInFeatures.add(newFeature)
-        updateFeaturesTable()
-      }
-    }
+    addButton.addSelectionListener { () => addNewFeature() }
 
     val editButton = toolkit.createButton(buttons, "Edit...", SWT.PUSH)
     editButton.setLayoutData(fillHorizontal.create)
 
     editButton.addSelectionListener { () =>
       selectionElement(featuresTable.getSelection) match {
-        case Some(feature: ProofFeature) => {
-          val featureDialog = new FeatureInfoDialog(addButton.getShell, proofStore, feature)
-
-          if (featureDialog.open() == Window.OK) {
-            // TODO handle cancel?
-            updateFeaturesTable()
-          }
-        }
-
+        case Some(feature: ProofFeature) => editFeature(feature)
         case _ =>
       }
     }
@@ -281,6 +266,54 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     featuresTable.setInput(allFeatures)
   }
 
+  private def addNewFeature() {
+
+    val addSavePoint = transaction map (_.setSavepoint())
+
+    val newFeature = ppFactory.createProofFeature
+    // add immediately
+    // TODO how about OutFeatures?
+    elem.getInfo.getInFeatures.add(newFeature)
+    updateFeaturesTable()
+
+    openFeatureInfo(newFeature)(cancelOrRefreshFeatures(addSavePoint))
+  }
+
+  private def editFeature(feature: ProofFeature) {
+    val editSavePoint = transaction map (_.setSavepoint())
+    openFeatureInfo(feature)(cancelOrRefreshFeatures(editSavePoint))
+  }
+
+  private def cancelOrRefreshFeatures(savePoint: Option[CDOSavepoint]): Int => Unit =
+    cancelOrElse(savePoint, updateFeaturesTable)(updateFeaturesTable)
+
+  private def cancelOrElse(savePoint: Option[CDOSavepoint],
+                           onCancel: => Unit = {})(onOk: => Unit): Int => Unit = {
+    returnCode =>
+      if (returnCode == Window.OK) {
+        onOk
+      } else {
+        savePoint foreach (_.rollback())
+        onCancel
+      }
+  }
+
+  private def openFeatureInfo(feature: ProofFeature)(callback: Int => Unit) {
+    featureInfoDialog match {
+      case Some(openDialog) => openDialog.close()
+      case None => // ignore
+    }
+
+    val newDialog = new FeatureInfoDialog(intentLink.getShell, proofStore, feature,
+      Some(handleClosedAnd(callback)))
+    featureInfoDialog = Some(newDialog)
+    newDialog.open()
+  }
+
+  private def handleClosedAnd(f: Int => Unit)(returnCode: Int) {
+    featureInfoDialog = None
+    f(returnCode)
+  }
 
   private def createStepInfo(toolkit: FormToolkit, parent: Composite): Control = {
 
