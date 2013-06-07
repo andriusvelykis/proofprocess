@@ -7,7 +7,6 @@ import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.plugin
 import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, selectionElement}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
-import org.eclipse.core.runtime.IStatus
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.dialogs.{IDialogConstants, StatusDialog}
@@ -16,7 +15,7 @@ import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
 import org.eclipse.jface.viewers.{DoubleClickEvent, StructuredSelection, StyledString, TableViewer}
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.StyledText
-import org.eclipse.swt.widgets.{Button, Composite, Control, Shell, Text}
+import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent}
 import org.eclipse.ui.forms.widgets.{FormToolkit, Section}
 import org.eclipse.ui.forms.widgets.ExpandableComposite.{EXPANDED, NO_TITLE_FOCUS_BOX, TITLE_BAR, TWISTIE}
@@ -43,24 +42,20 @@ class SubTermSelectionDialog(parent: Shell,
 
   private var schemaTermsTable: TableViewer = _
 
-  private var okButton: Button = _
-
   setTitle("Select Sub-term")
   setShellStyle(getShellStyle() | SWT.MAX | SWT.RESIZE)
 
   override def getDialogBoundsSettings = plugin.dialogSettings("SubTermSelectionDialog")
 
   override protected def createButtonsForButtonBar(parent: Composite) {
-    val okLabel = okButtonLabel getOrElse IDialogConstants.OK_LABEL
-    okButton = createButton(parent, IDialogConstants.OK_ID, okLabel, true)
-    createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false)
+    super.createButtonsForButtonBar(parent)
+    okButtonLabel foreach { text =>
+      val okBtn = getButton(IDialogConstants.OK_ID)
+      okBtn.setText(text)
+      setButtonLayoutData(okBtn)
+    }
   }
 
-  override protected def updateButtonsEnableState(status: IStatus) =
-    Option(okButton) filterNot (_.isDisposed) match {
-      case Some(button) => button.setEnabled(!status.matches(IStatus.ERROR))
-      case None => // ignore
-    }
 
   /**
    * Create the dialog area.
