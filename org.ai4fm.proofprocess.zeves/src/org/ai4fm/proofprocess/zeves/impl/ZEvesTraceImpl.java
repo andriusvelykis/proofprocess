@@ -51,7 +51,7 @@ public class ZEvesTraceImpl extends CDOObjectImpl implements ZEvesTrace {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String CASE_EDEFAULT = "\"\"";
+	protected static final String CASE_EDEFAULT = "";
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -46,7 +46,7 @@ public class IntentImpl extends CDOObjectImpl implements Intent {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String DESCRIPTION_EDEFAULT = "\"\"";
+	protected static final String DESCRIPTION_EDEFAULT = "";
 
 	/**
 	 * <!-- begin-user-doc -->

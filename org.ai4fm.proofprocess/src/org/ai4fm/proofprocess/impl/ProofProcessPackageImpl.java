@@ -798,7 +798,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		// Initialize classes and features; add operations and parameters
 		initEClass(intentEClass, Intent.class, "Intent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIntent_Name(), ecorePackage.getEString(), "name", "", 1, 1, Intent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIntent_Description(), ecorePackage.getEString(), "description", "\"\"", 1, 1, Intent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIntent_Description(), ecorePackage.getEString(), "description", "", 1, 1, Intent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(termEClass, Term.class, "Term", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -820,7 +820,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 
 		initEClass(proofFeatureDefEClass, ProofFeatureDef.class, "ProofFeatureDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getProofFeatureDef_Name(), ecorePackage.getEString(), "name", "", 1, 1, ProofFeatureDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProofFeatureDef_Description(), ecorePackage.getEString(), "description", "\"\"", 1, 1, ProofFeatureDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProofFeatureDef_Description(), ecorePackage.getEString(), "description", "", 1, 1, ProofFeatureDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(proofFeatureEClass, ProofFeature.class, "ProofFeature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofFeature_Name(), this.getProofFeatureDef(), null, "name", null, 1, 1, ProofFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
