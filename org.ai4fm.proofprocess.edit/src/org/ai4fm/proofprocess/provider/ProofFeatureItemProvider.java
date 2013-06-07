@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -60,14 +61,34 @@ public class ProofFeatureItemProvider
 	}
 
 	private ILabelProvider labelProvider = null;
+	private ComposedAdapterFactory adapterFactory = null;
 
     private ILabelProvider getLabelProvider() {
     	if (labelProvider == null) {
-    		labelProvider = new AdapterFactoryLabelProvider(getAdapterFactory());
+    		adapterFactory = 
+    			new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+
+    		labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
     	}
 
     	return labelProvider;
     }
+
+	@Override
+	public void dispose() {
+
+		if (labelProvider != null) {
+			labelProvider.dispose();
+			labelProvider = null;
+		}
+		
+		if (adapterFactory != null) {
+			adapterFactory.dispose();
+			adapterFactory = null;
+		}
+
+		super.dispose();
+	}
 
 	/**
 	 * This returns the property descriptors for the adapted class.
