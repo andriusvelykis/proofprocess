@@ -46,7 +46,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   private val adapterFactory =
     new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)
 
-  private val labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
+  private val labelProvider = new AdapterFactoryLabelProvider(adapterFactory)
 
   private lazy val ppFactory = ProofProcessFactory.eINSTANCE
 
@@ -264,6 +264,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
           
       }
 
+    featureLabelProvider.setFireLabelUpdateNotifications(true)
     featuresTable.setLabelProvider(featureLabelProvider)
 
     val proofInfo = elem.getInfo
