@@ -2,7 +2,7 @@ package org.ai4fm.proofprocess.ui.features
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofFeature, ProofProcessFactory, ProofStep, ProofStore, Term}
+import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofFeature, ProofProcessFactory, ProofProcessPackage, ProofStep, ProofStore, Term}
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.{TermSelectionSource, TermSelectionSourceProvider}
@@ -13,11 +13,14 @@ import org.ai4fm.proofprocess.ui.util.{AdaptingLabelProvider, AdaptingTableLabel
 import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, noArgFnToSelectionAdapter, selectionElement}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
+import org.eclipse.core.databinding.observable.list.MultiList
 import org.eclipse.emf.cdo.transaction.CDOSavepoint
 import org.eclipse.emf.cdo.util.CommitException
+import org.eclipse.emf.databinding.EMFObservables
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.action.Action
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
 import org.eclipse.jface.resource.{FontDescriptor, JFaceResources, LocalResourceManager, ResourceManager}
@@ -238,7 +241,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     table.setLayoutData(fillBoth.hint(100, 50).create)
 
     featuresTable = new TableViewer(table)
-    featuresTable.setContentProvider(ScalaArrayContentProvider)
+    featuresTable.setContentProvider(new ObservableListContentProvider)
 
     def bold(font: Font): Font = {
       val fontDescriptor = FontDescriptor.createFrom(font)
@@ -262,6 +265,15 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       }
 
     featuresTable.setLabelProvider(featureLabelProvider)
+
+    val proofInfo = elem.getInfo
+    val inFeaturesObs =
+      EMFObservables.observeList(proofInfo, ProofProcessPackage.Literals.PROOF_INFO__IN_FEATURES)
+    val outFeaturesObs =
+      EMFObservables.observeList(proofInfo, ProofProcessPackage.Literals.PROOF_INFO__OUT_FEATURES)
+
+    val multiListObs = new MultiList(Array(inFeaturesObs, outFeaturesObs))
+    featuresTable.setInput(multiListObs)
     
 
     val buttons = toolkit.createComposite(container, SWT.NONE)
@@ -289,8 +301,6 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   }
 
   private def updateFeaturesTable() {
-    val allFeatures = elem.getInfo.getInFeatures.asScala ++ elem.getInfo.getOutFeatures.asScala
-    featuresTable.setInput(allFeatures)
     featuresTable.refresh()
   }
 
