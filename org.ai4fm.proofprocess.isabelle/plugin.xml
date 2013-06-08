@@ -12,9 +12,27 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://org/ai4fm/proofprocess/isabelle/v1.0.0"
+            uri="http://org/ai4fm/proofprocess/isabelle/v1.0.0.11"
             class="org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage"
             genModel="model/IsabelleProofProcess.genmodel"/>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.dynamic_package">
+      <resource
+            location="model/history/IsabelleProofProcess-v1.0.0.ecore"
+            uri="http://org/ai4fm/proofprocess/isabelle/v1.0.0">
+      </resource>
+      <resource
+            location="model/history/IsabelleProofProcess-v1.0.0.10.ecore"
+            uri="http://org/ai4fm/proofprocess/isabelle/v1.0.0.10">
+      </resource>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.conversion_delegate">
+      <factory
+            class="org.ai4fm.proofprocess.isabelle.parse.IsabelleConversionDelegateFactory"
+            uri="http://org/ai4fm/proofprocess/isabelle/conversion/v1.0.0">
+      </factory>
    </extension>
 
 </plugin>

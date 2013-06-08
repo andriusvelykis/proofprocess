@@ -1,7 +1,8 @@
 package org.ai4fm.proofprocess.ui.views
 
 import org.ai4fm.proofprocess.{ProofStep, Term}
-import org.ai4fm.proofprocess.ui.PProcessImages
+import org.ai4fm.proofprocess.ui.internal.PProcessImages
+
 import org.eclipse.jface.resource.ResourceManager
 import org.eclipse.swt.graphics.Image
 

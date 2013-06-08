@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.ai4fm.proofprocess.ProofStore#getProofs <em>Proofs</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.ProofStore#getIntents <em>Intents</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.ProofStore#getFeatures <em>Features</em>}</li>
  * </ul>
  * </p>
  *
@@ -59,5 +60,21 @@ public interface ProofStore extends CDOObject {
 	 * @generated
 	 */
 	EList<Intent> getIntents();
+
+	/**
+	 * Returns the value of the '<em><b>Features</b></em>' containment reference list.
+	 * The list contents are of type {@link org.ai4fm.proofprocess.ProofFeatureDef}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Features</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Features</em>' containment reference list.
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofStore_Features()
+	 * @model containment="true" ordered="false"
+	 * @generated
+	 */
+	EList<ProofFeatureDef> getFeatures();
 
 } // ProofStore

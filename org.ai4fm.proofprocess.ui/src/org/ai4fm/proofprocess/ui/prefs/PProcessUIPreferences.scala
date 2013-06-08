@@ -1,6 +1,6 @@
 package org.ai4fm.proofprocess.ui.prefs
 
-import org.ai4fm.proofprocess.ui.PProcessUIPlugin
+import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin
 import org.eclipse.core.runtime.Platform
 import org.eclipse.core.runtime.preferences.{AbstractPreferenceInitializer, DefaultScope, IScopeContext, InstanceScope}
 
@@ -23,7 +23,10 @@ object PProcessUIPreferences {
   
   /** Preference indicating whether to track proof process live */
   val TRACK_LATEST_PROOF_ENTRY = pluginId + ".trackLatestProofEntry"
-  
+
+  /** Preference indicating whether to filter affected goal when marking features */
+  val FILTER_AFFECTED_GOAL = pluginId + ".filterAffectedGoal"
+
 }
 
 /**
@@ -39,5 +42,7 @@ class PProcessUIPreferenceInitializer extends AbstractPreferenceInitializer {
     
     // track latest proof entry by default
     prefDefaults.putBoolean(TRACK_LATEST_PROOF_ENTRY, true)
+
+    prefDefaults.putBoolean(FILTER_AFFECTED_GOAL, true)
   }
 }

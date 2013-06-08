@@ -42,7 +42,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://org/ai4fm/proofprocess/v1.0.0";
+	String eNS_URI = "http://org/ai4fm/proofprocess/v1.0.0.11";
 
 	/**
 	 * The package namespace name.
@@ -339,13 +339,22 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_FEATURE__PARAMS = 2;
 
 	/**
+	 * The feature id for the '<em><b>Misc</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROOF_FEATURE__MISC = 3;
+
+	/**
 	 * The number of structural features of the '<em>Proof Feature</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROOF_FEATURE_FEATURE_COUNT = 3;
+	int PROOF_FEATURE_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.ProofElemImpl <em>Proof Elem</em>}' class.
@@ -635,13 +644,22 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_STORE__INTENTS = 1;
 
 	/**
+	 * The feature id for the '<em><b>Features</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROOF_STORE__FEATURES = 2;
+
+	/**
 	 * The number of structural features of the '<em>Proof Store</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROOF_STORE_FEATURE_COUNT = 2;
+	int PROOF_STORE_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.ProofFeatureType <em>Proof Feature Type</em>}' enum.
@@ -899,6 +917,17 @@ public interface ProofProcessPackage extends EPackage {
 	EReference getProofFeature_Params();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.ProofFeature#getMisc <em>Misc</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Misc</em>'.
+	 * @see org.ai4fm.proofprocess.ProofFeature#getMisc()
+	 * @see #getProofFeature()
+	 * @generated
+	 */
+	EAttribute getProofFeature_Misc();
+
+	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.ProofElem <em>Proof Elem</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1109,6 +1138,17 @@ public interface ProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getProofStore_Intents();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.ai4fm.proofprocess.ProofStore#getFeatures <em>Features</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Features</em>'.
+	 * @see org.ai4fm.proofprocess.ProofStore#getFeatures()
+	 * @see #getProofStore()
+	 * @generated
+	 */
+	EReference getProofStore_Features();
 
 	/**
 	 * Returns the meta object for enum '{@link org.ai4fm.proofprocess.ProofFeatureType <em>Proof Feature Type</em>}'.
@@ -1343,6 +1383,14 @@ public interface ProofProcessPackage extends EPackage {
 		EReference PROOF_FEATURE__PARAMS = eINSTANCE.getProofFeature_Params();
 
 		/**
+		 * The meta object literal for the '<em><b>Misc</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROOF_FEATURE__MISC = eINSTANCE.getProofFeature_Misc();
+
+		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.ProofElemImpl <em>Proof Elem</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1517,6 +1565,14 @@ public interface ProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PROOF_STORE__INTENTS = eINSTANCE.getProofStore_Intents();
+
+		/**
+		 * The meta object literal for the '<em><b>Features</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROOF_STORE__FEATURES = eINSTANCE.getProofStore_Features();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.ProofFeatureType <em>Proof Feature Type</em>}' enum.

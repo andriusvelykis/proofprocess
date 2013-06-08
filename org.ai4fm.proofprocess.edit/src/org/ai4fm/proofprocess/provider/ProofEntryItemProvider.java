@@ -101,11 +101,17 @@ public class ProofEntryItemProvider
 	 * This returns ProofEntry.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofEntry"));
+	  ProofEntry entry = (ProofEntry) object;
+	  if (entry.getProofStep() != null && entry.getProofStep().getOutGoals().isEmpty()) {
+	    // no out goals - use "success" icon
+	    return overlayImage(object, getResourceLocator().getImage("full/obj16/success"));
+	  } else {
+	    return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofEntry"));
+	  }
 	}
 
 	/**

@@ -7,10 +7,12 @@
 package org.ai4fm.proofprocess.provider;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.ai4fm.proofprocess.ProofElem;
+import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
@@ -154,6 +156,37 @@ public class ProofElemItemProvider
 	@Override
 	public ResourceLocator getResourceLocator() {
 		return ProofProcessEditPlugin.INSTANCE;
+	}
+
+	@Override
+	public Collection<?> getChildren(Object object) {
+		Collection<?> children = super.getChildren(object);
+
+		List<Object> filteredChildren = new ArrayList<Object>();
+		for (Object child : children) {
+			if (child instanceof ProofInfo) {
+				ProofInfo proofInfo = (ProofInfo) child;
+
+				// if proof info has no data apart from the intent, do not show it
+				boolean emptyInfo = 
+						(proofInfo.getNarrative() == null || proofInfo.getNarrative().isEmpty())
+						&& proofInfo.getInFeatures().isEmpty()
+						&& proofInfo.getOutFeatures().isEmpty();
+				if (!emptyInfo) {
+					filteredChildren.add(proofInfo);
+				} else {
+					// show just the intent if available
+					Object intent = proofInfo.getIntent();
+					if (intent != null) {
+						filteredChildren.add(intent);
+					}
+				}
+			} else {
+				filteredChildren.add(child);
+			}
+		}
+
+		return filteredChildren;
 	}
 
 }

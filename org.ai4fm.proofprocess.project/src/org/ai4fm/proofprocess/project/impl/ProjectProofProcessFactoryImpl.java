@@ -31,7 +31,7 @@ public class ProjectProofProcessFactoryImpl extends EFactoryImpl implements Proj
 	 */
 	public static ProjectProofProcessFactory init() {
 		try {
-			ProjectProofProcessFactory theProjectProofProcessFactory = (ProjectProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/project/v1.0.0"); 
+			ProjectProofProcessFactory theProjectProofProcessFactory = (ProjectProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/project/v1.0.0.11"); 
 			if (theProjectProofProcessFactory != null) {
 				return theProjectProofProcessFactory;
 			}

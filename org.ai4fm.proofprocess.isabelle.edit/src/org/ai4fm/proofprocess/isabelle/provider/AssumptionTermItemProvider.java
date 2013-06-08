@@ -6,7 +6,9 @@ package org.ai4fm.proofprocess.isabelle.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.isabelle.AssumptionTerm;
+import org.ai4fm.proofprocess.isabelle.DisplayTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 
@@ -110,11 +112,22 @@ public class AssumptionTermItemProvider
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_AssumptionTerm_type");
+		AssumptionTerm term = (AssumptionTerm) object;
+		return "Assumption: " + getTermText(term.getTerm());
+	}
+
+	private String getTermText(Term term) {
+		if (term == null) {
+			return String.valueOf(term);
+		} else if (term instanceof DisplayTerm) {
+			return ((DisplayTerm) term).getDisplay();
+		} else {
+			return term.getClass().getSimpleName();
+		}
 	}
 
 	/**

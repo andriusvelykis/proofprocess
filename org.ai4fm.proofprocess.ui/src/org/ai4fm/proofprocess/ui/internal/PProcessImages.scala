@@ -1,9 +1,9 @@
-package org.ai4fm.proofprocess.ui
+package org.ai4fm.proofprocess.ui.internal
 
-import java.net.MalformedURLException
-import java.net.URL
+import java.net.{MalformedURLException, URL}
 
 import org.eclipse.jface.resource.ImageDescriptor
+
 
 /** ProofProcess image definitions.
   * 
@@ -20,6 +20,9 @@ object PProcessImages {
 
   lazy val GOAL_IN = create("goal_in.gif")
   lazy val GOAL_OUT = create("goal_out.gif")
+  lazy val SUCCESS = create("success.gif")
+
+  lazy val FILTER = create("filter.gif")
 
   private def create(iconPath: String) = {
     try {

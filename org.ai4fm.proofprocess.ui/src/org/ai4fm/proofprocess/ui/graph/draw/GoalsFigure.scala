@@ -3,13 +3,10 @@ package org.ai4fm.proofprocess.ui.graph.draw
 import scala.collection.Iterable
 
 import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.ui.PProcessImages
-import org.eclipse.draw2d.Figure
-import org.eclipse.draw2d.Label
-import org.eclipse.draw2d.PositionConstants
-import org.eclipse.draw2d.ToolbarLayout
-import org.eclipse.jface.resource.ImageDescriptor
-import org.eclipse.jface.resource.ResourceManager
+import org.ai4fm.proofprocess.ui.internal.PProcessImages
+
+import org.eclipse.draw2d.{Figure, Label, PositionConstants, ToolbarLayout}
+import org.eclipse.jface.resource.{ImageDescriptor, ResourceManager}
 import org.eclipse.jface.viewers.ILabelProvider
 
 

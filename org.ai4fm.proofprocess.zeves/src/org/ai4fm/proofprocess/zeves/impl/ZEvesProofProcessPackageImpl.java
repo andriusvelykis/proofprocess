@@ -319,7 +319,7 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 		initEClass(zEvesTraceEClass, ZEvesTrace.class, "ZEvesTrace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getZEvesTrace_UsedLemmas(), ecorePackage.getEString(), "usedLemmas", null, 0, -1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getZEvesTrace_Text(), ecorePackage.getEString(), "text", null, 1, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getZEvesTrace_Case(), ecorePackage.getEString(), "case", "\"\"", 1, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getZEvesTrace_Case(), ecorePackage.getEString(), "case", "", 1, 1, ZEvesTrace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(zmlTermEDataType, Term.class, "ZmlTerm", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
@@ -328,8 +328,28 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 		createResource(eNS_URI);
 
 		// Create annotations
+		// http://www.eclipse.org/emf/2002/Ecore
+		createEcoreAnnotations();
 		// http://www.eclipse.org/CDO/DBStore
 		createDBStoreAnnotations();
+		// http://org/ai4fm/proofprocess/zeves/conversion/v1.0.0
+		createV1Annotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://www.eclipse.org/emf/2002/Ecore</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createEcoreAnnotations() {
+		String source = "http://www.eclipse.org/emf/2002/Ecore";		
+		addAnnotation
+		  (this, 
+		   source, 
+		   new String[] {
+			 "conversionDelegates", "http://org/ai4fm/proofprocess/zeves/conversion/v1.0.0"
+		   });		
 	}
 
 	/**
@@ -339,12 +359,27 @@ public class ZEvesProofProcessPackageImpl extends EPackageImpl implements ZEvesP
 	 * @generated
 	 */
 	protected void createDBStoreAnnotations() {
-		String source = "http://www.eclipse.org/CDO/DBStore";		
+		String source = "http://www.eclipse.org/CDO/DBStore";			
 		addAnnotation
 		  (getCztTerm_Term(), 
 		   source, 
 		   new String[] {
 			 "columnType", "CLOB"
+		   });	
+	}
+
+	/**
+	 * Initializes the annotations for <b>http://org/ai4fm/proofprocess/zeves/conversion/v1.0.0</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createV1Annotations() {
+		String source = "http://org/ai4fm/proofprocess/zeves/conversion/v1.0.0";				
+		addAnnotation
+		  (zmlTermEDataType, 
+		   source, 
+		   new String[] {
 		   });
 	}
 

@@ -73,7 +73,7 @@ public interface ZEvesTrace extends Trace {
 
 	/**
 	 * Returns the value of the '<em><b>Case</b></em>' attribute.
-	 * The default value is <code>"\"\""</code>.
+	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Case</em>' attribute isn't clear,
@@ -83,7 +83,7 @@ public interface ZEvesTrace extends Trace {
 	 * @return the value of the '<em>Case</em>' attribute.
 	 * @see #setCase(String)
 	 * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage#getZEvesTrace_Case()
-	 * @model default="\"\"" required="true"
+	 * @model default="" required="true"
 	 * @generated
 	 */
 	String getCase();

@@ -48,7 +48,7 @@ public class ProofInfoImpl extends CDOObjectImpl implements ProofInfo {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NARRATIVE_EDEFAULT = "\"\"";
+	protected static final String NARRATIVE_EDEFAULT = "";
 
 	/**
 	 * <!-- begin-user-doc -->

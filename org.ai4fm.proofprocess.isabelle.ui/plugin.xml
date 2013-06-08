@@ -15,6 +15,10 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:org.ai4fm.proofprocess.ui.PProcessView">
+         <separator
+               name="org.ai4fm.proofprocess.isabelle.ui.separator"
+               visible="true">
+         </separator>
          <command
                commandId="org.ai4fm.proofprocess.isabelle.ui.exportPProcessToIsabelle"
                style="push">
@@ -57,6 +61,16 @@
       <startup
             class="org.ai4fm.proofprocess.isabelle.ui.IsabellePProcessUIStartup">
       </startup>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.ai4fm.proofprocess.isabelle.JudgementTerm"
+            class="org.ai4fm.proofprocess.isabelle.ui.term.JudgementTermSelectionSourceAdapter">
+         <adapter
+               type="org.ai4fm.proofprocess.ui.TermSelectionSourceProvider">
+         </adapter>
+      </factory>
    </extension>
 
 </plugin>

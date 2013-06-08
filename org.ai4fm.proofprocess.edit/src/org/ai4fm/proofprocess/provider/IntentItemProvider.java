@@ -129,14 +129,15 @@ public class IntentItemProvider
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
 		String label = ((Intent)object).getName();
 		return label == null || label.length() == 0 ?
 			getString("_UI_Intent_type") :
-			getString("_UI_Intent_type") + " " + label;
+			// only use the label for intent
+			label;
 	}
 
 	/**

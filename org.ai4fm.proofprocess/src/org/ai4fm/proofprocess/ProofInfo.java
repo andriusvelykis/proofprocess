@@ -58,7 +58,7 @@ public interface ProofInfo extends CDOObject {
 
 	/**
 	 * Returns the value of the '<em><b>Narrative</b></em>' attribute.
-	 * The default value is <code>"\"\""</code>.
+	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Narrative</em>' attribute isn't clear,
@@ -68,7 +68,7 @@ public interface ProofInfo extends CDOObject {
 	 * @return the value of the '<em>Narrative</em>' attribute.
 	 * @see #setNarrative(String)
 	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofInfo_Narrative()
-	 * @model default="\"\""
+	 * @model default=""
 	 * @generated
 	 */
 	String getNarrative();

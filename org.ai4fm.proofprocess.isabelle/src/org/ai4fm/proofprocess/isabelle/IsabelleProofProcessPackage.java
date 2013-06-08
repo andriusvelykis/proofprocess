@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory
  * @model kind="package"
+ *        annotation="http://www.eclipse.org/emf/2002/Ecore conversionDelegates='http://org/ai4fm/proofprocess/isabelle/conversion/v1.0.0'"
  * @generated
  */
 public interface IsabelleProofProcessPackage extends EPackage {
@@ -44,7 +45,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://org/ai4fm/proofprocess/isabelle/v1.0.0";
+	String eNS_URI = "http://org/ai4fm/proofprocess/isabelle/v1.0.0.11";
 
 	/**
 	 * The package namespace name.

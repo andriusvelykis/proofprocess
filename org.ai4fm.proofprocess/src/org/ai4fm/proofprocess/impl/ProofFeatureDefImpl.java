@@ -46,7 +46,7 @@ public class ProofFeatureDefImpl extends CDOObjectImpl implements ProofFeatureDe
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String DESCRIPTION_EDEFAULT = "\"\"";
+	protected static final String DESCRIPTION_EDEFAULT = "";
 
 	/**
 	 * <!-- begin-user-doc -->

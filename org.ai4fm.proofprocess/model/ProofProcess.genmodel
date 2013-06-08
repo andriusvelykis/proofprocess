@@ -1,143 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.ai4fm.proofprocess/src" modelPluginID="org.ai4fm.proofprocess" modelName="ProofProcess" rootExtendsInterface="org.eclipse.emf.cdo.CDOObject" rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl" importerID="org.eclipse.emf.importer.ecore" featureDelegation="Dynamic" complianceLevel="6.0" copyrightFields="false">
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.ai4fm.proofprocess/src" modelPluginID="org.ai4fm.proofprocess"
+    modelName="ProofProcess" rootExtendsInterface="org.eclipse.emf.cdo.CDOObject"
+    rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl" importerID="org.eclipse.emf.importer.ecore"
+    featureDelegation="Dynamic" complianceLevel="6.0" copyrightFields="false">
   <foreignModel>ProofProcess.ecore</foreignModel>
   <modelPluginVariables>CDO=org.eclipse.emf.cdo</modelPluginVariables>
-  <genPackages prefix="ProofProcess" basePackage="org.ai4fm" disposableProviderFactory="true" fileExtensions="proof">
-    <ecorePackage href="ProofProcess.ecore#/"/>
-    <genEnums typeSafeEnumCompatible="false">
-      <ecoreEnum href="ProofProcess.ecore#//ProofFeatureType"/>
-      <genEnumLiterals>
-        <ecoreEnumLiteral href="ProofProcess.ecore#//ProofFeatureType/USER"/>
-      </genEnumLiterals>
-      <genEnumLiterals>
-        <ecoreEnumLiteral href="ProofProcess.ecore#//ProofFeatureType/INFERRED"/>
-      </genEnumLiterals>
+  <genPackages prefix="ProofProcess" basePackage="org.ai4fm" disposableProviderFactory="true"
+      fileExtensions="proof" ecorePackage="ProofProcess.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ProofProcess.ecore#//ProofFeatureType">
+      <genEnumLiterals ecoreEnumLiteral="ProofProcess.ecore#//ProofFeatureType/USER"/>
+      <genEnumLiterals ecoreEnumLiteral="ProofProcess.ecore#//ProofFeatureType/INFERRED"/>
     </genEnums>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//Intent"/>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="ProofProcess.ecore#//Intent/name"/>
-      </genFeatures>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="ProofProcess.ecore#//Intent/description"/>
-      </genFeatures>
+    <genClasses ecoreClass="ProofProcess.ecore#//Intent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//Intent/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//Intent/description"/>
     </genClasses>
-    <genClasses image="false">
-      <ecoreClass href="ProofProcess.ecore#//Term"/>
+    <genClasses image="false" ecoreClass="ProofProcess.ecore#//Term"/>
+    <genClasses image="false" ecoreClass="ProofProcess.ecore#//Loc"/>
+    <genClasses image="false" ecoreClass="ProofProcess.ecore#//Trace"/>
+    <genClasses ecoreClass="ProofProcess.ecore#//ProofStep">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofStep/inGoals"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofStep/outGoals"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofStep/source"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofStep/trace"/>
     </genClasses>
-    <genClasses image="false">
-      <ecoreClass href="ProofProcess.ecore#//Loc"/>
+    <genClasses ecoreClass="ProofProcess.ecore#//ProofInfo">
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofInfo/intent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//ProofInfo/narrative"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofInfo/inFeatures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofInfo/outFeatures"/>
     </genClasses>
-    <genClasses image="false">
-      <ecoreClass href="ProofProcess.ecore#//Trace"/>
+    <genClasses ecoreClass="ProofProcess.ecore#//ProofFeatureDef">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//ProofFeatureDef/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//ProofFeatureDef/description"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//ProofStep"/>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofStep/inGoals"/>
-      </genFeatures>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofStep/outGoals"/>
-      </genFeatures>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofStep/source"/>
-      </genFeatures>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofStep/trace"/>
-      </genFeatures>
+    <genClasses ecoreClass="ProofProcess.ecore#//ProofFeature">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofFeature/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//ProofFeature/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofFeature/params"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//ProofFeature/misc"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//ProofInfo"/>
-      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofInfo/intent"/>
-      </genFeatures>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="ProofProcess.ecore#//ProofInfo/narrative"/>
-      </genFeatures>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofInfo/inFeatures"/>
-      </genFeatures>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofInfo/outFeatures"/>
-      </genFeatures>
+    <genClasses image="false" ecoreClass="ProofProcess.ecore#//ProofElem">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofElem/info"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//ProofFeatureDef"/>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="ProofProcess.ecore#//ProofFeatureDef/name"/>
-      </genFeatures>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="ProofProcess.ecore#//ProofFeatureDef/description"/>
-      </genFeatures>
+    <genClasses ecoreClass="ProofProcess.ecore#//ProofEntry">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofEntry/proofStep"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//ProofFeature"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofFeature/name"/>
-      </genFeatures>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="ProofProcess.ecore#//ProofFeature/type"/>
-      </genFeatures>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofFeature/params"/>
-      </genFeatures>
+    <genClasses ecoreClass="ProofProcess.ecore#//ProofSeq">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofSeq/entries"/>
     </genClasses>
-    <genClasses image="false">
-      <ecoreClass href="ProofProcess.ecore#//ProofElem"/>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofElem/info"/>
-      </genFeatures>
+    <genClasses ecoreClass="ProofProcess.ecore#//ProofParallel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofParallel/entries"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofParallel/links"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//ProofEntry"/>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofEntry/proofStep"/>
-      </genFeatures>
+    <genClasses ecoreClass="ProofProcess.ecore#//ProofDecor">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofDecor/entry"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//ProofSeq"/>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofSeq/entries"/>
-      </genFeatures>
+    <genClasses ecoreClass="ProofProcess.ecore#//Attempt">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//Attempt/proof"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//ProofParallel"/>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofParallel/entries"/>
-      </genFeatures>
+    <genClasses ecoreClass="ProofProcess.ecore#//Proof">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//Proof/goals"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//Proof/label"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//Proof/attempts"/>
     </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//ProofDecor"/>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofDecor/entry"/>
-      </genFeatures>
-    </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//Attempt"/>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//Attempt/proof"/>
-      </genFeatures>
-    </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//Proof"/>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//Proof/goals"/>
-      </genFeatures>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="ProofProcess.ecore#//Proof/label"/>
-      </genFeatures>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//Proof/attempts"/>
-      </genFeatures>
-    </genClasses>
-    <genClasses>
-      <ecoreClass href="ProofProcess.ecore#//ProofStore"/>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofStore/proofs"/>
-      </genFeatures>
-      <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="ProofProcess.ecore#//ProofStore/intents"/>
-      </genFeatures>
+    <genClasses ecoreClass="ProofProcess.ecore#//ProofStore">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofStore/proofs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofStore/intents"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofStore/features"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

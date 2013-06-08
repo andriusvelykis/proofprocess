@@ -2,8 +2,9 @@ package org.ai4fm.proofprocess.ui.views
 
 import scala.collection.JavaConversions._
 
-import org.ai4fm.proofprocess.ui.PProcessUIPlugin
 import org.ai4fm.proofprocess.ui.graph.{PProcessFigureProvider, PProcessGraphContentProvider}
+import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin
+
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.gef4.zest.core.viewers.{EntityConnectionData, GraphViewer}

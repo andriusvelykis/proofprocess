@@ -6,7 +6,9 @@ import scala.language.implicitConversions
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.core.prefs.PreferenceTracker
 import org.ai4fm.proofprocess.core.store.{IProofEntryTracker, IProofStoreProvider}
+import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log}
 import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences._
+import org.ai4fm.proofprocess.ui.util.SWTUtil.noArgFnToDoubleClickListener
 import org.eclipse.core.runtime.{IProgressMonitor, IStatus, Status}
 import org.eclipse.core.runtime.jobs.Job
 import org.eclipse.emf.ecore.EObject
@@ -20,6 +22,8 @@ import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.widgets.Composite
 import org.eclipse.ui.{IViewPart, IWorkbenchActionConstants}
+import org.eclipse.ui.commands.ICommandService
+import org.eclipse.ui.handlers.IHandlerService
 import org.eclipse.ui.part.Page
 
 
@@ -48,11 +52,16 @@ class PProcessPage(viewPart: IViewPart,
     val mgr = new MenuManager();
 //    mgr.add(groupAttemptsAction);
     // add a placeholder for contributed actions
+    mgr.add(new GroupMarker("edit"))
     mgr.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS))
     val menu = mgr.createContextMenu(treeViewer.getTree)
     treeViewer.getTree.setMenu(menu)
     // register the menu with site to allow contributions
     getSite.registerContextMenu(viewPart.getViewSite.getId, mgr, treeViewer)
+
+    // on double-click, open the dialog to mark features
+    // (availability handled by handler definition in the plugin.xml)
+    treeViewer.addDoubleClickListener { () => openMarkFeaturesDialog() }
 
     val resourceMgr = new LocalResourceManager(JFaceResources.getResources, treeViewer.getTree)
     val overridingLabelProvider = new PProcessViewLabelProvider(resourceMgr)
@@ -129,6 +138,32 @@ class PProcessPage(viewPart: IViewPart,
 
     collect0(eobj, List())
   }
+
+  private def MARK_FEATURES_COMMAND_ID = "org.ai4fm.proofprocess.ui.markFeatures"
+
+  private def openMarkFeaturesDialog() = executeCommand(MARK_FEATURES_COMMAND_ID)
+
+  /**
+   * Executes the given command ID if it is enabled
+   */
+  private def executeCommand(cmdId: String) =
+    (getSiteService(classOf[ICommandService]), getSiteService(classOf[IHandlerService])) match {
+
+      case (Some(commandService), Some(handlerService)) =>
+        try {
+          val command = commandService.getCommand(cmdId)
+          if (command.isEnabled) {
+            handlerService.executeCommand(cmdId, null)
+          }
+        } catch {
+          case e: Exception => log(error(Some(e)))
+        }
+
+      case _ => // ignore
+    }
+
+  private def getSiteService[T](clazz: Class[T]): Option[T] =
+    Option(getSite.getService(clazz).asInstanceOf[T])
 
   private val trackEntryPref = new PreferenceTracker(prefs, TRACK_LATEST_PROOF_ENTRY)(() => {
     

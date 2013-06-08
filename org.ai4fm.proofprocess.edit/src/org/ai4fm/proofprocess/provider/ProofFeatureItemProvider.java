@@ -11,8 +11,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.ai4fm.proofprocess.ProofFeature;
-import org.ai4fm.proofprocess.ProofFeatureType;
+import org.ai4fm.proofprocess.ProofFeatureDef;
+import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessPackage;
+import org.ai4fm.proofprocess.Term;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -22,6 +24,7 @@ import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -31,6 +34,8 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
 
 /**
  * This is the item provider adapter for a {@link org.ai4fm.proofprocess.ProofFeature} object.
@@ -56,6 +61,36 @@ public class ProofFeatureItemProvider
 		super(adapterFactory);
 	}
 
+	private ILabelProvider labelProvider = null;
+	private ComposedAdapterFactory adapterFactory = null;
+
+    private ILabelProvider getLabelProvider() {
+    	if (labelProvider == null) {
+    		adapterFactory = 
+    			new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+
+    		labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
+    	}
+
+    	return labelProvider;
+    }
+
+	@Override
+	public void dispose() {
+
+		if (labelProvider != null) {
+			labelProvider.dispose();
+			labelProvider = null;
+		}
+		
+		if (adapterFactory != null) {
+			adapterFactory.dispose();
+			adapterFactory = null;
+		}
+
+		super.dispose();
+	}
+
 	/**
 	 * This returns the property descriptors for the adapted class.
 	 * <!-- begin-user-doc -->
@@ -69,6 +104,7 @@ public class ProofFeatureItemProvider
 
 			addNamePropertyDescriptor(object);
 			addTypePropertyDescriptor(object);
+			addMiscPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -118,6 +154,28 @@ public class ProofFeatureItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Misc feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addMiscPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_ProofFeature_misc_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ProofFeature_misc_feature", "_UI_ProofFeature_type"),
+				 ProofProcessPackage.Literals.PROOF_FEATURE__MISC,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -148,29 +206,67 @@ public class ProofFeatureItemProvider
 	}
 
 	/**
-	 * This returns ProofFeature.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofFeature"));
+		if (isOutFeature((ProofFeature) object)) {
+			return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofFeatureOut"));
+		} else {
+			return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofFeature"));
+		}
+	}
+
+	private Boolean isOutFeature(ProofFeature feature) {
+		if (feature.eContainer() instanceof ProofInfo) {
+			ProofInfo info = (ProofInfo) feature.eContainer();
+			if (info.getOutFeatures().contains(feature)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		ProofFeatureType labelValue = ((ProofFeature)object).getType();
-		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ?
-			getString("_UI_ProofFeature_type") :
-			getString("_UI_ProofFeature_type") + " " + label;
+		ProofFeature feature = (ProofFeature) object;
+
+		ProofFeatureDef featureDef = feature.getName();
+		String featureDefStr = featureDef != null ? featureDef.getName() : "<?feature>";
+
+		String paramsStr = renderParameters(feature.getParams());
+		
+		return featureDefStr + " (" + paramsStr + ")";
+	}
+
+	private String renderParameters(List<Term> params) {
+		if (params.isEmpty()) {
+			return "";
+		} else {
+			// render parameters
+			ILabelProvider label = getLabelProvider();
+
+			StringBuilder out = new StringBuilder();
+			String sep = "";
+			for (Term param : params) {
+				out.append(sep);
+				out.append(label.getText(param));
+				sep = ", ";
+			}
+
+			return out.toString();
+		}
 	}
 
 	/**
@@ -178,18 +274,18 @@ public class ProofFeatureItemProvider
 	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(ProofFeature.class)) {
-			case ProofProcessPackage.PROOF_FEATURE__TYPE:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+			case ProofProcessPackage.PROOF_FEATURE__NAME:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
 				return;
 			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
 				return;
 		}
 		super.notifyChanged(notification);

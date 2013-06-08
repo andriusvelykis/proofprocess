@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EPackage;
  * <!-- end-user-doc -->
  * @see org.ai4fm.proofprocess.zeves.ZEvesProofProcessFactory
  * @model kind="package"
+ *        annotation="http://www.eclipse.org/emf/2002/Ecore conversionDelegates='http://org/ai4fm/proofprocess/zeves/conversion/v1.0.0'"
  * @generated
  */
 public interface ZEvesProofProcessPackage extends EPackage {
@@ -43,7 +44,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://org/ai4fm/proofprocess/zeves/v1.0.0";
+	String eNS_URI = "http://org/ai4fm/proofprocess/zeves/v1.0.0.11";
 
 	/**
 	 * The package namespace name.

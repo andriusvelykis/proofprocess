@@ -2,14 +2,14 @@ package org.ai4fm.proofprocess.cdo.internal.db
 
 import java.net.URI
 
-import scala.collection.JavaConversions.mapAsJavaMap
+import scala.collection.JavaConverters._
 
 import org.eclipse.emf.cdo.net4j.CDONet4jUtil
-import org.eclipse.emf.cdo.server.CDOServerUtil
-import org.eclipse.emf.cdo.server.IRepository
+import org.eclipse.emf.cdo.server.{CDOServerUtil, IRepository}
 import org.eclipse.emf.cdo.server.db.CDODBUtil
 import org.eclipse.emf.cdo.server.net4j.CDONet4jServerUtil
 import org.eclipse.emf.cdo.session.CDOSession
+import org.eclipse.emf.cdo.spi.server.InternalRepository
 import org.eclipse.net4j.acceptor.IAcceptor
 import org.eclipse.net4j.connector.IConnector
 import org.eclipse.net4j.db.DBUtil
@@ -17,7 +17,9 @@ import org.eclipse.net4j.db.h2.H2Adapter
 import org.eclipse.net4j.jvm.JVMUtil
 import org.eclipse.net4j.util.container.IPluginContainer
 import org.eclipse.net4j.util.lifecycle.LifecycleUtil
+
 import org.h2.jdbcx.JdbcDataSource
+
 
 /** A class to encapsulate both CDO repository server and client.
   * 
@@ -35,7 +37,7 @@ class PProcessRepository(val databaseLoc: URI, val name: String) {
   // adapted from Gastro CDO example and http://wiki.eclipse.org/Run_a_CDO_container_inside_eclipse_runtime
   val (acceptor: IAcceptor,
       connector: IConnector,
-      repository: IRepository,
+      repository: InternalRepository,
       session: CDOSession) = {
 
     val dbName = name
@@ -51,12 +53,13 @@ class PProcessRepository(val databaseLoc: URI, val name: String) {
     val dbConnectionProvider = DBUtil.createConnectionProvider(dataSource)
     val store = CDODBUtil.createStore(mappingStrategy, dbAdapter, dbConnectionProvider)
 
+    // disable auditing - it results in VERY LARGE databases because all revisions are stored.
     val props = Map(
       IRepository.Props.OVERRIDE_UUID -> dbName,
-      IRepository.Props.SUPPORTING_AUDITS -> "true",
+      IRepository.Props.SUPPORTING_AUDITS -> "false",
       IRepository.Props.SUPPORTING_BRANCHES -> "false")
 
-    val repository = CDOServerUtil.createRepository(dbName, store, props)
+    val repository = CDOServerUtil.createRepository(dbName, store, props.asJava)
     CDOServerUtil.addRepository(container, repository)
     CDONet4jServerUtil.prepareContainer(container)
 
@@ -76,6 +79,13 @@ class PProcessRepository(val databaseLoc: URI, val name: String) {
 //  lazy val transaction = session.openTransaction
 //  lazy val resource = transaction.getOrCreateResource("/proofprocess")
 
+  def activate() {
+    LifecycleUtil.activate(repository)
+    LifecycleUtil.activate(acceptor)
+    LifecycleUtil.activate(connector)
+    LifecycleUtil.activate(session)
+  }
+
   /** Deactivates all resources opened for the server and client. */
   def deactivate() {
 
@@ -83,8 +93,8 @@ class PProcessRepository(val databaseLoc: URI, val name: String) {
 //    LifecycleUtil.deactivate(resource)
 //    LifecycleUtil.deactivate(transaction)
     LifecycleUtil.deactivate(session)
-    LifecycleUtil.deactivate(acceptor)
     LifecycleUtil.deactivate(connector)
+    LifecycleUtil.deactivate(acceptor)
     LifecycleUtil.deactivate(repository)
   }
 

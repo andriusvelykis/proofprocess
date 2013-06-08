@@ -456,6 +456,15 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getProofFeature_Misc() {
+		return (EAttribute)proofFeatureEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public EClass getProofElem() {
 		return proofElemEClass;
@@ -655,6 +664,15 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getProofStore_Features() {
+		return (EReference)proofStoreEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public EEnum getProofFeatureType() {
 		return proofFeatureTypeEEnum;
@@ -719,6 +737,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		createEReference(proofFeatureEClass, PROOF_FEATURE__NAME);
 		createEAttribute(proofFeatureEClass, PROOF_FEATURE__TYPE);
 		createEReference(proofFeatureEClass, PROOF_FEATURE__PARAMS);
+		createEAttribute(proofFeatureEClass, PROOF_FEATURE__MISC);
 
 		proofElemEClass = createEClass(PROOF_ELEM);
 		createEReference(proofElemEClass, PROOF_ELEM__INFO);
@@ -747,6 +766,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		proofStoreEClass = createEClass(PROOF_STORE);
 		createEReference(proofStoreEClass, PROOF_STORE__PROOFS);
 		createEReference(proofStoreEClass, PROOF_STORE__INTENTS);
+		createEReference(proofStoreEClass, PROOF_STORE__FEATURES);
 
 		// Create enums
 		proofFeatureTypeEEnum = createEEnum(PROOF_FEATURE_TYPE);
@@ -788,7 +808,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		// Initialize classes and features; add operations and parameters
 		initEClass(intentEClass, Intent.class, "Intent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIntent_Name(), ecorePackage.getEString(), "name", "", 1, 1, Intent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIntent_Description(), ecorePackage.getEString(), "description", "\"\"", 1, 1, Intent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIntent_Description(), ecorePackage.getEString(), "description", "", 1, 1, Intent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(termEClass, Term.class, "Term", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -804,18 +824,19 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 
 		initEClass(proofInfoEClass, ProofInfo.class, "ProofInfo", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofInfo_Intent(), this.getIntent(), null, "intent", null, 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProofInfo_Narrative(), ecorePackage.getEString(), "narrative", "\"\"", 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProofInfo_Narrative(), ecorePackage.getEString(), "narrative", "", 0, 1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProofInfo_InFeatures(), this.getProofFeature(), null, "inFeatures", null, 0, -1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProofInfo_OutFeatures(), this.getProofFeature(), null, "outFeatures", null, 0, -1, ProofInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(proofFeatureDefEClass, ProofFeatureDef.class, "ProofFeatureDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getProofFeatureDef_Name(), ecorePackage.getEString(), "name", "", 1, 1, ProofFeatureDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProofFeatureDef_Description(), ecorePackage.getEString(), "description", "\"\"", 1, 1, ProofFeatureDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProofFeatureDef_Description(), ecorePackage.getEString(), "description", "", 1, 1, ProofFeatureDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(proofFeatureEClass, ProofFeature.class, "ProofFeature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofFeature_Name(), this.getProofFeatureDef(), null, "name", null, 1, 1, ProofFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProofFeature_Type(), this.getProofFeatureType(), "type", null, 0, 1, ProofFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProofFeature_Params(), this.getTerm(), null, "params", null, 1, -1, ProofFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProofFeature_Misc(), ecorePackage.getEString(), "misc", "", 0, 1, ProofFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(proofElemEClass, ProofElem.class, "ProofElem", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofElem_Info(), this.getProofInfo(), null, "info", null, 1, 1, ProofElem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -844,6 +865,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		initEClass(proofStoreEClass, ProofStore.class, "ProofStore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofStore_Proofs(), this.getProof(), null, "proofs", null, 0, -1, ProofStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProofStore_Intents(), this.getIntent(), null, "intents", null, 0, -1, ProofStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getProofStore_Features(), this.getProofFeatureDef(), null, "features", null, 0, -1, ProofStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(proofFeatureTypeEEnum, ProofFeatureType.class, "ProofFeatureType");
