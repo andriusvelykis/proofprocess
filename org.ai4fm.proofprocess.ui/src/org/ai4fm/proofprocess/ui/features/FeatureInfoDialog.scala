@@ -3,7 +3,7 @@ package org.ai4fm.proofprocess.ui.features
 import org.ai4fm.proofprocess.{ProofFeature, ProofProcessPackage, ProofStore}
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
-import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, selectionElement}
+import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, noArgFnToSelectionAdapter, selectionElement}
 
 import org.eclipse.core.databinding.observable.list.IObservableList
 import org.eclipse.emf.databinding.EMFObservables
@@ -40,8 +40,6 @@ class FeatureInfoDialog(parent: Shell,
   private var featureLink: ImageHyperlink = _
   private var featureDescField: Text = _
 
-  private var paramTermsTable: TableViewer = _
-
   setTitle("Proof Feature")
   // non-modal dialog
   setShellStyle(SWT.DIALOG_TRIM | SWT.MAX | SWT.RESIZE | SWT.MODELESS | Window.getDefaultOrientation)
@@ -77,8 +75,8 @@ class FeatureInfoDialog(parent: Shell,
 
     toolkit.createLabel(form.getBody, 
         "Parameter terms (select them in Mark Features dialog): ", SWT.WRAP)
-    paramTermsTable = createTermList(toolkit, form.getBody, paramsObservable)
-    paramTermsTable.getTable.setLayoutData(fillBoth.hint(100, 20).create)
+    val paramTermsControl = createTermList(toolkit, form.getBody, paramsObservable)
+    paramTermsControl.setLayoutData(fillBoth.hint(100, 50).create)
 
     form
   }
@@ -144,9 +142,13 @@ class FeatureInfoDialog(parent: Shell,
 
   private def createTermList(toolkit: FormToolkit,
                              parent: Composite,
-                             terms: IObservableList): TableViewer = {
+                             terms: IObservableList): Control = {
 
-    val table = toolkit.createTable(parent, SWT.V_SCROLL | SWT.H_SCROLL)
+    val container = toolkit.createComposite(parent, SWT.NONE)
+    container.setLayout(GridLayoutFactory.fillDefaults.numColumns(2).create)
+
+    val table = toolkit.createTable(container, SWT.V_SCROLL | SWT.H_SCROLL)
+    table.setLayoutData(fillBoth.hint(100, 50).create)
 
     val viewer = new TableViewer(table)
     viewer.setContentProvider(new ObservableListContentProvider)
@@ -161,8 +163,23 @@ class FeatureInfoDialog(parent: Shell,
 
     viewer.setInput(terms)
 
-    viewer
+    val buttons = toolkit.createComposite(container, SWT.NONE)
+    buttons.setLayout(GridLayoutFactory.fillDefaults.create)
+    buttons.setLayoutData(GridDataFactory.fillDefaults.hint(70, SWT.DEFAULT).create)
+
+    val removeButton = toolkit.createButton(buttons, "Remove", SWT.PUSH)
+    removeButton.setLayoutData(fillHorizontal.create)
+
+    removeButton.addSelectionListener { () =>
+      selectionElement(viewer.getSelection) match {
+        case Some(elem) => terms.remove(elem)
+        case _ =>
+      }
+    }
+
+    container
   }
+
 
   private def fillBoth: GridDataFactory = GridDataFactory.fillDefaults.grab(true, true)
 
