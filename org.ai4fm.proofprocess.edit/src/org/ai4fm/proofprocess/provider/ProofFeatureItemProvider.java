@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.ai4fm.proofprocess.ProofFeature;
-import org.ai4fm.proofprocess.ProofFeatureType;
 import org.ai4fm.proofprocess.ProofFeatureDef;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.Term;
