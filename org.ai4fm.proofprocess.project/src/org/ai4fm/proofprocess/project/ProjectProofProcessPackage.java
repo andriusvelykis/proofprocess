@@ -43,7 +43,7 @@ public interface ProjectProofProcessPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://org/ai4fm/proofprocess/project/v1.0.0.10";
+	String eNS_URI = "http://org/ai4fm/proofprocess/project/v1.0.0.11";
 
 	/**
 	 * The package namespace name.
