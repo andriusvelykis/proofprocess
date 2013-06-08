@@ -75,7 +75,8 @@ class FeatureInfoDialog(parent: Shell,
     val paramsObservable =
       EMFObservables.observeList(feature, ProofProcessPackage.Literals.PROOF_FEATURE__PARAMS)
 
-    toolkit.createLabel(form.getBody, "Parameter terms: ")
+    toolkit.createLabel(form.getBody, 
+        "Parameter terms (select them in Mark Features dialog): ", SWT.WRAP)
     paramTermsTable = createTermList(toolkit, form.getBody, paramsObservable)
     paramTermsTable.getTable.setLayoutData(fillBoth.hint(100, 20).create)
 
@@ -85,7 +86,7 @@ class FeatureInfoDialog(parent: Shell,
   private def createFeatureInfo(toolkit: FormToolkit, parent: Composite): Control = {
     
     val container = toolkit.createComposite(parent, SWT.WRAP)
-    container.setLayout(GridLayoutFactory.swtDefaults.numColumns(2).create)
+    container.setLayout(GridLayoutFactory.fillDefaults.numColumns(2).create)
 
     toolkit.createLabel(container, "Feature: ")
     featureLink = toolkit.createImageHyperlink(container, SWT.NONE)
