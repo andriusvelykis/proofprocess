@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.ai4fm.proofprocess.ProofFeature;
 import org.ai4fm.proofprocess.ProofFeatureDef;
+import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.Term;
 
@@ -205,14 +206,30 @@ public class ProofFeatureItemProvider
 	}
 
 	/**
-	 * This returns ProofFeature.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofFeature"));
+		if (isOutFeature((ProofFeature) object)) {
+			return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofFeatureOut"));
+		} else {
+			return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofFeature"));
+		}
+	}
+
+	private Boolean isOutFeature(ProofFeature feature) {
+		if (feature.eContainer() instanceof ProofInfo) {
+			ProofInfo info = (ProofInfo) feature.eContainer();
+			if (info.getOutFeatures().contains(feature)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	/**
