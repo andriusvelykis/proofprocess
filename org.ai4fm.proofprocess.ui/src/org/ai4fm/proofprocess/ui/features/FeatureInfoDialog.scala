@@ -3,7 +3,7 @@ package org.ai4fm.proofprocess.ui.features
 import org.ai4fm.proofprocess.{ProofFeature, ProofProcessPackage, ProofStore}
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
-import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, noArgFnToSelectionAdapter, selectionElement}
+import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, noArgFnToSelectionAdapter, selectionElement}
 
 import org.eclipse.core.databinding.observable.list.IObservableList
 import org.eclipse.emf.databinding.EMFObservables
@@ -16,9 +16,11 @@ import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
 import org.eclipse.jface.viewers.{DoubleClickEvent, TableViewer}
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
+import org.eclipse.swt.events.ModifyEvent
 import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
-import org.eclipse.ui.forms.events.{HyperlinkAdapter, HyperlinkEvent}
-import org.eclipse.ui.forms.widgets.{FormToolkit, ImageHyperlink}
+import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
+import org.eclipse.ui.forms.widgets.{FormToolkit, ImageHyperlink, Section}
+import org.eclipse.ui.forms.widgets.ExpandableComposite.{EXPANDED, NO_TITLE_FOCUS_BOX, TITLE_BAR, TWISTIE}
 
 
 /**
@@ -39,6 +41,9 @@ class FeatureInfoDialog(parent: Shell,
 
   private var featureLink: ImageHyperlink = _
   private var featureDescField: Text = _
+
+  private var miscCommentsField: Text = _
+  private var miscCommentsChanged = false
 
   setTitle("Proof Feature")
   // non-modal dialog
@@ -77,6 +82,62 @@ class FeatureInfoDialog(parent: Shell,
         "Parameter terms (select them in Mark Features dialog): ", SWT.WRAP)
     val paramTermsControl = createTermList(toolkit, form.getBody, paramsObservable)
     paramTermsControl.setLayoutData(fillBoth.hint(100, 50).create)
+
+    val sectionListener = new ExpansionAdapter {
+      override def expansionStateChanged(e: ExpansionEvent) = form.reflow(true)
+    }
+
+    def createSection(text: String,
+                      desc: Option[String],
+                      expanded: Boolean = false,
+                      grabSpace: Boolean = true)(
+                        contents: Composite => Control) {
+
+      val sectFlags = TITLE_BAR | NO_TITLE_FOCUS_BOX | TWISTIE |
+        (if (expanded) EXPANDED else 0) |
+        (if (desc.isDefined) Section.DESCRIPTION else 0)
+      
+      val section = toolkit.createSection(form.getBody, sectFlags)
+      section.setText(text)
+      desc foreach (section.setDescription)
+
+      val layoutData = GridDataFactory.fillDefaults.grab(true, false).create
+      section.setLayoutData(layoutData)
+
+      if (grabSpace) {
+        layoutData.grabExcessVerticalSpace = expanded
+
+        // toggle grabbing vertical space when expanded/collapsed
+        section.addExpansionListener(new ExpansionAdapter {
+          override def expansionStateChanged(e: ExpansionEvent) =
+            // do not grab vertical space if collapsed
+            layoutData.grabExcessVerticalSpace = e.getState
+        })
+        
+        section.addExpansionListener(sectionListener)
+      }
+      
+      val control = contents(section)
+      control.setLayoutData(fillBoth.create)
+      section.setClient(control)
+    }
+
+    val miscComments = feature.getMisc()
+    createSection("Additional comments", None, !miscComments.isEmpty) { parent =>
+      val container = toolkit.createComposite(parent, SWT.WRAP)
+      container.setLayout(GridLayoutFactory.swtDefaults.create)
+
+      miscCommentsField = toolkit.createText(container, miscComments, 
+          SWT.MULTI | SWT.WRAP | SWT.V_SCROLL)
+      miscCommentsField.setLayoutData(fillBoth.hint(100, 30).create)
+
+      // record if misc field has been changed, and set the value during save
+      miscCommentsField.addModifyListener { _: ModifyEvent => miscCommentsChanged = true }
+
+      toolkit.paintBordersFor(container)
+
+      container
+    }
 
     form
   }
@@ -187,6 +248,10 @@ class FeatureInfoDialog(parent: Shell,
 
   override def close(): Boolean = {
 
+    if (getReturnCode == Window.OK) {
+      saveChanges()
+    }
+
     val result = super.close()
     if (result) {
       dispose()
@@ -198,6 +263,12 @@ class FeatureInfoDialog(parent: Shell,
     }
 
     result
+  }
+
+  private def saveChanges() = {
+    if (miscCommentsChanged) {
+      feature.setMisc(miscCommentsField.getText)
+    }
   }
 
   private def dispose() {
