@@ -103,6 +103,7 @@ public class ProofFeatureItemProvider
 
 			addNamePropertyDescriptor(object);
 			addTypePropertyDescriptor(object);
+			addMiscPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -143,6 +144,28 @@ public class ProofFeatureItemProvider
 				 getString("_UI_ProofFeature_type_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_ProofFeature_type_feature", "_UI_ProofFeature_type"),
 				 ProofProcessPackage.Literals.PROOF_FEATURE__TYPE,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Misc feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addMiscPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_ProofFeature_misc_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ProofFeature_misc_feature", "_UI_ProofFeature_type"),
+				 ProofProcessPackage.Literals.PROOF_FEATURE__MISC,
 				 true,
 				 false,
 				 false,

@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.ai4fm.proofprocess.ProofFeature#getName <em>Name</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.ProofFeature#getType <em>Type</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.ProofFeature#getParams <em>Params</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.ProofFeature#getMisc <em>Misc</em>}</li>
  * </ul>
  * </p>
  *
@@ -99,5 +100,32 @@ public interface ProofFeature extends CDOObject {
 	 * @generated
 	 */
 	EList<Term> getParams();
+
+	/**
+	 * Returns the value of the '<em><b>Misc</b></em>' attribute.
+	 * The default value is <code>""</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Misc</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Misc</em>' attribute.
+	 * @see #setMisc(String)
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofFeature_Misc()
+	 * @model default=""
+	 * @generated
+	 */
+	String getMisc();
+
+	/**
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.ProofFeature#getMisc <em>Misc</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Misc</em>' attribute.
+	 * @see #getMisc()
+	 * @generated
+	 */
+	void setMisc(String value);
 
 } // ProofFeature

@@ -41,7 +41,7 @@ public interface ProofProcessLogPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://org/ai4fm/proofprocess/log/v1.0.0.10";
+	String eNS_URI = "http://org/ai4fm/proofprocess/log/v1.0.0.11";
 
 	/**
 	 * The package namespace name.

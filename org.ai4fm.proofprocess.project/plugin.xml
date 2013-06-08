@@ -12,11 +12,11 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://org/ai4fm/proofprocess/project/v1.0.0.10"
+            uri="http://org/ai4fm/proofprocess/project/v1.0.0.11"
             class="org.ai4fm.proofprocess.project.ProjectProofProcessPackage"
             genModel="model/ProjectProofProcess.genmodel"/>
       <package
-            uri="http://org/ai4fm/proofprocess/log/v1.0.0.10"
+            uri="http://org/ai4fm/proofprocess/log/v1.0.0.11"
             class="org.ai4fm.proofprocess.log.ProofProcessLogPackage"
             genModel="model/ProofProcessLog.genmodel"/>
    </extension>
@@ -29,6 +29,14 @@
       <resource
             location="/model/history/ProofProcessLog-v1.0.0.ecore"
             uri="http://org/ai4fm/proofprocess/log/v1.0.0">
+      </resource>
+      <resource
+            location="/model/history/ProjectProofProcess-v1.0.0.10.ecore"
+            uri="http://org/ai4fm/proofprocess/project/v1.0.0.10">
+      </resource>
+      <resource
+            location="/model/history/ProofProcessLog-v1.0.0.10.ecore"
+            uri="http://org/ai4fm/proofprocess/log/v1.0.0.10">
       </resource>
    </extension>
 

@@ -34,6 +34,7 @@ import org.eclipse.emf.internal.cdo.CDOObjectImpl;
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofFeatureImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofFeatureImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.ai4fm.proofprocess.impl.ProofFeatureImpl#getParams <em>Params</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.ProofFeatureImpl#getMisc <em>Misc</em>}</li>
  * </ul>
  * </p>
  *
@@ -49,6 +50,16 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 	 * @ordered
 	 */
 	protected static final ProofFeatureType TYPE_EDEFAULT = ProofFeatureType.USER;
+
+	/**
+	 * The default value of the '{@link #getMisc() <em>Misc</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMisc()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String MISC_EDEFAULT = "";
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -144,6 +155,24 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getMisc() {
+		return (String)eDynamicGet(ProofProcessPackage.PROOF_FEATURE__MISC, ProofProcessPackage.Literals.PROOF_FEATURE__MISC, true, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMisc(String newMisc) {
+		eDynamicSet(ProofProcessPackage.PROOF_FEATURE__MISC, ProofProcessPackage.Literals.PROOF_FEATURE__MISC, newMisc);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -168,6 +197,8 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 				return getType();
 			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
 				return getParams();
+			case ProofProcessPackage.PROOF_FEATURE__MISC:
+				return getMisc();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -191,6 +222,9 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 				getParams().clear();
 				getParams().addAll((Collection<? extends Term>)newValue);
 				return;
+			case ProofProcessPackage.PROOF_FEATURE__MISC:
+				setMisc((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -212,6 +246,9 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
 				getParams().clear();
 				return;
+			case ProofProcessPackage.PROOF_FEATURE__MISC:
+				setMisc(MISC_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -230,6 +267,8 @@ public class ProofFeatureImpl extends CDOObjectImpl implements ProofFeature {
 				return getType() != TYPE_EDEFAULT;
 			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
 				return !getParams().isEmpty();
+			case ProofProcessPackage.PROOF_FEATURE__MISC:
+				return MISC_EDEFAULT == null ? getMisc() != null : !MISC_EDEFAULT.equals(getMisc());
 		}
 		return super.eIsSet(featureID);
 	}

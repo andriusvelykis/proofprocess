@@ -456,6 +456,15 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getProofFeature_Misc() {
+		return (EAttribute)proofFeatureEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public EClass getProofElem() {
 		return proofElemEClass;
@@ -728,6 +737,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		createEReference(proofFeatureEClass, PROOF_FEATURE__NAME);
 		createEAttribute(proofFeatureEClass, PROOF_FEATURE__TYPE);
 		createEReference(proofFeatureEClass, PROOF_FEATURE__PARAMS);
+		createEAttribute(proofFeatureEClass, PROOF_FEATURE__MISC);
 
 		proofElemEClass = createEClass(PROOF_ELEM);
 		createEReference(proofElemEClass, PROOF_ELEM__INFO);
@@ -826,6 +836,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		initEReference(getProofFeature_Name(), this.getProofFeatureDef(), null, "name", null, 1, 1, ProofFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProofFeature_Type(), this.getProofFeatureType(), "type", null, 0, 1, ProofFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProofFeature_Params(), this.getTerm(), null, "params", null, 1, -1, ProofFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProofFeature_Misc(), ecorePackage.getEString(), "misc", "", 0, 1, ProofFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(proofElemEClass, ProofElem.class, "ProofElem", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofElem_Info(), this.getProofInfo(), null, "info", null, 1, 1, ProofElem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
