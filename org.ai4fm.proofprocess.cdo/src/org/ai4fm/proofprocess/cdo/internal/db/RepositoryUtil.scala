@@ -48,13 +48,15 @@ object RepositoryUtil {
 
     println("Needs upgrade: " + needsUpgrade(repo))
 
-    log(info("Upgrading repository " + repo.getName + "."))
+    log(info("Upgrading repository " + repo.getName + ". Exporting data files..."))
 
     val exported = exportSnapshots(repo, repoInfo.session)
 
+    log(info("Backing up repository " + repo.getName + "..."))
     val repoBackup = exportRepository(repo)
     log(info("Backed up the repository to " + repoBackup))
 
+    log(info("Wiping repository " + repo.getName + "..."))
     wipeRepository(repoInfo)
     log(info("Wiped repository " + repo.getName + ". Importing converted data..."))
 
