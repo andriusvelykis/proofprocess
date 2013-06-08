@@ -152,7 +152,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
       inGoalDisplay = createTermDisplay(toolkit, container)
 
-      inGoalsTable = createTermList(toolkit, container, inGoals.size > 1)
+      inGoalsTable = createTermList(toolkit, container, inGoals.size > 1, true)
       
       toolkit.paintBordersFor(container)
 
@@ -187,7 +187,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
         val resultsLabel = toolkit.createLabel(container, "Results: ")
         resultsLabel.setLayoutData(GridDataFactory.swtDefaults.create)
 
-        outGoalsTable = Some(createTermList(toolkit, container, outGoals.size > 1))
+        outGoalsTable = Some(createTermList(toolkit, container, outGoals.size > 1, false))
 
         toolkit.paintBordersFor(container)
         container
@@ -323,7 +323,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     featuresTable.refresh()
   }
 
-  private def addNewFeature(initialTerms: List[Term] = Nil) {
+  private def addNewFeature(inFeature: Boolean = true, initialTerms: List[Term] = Nil) {
 
     val addSavePoint = transaction map (_.setSavepoint())
 
@@ -331,8 +331,8 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     newFeature.getParams.addAll(initialTerms.asJava)
 
     // add immediately
-    // TODO how about OutFeatures?
-    elem.getInfo.getInFeatures.add(newFeature)
+    val featuresList = if (inFeature) elem.getInfo.getInFeatures else elem.getInfo.getOutFeatures
+    featuresList.add(newFeature)
 
     openFeatureInfo(newFeature, addSavePoint)
   }
@@ -504,7 +504,8 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   private def createTermList(toolkit: FormToolkit,
                              parent: Composite,
-                             multi: Boolean): TableViewer = {
+                             multi: Boolean,
+                             inGoals: Boolean): TableViewer = {
 
     val table = toolkit.createTable(parent, SWT.V_SCROLL | SWT.H_SCROLL)
     val hhint = 100
@@ -519,7 +520,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     viewer.addDoubleClickListener { e: DoubleClickEvent =>
       selectionElement(e.getSelection) match {
-        case Some((t: Term, source: ProofEntry)) => selectSubTerm(t, source.getProofStep)
+        case Some((t: Term, source: ProofEntry)) => selectSubTerm(t, source.getProofStep, inGoals)
         case _ => // ignore
       }
     }
@@ -528,7 +529,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   }
 
 
-  private def selectSubTerm(term: Term, context: ProofStep) {
+  private def selectSubTerm(term: Term, context: ProofStep, inGoal: Boolean) {
 
     val editingFeature = editFeature.isDefined
     val okLabel = if (editingFeature) "Mark Feature Term" else "Create New Feature With Term"
@@ -539,11 +540,28 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     if (subTermDialog.open() == Window.OK) {
       val selectedTerm = subTermDialog.selectedTerm
       editFeature match {
-        case Some(feature) => feature.getParams.add(selectedTerm)
-        case None => addNewFeature(List(selectedTerm))
+        case Some(feature) => addFeatureParam(feature, selectedTerm, inGoal)
+        case None => addNewFeature(inGoal, List(selectedTerm))
       }
       updateFeaturesTable()
     }
+  }
+
+  private def addFeatureParam(feature: ProofFeature, param: Term, isInTerm: Boolean) {
+    // out feature if it is already out and out-param is added; or if it is the first out-param
+    val isOutFeature = elem.getInfo.getOutFeatures.contains(feature)
+    val isOutTerm = !isInTerm && (isOutFeature || feature.getParams.isEmpty)
+
+    feature.getParams.add(param)
+    
+    if (isOutTerm != isOutFeature) {
+      // move to the correct feature list - just swap the lists
+      val featureLists = (elem.getInfo.getInFeatures, elem.getInfo.getOutFeatures)
+      val (add, remove) = if (isOutTerm) featureLists.swap else featureLists
+      remove.remove(feature)
+      add.add(feature)
+    }
+    
   }
 
 
