@@ -40,6 +40,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofFeature/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//ProofFeature/type"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofFeature/params"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ProofProcess.ecore#//ProofFeature/misc"/>
     </genClasses>
     <genClasses image="false" ecoreClass="ProofProcess.ecore#//ProofElem">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofElem/info"/>
