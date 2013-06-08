@@ -53,9 +53,10 @@ class PProcessRepository(val databaseLoc: URI, val name: String) {
     val dbConnectionProvider = DBUtil.createConnectionProvider(dataSource)
     val store = CDODBUtil.createStore(mappingStrategy, dbAdapter, dbConnectionProvider)
 
+    // disable auditing - it results in VERY LARGE databases because all revisions are stored.
     val props = Map(
       IRepository.Props.OVERRIDE_UUID -> dbName,
-      IRepository.Props.SUPPORTING_AUDITS -> "true",
+      IRepository.Props.SUPPORTING_AUDITS -> "false",
       IRepository.Props.SUPPORTING_BRANCHES -> "false")
 
     val repository = CDOServerUtil.createRepository(dbName, store, props.asJava)
