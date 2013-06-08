@@ -126,5 +126,11 @@
          </enabledWhen>
       </handler>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.ai4fm.proofprocess.ui.internal.PProcessUIStartup">
+      </startup>
+   </extension>
 
 </plugin>
