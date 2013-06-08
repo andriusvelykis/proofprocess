@@ -101,7 +101,9 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     
     form.getBody.setLayout(GridLayoutFactory.swtDefaults.create)
 
-    toolkit.createLabel(form.getBody, "Some more information", SWT.NONE)
+    val infoMsg = "Mark the important features of this proof step. " +
+    		"Proof features should indicate the important parts of in/out goals or related terms."
+    toolkit.createLabel(form.getBody, infoMsg, SWT.NONE)
 
     val sectionListener = new ExpansionAdapter {
       override def expansionStateChanged(e: ExpansionEvent) = form.reflow(true)
