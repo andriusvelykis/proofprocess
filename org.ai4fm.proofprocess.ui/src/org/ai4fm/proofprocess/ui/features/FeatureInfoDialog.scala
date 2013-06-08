@@ -70,7 +70,9 @@ class FeatureInfoDialog(parent: Shell,
     
     form.getBody.setLayout(GridLayoutFactory.swtDefaults.create)
 
-    toolkit.createLabel(form.getBody, "Some more information", SWT.NONE)
+    val infoMsg = "Select a proof feature to mark for this proof step. " +
+      "Add feature parameters from the previous dialog."
+    toolkit.createLabel(form.getBody, infoMsg, SWT.WRAP)
 
     val featureInfoControl = createFeatureInfo(toolkit, form.getBody)
     featureInfoControl.setLayoutData(fillHorizontal.create)
