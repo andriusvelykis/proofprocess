@@ -4,7 +4,9 @@ import java.io.{File, FileInputStream, FileOutputStream, IOException}
 import java.util.Collections
 
 import scala.collection.JavaConverters._
+import scala.collection.TraversableOnce.flattenTraversableOnce
 import scala.collection.mutable
+import scala.util.{Failure, Success, Try}
 
 import org.ai4fm.proofprocess.cdo.internal.PProcessCDOPlugin.{error, info, log}
 
@@ -20,6 +22,8 @@ import org.eclipse.emf.ecore.{EClass, EClassifier, EObject, EPackage, EStructura
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.net4j.util.lifecycle.LifecycleUtil
+
+import org.h2.tools.DeleteDbFiles
 
 
 /**
@@ -198,15 +202,36 @@ object RepositoryUtil {
       LifecycleUtil.deactivate(repo)
     }
 
-    val dropOnActivate = repo.getStore.isDropAllDataOnActivate
+    // try deleting repository files to compact everything
+    val deleted = deleteRepoFiles(repoInfo)
 
-    repo.getStore.setDropAllDataOnActivate(true)
-    LifecycleUtil.activate(repo)
+    if (!deleted) {
+      // try at least dropping tables
+      val dropOnActivate = repo.getStore.isDropAllDataOnActivate
 
-    LifecycleUtil.deactivate(repo)
-    repo.getStore.setDropAllDataOnActivate(dropOnActivate)
+      repo.getStore.setDropAllDataOnActivate(true)
+      LifecycleUtil.activate(repo)
+
+      LifecycleUtil.deactivate(repo)
+      repo.getStore.setDropAllDataOnActivate(dropOnActivate)
+    }
 
   }
+
+  private def deleteRepoFiles(repoInfo: PProcessRepository): Boolean =
+    Try(new File(repoInfo.databaseLoc)) match {
+
+      case Failure(ex) => {
+        log(error(Some(ex)))
+        false
+      }
+
+      case Success(dbDir) => {
+        DeleteDbFiles.execute(dbDir.getAbsolutePath, repoInfo.name, true)
+        true
+      }
+    }
+
 
   def importData(session: CDOSession, resources: Map[String, File]) {
     val transaction = session.openTransaction()
