@@ -12,7 +12,7 @@ import org.ai4fm.proofprocess.ui.internal.PProcessImages
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
 import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences
 import org.ai4fm.proofprocess.ui.util.{AdaptingLabelProvider, AdaptingTableLabelProvider}
-import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToOpenListener, noArgFnToSelectionAdapter, selectionElement}
+import org.ai4fm.proofprocess.ui.util.SWTUtil._
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
 import org.eclipse.core.databinding.DataBindingContext
@@ -32,7 +32,7 @@ import org.eclipse.jface.viewers.{DoubleClickEvent, ILabelProvider, ITableLabelP
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.StyledText
-import org.eclipse.swt.graphics.{Font, Image}
+import org.eclipse.swt.graphics.{Font, Image, Point}
 import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
 import org.eclipse.ui.forms.widgets.{FormToolkit, ImageHyperlink, Section}
@@ -640,6 +640,10 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     adapterFactory.dispose()
   }
+
+  override def getInitialSize(): Point =
+    defaultInitialDialogSize(getDialogBoundsSettings,
+      super.getInitialSize(), new Point(600, 600))
 
 
   private class FilterAffectedGoal extends Action("Filter Affected Goal", SWT.TOGGLE) {

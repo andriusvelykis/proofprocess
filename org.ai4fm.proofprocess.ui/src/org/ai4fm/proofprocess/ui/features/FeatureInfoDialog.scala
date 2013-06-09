@@ -1,10 +1,11 @@
 package org.ai4fm.proofprocess.ui.features
 
-import org.ai4fm.proofprocess.{ProofFeature, ProofStore}
+import org.ai4fm.proofprocess.ProofFeature
 import org.ai4fm.proofprocess.ProofProcessPackage.{Literals => PPLiterals}
+import org.ai4fm.proofprocess.ProofStore
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
-import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, noArgFnToSelectionAdapter, selectionElement}
+import org.ai4fm.proofprocess.ui.util.SWTUtil._
 
 import org.eclipse.core.databinding.DataBindingContext
 import org.eclipse.core.databinding.observable.list.IObservableList
@@ -20,6 +21,7 @@ import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
 import org.eclipse.jface.viewers.{DoubleClickEvent, TableViewer}
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
+import org.eclipse.swt.graphics.Point
 import org.eclipse.swt.widgets.{Composite, Control, Shell}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
 import org.eclipse.ui.forms.widgets.{FormToolkit, Section}
@@ -273,5 +275,9 @@ class FeatureInfoDialog(parent: Shell,
     databindingContext.dispose()
     adapterFactory.dispose()
   }
+
+  override def getInitialSize(): Point =
+    defaultInitialDialogSize(getDialogBoundsSettings,
+      super.getInitialSize(), new Point(400, 400))
 
 }
