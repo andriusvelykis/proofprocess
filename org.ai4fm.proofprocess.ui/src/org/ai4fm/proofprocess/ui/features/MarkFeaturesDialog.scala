@@ -62,7 +62,6 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
   private var intentLink: ImageHyperlink = _
 
-  private var featuresTable: TableViewer = _
   private var featureInfoDialog: Option[FeatureInfoDialog] = None
   private var editFeature: Option[ProofFeature] = None
 
@@ -251,7 +250,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val table = toolkit.createTable(container, SWT.V_SCROLL)
     table.setLayoutData(fillBoth.hint(100, 50).create)
 
-    featuresTable = new TableViewer(table)
+    val featuresTable = new TableViewer(table)
     featuresTable.setContentProvider(new ObservableListContentProvider)
 
     def bold(font: Font): Font = {
@@ -318,14 +317,9 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
       }
     }
 
-    updateFeaturesTable()
-
     container
   }
 
-  private def updateFeaturesTable() {
-    featuresTable.refresh()
-  }
 
   private def addNewFeature(inFeature: Boolean = true, initialTerms: List[Term] = Nil) {
 
@@ -360,7 +354,6 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     }
 
     editFeature = Some(feature)
-    updateFeaturesTable()
 
     val newDialog = new FeatureInfoDialog(intentLink.getShell, proofStore, feature,
       Some(stopEditFeature(savePoint)))
@@ -375,8 +368,6 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     if (returnCode != Window.OK) {
       savePoint foreach (_.rollback())
     }
-
-    updateFeaturesTable()
   }
 
   private def createStepInfo(toolkit: FormToolkit, parent: Composite): Control = {
@@ -547,7 +538,6 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
         case Some(feature) => addFeatureParam(feature, selectedTerm, inGoal)
         case None => addNewFeature(inGoal, List(selectedTerm))
       }
-      updateFeaturesTable()
     }
   }
 
