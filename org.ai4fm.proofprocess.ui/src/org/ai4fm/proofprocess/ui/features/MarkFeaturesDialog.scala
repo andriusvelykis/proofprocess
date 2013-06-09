@@ -2,7 +2,9 @@ package org.ai4fm.proofprocess.ui.features
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofFeature, ProofProcessFactory, ProofProcessPackage, ProofStep, ProofStore, Term}
+import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofFeature, ProofProcessFactory}
+import org.ai4fm.proofprocess.{ProofStep, ProofStore, Term}
+import org.ai4fm.proofprocess.ProofProcessPackage.{Literals => PPLiterals}
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.{TermSelectionSource, TermSelectionSourceProvider}
@@ -16,7 +18,7 @@ import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 import org.eclipse.core.databinding.observable.list.MultiList
 import org.eclipse.emf.cdo.transaction.CDOSavepoint
 import org.eclipse.emf.cdo.util.CommitException
-import org.eclipse.emf.databinding.EMFObservables
+import org.eclipse.emf.databinding.EMFObservables.observeList
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.action.Action
@@ -69,6 +71,10 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   private var inGoalsTable: TableViewer = _
   private var outGoalDisplay: Option[StyledText] = None
   private var outGoalsTable: Option[TableViewer] = None
+
+  val inFeaturesObs = observeList(elem.getInfo, PPLiterals.PROOF_INFO__IN_FEATURES)
+  val outFeaturesObs = observeList(elem.getInfo, PPLiterals.PROOF_INFO__OUT_FEATURES)
+  val allFeaturesObs = new MultiList(Array(inFeaturesObs, outFeaturesObs))
 
   private lazy val (inGoalFiltered, outGoalFiltered) = createFilteredGoals()
 
@@ -269,14 +275,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     featureLabelProvider.setFireLabelUpdateNotifications(true)
     featuresTable.setLabelProvider(featureLabelProvider)
 
-    val proofInfo = elem.getInfo
-    val inFeaturesObs =
-      EMFObservables.observeList(proofInfo, ProofProcessPackage.Literals.PROOF_INFO__IN_FEATURES)
-    val outFeaturesObs =
-      EMFObservables.observeList(proofInfo, ProofProcessPackage.Literals.PROOF_INFO__OUT_FEATURES)
-
-    val multiListObs = new MultiList(Array(inFeaturesObs, outFeaturesObs))
-    featuresTable.setInput(multiListObs)
+    featuresTable.setInput(allFeaturesObs)
 
     // edit on open (double-click)
     featuresTable.addOpenListener { e: OpenEvent =>
@@ -643,7 +642,10 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   }
 
   private def dispose() {
-    adapterFactory.dispose
+    allFeaturesObs.dispose()
+    inFeaturesObs.dispose()
+    outFeaturesObs.dispose()
+    adapterFactory.dispose()
   }
 
 
