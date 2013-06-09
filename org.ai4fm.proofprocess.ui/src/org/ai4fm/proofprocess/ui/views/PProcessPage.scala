@@ -7,8 +7,9 @@ import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.core.prefs.PreferenceTracker
 import org.ai4fm.proofprocess.core.store.{IProofEntryTracker, IProofStoreProvider}
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log}
-import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences._
+import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences.{TRACK_LATEST_PROOF_ENTRY, prefs}
 import org.ai4fm.proofprocess.ui.util.SWTUtil.noArgFnToDoubleClickListener
+
 import org.eclipse.core.runtime.{IProgressMonitor, IStatus, Status}
 import org.eclipse.core.runtime.jobs.Job
 import org.eclipse.emf.ecore.EObject
@@ -59,9 +60,9 @@ class PProcessPage(viewPart: IViewPart,
     // register the menu with site to allow contributions
     getSite.registerContextMenu(viewPart.getViewSite.getId, mgr, treeViewer)
 
-    // on double-click, open the dialog to mark features
+    // on double-click, open the dialog to mark features or to edit selected element
     // (availability handled by handler definition in the plugin.xml)
-    treeViewer.addDoubleClickListener { () => openMarkFeaturesDialog() }
+    treeViewer.addDoubleClickListener { () => openMarkFeaturesDialog() || openEditDialog() }
 
     val resourceMgr = new LocalResourceManager(JFaceResources.getResources, treeViewer.getTree)
     val overridingLabelProvider = new PProcessViewLabelProvider(resourceMgr)
@@ -140,13 +141,16 @@ class PProcessPage(viewPart: IViewPart,
   }
 
   private def MARK_FEATURES_COMMAND_ID = "org.ai4fm.proofprocess.ui.markFeatures"
+  private def EDIT_ELEM_COMMAND_ID = "org.ai4fm.proofprocess.ui.editElement"
 
-  private def openMarkFeaturesDialog() = executeCommand(MARK_FEATURES_COMMAND_ID)
+  private def openMarkFeaturesDialog(): Boolean = executeCommand(MARK_FEATURES_COMMAND_ID)
+
+  private def openEditDialog(): Boolean = executeCommand(EDIT_ELEM_COMMAND_ID)
 
   /**
    * Executes the given command ID if it is enabled
    */
-  private def executeCommand(cmdId: String) =
+  private def executeCommand(cmdId: String): Boolean =
     (getSiteService(classOf[ICommandService]), getSiteService(classOf[IHandlerService])) match {
 
       case (Some(commandService), Some(handlerService)) =>
@@ -154,12 +158,18 @@ class PProcessPage(viewPart: IViewPart,
           val command = commandService.getCommand(cmdId)
           if (command.isEnabled) {
             handlerService.executeCommand(cmdId, null)
+            true
+          } else {
+            false
           }
         } catch {
-          case e: Exception => log(error(Some(e)))
+          case e: Exception => {
+            log(error(Some(e)))
+            false
+          }
         }
 
-      case _ => // ignore
+      case _ => false
     }
 
   private def getSiteService[T](clazz: Class[T]): Option[T] =

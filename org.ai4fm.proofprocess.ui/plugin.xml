@@ -63,6 +63,11 @@
             id="org.ai4fm.proofprocess.ui.markFeatures"
             name="Mark Features">
       </command>
+      <command
+            description="Edit"
+            id="org.ai4fm.proofprocess.ui.editElement"
+            name="Edit">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -92,6 +97,10 @@
             locationURI="popup:org.ai4fm.proofprocess.ui.PProcessView?after=edit">
          <command
                commandId="org.ai4fm.proofprocess.ui.markFeatures"
+               style="push">
+         </command>
+         <command
+               commandId="org.ai4fm.proofprocess.ui.editElement"
                style="push">
          </command>
       </menuContribution>
@@ -124,6 +133,48 @@
                </and>
             </with>
          </enabledWhen>
+      </handler>
+      <handler
+            class="org.ai4fm.proofprocess.ui.actions.FeatureDefInfoHandler"
+            commandId="org.ai4fm.proofprocess.ui.editElement">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="org.ai4fm.proofprocess.ProofFeatureDef">
+                     </instanceof>
+                  </iterate>
+               </and>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.ai4fm.proofprocess.ui.actions.IntentInfoHandler"
+            commandId="org.ai4fm.proofprocess.ui.editElement">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="org.ai4fm.proofprocess.Intent">
+                     </instanceof>
+                  </iterate>
+               </and>
+            </with>
+         </activeWhen>
       </handler>
    </extension>
    <extension
