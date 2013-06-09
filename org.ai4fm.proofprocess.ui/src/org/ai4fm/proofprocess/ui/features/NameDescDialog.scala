@@ -1,6 +1,6 @@
 package org.ai4fm.proofprocess.ui.features
 
-import org.ai4fm.proofprocess.{Intent, ProofProcessPackage}
+import org.ai4fm.proofprocess.{Intent, ProofFeatureDef, ProofProcessPackage}
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.plugin
 import org.ai4fm.proofprocess.ui.util.SWTUtil.defaultInitialDialogSize
@@ -112,6 +112,7 @@ class NameDescDialog(parentShell: Shell,
 
 }
 
+
 class IntentInfoDialog(parentShell: Shell, intent: Intent)
     extends NameDescDialog(parentShell,
       EMFObservables.observeValue(intent, ProofProcessPackage.Literals.INTENT__NAME),
@@ -120,3 +121,11 @@ class IntentInfoDialog(parentShell: Shell, intent: Intent)
       "Proof Intent", "Proof intent",
       "IntentInfoDialog")
 
+
+class FeatureDefInfoDialog(parentShell: Shell, feature: ProofFeatureDef)
+    extends NameDescDialog(parentShell,
+      EMFObservables.observeValue(feature, ProofProcessPackage.Literals.PROOF_FEATURE_DEF__NAME),
+      EMFObservables.observeValue(feature, ProofProcessPackage.Literals.PROOF_FEATURE_DEF__DESCRIPTION),
+      PProcessUtil.cdoTransaction(feature),
+      "Proof Feature", "Proof feature",
+      "FeatureDefInfoDialog")
