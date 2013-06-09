@@ -4,12 +4,14 @@ import org.ai4fm.proofprocess.{ProofFeature, ProofStore}
 import org.ai4fm.proofprocess.ProofProcessPackage.{Literals => PPLiterals}
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
-import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, noArgFnToSelectionAdapter, selectionElement}
+import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, noArgFnToSelectionAdapter, selectionElement}
 
+import org.eclipse.core.databinding.DataBindingContext
 import org.eclipse.core.databinding.observable.list.IObservableList
 import org.eclipse.emf.databinding.EMFObservables
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.jface.databinding.swt.WidgetProperties
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
@@ -17,7 +19,6 @@ import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
 import org.eclipse.jface.viewers.{DoubleClickEvent, TableViewer}
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
-import org.eclipse.swt.events.ModifyEvent
 import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
 import org.eclipse.ui.forms.widgets.{FormToolkit, ImageHyperlink, Section}
@@ -43,10 +44,10 @@ class FeatureInfoDialog(parent: Shell,
   private var featureLink: ImageHyperlink = _
   private var featureDescField: Text = _
 
-  private var miscCommentsField: Text = _
-  private var miscCommentsChanged = false
-
+  val databindingContext = new DataBindingContext
+  
   val paramsObservable = EMFObservables.observeList(feature, PPLiterals.PROOF_FEATURE__PARAMS)
+  val miscObservable = EMFObservables.observeValue(feature, PPLiterals.PROOF_FEATURE__MISC)
 
   setTitle("Proof Feature")
   // non-modal dialog
@@ -124,17 +125,15 @@ class FeatureInfoDialog(parent: Shell,
       section.setClient(control)
     }
 
-    val miscComments = feature.getMisc()
-    createSection("Additional comments", None, !miscComments.isEmpty) { parent =>
+    createSection("Additional comments", None, !feature.getMisc.isEmpty) { parent =>
       val container = toolkit.createComposite(parent, SWT.WRAP)
       container.setLayout(GridLayoutFactory.swtDefaults.create)
 
-      miscCommentsField = toolkit.createText(container, miscComments, 
-          SWT.MULTI | SWT.WRAP | SWT.V_SCROLL)
+      val miscCommentsField = toolkit.createText(container, "", SWT.MULTI | SWT.WRAP | SWT.V_SCROLL)
       miscCommentsField.setLayoutData(fillBoth.hint(100, 30).create)
 
-      // record if misc field has been changed, and set the value during save
-      miscCommentsField.addModifyListener { _: ModifyEvent => miscCommentsChanged = true }
+      databindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(miscCommentsField),
+                                   miscObservable)
 
       toolkit.paintBordersFor(container)
 
@@ -162,6 +161,7 @@ class FeatureInfoDialog(parent: Shell,
     featureDescField = toolkit.createText(container, "", SWT.MULTI | SWT.WRAP | SWT.V_SCROLL)
     featureDescField.setLayoutData(fillHorizontal.hint(100, 30).create)
     featureDescField.setEditable(false)
+    featureDescField.setEnabled(false)
 
     updateFeatureLink()
 
@@ -250,10 +250,6 @@ class FeatureInfoDialog(parent: Shell,
 
   override def close(): Boolean = {
 
-    if (getReturnCode == Window.OK) {
-      saveChanges()
-    }
-
     val result = super.close()
     if (result) {
       dispose()
@@ -267,14 +263,10 @@ class FeatureInfoDialog(parent: Shell,
     result
   }
 
-  private def saveChanges() = {
-    if (miscCommentsChanged) {
-      feature.setMisc(miscCommentsField.getText)
-    }
-  }
-
   private def dispose() {
     paramsObservable.dispose()
+    miscObservable.dispose()
+    databindingContext.dispose()
     adapterFactory.dispose()
   }
 
