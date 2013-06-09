@@ -12,16 +12,18 @@ import org.ai4fm.proofprocess.ui.internal.PProcessImages
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
 import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences
 import org.ai4fm.proofprocess.ui.util.{AdaptingLabelProvider, AdaptingTableLabelProvider}
-import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, fnToOpenListener, noArgFnToSelectionAdapter, selectionElement}
+import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToOpenListener, noArgFnToSelectionAdapter, selectionElement}
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
+import org.eclipse.core.databinding.DataBindingContext
 import org.eclipse.core.databinding.observable.list.MultiList
 import org.eclipse.emf.cdo.transaction.CDOSavepoint
 import org.eclipse.emf.cdo.util.CommitException
-import org.eclipse.emf.databinding.EMFObservables.observeList
+import org.eclipse.emf.databinding.EMFObservables.{observeList, observeValue}
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.action.Action
+import org.eclipse.jface.databinding.swt.WidgetProperties
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider
 import org.eclipse.jface.dialogs.StatusDialog
 import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
@@ -30,7 +32,6 @@ import org.eclipse.jface.viewers.{DoubleClickEvent, ILabelProvider, ITableLabelP
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.StyledText
-import org.eclipse.swt.events.ModifyEvent
 import org.eclipse.swt.graphics.{Font, Image}
 import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
@@ -60,8 +61,6 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   private val editSavePoint = transaction map (_.setSavepoint())
 
   private var intentLink: ImageHyperlink = _
-  private var narrativeField: Text = _
-  private var narrativeChanged = false
 
   private var featuresTable: TableViewer = _
   private var featureInfoDialog: Option[FeatureInfoDialog] = None
@@ -71,6 +70,11 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   private var inGoalsTable: TableViewer = _
   private var outGoalDisplay: Option[StyledText] = None
   private var outGoalsTable: Option[TableViewer] = None
+
+  /* Databinding */
+  val databindingContext = new DataBindingContext
+
+  val narrativeObservable = observeValue(elem.getInfo, PPLiterals.PROOF_INFO__NARRATIVE)
 
   val inFeaturesObs = observeList(elem.getInfo, PPLiterals.PROOF_INFO__IN_FEATURES)
   val outFeaturesObs = observeList(elem.getInfo, PPLiterals.PROOF_INFO__OUT_FEATURES)
@@ -222,10 +226,9 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     updateIntentLink()
 
-    val narr = elem.getInfo.getNarrative
-    narrativeField = createTextField(toolkit, container, "Narrative:", narr)
-    // record if narrative field has been changed, and set the value during save
-    narrativeField.addModifyListener { _: ModifyEvent => narrativeChanged = true }
+    val narrativeField = createTextField(toolkit, container, "Narrative:", "")
+    databindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(narrativeField),
+                                 narrativeObservable)
 
 
     val featuresLabel = toolkit.createLabel(container, "Features:")
@@ -625,11 +628,6 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   }
 
   private def saveChanges() = {
-    
-    if (narrativeChanged) {
-      elem.getInfo.setNarrative(narrativeField.getText)
-    }
-    
     try {
       transaction foreach { _.commit() }
     } catch {
@@ -642,9 +640,14 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
   }
 
   private def dispose() {
+    narrativeObservable.dispose()
+    
     allFeaturesObs.dispose()
     inFeaturesObs.dispose()
     outFeaturesObs.dispose()
+
+    databindingContext.dispose()
+
     adapterFactory.dispose()
   }
 
