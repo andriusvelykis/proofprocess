@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.ui.features
 
-import org.ai4fm.proofprocess.{ProofFeature, ProofProcessPackage, ProofStore}
+import org.ai4fm.proofprocess.{ProofFeature, ProofStore}
+import org.ai4fm.proofprocess.ProofProcessPackage.{Literals => PPLiterals}
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
 import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, fnToModifyListener, noArgFnToSelectionAdapter, selectionElement}
@@ -45,6 +46,8 @@ class FeatureInfoDialog(parent: Shell,
   private var miscCommentsField: Text = _
   private var miscCommentsChanged = false
 
+  val paramsObservable = EMFObservables.observeList(feature, PPLiterals.PROOF_FEATURE__PARAMS)
+
   setTitle("Proof Feature")
   // non-modal dialog
   setShellStyle(SWT.DIALOG_TRIM | SWT.MAX | SWT.RESIZE | SWT.MODELESS | Window.getDefaultOrientation)
@@ -76,9 +79,6 @@ class FeatureInfoDialog(parent: Shell,
 
     val featureInfoControl = createFeatureInfo(toolkit, form.getBody)
     featureInfoControl.setLayoutData(fillHorizontal.create)
-
-    val paramsObservable =
-      EMFObservables.observeList(feature, ProofProcessPackage.Literals.PROOF_FEATURE__PARAMS)
 
     toolkit.createLabel(form.getBody, 
         "Parameter terms (select them in Mark Features dialog): ", SWT.WRAP)
@@ -274,7 +274,8 @@ class FeatureInfoDialog(parent: Shell,
   }
 
   private def dispose() {
-    adapterFactory.dispose
+    paramsObservable.dispose()
+    adapterFactory.dispose()
   }
 
 }
