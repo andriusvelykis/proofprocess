@@ -8,6 +8,7 @@ import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, noArgFnT
 
 import org.eclipse.core.databinding.DataBindingContext
 import org.eclipse.core.databinding.observable.list.IObservableList
+import org.eclipse.core.databinding.observable.value.{IValueChangeListener, ValueChangeEvent}
 import org.eclipse.emf.databinding.EMFObservables
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
@@ -19,9 +20,9 @@ import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
 import org.eclipse.jface.viewers.{DoubleClickEvent, TableViewer}
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
-import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
+import org.eclipse.swt.widgets.{Composite, Control, Shell}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
-import org.eclipse.ui.forms.widgets.{FormToolkit, ImageHyperlink, Section}
+import org.eclipse.ui.forms.widgets.{FormToolkit, Section}
 import org.eclipse.ui.forms.widgets.ExpandableComposite.{EXPANDED, NO_TITLE_FOCUS_BOX, TITLE_BAR, TWISTIE}
 
 
@@ -41,11 +42,9 @@ class FeatureInfoDialog(parent: Shell,
 
   private val labelProvider = new AdapterFactoryLabelProvider(adapterFactory)
 
-  private var featureLink: ImageHyperlink = _
-  private var featureDescField: Text = _
-
   val databindingContext = new DataBindingContext
-  
+
+  val featureObservable = EMFObservables.observeValue(feature, PPLiterals.PROOF_FEATURE__NAME)
   val paramsObservable = EMFObservables.observeList(feature, PPLiterals.PROOF_FEATURE__PARAMS)
   val miscObservable = EMFObservables.observeValue(feature, PPLiterals.PROOF_FEATURE__MISC)
 
@@ -149,7 +148,7 @@ class FeatureInfoDialog(parent: Shell,
     container.setLayout(GridLayoutFactory.fillDefaults.numColumns(2).create)
 
     toolkit.createLabel(container, "Feature: ")
-    featureLink = toolkit.createImageHyperlink(container, SWT.NONE)
+    val featureLink = toolkit.createImageHyperlink(container, SWT.NONE)
     featureLink.setLayoutData(fillHorizontal.create)
     featureLink.addHyperlinkListener(new HyperlinkAdapter {
       override def linkActivated(e: HyperlinkEvent) = selectFeature()
@@ -158,34 +157,40 @@ class FeatureInfoDialog(parent: Shell,
     // placeholder to take space
     toolkit.createComposite(container)
 
-    featureDescField = toolkit.createText(container, "", SWT.MULTI | SWT.WRAP | SWT.V_SCROLL)
+    val featureDescField = toolkit.createText(container, "", SWT.MULTI | SWT.WRAP | SWT.V_SCROLL)
     featureDescField.setLayoutData(fillHorizontal.hint(100, 30).create)
     featureDescField.setEditable(false)
     featureDescField.setEnabled(false)
 
+    def updateFeatureLink() = Option(feature.getName) match {
+
+      case None => {
+        featureLink.setText("(not set)")
+        featureDescField.setText("")
+      }
+
+      case Some(featureDef) => {
+        featureLink.setImage(labelProvider.getImage(featureDef))
+        featureLink.setText(labelProvider.getText(featureDef))
+        featureDescField.setText(featureDef.getDescription)
+      }
+    }
+
+    featureObservable.addValueChangeListener(new IValueChangeListener {
+      override def handleValueChange(event: ValueChangeEvent) {
+        updateFeatureLink()
+      }
+    })
     updateFeatureLink()
 
     toolkit.paintBordersFor(container)
     container
   }
 
-  private def updateFeatureLink() = Option(feature.getName) match {
-
-    case None => {
-      featureLink.setText("(not set)")
-      featureDescField.setText("")
-    }
-
-    case Some(featureDef) => {
-      featureLink.setImage(labelProvider.getImage(featureDef))
-      featureLink.setText(labelProvider.getText(featureDef))
-      featureDescField.setText(featureDef.getDescription)
-    }
-  }
 
   private def selectFeature() = proofStore match {
     case Some(proofStore) => {
-      val featureDialog = new FeatureDefSelectionDialog(featureLink.getShell, proofStore)
+      val featureDialog = new FeatureDefSelectionDialog(getShell, proofStore)
       featureDialog.selectedFeature = Option(feature.getName)
 
       if (featureDialog.open() == Window.OK) {
@@ -194,8 +199,6 @@ class FeatureInfoDialog(parent: Shell,
         // locate the intent (or create a new one with the given name)
         val featureDef = featureName map (PProcessUtil.getProofFeatureDef(proofStore, _))
         feature.setName(featureDef.orNull)
-
-        updateFeatureLink()
       }
     }
 
@@ -264,6 +267,7 @@ class FeatureInfoDialog(parent: Shell,
   }
 
   private def dispose() {
+    featureObservable.dispose()
     paramsObservable.dispose()
     miscObservable.dispose()
     databindingContext.dispose()
