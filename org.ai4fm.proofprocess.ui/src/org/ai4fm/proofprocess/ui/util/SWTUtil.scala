@@ -107,18 +107,23 @@ object SWTUtil {
    */
   def defaultInitialDialogSize(settings: IDialogSettings,
       initialSize: => Point,
-      defaultSize: => Point): Point = {
+      defaultSize: => Point,
+      max: Boolean = true): Point = {
 
     val settingsWidth = settingsDialogSize(settings, "DIALOG_WIDTH")
     val settingsHeight = settingsDialogSize(settings, "DIALOG_HEIGHT")
 
     (settingsWidth, settingsHeight) match {
-      case (None, None) => defaultSize
+      case (None, None) => if (max) defaultSize max initialSize else defaultSize
       case _ => initialSize
     }
   }
 
   private def settingsDialogSize(settings: IDialogSettings, key: String): Option[Int] =
     Try(settings.getInt("DIALOG_WIDTH")).toOption filter (_ != Dialog.DIALOG_DEFAULT_BOUNDS)
+
+  implicit class FancyPoint(val point: Point) {
+    def max(other: Point): Point = new Point(point.x max other.x, point.y max other.y)
+  }
 
 }
