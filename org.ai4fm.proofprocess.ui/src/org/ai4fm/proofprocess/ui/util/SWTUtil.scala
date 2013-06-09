@@ -1,10 +1,13 @@
 package org.ai4fm.proofprocess.ui.util
 
 import scala.language.implicitConversions
+import scala.util.Try
 
+import org.eclipse.jface.dialogs.{Dialog, IDialogSettings}
 import org.eclipse.jface.util.{IPropertyChangeListener, PropertyChangeEvent}
 import org.eclipse.jface.viewers._
 import org.eclipse.swt.events._
+import org.eclipse.swt.graphics.Point
 import org.eclipse.swt.widgets.Control
 
 
@@ -96,5 +99,26 @@ object SWTUtil {
       case Some(ss: IStructuredSelection) => Option(ss.getFirstElement)
       case _ => None
     }
+
+
+  /**
+   * A selector for either calculated initial dialog size (from dialog settings)
+   * or a given default size if no user settings are saved. 
+   */
+  def defaultInitialDialogSize(settings: IDialogSettings,
+      initialSize: => Point,
+      defaultSize: => Point): Point = {
+
+    val settingsWidth = settingsDialogSize(settings, "DIALOG_WIDTH")
+    val settingsHeight = settingsDialogSize(settings, "DIALOG_HEIGHT")
+
+    (settingsWidth, settingsHeight) match {
+      case (None, None) => defaultSize
+      case _ => initialSize
+    }
+  }
+
+  private def settingsDialogSize(settings: IDialogSettings, key: String): Option[Int] =
+    Try(settings.getInt("DIALOG_WIDTH")).toOption filter (_ != Dialog.DIALOG_DEFAULT_BOUNDS)
 
 }
