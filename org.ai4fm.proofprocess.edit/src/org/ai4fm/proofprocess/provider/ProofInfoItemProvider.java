@@ -164,14 +164,11 @@ public class ProofInfoItemProvider
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((ProofInfo)object).getNarrative();
-		return label == null || label.length() == 0 ?
-			getString("_UI_ProofInfo_type") :
-			getString("_UI_ProofInfo_type") + " " + label;
+		return "Info";
 	}
 
 	/**
@@ -179,13 +176,15 @@ public class ProofInfoItemProvider
 	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(ProofInfo.class)) {
+			case ProofProcessPackage.PROOF_INFO__INTENT:
+				return;
 			case ProofProcessPackage.PROOF_INFO__NARRATIVE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
