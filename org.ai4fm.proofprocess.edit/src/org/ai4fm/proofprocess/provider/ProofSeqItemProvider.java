@@ -10,7 +10,6 @@ package org.ai4fm.proofprocess.provider;
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.ProofSeq;
@@ -116,20 +115,7 @@ public class ProofSeqItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		
-		ProofSeq entry = (ProofSeq) object;
-		ProofInfo info = entry.getInfo();
-		
-		String desc = null;
-		if (info != null) {
-			desc = info.getNarrative();
-		}
-		
-		if (desc != null && !desc.isEmpty()) {
-			return getString("_UI_ProofSeq_type") + " " + desc;
-		}
-		
-		return getString("_UI_ProofSeq_type");
+		return getText(getString("_UI_ProofSeq_type"), "", (ProofSeq) object);
 	}
 
 	/**
