@@ -68,6 +68,11 @@
             id="org.ai4fm.proofprocess.ui.editElement"
             name="Edit">
       </command>
+      <command
+            description="Group Selected Proof Steps"
+            id="org.ai4fm.proofprocess.ui.groupSteps"
+            name="Group Steps">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -97,6 +102,11 @@
             locationURI="popup:org.ai4fm.proofprocess.ui.PProcessView?after=edit">
          <command
                commandId="org.ai4fm.proofprocess.ui.markFeatures"
+               style="push">
+         </command>
+         <command
+               commandId="org.ai4fm.proofprocess.ui.groupSteps"
+               icon="icons/ProofSeq.gif"
                style="push">
          </command>
          <command
@@ -173,6 +183,22 @@
                      </instanceof>
                   </iterate>
                </and>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.ai4fm.proofprocess.ui.actions.GroupStepsHandler"
+            commandId="org.ai4fm.proofprocess.ui.groupSteps">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="org.ai4fm.proofprocess.ProofElem">
+                  </instanceof>
+               </iterate>
             </with>
          </activeWhen>
       </handler>
