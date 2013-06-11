@@ -100,6 +100,30 @@ class PProcessRepositoryManager {
     repository(RepositoryId(databaseLoc, repositoryName), monitor).session
 
 
+  /**
+   * Forces upgrade of the repository.
+   *
+   * Note that this action may also help compact the repository in the database.
+   * 
+   * The existing CDO sessions on the repository will not work after upgrade:
+   * need to reinitialise new CDO sessions.
+   */
+  def upgradeRepository(databaseLoc: URI,
+                        repositoryName: String,
+                        monitor: IProgressMonitor = new NullProgressMonitor) = {
+    val repoId = RepositoryId(databaseLoc, repositoryName)
+
+    val ppRepo = repository(repoId, monitor)
+
+    // upgrade the repository
+    RepositoryUtil.upgradeRepository(ppRepo,
+      subTask(monitor, "Upgrading ProofProcess repository..."))
+
+    // remove the previous repository link
+    repositories.remove(repoId)
+  }
+
+
   private case class RepositoryId(val databaseLoc: URI, val name: String)
 
   def dispose() {

@@ -56,6 +56,11 @@ class PProcessCDOPlugin extends Plugin {
               monitor: IProgressMonitor = new NullProgressMonitor): CDOSession =
     repoManager.session(databaseLoc, repositoryName, monitor)
 
+  def upgradeRepository(databaseLoc: URI,
+                        repositoryName: String,
+                        monitor: IProgressMonitor = new NullProgressMonitor) =
+    repoManager.upgradeRepository(databaseLoc, repositoryName, monitor)
+
 
   @throws(classOf[Exception])
   override def stop(context: BundleContext) {
