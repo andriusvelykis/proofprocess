@@ -2,33 +2,22 @@ package org.ai4fm.proofprocess.project.core
 
 import java.io.IOException
 
-import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConverters._
 
-import org.ai4fm.filehistory.FileHistoryFactory
-import org.ai4fm.filehistory.FileHistoryProject
-import org.ai4fm.filehistory.FileVersion
-import org.ai4fm.filehistory.core.FileHistoryUtil
-import org.ai4fm.filehistory.core.IFileHistoryManager
-import org.ai4fm.filehistory.core.XmlFileHistoryManager
+import org.ai4fm.filehistory.{FileHistoryFactory, FileHistoryProject, FileVersion}
+import org.ai4fm.filehistory.core.{FileHistoryUtil, IFileHistoryManager, XmlFileHistoryManager}
 import org.ai4fm.proofprocess.cdo.PProcessCDO
-import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.error
-import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.log
-import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.plugin
-import org.eclipse.core.filesystem.URIUtil
-import org.eclipse.core.resources.IFile
-import org.eclipse.core.resources.IProject
-import org.eclipse.core.resources.IResource
-import org.eclipse.core.runtime.CoreException
-import org.eclipse.core.runtime.IPath
-import org.eclipse.core.runtime.IProgressMonitor
-import org.eclipse.core.runtime.NullProgressMonitor
-import org.eclipse.core.runtime.Path
-import org.eclipse.core.runtime.QualifiedName
-import org.eclipse.core.runtime.SubProgressMonitor
+import org.ai4fm.proofprocess.project.core.internal.ProjectPProcessCorePlugin.{error, log, plugin}
+
+import org.eclipse.core.resources.{IFile, IProject, IResource}
+import org.eclipse.core.runtime.{CoreException, IPath, IProgressMonitor, NullProgressMonitor, Path, QualifiedName, SubProgressMonitor}
 import org.eclipse.core.runtime.jobs.Job
 import org.eclipse.emf.common.command.BasicCommandStack
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
+
+import ProofManager.projectPProcessRepositoryInfo
+
 
 /**
   * @author Andrius Velykis
@@ -98,14 +87,7 @@ object ProofHistoryManager {
     val adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)
     val editingDomain = new AdapterFactoryEditingDomain(adapterFactory, new BasicCommandStack)
 
-    // FIXME better repository names?
-    val repositoryName = projectResource.getName
-
-    // store database in workspace plug-in location
-    // TODO investigate configuration/user locations
-    // (via Platform.getConfigurationLocation or .getUserLocation)
-    val databaseLocPath = plugin.getStateLocation.append("database")
-    val databaseLocUri = URIUtil.toURI(databaseLocPath)
+    val (databaseLocUri, repositoryName) = projectPProcessRepositoryInfo(projectResource)
 
     val session = PProcessCDO.session(databaseLocUri, repositoryName)
     val transaction = session.openTransaction(editingDomain.getResourceSet)
@@ -123,7 +105,7 @@ object ProofHistoryManager {
     val resourceContents = emfResource.getContents()
 
     // look for the history project as the root element
-    resourceContents.headOption match {
+    resourceContents.asScala.headOption match {
       case Some(e: FileHistoryProject) => e
       case _ => {
 
