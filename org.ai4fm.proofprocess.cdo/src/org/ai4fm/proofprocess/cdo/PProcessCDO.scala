@@ -26,4 +26,18 @@ object PProcessCDO {
               monitor: IProgressMonitor = new NullProgressMonitor): CDOSession =
     PProcessCDOPlugin.plugin.session(databaseLoc, repositoryName)
 
+
+  /**
+   * Forces upgrade of the repository.
+   * 
+   * Note that this action may also help compact the repository in the database.
+   * 
+   * The existing CDO sessions on the repository will not work after upgrade:
+   * need to reinitialise new CDO sessions.
+   */
+  def upgradeRepository(databaseLoc: URI,
+                        repositoryName: String,
+                        monitor: IProgressMonitor = new NullProgressMonitor) =
+    PProcessCDOPlugin.plugin.upgradeRepository(databaseLoc, repositoryName)
+
 }

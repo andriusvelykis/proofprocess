@@ -90,14 +90,7 @@ object ProofManager {
     val adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)
     val editingDomain = new AdapterFactoryEditingDomain(adapterFactory, new BasicCommandStack)
 
-    // FIXME better repository names?
-    val repositoryName = projectResource.getName
-
-    // store database in workspace plug-in location
-    // TODO investigate configuration/user locations
-    // (via Platform.getConfigurationLocation or .getUserLocation)
-    val databaseLocPath = plugin.getStateLocation.append("database")
-    val databaseLocUri = URIUtil.toURI(databaseLocPath)
+    val (databaseLocUri, repositoryName) = projectPProcessRepositoryInfo(projectResource)
 
     val session = PProcessCDO.session(databaseLocUri, repositoryName, monitor)
     val transaction = session.openTransaction(editingDomain.getResourceSet)
@@ -125,6 +118,24 @@ object ProofManager {
 
     ProjectProofManager(proofRoot, proofLogRoot)
   }
+
+
+  /**
+   * Retrieves proof process repository information for the given project resource.
+   */
+  def projectPProcessRepositoryInfo(projectResource: IProject): (java.net.URI, String) = {
+    // FIXME better repository names?
+    val repositoryName = projectResource.getName
+
+    // store database in workspace plug-in location
+    // TODO investigate configuration/user locations
+    // (via Platform.getConfigurationLocation or .getUserLocation)
+    val databaseLocPath = plugin.getStateLocation.append("database")
+    val databaseLocUri = URIUtil.toURI(databaseLocPath)
+
+    (databaseLocUri, repositoryName)
+  }
+
 
   private def storedManager(projectResource: IProject): Option[ProjectProofManager] =
     projectResource.getSessionProperty(PROP_PROOF_PROCESS) match {
