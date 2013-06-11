@@ -4,7 +4,7 @@ import org.ai4fm.proofprocess.{ProofStep, Term}
 import org.ai4fm.proofprocess.core.util.PProcessUtil.getAdapter
 import org.ai4fm.proofprocess.ui.TermSelectionSourceProvider
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.plugin
-import org.ai4fm.proofprocess.ui.util.SWTUtil.{fnToDoubleClickListener, selectionElement}
+import org.ai4fm.proofprocess.ui.util.SWTUtil._
 import org.ai4fm.proofprocess.ui.util.ScalaArrayContentProvider
 
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
@@ -15,6 +15,7 @@ import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
 import org.eclipse.jface.viewers.{DoubleClickEvent, StructuredSelection, StyledString, TableViewer}
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.StyledText
+import org.eclipse.swt.graphics.Point
 import org.eclipse.swt.widgets.{Composite, Control, Shell, Text}
 import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent}
 import org.eclipse.ui.forms.widgets.{FormToolkit, Section}
@@ -77,7 +78,10 @@ class SubTermSelectionDialog(parent: Shell,
     
     form.getBody.setLayout(GridLayoutFactory.swtDefaults.create)
 
-    toolkit.createLabel(form.getBody, "Some more information", SWT.NONE)
+    val infoMsg = 
+      "Select the term, sub-term or a schema term to mark as proof feature parameter."
+
+    toolkit.createLabel(form.getBody, infoMsg, SWT.NONE)
 
     toolkit.createLabel(form.getBody, "Term:", SWT.NONE)
     renderedTermField = new StyledText(form.getBody,
@@ -236,5 +240,9 @@ class SubTermSelectionDialog(parent: Shell,
   private def dispose() {
     adapterFactory.dispose
   }
+
+  override def getInitialSize(): Point =
+    defaultInitialDialogSize(getDialogBoundsSettings,
+      super.getInitialSize(), new Point(700, 600))
 
 }
