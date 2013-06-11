@@ -68,6 +68,16 @@
             id="org.ai4fm.proofprocess.ui.editElement"
             name="Edit">
       </command>
+      <command
+            description="Group Selected Proof Steps"
+            id="org.ai4fm.proofprocess.ui.groupSteps"
+            name="Group Steps">
+      </command>
+      <command
+            description="Ungroup Selected Proof Steps"
+            id="org.ai4fm.proofprocess.ui.ungroupSteps"
+            name="Ungroup Steps">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -99,6 +109,23 @@
                commandId="org.ai4fm.proofprocess.ui.markFeatures"
                style="push">
          </command>
+         <separator
+               name="group"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.ai4fm.proofprocess.ui.groupSteps"
+               icon="icons/ProofSeq.gif"
+               style="push">
+         </command>
+         <command
+               commandId="org.ai4fm.proofprocess.ui.ungroupSteps"
+               style="push">
+         </command>
+         <separator
+               name="properties"
+               visible="true">
+         </separator>
          <command
                commandId="org.ai4fm.proofprocess.ui.editElement"
                style="push">
@@ -171,6 +198,47 @@
                      <instanceof
                            value="org.ai4fm.proofprocess.Intent">
                      </instanceof>
+                  </iterate>
+               </and>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.ai4fm.proofprocess.ui.actions.GroupStepsHandler"
+            commandId="org.ai4fm.proofprocess.ui.groupSteps">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="org.ai4fm.proofprocess.ProofElem">
+                  </instanceof>
+               </iterate>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.ai4fm.proofprocess.ui.actions.UngroupStepsHandler"
+            commandId="org.ai4fm.proofprocess.ui.ungroupSteps">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <or>
+                        <instanceof
+                              value="org.ai4fm.proofprocess.ProofSeq">
+                        </instanceof>
+                        <instanceof
+                              value="org.ai4fm.proofprocess.ProofDecor">
+                        </instanceof></or>
                   </iterate>
                </and>
             </with>

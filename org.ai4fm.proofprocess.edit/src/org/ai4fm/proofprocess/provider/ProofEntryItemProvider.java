@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.ai4fm.proofprocess.ProofEntry;
-import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
@@ -122,20 +121,7 @@ public class ProofEntryItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		
-		ProofEntry entry = (ProofEntry) object;
-		ProofInfo info = entry.getInfo();
-		
-		String desc = null;
-		if (info != null) {
-			desc = info.getNarrative();
-		}
-		
-		if (desc != null && !desc.isEmpty()) {
-			return getString("_UI_ProofEntry_type") + " " + desc;
-		}
-		
-		return getString("_UI_ProofEntry_type");
+		return getText(getString("_UI_ProofEntry_type"), "", (ProofEntry) object, false, true);
 	}
 
 	/**

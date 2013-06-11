@@ -62,14 +62,14 @@ public class UnparsedTermItemProvider
 	}
 
 	/**
-	 * This returns UnparsedTerm.gif.
+	 * This returns UnparsedTerm.png.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/UnparsedTerm"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/UnparsedTerm.png"));
 	}
 
 	/**

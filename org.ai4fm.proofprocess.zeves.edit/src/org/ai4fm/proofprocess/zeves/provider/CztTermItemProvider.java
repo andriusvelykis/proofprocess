@@ -89,14 +89,14 @@ public class CztTermItemProvider
 	}
 
 	/**
-	 * This returns CztTerm.gif.
+	 * This returns CztTerm.png.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/CztTerm"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/CztTerm.png"));
 	}
 
 	/**

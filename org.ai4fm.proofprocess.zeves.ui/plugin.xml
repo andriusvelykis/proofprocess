@@ -2,15 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.views">
-      <view
-            class="org.ai4fm.proofprocess.zeves.ui.views.ProofProcessView"
-            id="org.ai4fm.proofprocess.zeves.ui.proofProcessView"
-            name="Proof Process"
-            restorable="true">
-      </view>
-   </extension>
-   <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
             targetID="net.sourceforge.czt.eclipse.zeves.ui.ZEvesPerspective">
