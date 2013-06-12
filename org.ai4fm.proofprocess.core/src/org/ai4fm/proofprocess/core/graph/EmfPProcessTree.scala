@@ -2,8 +2,6 @@ package org.ai4fm.proofprocess.core.graph
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.ProofDecor
-
 import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofParallel
@@ -17,14 +15,13 @@ import org.ai4fm.proofprocess.core.graph.PProcessTree.CaseObject
   * @author Andrius Velykis
   */
 object EmfPProcessTree 
-  extends PProcessTree[ProofElem, ProofEntry, ProofSeq, ProofParallel, ProofDecor, ProofStep] {
+  extends PProcessTree[ProofElem, ProofEntry, ProofSeq, ProofParallel, ProofStep] {
 
   val factory = ProofProcessFactory.eINSTANCE
   
   override val entry = ProofEntryTree
   override val seq = ProofSeqTree
   override val parallel = ProofParallelTree
-  override val decor = ProofDecorTree
   
 
   object ProofEntryTree extends CaseObject[ProofElem, ProofEntry, ProofStep] {
@@ -79,21 +76,5 @@ object EmfPProcessTree
       case _ => None
     }
   }
-  
-  
-  object ProofDecorTree extends CaseObject[ProofElem, ProofDecor, ProofElem] {
 
-    override def apply(elem: ProofElem): ProofDecor = {
-      val dec = factory.createProofDecor
-      dec.setEntry(elem)
-      dec.setInfo(factory.createProofInfo)
-      dec
-    }
-
-    override def unapply(e: ProofElem): Option[ProofElem] = e match {
-      case dec: ProofDecor => Some(dec.getEntry)
-      case _ => None
-    }
-  }
-  
 }

@@ -306,7 +306,6 @@ class PProcessGraphTest {
   case class Entry(e: Int) extends PElem
   case class Seq(seq: List[PElem]) extends PElem
   case class Par(par: Set[PElem], links: Set[Entry]) extends PElem
-  case class Decor(entry: PElem) extends PElem
 
   object Par {
     def apply(elems: Set[PElem]): Par = Par(elems, Set())
@@ -339,19 +338,10 @@ class PProcessGraphTest {
     }
   }
   
-  object DecorCase extends CaseObject[PElem, Decor, PElem] {
-    def unapply(e: PElem): Option[PElem] = e match {
-        case Decor(e) => Some(e)
-        case _ => None
-      }
-    def apply(elem: PElem) = Decor(elem)
-  }
-  
-  val intPPTree = new PProcessTree[PElem, Entry, Seq, Par, Decor, Int] {
+  val intPPTree = new PProcessTree[PElem, Entry, Seq, Par, Int] {
     override def entry = EntryCase
     override def seq = SeqCase
     override def parallel = ParCase
-    override def decor = DecorCase
   }
   
   
@@ -360,7 +350,6 @@ class PProcessGraphTest {
 //    case (Seq(seq), pseq: ProofSeq) => isShapeElems(seq, pseq.getEntries)
 //    // for parallel, check for any permutation of branches
 //    case (Par(par), ppar: ProofParallel) => par.permutations.exists(isShapeElems(_, ppar.getEntries))
-//    case (Decor(e), d: ProofDecor) => isShape(e, d.getEntry)
 //    case _ => false
 //  }
 //  

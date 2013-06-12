@@ -4,7 +4,6 @@ import scala.collection.JavaConversions._
 
 import org.ai4fm.proofprocess.Attempt
 import org.ai4fm.proofprocess.Proof
-import org.ai4fm.proofprocess.ProofDecor
 import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofParallel
@@ -34,7 +33,6 @@ object PProcessGraph {
     }
 
     def children(elem: ProofElem): List[ProofElem] = elem match {
-      case dec: ProofDecor => Option(dec.getEntry).toList
       case seq: ProofSeq => seq.getEntries.toList
       case par: ProofParallel => par.getEntries.toList
     }
@@ -42,10 +40,6 @@ object PProcessGraph {
     def proofGraph(elem: ProofElem, cont: List[ProofElem]): (List[ProofElem], Map[ProofElem, List[ProofElem]]) = elem match {
       // TODO comments
       case entry: ProofEntry => (List(entry), Map(entry -> cont))
-      case dec: ProofDecor => {
-        val (entryCont, entryGraph) = Option(dec.getEntry).map(e => proofGraph(e, cont)) getOrElse (Nil, emptyGraph)
-        (dec :: entryCont, entryGraph + (dec -> cont))
-      }
       case seq: ProofSeq => {
         val (entriesCont, entriesGraph) = seq.getEntries.toList.foldRight(cont, emptyGraph) {
           case (entry, (cont, graph)) => {

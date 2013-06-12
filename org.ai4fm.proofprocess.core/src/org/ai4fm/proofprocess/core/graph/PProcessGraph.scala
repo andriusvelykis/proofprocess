@@ -30,8 +30,8 @@ object PProcessGraph {
     *
     * @return  `(graph, roots)` the pair of created graph and the list of roots to traverse it
     */
-  def toGraph[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Decor <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, Decor, _])
+  def toGraph[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
+      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _])
       (rootElem: Elem)
       (implicit entryManifest: Manifest[Entry]): PPRootGraph[Entry] = {
     
@@ -62,9 +62,6 @@ object PProcessGraph {
         // only the entry is a root now
         PPRootGraph(withEntryEdges, List(entry))
       }
-
-      // for decorator, just extract the underlying entry
-      case ppTree.decor(entry) => graph0(entry, acc)
 
       // for parallel, create subgraphs of each parallel entry,
       // and then merge these subgraphs and their roots
@@ -99,7 +96,7 @@ object PProcessGraph {
   }
   
   def toPProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _, _], topRoot: => Entry)
+      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _], topRoot: => Entry)
       (rootGraph: PPRootGraph[Entry]): Elem = {
    
     val PPRootGraph(graph, roots) = rootGraph
@@ -139,7 +136,7 @@ object PProcessGraph {
   }
   
   def toPProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _, _])
+      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _])
       (graph: PPGraph[Entry], root: Entry): Elem = {
     
     type MergeMap = Map[Entry, List[Entry]]

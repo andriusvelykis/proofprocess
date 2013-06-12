@@ -232,13 +232,9 @@
                   <iterate
                         ifEmpty="false"
                         operator="and">
-                     <or>
-                        <instanceof
-                              value="org.ai4fm.proofprocess.ProofSeq">
-                        </instanceof>
-                        <instanceof
-                              value="org.ai4fm.proofprocess.ProofDecor">
-                        </instanceof></or>
+                     <instanceof
+                           value="org.ai4fm.proofprocess.ProofSeq">
+                     </instanceof>
                   </iterate>
                </and>
             </with>

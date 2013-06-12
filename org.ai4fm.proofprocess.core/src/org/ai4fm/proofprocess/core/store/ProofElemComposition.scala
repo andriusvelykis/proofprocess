@@ -2,7 +2,7 @@ package org.ai4fm.proofprocess.core.store
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.{ProofDecor, ProofElem, ProofEntry, ProofParallel, ProofSeq, Term}
+import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofParallel, ProofSeq, Term}
 
 
 /**
@@ -17,8 +17,6 @@ object ProofElemComposition {
       f: ProofEntry => Seq[A]): Seq[(A, ProofEntry)] = elem match {
 
     case entry: ProofEntry => f(entry) map ((_, entry))
-
-    case decor: ProofDecor => composeEntries(decor.getEntry, before)(f)
 
     case parallel: ProofParallel => {
       // TODO review what to do with links? E.g. how about assumptions..?
