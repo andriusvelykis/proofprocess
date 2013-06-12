@@ -165,11 +165,6 @@ public class AttemptItemProvider
 			(createChildParameter
 				(ProofProcessPackage.Literals.ATTEMPT__PROOF,
 				 ProofProcessFactory.eINSTANCE.createProofParallel()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProofProcessPackage.Literals.ATTEMPT__PROOF,
-				 ProofProcessFactory.eINSTANCE.createProofDecor()));
 	}
 
 	/**

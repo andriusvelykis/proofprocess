@@ -120,10 +120,6 @@ public class ProofProcessAdapterFactory extends AdapterFactoryImpl {
 				return createProofParallelAdapter();
 			}
 			@Override
-			public Adapter caseProofDecor(ProofDecor object) {
-				return createProofDecorAdapter();
-			}
-			@Override
 			public Adapter caseAttempt(Attempt object) {
 				return createAttemptAdapter();
 			}
@@ -320,20 +316,6 @@ public class ProofProcessAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createProofParallelAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.ProofDecor <em>Proof Decor</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.ProofDecor
-	 * @generated
-	 */
-	public Adapter createProofDecorAdapter() {
 		return null;
 	}
 

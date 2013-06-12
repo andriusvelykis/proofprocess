@@ -145,13 +145,6 @@ public class ProofProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ProofProcessPackage.PROOF_DECOR: {
-				ProofDecor proofDecor = (ProofDecor)theEObject;
-				T result = caseProofDecor(proofDecor);
-				if (result == null) result = caseProofElem(proofDecor);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ProofProcessPackage.ATTEMPT: {
 				Attempt attempt = (Attempt)theEObject;
 				T result = caseAttempt(attempt);
@@ -351,21 +344,6 @@ public class ProofProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProofParallel(ProofParallel object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Proof Decor</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Proof Decor</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseProofDecor(ProofDecor object) {
 		return null;
 	}
 

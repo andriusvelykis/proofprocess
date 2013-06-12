@@ -260,29 +260,6 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofDecor} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ProofDecorItemProvider proofDecorItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofDecor}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createProofDecorAdapter() {
-		if (proofDecorItemProvider == null) {
-			proofDecorItemProvider = new ProofDecorItemProvider(this);
-		}
-
-		return proofDecorItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.Attempt} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -458,7 +435,6 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 		if (proofEntryItemProvider != null) proofEntryItemProvider.dispose();
 		if (proofSeqItemProvider != null) proofSeqItemProvider.dispose();
 		if (proofParallelItemProvider != null) proofParallelItemProvider.dispose();
-		if (proofDecorItemProvider != null) proofDecorItemProvider.dispose();
 		if (attemptItemProvider != null) attemptItemProvider.dispose();
 		if (proofItemProvider != null) proofItemProvider.dispose();
 		if (proofStoreItemProvider != null) proofStoreItemProvider.dispose();
