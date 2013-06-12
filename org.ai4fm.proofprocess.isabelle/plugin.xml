@@ -12,7 +12,7 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://org/ai4fm/proofprocess/isabelle/v1.0.0.11"
+            uri="http://org/ai4fm/proofprocess/isabelle/v1.0.0.12"
             class="org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage"
             genModel="model/IsabelleProofProcess.genmodel"/>
    </extension>
@@ -25,6 +25,10 @@
       <resource
             location="model/history/IsabelleProofProcess-v1.0.0.10.ecore"
             uri="http://org/ai4fm/proofprocess/isabelle/v1.0.0.10">
+      </resource>
+      <resource
+            location="model/history/IsabelleProofProcess-v1.0.0.11.ecore"
+            uri="http://org/ai4fm/proofprocess/isabelle/v1.0.0.11">
       </resource>
    </extension>
    <extension
