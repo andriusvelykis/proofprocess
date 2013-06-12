@@ -45,7 +45,7 @@ public interface IsabelleProofProcessPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://org/ai4fm/proofprocess/isabelle/v1.0.0.11";
+	String eNS_URI = "http://org/ai4fm/proofprocess/isabelle/v1.0.0.12";
 
 	/**
 	 * The package namespace name.

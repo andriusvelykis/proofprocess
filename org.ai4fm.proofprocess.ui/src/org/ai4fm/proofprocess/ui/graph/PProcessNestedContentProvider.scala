@@ -1,6 +1,6 @@
 package org.ai4fm.proofprocess.ui.graph
 
-import org.ai4fm.proofprocess.{ProofDecor, ProofParallel, ProofSeq}
+import org.ai4fm.proofprocess.{ProofParallel, ProofSeq}
 import org.eclipse.gef4.zest.core.viewers.INestedContentProvider
 
 
@@ -16,7 +16,6 @@ trait PProcessNestedContentProvider extends INestedContentProvider {
 
   // all proof elements except ProofEntry are nested by the entries
   private val children: PartialFunction[Any, Array[AnyRef]] = {
-    case d: ProofDecor => Array(d.getEntry)
     case p: ProofParallel => p.getEntries.toArray
     case s: ProofSeq => s.getEntries.toArray
   }

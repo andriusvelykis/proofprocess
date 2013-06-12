@@ -32,7 +32,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 */
 	public static ProofProcessFactory init() {
 		try {
-			ProofProcessFactory theProofProcessFactory = (ProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/v1.0.0.11"); 
+			ProofProcessFactory theProofProcessFactory = (ProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/v1.0.0.12"); 
 			if (theProofProcessFactory != null) {
 				return theProofProcessFactory;
 			}
@@ -69,7 +69,6 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 			case ProofProcessPackage.PROOF_ENTRY: return (EObject)createProofEntry();
 			case ProofProcessPackage.PROOF_SEQ: return (EObject)createProofSeq();
 			case ProofProcessPackage.PROOF_PARALLEL: return (EObject)createProofParallel();
-			case ProofProcessPackage.PROOF_DECOR: return (EObject)createProofDecor();
 			case ProofProcessPackage.ATTEMPT: return (EObject)createAttempt();
 			case ProofProcessPackage.PROOF: return (EObject)createProof();
 			case ProofProcessPackage.PROOF_STORE: return (EObject)createProofStore();
@@ -194,17 +193,6 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	public ProofParallel createProofParallel() {
 		ProofParallelImpl proofParallel = new ProofParallelImpl();
 		return proofParallel;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ProofDecor createProofDecor() {
-		ProofDecorImpl proofDecor = new ProofDecorImpl();
-		return proofDecor;
 	}
 
 	/**

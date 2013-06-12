@@ -186,11 +186,6 @@ public class ProofParallelItemProvider
 			(createChildParameter
 				(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES,
 				 ProofProcessFactory.eINSTANCE.createProofParallel()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES,
-				 ProofProcessFactory.eINSTANCE.createProofDecor()));
 	}
 
 }

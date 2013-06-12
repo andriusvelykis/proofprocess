@@ -3,7 +3,7 @@ package org.ai4fm.proofprocess.core.graph
 /** A bridge to ProofProcess tree structure.
   * 
   * Provides extractors and factories for each type of ProofProcess tree elements:
-  * entry, sequence, parallel and decorator.
+  * entry, sequence and parallel.
   * 
   * Allows hiding the actual implementation of the ProofProcess tree, e.g. either EMF
   * or Scala-based, or otherwise. The structure can be examined using the extractors 
@@ -11,7 +11,7 @@ package org.ai4fm.proofprocess.core.graph
   * 
   * @author Andrius Velykis
   */
-trait PProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Decor <: Elem, EntryData] {
+trait PProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, EntryData] {
 
   import PProcessTree._
   
@@ -20,8 +20,6 @@ trait PProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Decor <: 
   def seq: CaseObject[Elem, Seq, List[Elem]]
   
   def parallel: CaseObject[Elem, Parallel, (Set[Elem], Set[Entry])]
-  
-  def decor: CaseObject[Elem, Decor, Elem]
 }
 
 object PProcessTree {

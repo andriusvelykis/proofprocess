@@ -2,7 +2,7 @@ package org.ai4fm.proofprocess.ui.actions
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.{Attempt, ProofDecor, ProofElem, ProofParallel, ProofProcessFactory, ProofSeq}
+import org.ai4fm.proofprocess.{Attempt, ProofElem, ProofParallel, ProofProcessFactory, ProofSeq}
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 import org.ai4fm.proofprocess.ui.features.MarkFeaturesDialog
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log}
@@ -18,8 +18,7 @@ import org.eclipse.ui.handlers.HandlerUtil
 
 
 /**
- * Groups selected proof elements together into a proof sequence
- * (or a proof decoration if a single element only).
+ * Groups selected proof elements together into a proof sequence.
  *
  * @author Andrius Velykis
  */
@@ -63,9 +62,6 @@ class GroupStepsHandler extends AbstractHandler {
             groupElements(event, topElems, g => parentSeq.getEntries.add(groupedIndex, g))
           }
         }
-
-        case Some(parentDecor: ProofDecor) =>
-          groupElements(event, topElems, parentDecor.setEntry)
 
         case Some(parentAttempt: Attempt) =>
           groupElements(event, topElems, parentAttempt.setProof)
@@ -124,25 +120,14 @@ class GroupStepsHandler extends AbstractHandler {
     val transaction = PProcessUtil.cdoTransaction(elems.head)
     val savePoint = transaction map (_.setSavepoint())
 
-    val group =
-      if (elems.size == 1) {
-        // decorate only
-        val decor = factory.createProofDecor
-        decor.setInfo(factory.createProofInfo)
-        decor.setEntry(elems.head)
-        decor
-      } else {
-
-        val seq = factory.createProofSeq
-        seq.setInfo(factory.createProofInfo)
-        seq.getEntries.addAll(elems.asJava)
-        seq
-      }
+    val seq = factory.createProofSeq
+    seq.setInfo(factory.createProofInfo)
+    seq.getEntries.addAll(elems.asJava)
 
     // add to the correct place
-    addGroup(group)
+    addGroup(seq)
 
-    val dialog = new MarkFeaturesDialog(HandlerUtil.getActiveShell(event), group)
+    val dialog = new MarkFeaturesDialog(HandlerUtil.getActiveShell(event), seq)
 
     if (dialog.open() == Window.OK) {
       commit(transaction)

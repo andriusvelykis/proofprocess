@@ -4,7 +4,6 @@ import isabelle.Symbol
 import isabelle.eclipse.core.IsabelleCore
 import org.ai4fm.proofprocess.Attempt
 import org.ai4fm.proofprocess.{Proof => PPProof}
-import org.ai4fm.proofprocess.ProofDecor
 import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofParallel
@@ -61,7 +60,6 @@ object ProverDataConverter {
       val proofGoals = goalStates.map(state => ProofGoal(state, Gap()))
       (Proof(why, proofGoals), inGoals)
     }
-    case d: ProofDecor => proofTree(d.getEntry)
     case s: ProofSeq => s.getEntries.foldRight[(ProofTree, List[TermRef])]((Gap(), Nil)) {
       case (entry, (result, resultInGoals)) => {
         val (entryTree, inGoals) = proofTree(entry)

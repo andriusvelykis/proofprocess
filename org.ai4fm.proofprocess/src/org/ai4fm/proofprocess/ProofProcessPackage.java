@@ -42,7 +42,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://org/ai4fm/proofprocess/v1.0.0.11";
+	String eNS_URI = "http://org/ai4fm/proofprocess/v1.0.0.12";
 
 	/**
 	 * The package namespace name.
@@ -505,43 +505,6 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_PARALLEL_FEATURE_COUNT = PROOF_ELEM_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.ProofDecorImpl <em>Proof Decor</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.ai4fm.proofprocess.impl.ProofDecorImpl
-	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofDecor()
-	 * @generated
-	 */
-	int PROOF_DECOR = 12;
-
-	/**
-	 * The feature id for the '<em><b>Info</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROOF_DECOR__INFO = PROOF_ELEM__INFO;
-
-	/**
-	 * The feature id for the '<em><b>Entry</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROOF_DECOR__ENTRY = PROOF_ELEM_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Proof Decor</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROOF_DECOR_FEATURE_COUNT = PROOF_ELEM_FEATURE_COUNT + 1;
-
-	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.AttemptImpl <em>Attempt</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -549,7 +512,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getAttempt()
 	 * @generated
 	 */
-	int ATTEMPT = 13;
+	int ATTEMPT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Proof</b></em>' containment reference.
@@ -577,7 +540,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProof()
 	 * @generated
 	 */
-	int PROOF = 14;
+	int PROOF = 13;
 
 	/**
 	 * The feature id for the '<em><b>Goals</b></em>' containment reference list.
@@ -623,7 +586,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofStore()
 	 * @generated
 	 */
-	int PROOF_STORE = 15;
+	int PROOF_STORE = 14;
 
 	/**
 	 * The feature id for the '<em><b>Proofs</b></em>' containment reference list.
@@ -669,7 +632,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeatureType()
 	 * @generated
 	 */
-	int PROOF_FEATURE_TYPE = 16;
+	int PROOF_FEATURE_TYPE = 15;
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.Intent <em>Intent</em>}'.
@@ -1021,27 +984,6 @@ public interface ProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getProofParallel_Links();
-
-	/**
-	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.ProofDecor <em>Proof Decor</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Proof Decor</em>'.
-	 * @see org.ai4fm.proofprocess.ProofDecor
-	 * @generated
-	 */
-	EClass getProofDecor();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.ai4fm.proofprocess.ProofDecor#getEntry <em>Entry</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Entry</em>'.
-	 * @see org.ai4fm.proofprocess.ProofDecor#getEntry()
-	 * @see #getProofDecor()
-	 * @generated
-	 */
-	EReference getProofDecor_Entry();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.Attempt <em>Attempt</em>}'.
@@ -1469,24 +1411,6 @@ public interface ProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PROOF_PARALLEL__LINKS = eINSTANCE.getProofParallel_Links();
-
-		/**
-		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.ProofDecorImpl <em>Proof Decor</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.ai4fm.proofprocess.impl.ProofDecorImpl
-		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofDecor()
-		 * @generated
-		 */
-		EClass PROOF_DECOR = eINSTANCE.getProofDecor();
-
-		/**
-		 * The meta object literal for the '<em><b>Entry</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROOF_DECOR__ENTRY = eINSTANCE.getProofDecor_Entry();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.AttemptImpl <em>Attempt</em>}' class.
