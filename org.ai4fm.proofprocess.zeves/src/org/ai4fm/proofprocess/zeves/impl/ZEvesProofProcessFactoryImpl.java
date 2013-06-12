@@ -34,7 +34,7 @@ public class ZEvesProofProcessFactoryImpl extends EFactoryImpl implements ZEvesP
 	 */
 	public static ZEvesProofProcessFactory init() {
 		try {
-			ZEvesProofProcessFactory theZEvesProofProcessFactory = (ZEvesProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/zeves/v1.0.0.11"); 
+			ZEvesProofProcessFactory theZEvesProofProcessFactory = (ZEvesProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/zeves/v1.0.0.12"); 
 			if (theZEvesProofProcessFactory != null) {
 				return theZEvesProofProcessFactory;
 			}
