@@ -104,7 +104,11 @@ public class ProofSeqItemProvider
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofSeq"));
+		if (isDecor(object)) {
+			return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofDecor"));
+		} else {
+			return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofSeq"));
+		}
 	}
 
 	/**
@@ -116,6 +120,10 @@ public class ProofSeqItemProvider
 	@Override
 	public String getText(Object object) {
 		return getText(getString("_UI_ProofSeq_type"), "", (ProofSeq) object);
+	}
+
+	private boolean isDecor(Object object) {
+		return ((ProofSeq) object).getEntries().size() == 1;
 	}
 
 	/**
@@ -131,7 +139,7 @@ public class ProofSeqItemProvider
 
 		switch (notification.getFeatureID(ProofSeq.class)) {
 			case ProofProcessPackage.PROOF_SEQ__ENTRIES:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
 				return;
 		}
 		super.notifyChanged(notification);
