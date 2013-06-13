@@ -25,11 +25,20 @@ object PProcessGraph {
   
   
 
-  /** Converts ProofProcess graph represented as tree with the given root element to
-    * a Scala DAG of just the ProofEntry elements, and the list of root entries.
-    *
-    * @return  `(graph, roots)` the pair of created graph and the list of roots to traverse it
-    */
+  /** 
+   * Converts ProofProcess graph represented as tree with the given root element to
+   * a Scala DAG of just the ProofEntry elements, and the list of root entries.
+   *
+   * @tparam L  the supertype of all proof elements
+   * @tparam E  proof entry type
+   * @tparam S  proof entry sequence type
+   * @tparam P  parallel proof entries type
+   *
+   * @param ppTree    the ProofProcess tree extractors/converters
+   * @param rootElem  the ProofProcess tree represented by its root element
+   *
+   * @return  Graph representation of the given ProofProcess tree, as graph + root nodes.
+   */
   def toGraph[L, E <: L, S <: L, P <: L]
       (ppTree: PProcessTree[L, E, S, P, _])
       (rootElem: L)
@@ -94,7 +103,23 @@ object PProcessGraph {
     // invoke with empty accumulator and the given root, it will create the graph recursively
     graph0(rootElem, emptyGraph)
   }
-  
+
+
+  /** 
+   * Converts ProofProcess graph represented as a Scala graph + roots to a corresponding
+   * ProofProcess tree structure.
+   *
+   * @tparam L  the supertype of all proof elements
+   * @tparam E  proof entry type
+   * @tparam S  proof entry sequence type
+   * @tparam P  parallel proof entries type
+   *
+   * @param ppTree      the ProofProcess tree extractors/converters
+   * @param topRoot     an artificial root element in case of multiple graph roots
+   * @param rootGraph   the Scala graph representation of ProofProcess data (graph + roots)
+   *
+   * @return  ProofProcess tree representation of the data as the root element of the tree.
+   */
   def toPProcessTree[L, E <: L, S <: L, P <: L]
       (ppTree: PProcessTree[L, E, S, P, _], topRoot: => E)
       (rootGraph: PPRootGraph[E]): L = {
@@ -134,7 +159,23 @@ object PProcessGraph {
     }
     
   }
-  
+
+
+  /** 
+   * Converts ProofProcess graph represented as a Scala graph + single root to a corresponding
+   * ProofProcess tree structure.
+   *
+   * @tparam L  the supertype of all proof elements
+   * @tparam E  proof entry type
+   * @tparam S  proof entry sequence type
+   * @tparam P  parallel proof entries type
+   *
+   * @param ppTree  the ProofProcess tree extractors/converters
+   * @param graph   the Scala graph representation of ProofProcess data
+   * @param root    the single root element of the Scala ProofProcess graph
+   *
+   * @return  ProofProcess tree representation of the data as the root element of the tree.
+   */
   def toPProcessTree[L, E <: L, S <: L, P <: L]
       (ppTree: PProcessTree[L, E, S, P, _])
       (graph: PPGraph[E], root: E): L = {
