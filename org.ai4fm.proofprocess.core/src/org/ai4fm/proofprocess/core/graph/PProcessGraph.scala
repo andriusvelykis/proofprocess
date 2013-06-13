@@ -30,8 +30,8 @@ object PProcessGraph {
     *
     * @return  `(graph, roots)` the pair of created graph and the list of roots to traverse it
     */
-  def toGraph[L, E <: L, Seq <: L, Parallel <: L]
-      (ppTree: PProcessTree[L, E, Seq, Parallel, _])
+  def toGraph[L, E <: L, S <: L, Parallel <: L]
+      (ppTree: PProcessTree[L, E, S, Parallel, _])
       (rootElem: L)
       (implicit entryManifest: Manifest[E]): PPRootGraph[E] = {
     
@@ -95,8 +95,8 @@ object PProcessGraph {
     graph0(rootElem, emptyGraph)
   }
   
-  def toPProcessTree[L, E <: L, Seq <: L, Parallel <: L]
-      (ppTree: PProcessTree[L, E, Seq, Parallel, _], topRoot: => E)
+  def toPProcessTree[L, E <: L, S <: L, Parallel <: L]
+      (ppTree: PProcessTree[L, E, S, Parallel, _], topRoot: => E)
       (rootGraph: PPRootGraph[E]): L = {
    
     val PPRootGraph(graph, roots) = rootGraph
@@ -135,8 +135,8 @@ object PProcessGraph {
     
   }
   
-  def toPProcessTree[L, E <: L, Seq <: L, Parallel <: L]
-      (ppTree: PProcessTree[L, E, Seq, Parallel, _])
+  def toPProcessTree[L, E <: L, S <: L, Parallel <: L]
+      (ppTree: PProcessTree[L, E, S, Parallel, _])
       (graph: PPGraph[E], root: E): L = {
     
     type MergeMap = Map[E, List[E]]
