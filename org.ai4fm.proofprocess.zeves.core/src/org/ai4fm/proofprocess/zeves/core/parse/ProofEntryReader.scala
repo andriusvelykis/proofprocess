@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.zeves.core.parse
 
 import scala.collection.JavaConverters._
+import scala.language.existentials
 
 import org.ai4fm.proofprocess.{Intent, Loc, ProofElem, ProofEntry, ProofProcessFactory, Term, Trace}
 import org.ai4fm.proofprocess.core.graph.PProcessGraph._
@@ -70,7 +71,8 @@ trait ProofEntryReader {
     SnapshotUtil.zEvesProofResult(snapshotEntry).get
 
   private def readProofSteps(proofSteps: List[(ISnapshotEntry, List[Term])],
-                             inGoals: List[Term]): (PPRootGraph[ProofEntry], Map[ISnapshotEntry, ProofEntry]) = {
+                             inGoals: List[Term])
+      : (PPRootGraph[ProofEntry, _], Map[ISnapshotEntry, ProofEntry]) = {
 
     val proofStepEntries = PProcessUtil.toInOutGoalSteps(proofEntry)(inGoals, proofSteps)
     // link snapshot entries with respective proof step entries (for activity logging)
@@ -187,6 +189,6 @@ object ProofEntryReader {
 
 case class ProofEntryData(goals: List[Term],
                           label: Option[String],
-                          proofGraph: PPRootGraph[ProofEntry],
+                          proofGraph: PPRootGraph[ProofEntry, _],
                           entryMap: Map[ISnapshotEntry, ProofEntry])
 

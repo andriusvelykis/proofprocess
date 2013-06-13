@@ -41,7 +41,7 @@ object GoalGraphMatcher {
    */
   def goalGraph[A, N, T](node: GoalStep[A, T] => N)
                         (proofSteps: List[GoalStep[A, T]])
-                        (implicit nodeManifest: Manifest[N]): PPRootGraph[N] = {
+                        (implicit nodeManifest: Manifest[N]): PPRootGraph[N, _] = {
     
     // now go through the proof steps from the start
     // and link each proof step with its calculated parent (based on their goals) into a graph
@@ -49,7 +49,7 @@ object GoalGraphMatcher {
     val LinkContext(graph, roots, _) = (proofSteps foldLeft emptyContext)(linkStep(node) _)
     
     // reverse the roots, since branches are constructed with prepend
-    PPRootGraph(graph, roots.reverse)
+    PPRootGraph(graph, roots.reverse, Map())
   }
 
   private def linkStep[A, N, T](node: GoalStep[A, T] => N)

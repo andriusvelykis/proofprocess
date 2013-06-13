@@ -14,13 +14,20 @@ object PProcessGraph {
 
   type PPGraph[E] = Graph[E, DiEdge]
   type PPGraphRoots[E] = List[E]
-  
-  case class PPRootGraph[E](graph: PPGraph[E], roots: PPGraphRoots[E])
+ 
+  /**
+   * Encapsulates a ProofProcess graph that can have multiple roots and attached meta-information
+   * for entries.
+   * 
+   * @tparam E  graph entry (node) type
+   * @tparam I  meta-information type
+   */
+  case class PPRootGraph[E, I](graph: PPGraph[E], roots: PPGraphRoots[E], meta: Map[E, List[I]])
   
   object PPRootGraph {
     /** Empty graph */
-    def apply[E]()(implicit entryManifest: Manifest[E]): PPRootGraph[E] = 
-      PPRootGraph(Graph[E, DiEdge](), List())
+    def apply[E, I]()(implicit entryManifest: Manifest[E]): PPRootGraph[E, I] = 
+      PPRootGraph(Graph[E, DiEdge](), List(), Map())
   }
   
   
@@ -33,75 +40,84 @@ object PProcessGraph {
    * @tparam E  proof entry type
    * @tparam S  proof entry sequence type
    * @tparam P  parallel proof entries type
+   * @tparam I  proof meta-information type
    *
    * @param ppTree    the ProofProcess tree extractors/converters
    * @param rootElem  the ProofProcess tree represented by its root element
    *
    * @return  Graph representation of the given ProofProcess tree, as graph + root nodes.
    */
-  def toGraph[L, E <: L, S <: L, P <: L]
-      (ppTree: PProcessTree[L, E, S, P, _])
+  def toGraph[L, E <: L, S <: L, P <: L, I]
+      (ppTree: PProcessTree[L, E, S, P, _, I])
       (rootElem: L)
-      (implicit entryManifest: Manifest[E]): PPRootGraph[E] = {
+      (implicit entryManifest: Manifest[E]): PPRootGraph[E, I] = {
     
-    val emptyGraph = PPRootGraph()
+    val emptyGraph = PPRootGraph[E, I]()
 
     // a method that collects the graph with an accumulator (necessary for Seq implementation)
-    def graph0(rootElem: L, acc: PPRootGraph[E]): PPRootGraph[E] = rootElem match {
+    def graph0(rootElem: L,
+               acc: PPRootGraph[E, I],
+               parentMeta: List[I]): PPRootGraph[E, I] = {
 
-      // for proof entry, add it to the graph and connect to all outstanding roots
-      // (this means that this entry step is followed by all outstanding entry steps)
-      // 
-      // normally there should be only a single outstanding root here (or none), but multiple can
-      // happen, e.g., when we have 2 parallels in a row in a sequence: Seq(Entry, Parallel, Parallel, Entry).
-      // This way there should be a merge between parallels, but it is not represented as entry
+      // add this level's meta to the list
+      val elemMeta = ppTree.info(rootElem) :: parentMeta
 
-      // see that we typecast manually here, since the extractors cannot set the subtype correctly.
-      // We perform this pattern matching, then casting
-      case e @ ppTree.entry(_) => {
-        val entry = e.asInstanceOf[E]
-        val PPRootGraph(accGraph, accRoots) = acc
+      rootElem match {
 
-        // add the entry to the graph
-        val withEntryEdges = accRoots.foldLeft(accGraph + entry) {
-          // for each root, add an edge from entry to root
-          (accGraph, root) => accGraph + (entry ~> root)
-        }
+        // for proof entry, add it to the graph and connect to all outstanding roots
+        // (this means that this entry step is followed by all outstanding entry steps)
+        // 
+        // normally there should be only a single outstanding root here (or none), but multiple can
+        // happen, e.g., when we have 2 parallels in a row in a sequence: Seq(Entry, Parallel, Parallel, Entry).
+        // This way there should be a merge between parallels, but it is not represented as entry
 
-        // only the entry is a root now
-        PPRootGraph(withEntryEdges, List(entry))
-      }
+        // see that we typecast manually here, since the extractors cannot set the subtype correctly.
+        // We perform this pattern matching, then casting
+        case ppTree.entry(_) => {
+          val entry = rootElem.asInstanceOf[E]
+          val PPRootGraph(accGraph, accRoots, accMeta) = acc
 
-      // for parallel, create subgraphs of each parallel entry,
-      // and then merge these subgraphs and their roots
-      case ppTree.parallel((entries, links)) => {
-
-        // create subgraph based on the accumulated graph
-        val subGraphs = entries map (e => graph0(e, acc))
-
-        val merged = subGraphs.foldRight(emptyGraph) {
-          case (PPRootGraph(subGraph, subRoots), PPRootGraph(foldGraph, foldRoots)) => 
-            PPRootGraph(subGraph ++ foldGraph, subRoots ++ foldRoots)
-        }
-
-        val withLinks =
-          if (!links.isEmpty) {
-            merged.copy(roots = merged.roots ++ links)
+          // add the entry to the graph
+          val withEntryEdges = accRoots.foldLeft(accGraph + entry) {
+            // for each root, add an edge from entry to root
+            (accGraph, root) => accGraph + (entry ~> root)
           }
-          else merged
 
-        withLinks
-      }
+          // only the entry is a root now
+          PPRootGraph(withEntryEdges, List(entry), accMeta + (entry -> elemMeta))
+        }
 
-      // for sequences, just accumulate subgraph from the end, this way elements at the
-      // start are parents/roots to the subsequent elements
-      case ppTree.seq(elems) => elems.foldRight(acc) {
-        (entry, acc) => graph0(entry, acc)
+        // for parallel, create subgraphs of each parallel entry,
+        // and then merge these subgraphs and their roots
+        case ppTree.parallel((entries, links)) => {
+
+          // create subgraph based on the accumulated graph
+          val subGraphs = entries map (e => graph0(e, acc, elemMeta))
+
+          val merged = subGraphs.foldRight(emptyGraph) {
+            case (PPRootGraph(subGraph, subRoots, subMeta),
+                  PPRootGraph(foldGraph, foldRoots, foldMeta)) =>
+              PPRootGraph(subGraph ++ foldGraph, subRoots ++ foldRoots, subMeta ++ foldMeta)
+          }
+
+          val withLinks =
+            if (!links.isEmpty) {
+              merged.copy(roots = merged.roots ++ links)
+            } else merged
+
+          withLinks
+        }
+
+        // for sequences, just accumulate subgraph from the end, this way elements at the
+        // start are parents/roots to the subsequent elements
+        case ppTree.seq(elems) => elems.foldRight(acc) {
+          (entry, acc) => graph0(entry, acc, elemMeta)
+        }
       }
     }
     
     // invoke with empty accumulator and the given root, it will create the graph recursively
-    graph0(rootElem, emptyGraph)
+    graph0(rootElem, emptyGraph, Nil)
   }
 
 
@@ -113,6 +129,7 @@ object PProcessGraph {
    * @tparam E  proof entry type
    * @tparam S  proof entry sequence type
    * @tparam P  parallel proof entries type
+   * @tparam I  proof meta-information type
    *
    * @param ppTree      the ProofProcess tree extractors/converters
    * @param topRoot     an artificial root element in case of multiple graph roots
@@ -120,18 +137,18 @@ object PProcessGraph {
    *
    * @return  ProofProcess tree representation of the data as the root element of the tree.
    */
-  def toPProcessTree[L, E <: L, S <: L, P <: L]
-      (ppTree: PProcessTree[L, E, S, P, _], topRoot: => E)
-      (rootGraph: PPRootGraph[E]): L = {
-   
-    val PPRootGraph(graph, roots) = rootGraph
+  def toPProcessTree[L, E <: L, S <: L, P <: L, I]
+      (ppTree: PProcessTree[L, E, S, P, _, I], topRoot: => E)
+      (rootGraph: PPRootGraph[E, I]): L = {
+
+    val PPRootGraph(graph, roots, meta) = rootGraph
     
     require(!roots.isEmpty)
 
     roots match {
 
       case single :: Nil => // already single root
-        toPProcessTree(ppTree)(graph, single)
+        toPProcessTree(ppTree)(graph, single, meta)
 
       case multiple => {
 
@@ -140,7 +157,7 @@ object PProcessGraph {
         val newRoot = topRoot
         val newGraph = roots.foldRight(graph)((root, accGraph) => accGraph + (newRoot ~> root))
         
-        val tree = toPProcessTree(ppTree)(newGraph, newRoot)
+        val tree = toPProcessTree(ppTree)(newGraph, newRoot, meta)
         
         // the new root will always be the top element in the top sequence
         tree match {
@@ -169,17 +186,19 @@ object PProcessGraph {
    * @tparam E  proof entry type
    * @tparam S  proof entry sequence type
    * @tparam P  parallel proof entries type
+   * @tparam I  proof meta-information type
    *
    * @param ppTree  the ProofProcess tree extractors/converters
    * @param graph   the Scala graph representation of ProofProcess data
    * @param root    the single root element of the Scala ProofProcess graph
+   * @param meta    meta proof-information for graph entries
    *
    * @return  ProofProcess tree representation of the data as the root element of the tree.
    */
-  def toPProcessTree[L, E <: L, S <: L, P <: L]
-      (ppTree: PProcessTree[L, E, S, P, _])
-      (graph: PPGraph[E], root: E): L = {
-    
+  def toPProcessTree[L, E <: L, S <: L, P <: L, I]
+      (ppTree: PProcessTree[L, E, S, P, _, I])
+      (graph: PPGraph[E], root: E, meta: Map[E, List[I]]): L = {
+    // FIXME support meta-information
     type MergeMap = Map[E, List[E]]
     
     // add the root to the graph to ensure that we can traverse it

@@ -18,15 +18,27 @@ import org.junit.Test
 class PProcessGraphTest {
   
   def toPProcessTree(g: PPGraph[Entry], rs: PPGraphRoots[Entry]) = 
-    PProcessGraph.toPProcessTree(intPPTree, Entry(0))(PPRootGraph(g, rs))
+    PProcessGraph.toPProcessTree(intPPTree, Entry(0))(PPRootGraph(g, rs, Map()))
   def toGraph = PProcessGraph.toGraph(intPPTree) _
+
+
+  private def assertGraphEquals[E](rg1: PPRootGraph[E, _], rg2: PPRootGraph[E, _]) = {
+    val PPRootGraph(g1, r1, _) = rg1
+    val PPRootGraph(g2, r2, _) = rg2
+
+    assertEquals(g1, g2)
+    assertEquals(r1, r2)
+  }
+
+  private def ppRootGraph[E](graph: PPGraph[E], roots: PPGraphRoots[E]): PPRootGraph[E, _] =
+    PPRootGraph(graph, roots, Map())
   
   @Test
   def rootInEmptyGraph() {
     val e1 = e(1)
     val p1 = toPProcessTree(Graph(), List(e1))
     assertEquals(e1, p1)
-    assertEquals(PPRootGraph(Graph(e1), List(e1)), toGraph(p1))
+    assertGraphEquals(ppRootGraph(Graph(e1), List(e1)), toGraph(p1))
   }
   
   val r1 = List(e(1))
@@ -38,13 +50,13 @@ class PProcessGraphTest {
     val s1 = Seq(List(1, 2))
     val p1 = toPProcessTree(g1, r1)
     assertEquals(s1, p1)
-    assertEquals(PPRootGraph(g1, r1), toGraph(p1))
+    assertGraphEquals(ppRootGraph(g1, r1), toGraph(p1))
     
     val g2 = g1 + (e(2) ~> e(3))
     val s2 = Seq(List(1, 2, 3))
     val p2 = toPProcessTree(g2, r1)
     assertEquals(s2, p2)
-    assertEquals(PPRootGraph(g2, r1), toGraph(p2))
+    assertGraphEquals(ppRootGraph(g2, r1), toGraph(p2))
   }
   
   @Test
@@ -56,7 +68,7 @@ class PProcessGraphTest {
                               3))))
     val p1 = toPProcessTree(g1, r1)
     assertEquals(s1, p1)
-    assertEquals(PPRootGraph(g1, r1), toGraph(p1))
+    assertGraphEquals(ppRootGraph(g1, r1), toGraph(p1))
   }
   
   /** Simple merge:
@@ -76,7 +88,7 @@ class PProcessGraphTest {
                       4))
     val p1 = toPProcessTree(m1, r1)
     assertEquals(s1, p1)
-    assertEquals(PPRootGraph(m1, r1), toGraph(p1))
+    assertGraphEquals(ppRootGraph(m1, r1), toGraph(p1))
   }
   
   
@@ -103,7 +115,7 @@ class PProcessGraphTest {
                       7))
     val p2 = toPProcessTree(m2, r1)
     assertEquals(s2, p2)
-    assertEquals(PPRootGraph(m2, r1), toGraph(p2))
+    assertGraphEquals(ppRootGraph(m2, r1), toGraph(p2))
   }
 
   /** Branch merged twice with two other different branches in parallel (branch 3 is merged with both 2 and 5
@@ -146,7 +158,7 @@ class PProcessGraphTest {
     // note that the root e3 gets dropped when converting to graph
     // since we cannot determine whether the parallel is exhaustive,
     // or whether a direct merge is necessary
-    assertEquals(PPRootGraph(m4, List(e(1))), toGraph(p4))
+    assertGraphEquals(ppRootGraph(m4, List(e(1))), toGraph(p4))
   }
   
   /** One of the branches does not have any steps in it (1 -> 3). This is represented as a
@@ -171,7 +183,7 @@ class PProcessGraphTest {
     // note that the link 1->3 gets dropped when converting to graph
     // since we cannot determine whether the parallel is exhaustive,
     // or whether a direct merge is necessary
-    assertEquals(PPRootGraph(m5 - (e(1) ~> e(3)), r1), toGraph(p5))
+    assertGraphEquals(ppRootGraph(m5 - (e(1) ~> e(3)), r1), toGraph(p5))
   }
   
   /** Double merge of branches with no steps in them (1 -> 3 and 1 -> 4). This is represented as a
@@ -197,7 +209,7 @@ class PProcessGraphTest {
     val p6 = toPProcessTree(m6, r1)
     assertEquals(s6, p6)
     // note that both links 1->3 and 1->4 get dropped when converting to graph
-    assertEquals(PPRootGraph(m6 - (e(1) ~> e(3), e(1) ~> e(4)), r1), toGraph(p6))
+    assertGraphEquals(ppRootGraph(m6 - (e(1) ~> e(3), e(1) ~> e(4)), r1), toGraph(p6))
   }
   
   /**
@@ -227,7 +239,7 @@ class PProcessGraphTest {
     
     val p7 = toPProcessTree(m7, r1)
     assertEquals(s7, p7)
-    assertEquals(PPRootGraph(m7 - (e(2) ~> e(5)), r1), toGraph(p7))
+    assertGraphEquals(ppRootGraph(m7 - (e(2) ~> e(5)), r1), toGraph(p7))
   }
   
   /**
@@ -258,7 +270,7 @@ class PProcessGraphTest {
 
     val p8 = toPProcessTree(m8, r1)
     assertEquals(s8, p8)
-    assertEquals(PPRootGraph(m8 - (e(2) ~> e(5), e(3) ~> e(6)), r1), toGraph(p8))
+    assertGraphEquals(ppRootGraph(m8 - (e(2) ~> e(5), e(3) ~> e(6)), r1), toGraph(p8))
   }
 
 
@@ -294,7 +306,7 @@ class PProcessGraphTest {
 
     val p9 = toPProcessTree(m9, r1)
     assertEquals(s9, p9)
-    assertEquals(PPRootGraph(m9, r1), toGraph(p9))
+    assertGraphEquals(ppRootGraph(m9, r1), toGraph(p9))
   }
 
   
@@ -338,10 +350,12 @@ class PProcessGraphTest {
     }
   }
   
-  val intPPTree = new PProcessTree[PElem, Entry, Seq, Par, Int] {
+  val intPPTree = new PProcessTree[PElem, Entry, Seq, Par, Int, Int] {
     override def entry = EntryCase
     override def seq = SeqCase
     override def parallel = ParCase
+    // TODO better solution?
+    override def info(elem: PElem): Int = 0
   }
   
   

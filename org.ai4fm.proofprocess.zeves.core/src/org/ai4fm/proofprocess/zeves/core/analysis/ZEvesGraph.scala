@@ -18,7 +18,7 @@ object ZEvesGraph {
 
   private type CaseRoots = List[(ProofEntry, List[Int])]
   
-  def proofStepsGraph(proofSteps: List[ProofEntry]): PPRootGraph[ProofEntry] = {  
+  def proofStepsGraph(proofSteps: List[ProofEntry]): PPRootGraph[ProofEntry, _] = {  
 
     // go backwards through the steps and build up the graph
     val (graph, caseRoots) = proofSteps.foldRight(Graph(): PPGraph[ProofEntry], List(): CaseRoots) {
@@ -26,7 +26,7 @@ object ZEvesGraph {
     }
     
     // drop the cases from the roots now
-    PPRootGraph(graph, caseRoots.map(_._1))
+    PPRootGraph(graph, caseRoots.map(_._1), Map())
   }
 
   private def handleProofEntry(entry: ProofEntry,

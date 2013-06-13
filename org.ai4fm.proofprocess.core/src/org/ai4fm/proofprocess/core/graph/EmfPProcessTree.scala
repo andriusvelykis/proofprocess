@@ -2,27 +2,25 @@ package org.ai4fm.proofprocess.core.graph
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.ProofElem
-import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.ProofParallel
-import org.ai4fm.proofprocess.ProofProcessFactory
-import org.ai4fm.proofprocess.ProofSeq
-import org.ai4fm.proofprocess.ProofStep
+import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofInfo, ProofParallel, ProofProcessFactory, ProofSeq, ProofStep}
 import org.ai4fm.proofprocess.core.graph.PProcessTree.CaseObject
+
 
 /** Extractors and factories for EMF ProofProcess elements to the PProcessTree bridge.
   * 
   * @author Andrius Velykis
   */
 object EmfPProcessTree 
-  extends PProcessTree[ProofElem, ProofEntry, ProofSeq, ProofParallel, ProofStep] {
+  extends PProcessTree[ProofElem, ProofEntry, ProofSeq, ProofParallel, ProofStep, ProofInfo] {
 
   val factory = ProofProcessFactory.eINSTANCE
   
   override val entry = ProofEntryTree
   override val seq = ProofSeqTree
   override val parallel = ProofParallelTree
-  
+
+  override def info(elem: ProofElem): ProofInfo = elem.getInfo
+
 
   object ProofEntryTree extends CaseObject[ProofElem, ProofEntry, ProofStep] {
 

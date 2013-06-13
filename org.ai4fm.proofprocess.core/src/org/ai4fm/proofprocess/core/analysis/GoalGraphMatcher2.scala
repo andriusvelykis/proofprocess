@@ -21,13 +21,13 @@ object GoalGraphMatcher2 {
 
 
   def goalGraph[N, T <: Eq](proofSteps: List[GoalStep[N, T]])
-                           (implicit nodeManifest: Manifest[N]): PPRootGraph[N] =
+                           (implicit nodeManifest: Manifest[N]): PPRootGraph[N, _] =
     goalGraph(proofSteps, Graph())
 
 
   // cannot set initial to default being empty graph, because the manifest is somehow not available
   def goalGraph[N, T <: Eq](proofSteps: List[GoalStep[N, T]], initial: PPGraph[N])
-                           (implicit nodeManifest: Manifest[N]): PPRootGraph[N] = {
+                           (implicit nodeManifest: Manifest[N]): PPRootGraph[N, _] = {
     
     // now go through the proof steps from the start
     // and link each proof step with its calculated parent
@@ -38,7 +38,7 @@ object GoalGraphMatcher2 {
     // as roots, just take everything without any `in` edges
     val roots = (graph.nodes filter (_.inDegree == 0) map (_.value)).toList
     
-    PPRootGraph(graph, roots)
+    PPRootGraph(graph, roots, Map())
   }
 
   
