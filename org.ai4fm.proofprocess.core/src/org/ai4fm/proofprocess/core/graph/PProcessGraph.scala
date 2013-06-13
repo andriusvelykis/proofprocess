@@ -30,15 +30,15 @@ object PProcessGraph {
     *
     * @return  `(graph, roots)` the pair of created graph and the list of roots to traverse it
     */
-  def toGraph[Elem, E <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, E, Seq, Parallel, _])
-      (rootElem: Elem)
+  def toGraph[L, E <: L, Seq <: L, Parallel <: L]
+      (ppTree: PProcessTree[L, E, Seq, Parallel, _])
+      (rootElem: L)
       (implicit entryManifest: Manifest[E]): PPRootGraph[E] = {
     
     val emptyGraph = PPRootGraph()
 
     // a method that collects the graph with an accumulator (necessary for Seq implementation)
-    def graph0(rootElem: Elem, acc: PPRootGraph[E]): PPRootGraph[E] = rootElem match {
+    def graph0(rootElem: L, acc: PPRootGraph[E]): PPRootGraph[E] = rootElem match {
 
       // for proof entry, add it to the graph and connect to all outstanding roots
       // (this means that this entry step is followed by all outstanding entry steps)
@@ -95,9 +95,9 @@ object PProcessGraph {
     graph0(rootElem, emptyGraph)
   }
   
-  def toPProcessTree[Elem, E <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, E, Seq, Parallel, _], topRoot: => E)
-      (rootGraph: PPRootGraph[E]): Elem = {
+  def toPProcessTree[L, E <: L, Seq <: L, Parallel <: L]
+      (ppTree: PProcessTree[L, E, Seq, Parallel, _], topRoot: => E)
+      (rootGraph: PPRootGraph[E]): L = {
    
     val PPRootGraph(graph, roots) = rootGraph
     
@@ -135,9 +135,9 @@ object PProcessGraph {
     
   }
   
-  def toPProcessTree[Elem, E <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, E, Seq, Parallel, _])
-      (graph: PPGraph[E], root: E): Elem = {
+  def toPProcessTree[L, E <: L, Seq <: L, Parallel <: L]
+      (ppTree: PProcessTree[L, E, Seq, Parallel, _])
+      (graph: PPGraph[E], root: E): L = {
     
     type MergeMap = Map[E, List[E]]
     
@@ -155,7 +155,7 @@ object PProcessGraph {
       }
     }
 
-    def toSeq(entry: Elem, following: Elem): Elem = {
+    def toSeq(entry: L, following: L): L = {
       // either prepend to the existing sequence, or create a new one with the entry and the subgraph
       val seq = ppTree.seq
       val entrySeq = (entry, following) match {
@@ -175,7 +175,7 @@ object PProcessGraph {
       entrySeq
     }
     
-    def ensureParallel(elem: Elem): Elem = {
+    def ensureParallel(elem: L): L = {
       // check if the element is already parallel, otherwise wrap it into a parallel
       val par = elem match {
         case ppTree.parallel(_) => elem
@@ -184,14 +184,14 @@ object PProcessGraph {
       par
     }
     
-    def merge(mergeAt: MergeMap, subGraphsInit: Map[E, Elem])(
-                entry: E, branchRoots: List[E]): (Elem, Map[E, Elem]) = {
+    def merge(mergeAt: MergeMap, subGraphsInit: Map[E, L])(
+                entry: E, branchRoots: List[E]): (L, Map[E, L]) = {
 
       type BranchMerges = List[(E, List[E])]
 
       var _subGraphs = subGraphsInit
 
-      def subGraphs(e: E): Option[Elem] = {
+      def subGraphs(e: E): Option[L] = {
         // get and consume - remove from the map
         // this provides a nice depth-first parallel usage, otherwise higher parallel splits
         // re-attach the same branch from lower parallel splits..
@@ -235,7 +235,7 @@ object PProcessGraph {
       //
       // To achieve this, we recursively group the branches by the deepest merge point, and do the merge
       // there, e.g. group B and C on E merge, then group this merged branch with D on G merge.
-      def mergeDeepest(branchMergesDeepestFirst: BranchMerges): Elem = {
+      def mergeDeepest(branchMergesDeepestFirst: BranchMerges): L = {
 
         require(!branchMergesDeepestFirst.isEmpty)
         
@@ -292,7 +292,7 @@ object PProcessGraph {
          * Returns the merged element. Note that soft-links are not created for merges, they will
          * be created for outgoing elements in parallels (TODO verify).
          */
-        def mergeGroup(group: BranchMerges, mergePoint: E): Elem = {
+        def mergeGroup(group: BranchMerges, mergePoint: E): L = {
 
           // continue recursively for the group (remaining merges)
           val groupElem = mergeDeepest(group)
@@ -358,9 +358,9 @@ object PProcessGraph {
     }
 
     def createSubGraph(mergeAt: MergeMap,
-                       subGraphs: Map[E, Elem])(
+                       subGraphs: Map[E, L])(
                          entry: E,
-                         successors: Iterable[E]): (Elem, MergeMap, Map[E, Elem]) = {
+                         successors: Iterable[E]): (L, MergeMap, Map[E, L]) = {
 
       val succs = successors.toList
       
@@ -409,11 +409,11 @@ object PProcessGraph {
       }
     }
 
-    def handleNode(subGraphs: Map[E, Elem],
+    def handleNode(subGraphs: Map[E, L],
                    mergeAt: MergeMap)(
                      node: E,
                      predecessors: Iterable[E],
-                     successors: Iterable[E]): (Map[E, Elem], MergeMap) = {
+                     successors: Iterable[E]): (Map[E, L], MergeMap) = {
 
       val entry = node
 
@@ -437,7 +437,7 @@ object PProcessGraph {
       (newSubGraphs1, newMergeAt)
     }
     
-    val emptySubGraphs = Map[E, Elem]()
+    val emptySubGraphs = Map[E, L]()
     val emptyMergeAt: MergeMap = Map().withDefaultValue(List())
 
     val (subGraphs, mergeAt) = rootGraph.foldNodesRight((emptySubGraphs, emptyMergeAt))({
