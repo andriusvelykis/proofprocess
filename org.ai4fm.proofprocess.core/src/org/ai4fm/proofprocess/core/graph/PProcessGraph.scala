@@ -30,15 +30,15 @@ object PProcessGraph {
     *
     * @return  `(graph, roots)` the pair of created graph and the list of roots to traverse it
     */
-  def toGraph[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _])
+  def toGraph[Elem, E <: Elem, Seq <: Elem, Parallel <: Elem]
+      (ppTree: PProcessTree[Elem, E, Seq, Parallel, _])
       (rootElem: Elem)
-      (implicit entryManifest: Manifest[Entry]): PPRootGraph[Entry] = {
+      (implicit entryManifest: Manifest[E]): PPRootGraph[E] = {
     
     val emptyGraph = PPRootGraph()
 
     // a method that collects the graph with an accumulator (necessary for Seq implementation)
-    def graph0(rootElem: Elem, acc: PPRootGraph[Entry]): PPRootGraph[Entry] = rootElem match {
+    def graph0(rootElem: Elem, acc: PPRootGraph[E]): PPRootGraph[E] = rootElem match {
 
       // for proof entry, add it to the graph and connect to all outstanding roots
       // (this means that this entry step is followed by all outstanding entry steps)
@@ -50,7 +50,7 @@ object PProcessGraph {
       // see that we typecast manually here, since the extractors cannot set the subtype correctly.
       // We perform this pattern matching, then casting
       case e @ ppTree.entry(_) => {
-        val entry = e.asInstanceOf[Entry]
+        val entry = e.asInstanceOf[E]
         val PPRootGraph(accGraph, accRoots) = acc
 
         // add the entry to the graph
@@ -95,9 +95,9 @@ object PProcessGraph {
     graph0(rootElem, emptyGraph)
   }
   
-  def toPProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _], topRoot: => Entry)
-      (rootGraph: PPRootGraph[Entry]): Elem = {
+  def toPProcessTree[Elem, E <: Elem, Seq <: Elem, Parallel <: Elem]
+      (ppTree: PProcessTree[Elem, E, Seq, Parallel, _], topRoot: => E)
+      (rootGraph: PPRootGraph[E]): Elem = {
    
     val PPRootGraph(graph, roots) = rootGraph
     
@@ -135,18 +135,18 @@ object PProcessGraph {
     
   }
   
-  def toPProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _])
-      (graph: PPGraph[Entry], root: Entry): Elem = {
+  def toPProcessTree[Elem, E <: Elem, Seq <: Elem, Parallel <: Elem]
+      (ppTree: PProcessTree[Elem, E, Seq, Parallel, _])
+      (graph: PPGraph[E], root: E): Elem = {
     
-    type MergeMap = Map[Entry, List[Entry]]
+    type MergeMap = Map[E, List[E]]
     
     // add the root to the graph to ensure that we can traverse it
     val rootGraph = graph + root
 
     assert(rootGraph.isAcyclic)
     
-    def pullMergeUp(mergeAt: MergeMap, successor: Entry, entry: Entry): MergeMap = {
+    def pullMergeUp(mergeAt: MergeMap, successor: E, entry: E): MergeMap = {
       val succMerges = mergeAt(successor)
       if (!succMerges.isEmpty) {
         mergeAt + (entry -> succMerges)
@@ -184,14 +184,14 @@ object PProcessGraph {
       par
     }
     
-    def merge(mergeAt: MergeMap, subGraphsInit: Map[Entry, Elem])(
-                entry: Entry, branchRoots: List[Entry]): (Elem, Map[Entry, Elem]) = {
+    def merge(mergeAt: MergeMap, subGraphsInit: Map[E, Elem])(
+                entry: E, branchRoots: List[E]): (Elem, Map[E, Elem]) = {
 
-      type BranchMerges = List[(Entry, List[Entry])]
+      type BranchMerges = List[(E, List[E])]
 
       var _subGraphs = subGraphsInit
 
-      def subGraphs(e: Entry): Option[Elem] = {
+      def subGraphs(e: E): Option[Elem] = {
         // get and consume - remove from the map
         // this provides a nice depth-first parallel usage, otherwise higher parallel splits
         // re-attach the same branch from lower parallel splits..
@@ -257,7 +257,7 @@ object PProcessGraph {
         val (mergePointBranches, entryBranches) =
           branchMergesDeepestFirst partition { case (root, merges) => mergePoints.contains(root) }
         
-        def groupBranches(branches: BranchMerges): (List[Entry], Map[Entry, BranchMerges]) = {
+        def groupBranches(branches: BranchMerges): (List[E], Map[E, BranchMerges]) = {
           
           // group by the deepest merge point (at the start of the merge list)
           // note that empty branches have been split off already
@@ -292,7 +292,7 @@ object PProcessGraph {
          * Returns the merged element. Note that soft-links are not created for merges, they will
          * be created for outgoing elements in parallels (TODO verify).
          */
-        def mergeGroup(group: BranchMerges, mergePoint: Entry): Elem = {
+        def mergeGroup(group: BranchMerges, mergePoint: E): Elem = {
 
           // continue recursively for the group (remaining merges)
           val groupElem = mergeDeepest(group)
@@ -358,9 +358,9 @@ object PProcessGraph {
     }
 
     def createSubGraph(mergeAt: MergeMap,
-                       subGraphs: Map[Entry, Elem])(
-                         entry: Entry,
-                         successors: Iterable[Entry]): (Elem, MergeMap, Map[Entry, Elem]) = {
+                       subGraphs: Map[E, Elem])(
+                         entry: E,
+                         successors: Iterable[E]): (Elem, MergeMap, Map[E, Elem]) = {
 
       val succs = successors.toList
       
@@ -409,11 +409,11 @@ object PProcessGraph {
       }
     }
 
-    def handleNode(subGraphs: Map[Entry, Elem],
+    def handleNode(subGraphs: Map[E, Elem],
                    mergeAt: MergeMap)(
-                     node: Entry,
-                     predecessors: Iterable[Entry],
-                     successors: Iterable[Entry]): (Map[Entry, Elem], MergeMap) = {
+                     node: E,
+                     predecessors: Iterable[E],
+                     successors: Iterable[E]): (Map[E, Elem], MergeMap) = {
 
       val entry = node
 
@@ -437,7 +437,7 @@ object PProcessGraph {
       (newSubGraphs1, newMergeAt)
     }
     
-    val emptySubGraphs = Map[Entry, Elem]()
+    val emptySubGraphs = Map[E, Elem]()
     val emptyMergeAt: MergeMap = Map().withDefaultValue(List())
 
     val (subGraphs, mergeAt) = rootGraph.foldNodesRight((emptySubGraphs, emptyMergeAt))({
