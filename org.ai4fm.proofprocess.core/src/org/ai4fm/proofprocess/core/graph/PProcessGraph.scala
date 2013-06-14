@@ -44,7 +44,8 @@ object PProcessGraph {
  * @tparam I  proof meta-information type
  *
  * @param ppTree   the ProofProcess tree element extractors/converters
- * @param topRoot  an artificial root element in case of multiple graph roots
+ * @param topRoot  a helper method to construct an intermediate artificial root element
+ *                 in case of multiple graph roots
  *
  * @author Andrius Velykis
  */
