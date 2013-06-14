@@ -130,9 +130,7 @@ object ProofAttemptMatcher {
   }
   
   def toPProcessTree(ppGraph: PPRootGraph[ProofEntry, ProofInfo]): ProofElem =
-    PProcessGraph.toPProcessTree(
-      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(
-        ppGraph)
+    EmfPProcessTree.graphConverter.toPProcessTree(ppGraph)
   
   
   private def matchAttempt(matcher: ProofEntryMatcher)
@@ -140,7 +138,7 @@ object ProofAttemptMatcher {
                            attempt: Attempt): Option[(Attempt, Map[ProofEntry, ProofEntry])] =
     Option(attempt.getProof) flatMap { proofRoot =>
       {
-        val attemptGraph = PProcessGraph.toGraph(EmfPProcessTree)(proofRoot)
+        val attemptGraph = EmfPProcessTree.graphConverter.toGraph(proofRoot)
 
         val attemptMatcher = new AttemptMatcher(matcher)
         attemptMatcher.matchAttempt(ppGraph, attemptGraph, attempt)

@@ -13,7 +13,11 @@ import org.ai4fm.proofprocess.core.graph.PProcessTree.CaseObject
 object EmfPProcessTree 
   extends PProcessTree[ProofElem, ProofEntry, ProofSeq, ProofParallel, ProofStep, ProofInfo] {
 
-  val factory = ProofProcessFactory.eINSTANCE
+  /** A singleton instance of PProcessGraph graph-tree converter for EMF ProofProcess data. */
+  lazy val graphConverter =
+    new PProcessGraph(EmfPProcessTree, ProofEntryTree(factory.createProofStep))
+
+  private val factory = ProofProcessFactory.eINSTANCE
   
   override val entry = ProofEntryTree
   override val seq = ProofSeqTree

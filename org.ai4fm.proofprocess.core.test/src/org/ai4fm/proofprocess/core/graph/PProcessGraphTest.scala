@@ -16,10 +16,12 @@ import org.junit.Test
   * @author Andrius Velykis 
   */
 class PProcessGraphTest {
+
+  private val graphConverter = new PProcessGraph(intPPTree, Entry(0))
   
   def toPProcessTree(g: PPGraph[Entry], rs: PPGraphRoots[Entry]) = 
-    PProcessGraph.toPProcessTree(intPPTree, Entry(0))(PPRootGraph(g, rs, Map()))
-  def toGraph = PProcessGraph.toGraph(intPPTree) _
+    graphConverter.toPProcessTree(PPRootGraph(g, rs, Map()))
+  def toGraph = graphConverter.toGraph _
 
 
   private def assertGraphEquals[E](rg1: PPRootGraph[E, _], rg2: PPRootGraph[E, _]) = {

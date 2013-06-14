@@ -6,10 +6,11 @@ import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph
 
 
-/** Utility functions to convert between Scala Graph and ProofProcess tree structure.
-  * 
-  * @author Andrius Velykis
-  */
+/** 
+ * Converter between Scala Graph and ProofProcess tree structure.
+ * 
+ * @author Andrius Velykis
+ */
 object PProcessGraph {
 
   type PPGraph[E] = Graph[E, DiEdge]
@@ -29,28 +30,38 @@ object PProcessGraph {
     def apply[E, I]()(implicit entryManifest: Manifest[E]): PPRootGraph[E, I] = 
       PPRootGraph(Graph[E, DiEdge](), List(), Map())
   }
-  
-  
+}
 
-  /** 
+
+/**
+ * Provides conversion methods between an proof entry-based Scala graph and a ProofProcess tree
+ * structure.
+ *
+ * @tparam L  the supertype of all proof elements
+ * @tparam E  proof entry type
+ * @tparam S  proof entry sequence type
+ * @tparam P  parallel proof entries type
+ * @tparam I  proof meta-information type
+ *
+ * @param ppTree   the ProofProcess tree element extractors/converters
+ * @param topRoot  an artificial root element in case of multiple graph roots
+ *
+ * @author Andrius Velykis
+ */
+class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, P, _, I],
+                                                  topRoot: => E) {
+
+  import PProcessGraph._
+
+  /**
    * Converts ProofProcess graph represented as tree with the given root element to
    * a Scala DAG of just the ProofEntry elements, and the list of root entries.
    *
-   * @tparam L  the supertype of all proof elements
-   * @tparam E  proof entry type
-   * @tparam S  proof entry sequence type
-   * @tparam P  parallel proof entries type
-   * @tparam I  proof meta-information type
-   *
-   * @param ppTree    the ProofProcess tree extractors/converters
    * @param rootElem  the ProofProcess tree represented by its root element
    *
    * @return  Graph representation of the given ProofProcess tree, as graph + root nodes.
    */
-  def toGraph[L, E <: L, S <: L, P <: L, I]
-      (ppTree: PProcessTree[L, E, S, P, _, I])
-      (rootElem: L)
-      (implicit entryManifest: Manifest[E]): PPRootGraph[E, I] = {
+  def toGraph(rootElem: L)(implicit entryManifest: Manifest[E]): PPRootGraph[E, I] = {
     
     val emptyGraph = PPRootGraph[E, I]()
 
@@ -121,25 +132,15 @@ object PProcessGraph {
   }
 
 
-  /** 
+  /**
    * Converts ProofProcess graph represented as a Scala graph + roots to a corresponding
    * ProofProcess tree structure.
    *
-   * @tparam L  the supertype of all proof elements
-   * @tparam E  proof entry type
-   * @tparam S  proof entry sequence type
-   * @tparam P  parallel proof entries type
-   * @tparam I  proof meta-information type
-   *
-   * @param ppTree      the ProofProcess tree extractors/converters
-   * @param topRoot     an artificial root element in case of multiple graph roots
    * @param rootGraph   the Scala graph representation of ProofProcess data (graph + roots)
    *
    * @return  ProofProcess tree representation of the data as the root element of the tree.
    */
-  def toPProcessTree[L, E <: L, S <: L, P <: L, I]
-      (ppTree: PProcessTree[L, E, S, P, _, I], topRoot: => E)
-      (rootGraph: PPRootGraph[E, I]): L = {
+  def toPProcessTree(rootGraph: PPRootGraph[E, I]): L = {
 
     val PPRootGraph(graph, roots, meta) = rootGraph
     
@@ -148,7 +149,7 @@ object PProcessGraph {
     roots match {
 
       case single :: Nil => // already single root
-        toPProcessTree(ppTree)(graph, single, meta)
+        toPProcessTree(graph, single, meta)
 
       case multiple => {
 
@@ -157,7 +158,7 @@ object PProcessGraph {
         val newRoot = topRoot
         val newGraph = roots.foldRight(graph)((root, accGraph) => accGraph + (newRoot ~> root))
         
-        val tree = toPProcessTree(ppTree)(newGraph, newRoot, meta)
+        val tree = toPProcessTree(newGraph, newRoot, meta)
         
         // the new root will always be the top element in the top sequence
         tree match {
@@ -182,22 +183,13 @@ object PProcessGraph {
    * Converts ProofProcess graph represented as a Scala graph + single root to a corresponding
    * ProofProcess tree structure.
    *
-   * @tparam L  the supertype of all proof elements
-   * @tparam E  proof entry type
-   * @tparam S  proof entry sequence type
-   * @tparam P  parallel proof entries type
-   * @tparam I  proof meta-information type
-   *
-   * @param ppTree  the ProofProcess tree extractors/converters
    * @param graph   the Scala graph representation of ProofProcess data
    * @param root    the single root element of the Scala ProofProcess graph
    * @param meta    meta proof-information for graph entries
    *
    * @return  ProofProcess tree representation of the data as the root element of the tree.
    */
-  def toPProcessTree[L, E <: L, S <: L, P <: L, I]
-      (ppTree: PProcessTree[L, E, S, P, _, I])
-      (graph: PPGraph[E], root: E, meta: Map[E, List[I]]): L = {
+  def toPProcessTree(graph: PPGraph[E], root: E, meta: Map[E, List[I]]): L = {
     // FIXME support meta-information
     type MergeMap = Map[E, List[E]]
     
