@@ -30,6 +30,7 @@ object PProcessGraph {
     def apply[E, I]()(implicit entryManifest: Manifest[E]): PPRootGraph[E, I] = 
       PPRootGraph(Graph[E, DiEdge](), List(), Map())
   }
+
 }
 
 
@@ -186,11 +187,19 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
    *
    * @param graph   the Scala graph representation of ProofProcess data
    * @param root    the single root element of the Scala ProofProcess graph
-   * @param meta    meta proof-information for graph entries
+   * @param meta    meta proof-information for graph entries (entry to its parents)
    *
    * @return  ProofProcess tree representation of the data as the root element of the tree.
    */
   def toPProcessTree(graph: PPGraph[E], root: E, meta: Map[E, List[I]]): L = {
+    val ppTreeStructure = toPProcessTreeStructure(graph, root)
+    // need to reverse the meta, so that the lowest meta is the last
+    val reverseInfoMeta = meta mapValues (_.reverse)
+    addPProcessTreeMetaInfo(ppTreeStructure, reverseInfoMeta)
+  }
+
+
+  private def toPProcessTreeStructure(graph: PPGraph[E], root: E): L = {
     // FIXME support meta-information
     type MergeMap = Map[E, List[E]]
     
@@ -507,5 +516,191 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
     // this avoids calculating full size of, say, List
     col.take(2).size > 1
   }
+
+
+  private def addPProcessTreeMetaInfo(rootElem: L,
+                                      meta: Map[E, List[I]]): L = {
+    val (infoRoot, parentInfos) = addInfo(meta)(rootElem)
+
+    parentInfos match {
+      case Some(infos) => addInfos(infoRoot, infos)
+      case None => infoRoot
+    }
+  }
+
+  private def addInfo(meta: Map[E, List[I]])(rootElem: L): (L, Option[List[I]]) = rootElem match {
+
+    case ppTree.entry(_) => {
+      val entry = rootElem.asInstanceOf[E]
+
+      val entryInfo = meta.get(entry)
+      entryInfo match {
+
+        // assume that the last element in each meta list is the entry's info
+        case Some(infos) if !infos.isEmpty => {
+          val newEntry = ppTree.addInfo(entry, infos.last)
+          (newEntry, Some(infos))
+        }
+
+        // no proof meta-information (also empty list?) is available:
+        // do not add anything and return the entry
+        case _ => (entry, None)
+      }
+    }
+
+    case ppTree.parallel((entries, links)) => {
+      // only add infos to entries (link infos will be added somewhere within)
+
+      val infoEntries = entries map addInfo(meta)
+      val (infoChildren, commonInfos) = addChildrenInfo(infoEntries.toList, true)
+
+      val newParallel = ppTree.parallel((infoChildren.toSet, links))
+      // add the last info to the parallel itself
+
+      // TODO what if the group is actually much higher,
+      // e.g. encompassing the parallel and its siblings?
+      if (commonInfos.isEmpty) {
+        (newParallel, None)
+      } else {
+        (ppTree.addInfo(newParallel, commonInfos.last), Some(commonInfos.init))
+      }
+    }
+
+    case ppTree.seq(elems) => {
+      val infoElems = elems map addInfo(meta)
+      val (infoChildren, commonInfos) = addChildrenInfo(infoElems, false)
+
+      val newSeq = ppTree.seq(infoChildren)
+      if (commonInfos.isEmpty) {
+        (newSeq, None)
+      } else {
+        (ppTree.addInfo(newSeq, commonInfos.last), Some(commonInfos.init))
+      }
+    }
+  }
+
+
+  private def addChildrenInfo(elemInfos0: List[(L, Option[List[I]])],
+                              branchChildren: Boolean): (List[L], List[I]) = {
+    val elemInfos = flattenInfos(elemInfos0)
+
+    val parentInfos = longestCommonPrefixAll(elemInfos.view map (_._2))
+
+    val childInfos =
+      if (parentInfos.isEmpty) elemInfos
+      else {
+        // remove common parents from children infos
+        val parentLength = parentInfos.size
+        elemInfos map { case (e, infos) => (e, infos.drop(parentLength)) }
+      }
+
+    val childrenGroups =
+      if (!branchChildren) {
+        groupChildrenByInfoHeads(childInfos)
+      } else {
+        // do not group - just wrap the element into infos
+        // (this is needed for parallels)
+        childInfos map { case (elem, infos) => addInfos(elem, infos) }
+      }
+
+    (childrenGroups, parentInfos)
+  }
+
+  private def flattenInfos[E, I](elemInfos: List[(E, Option[List[I]])])
+      : List[(E, List[I])] = {
+    val (elems, infos) = elemInfos.unzip
+    val flatInfos = flattenPrev(infos, Nil)
+    elems zip flatInfos
+  }
+
+  /**
+   * Flattens the sequence by using previous non-empty value to replace empty values.
+   * Uses the given initial value if the first element is empty.
+   */
+  private def flattenPrev[A, B](seq: Seq[Option[B]], initial: => B): Seq[B] =
+    if (seq.isEmpty) {
+      Nil
+    } else {
+      val newHead = seq.head getOrElse initial
+      val tail = (seq.tail scanLeft newHead) { (prev, value) => value getOrElse prev }
+
+      newHead +: tail
+    }
+
+
+  private def longestCommonPrefixAll[A](lists: Seq[List[A]]): List[A] =
+    lists reduceLeft longestCommonPrefix
+
+  private def longestCommonPrefix[A](l1: List[A], l2: List[A]): List[A] = {
+    l1 match {
+      case Nil => Nil
+      case x :: xs => if (l2 != Nil && l2.head == x) x :: longestCommonPrefix(xs, l2.tail) else Nil
+    }
+  }
+
+
+  private def groupChildrenByInfoHeads(elemInfos: List[(L, List[I])]): List[L] = {
+    // group by head element
+    val groups = groupByHead(elemInfos)
+
+    val groupSubtrees =
+      groups map {
+        case (groupInfo, group) => groupInfo match {
+
+          case None => group map (_._1)
+
+          // group with a shared info - wrap into a proof seq and add the info 
+          case Some(info) => {
+            val subTrees = groupChildrenByInfoHeads(group)
+            val seqElem = groupWithInfo(subTrees, info)
+            List(seqElem)
+          }
+        }
+      }
+
+    groupSubtrees.flatten
+  }
+
+  private def groupWithInfo(elems: List[L], info: I): L = ppTree.addInfo(ppTree.seq(elems), info)
+
+
+  private def groupByHead[E, I](elemInfos: Seq[(E, List[I])])
+      : List[(Option[I], List[(E, List[I])])] =
+    // group and also remove empty groups
+    groupByHead0(elemInfos.toList, None, Nil) filterNot { case (_, group) => group.isEmpty }
+
+  private def groupByHead0[E, I](elemInfos: List[(E, List[I])],
+                                 groupHead: Option[I],
+                                 currentGroup: List[(E, List[I])])
+      : List[(Option[I], List[(E, List[I])])] = {
+
+    // need to reverse the group, because it is constructed backwards
+    lazy val groupEntry = (groupHead, currentGroup.reverse)
+
+    elemInfos match {
+
+      case Nil => List(groupEntry)
+
+      case (elem, infos) :: tail => {
+
+        // take the infos tail to use in the group
+        val currentEntry = (elem, if (infos.isEmpty) Nil else infos.tail)
+        val currentHead = infos.headOption
+
+        if (groupHead == currentHead) {
+          // same group - add to the group and continue 
+          groupByHead0(tail, groupHead, currentEntry :: currentGroup)
+        } else {
+          // new group - mark old group and continue recursively with a new group
+          groupEntry :: groupByHead0(tail, currentHead, List(currentEntry))
+        }
+      }
+    }
+  }
+
+
+  private def addInfos(elem: L, infos: List[I]): L = 
+    (infos foldRight elem){ (info, e) => groupWithInfo(List(e), info) }
+
 
 }

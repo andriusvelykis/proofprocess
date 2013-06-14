@@ -358,6 +358,8 @@ class PProcessGraphTest {
     override def parallel = ParCase
     // TODO better solution?
     override def info(elem: PElem): Int = 0
+    // FIXME
+    override def addInfo(elem: PElem, info: Int): PElem = elem
   }
   
   

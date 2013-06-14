@@ -25,6 +25,11 @@ object EmfPProcessTree
 
   override def info(elem: ProofElem): ProofInfo = elem.getInfo
 
+  override def addInfo(elem: ProofElem, info: ProofInfo): ProofElem = {
+    elem.setInfo(addProofInfo(elem.getInfo, info))
+    elem
+  }
+
 
   object ProofEntryTree extends CaseObject[ProofElem, ProofEntry, ProofStep] {
 
@@ -77,6 +82,21 @@ object EmfPProcessTree
 
       case _ => None
     }
+  }
+
+
+  private def addProofInfo(base: ProofInfo, newInfo: ProofInfo): ProofInfo = {
+
+    // TODO merge with base somehow? Or assume that base is not important - 
+    // but where are "inferred features" coming from then?
+    val info = factory.createProofInfo
+
+    info.setIntent(newInfo.getIntent)
+    info.setNarrative(newInfo.getNarrative)
+    info.getInFeatures.addAll(newInfo.getInFeatures)
+    info.getOutFeatures.addAll(newInfo.getOutFeatures)
+
+    info
   }
 
 }

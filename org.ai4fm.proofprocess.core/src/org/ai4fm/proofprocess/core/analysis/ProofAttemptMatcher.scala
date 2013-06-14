@@ -255,10 +255,9 @@ object ProofAttemptMatcher {
     // use extension roots, but replace with originals where mappings are available
     val extendedRoots = extensionGraph.roots map ( root => (extToOriginal.get(root) getOrElse root) )
 
-    // move the proof meta-information from the original
-    val extendedMeta = mapKeys(originalMeta, originalToExt.get)
-
-    toPProcessTree(PPRootGraph(extendedGraph, extendedRoots, extendedMeta))
+    // note that we do not need to move proof meta-information
+    // since the original nodes are used in extended map
+    toPProcessTree(PPRootGraph(extendedGraph, extendedRoots, originalMeta))
   }
 
   private def mapKeys[K, V, L](m: Map[K, V], f: K => Option[L]): Map[L, V] =
