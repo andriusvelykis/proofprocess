@@ -17,7 +17,20 @@ class GoalGraphMatcherTest {
   def goalGraph = GoalGraphMatcher.goalGraph[String, GoalStep, Int](Function.tupled(GoalStep)) _
   
   def inOutGoals = PProcessUtil.toInOutGoalSteps((a: String, i: List[Int], o: List[Int]) => (a, i, o)) _
-  
+
+
+  private def assertGraphEquals[E](rg1: PPRootGraph[E, _], rg2: PPRootGraph[E, _]) = {
+    val PPRootGraph(g1, r1, _) = rg1
+    val PPRootGraph(g2, r2, _) = rg2
+
+    assertEquals(g1, g2)
+    assertEquals(r1, r2)
+  }
+
+  private def ppRootGraph[E](graph: PPGraph[E], roots: PPGraphRoots[E]): PPRootGraph[E, _] =
+    PPRootGraph(graph, roots, Map())
+
+
   @Test
   def singleStep() {
 
@@ -28,7 +41,7 @@ class GoalGraphMatcherTest {
     val g1: PPGraph[GoalStep] = Graph(GoalStep("A", List(1), List()))
     val r1 = List(GoalStep("A", List(1), List()))
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -45,7 +58,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(GoalStep("A", List(1), List(2)) ~> GoalStep("B", List(2), List()))
     val r1 = List(GoalStep("A", List(1), List(2)))
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -63,7 +76,7 @@ class GoalGraphMatcherTest {
     val g1: PPGraph[GoalStep] = Graph(GoalStep("A", List(1), List()), GoalStep("B", List(2), List()))
     val r1 = List(GoalStep("A", List(1), List()), GoalStep("B", List(2), List()))
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -82,7 +95,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> GoalStep("B", List(2), List()), tA ~> GoalStep("C", List(3), List()))
     val r1 = List(tA)
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -106,7 +119,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tB ~> GoalStep("C", List(4), List()), tA ~> tD, tD ~> GoalStep("E", List(5), List()))
     val r1 = List(tA)
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
     
     // also check that the goal order does not matter (e.g. in "B")
     val s2 = inOutGoals(List(1), List(
@@ -117,7 +130,7 @@ class GoalGraphMatcherTest {
       ("E", List())
     ))
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s2))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s2))
   }
   
  /**
@@ -141,7 +154,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tB ~> tD, tA ~> tC, tC ~> tD)
     val r1 = List(tA)
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -165,7 +178,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tC, tB ~> tC)
     val r1 = List(tA, tB)
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -191,7 +204,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tC)
     val r1 = List(tA, tB, tC)
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -214,7 +227,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB)
     val r1 = List(tA, tB)
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -241,7 +254,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tB ~> tD, tC ~> tD)
     val r1 = List(tA, tB, tC)
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -265,7 +278,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tB ~> tC, tA ~> tC)
     val r1 = List(tA)
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   /**
@@ -294,7 +307,7 @@ class GoalGraphMatcherTest {
     val g1 = Graph(tA ~> tB, tA ~> tC, tB ~> tD, tB ~> tE, tC ~> tD, tC ~> tF, tD ~> tE, tE ~> tF)
     val r1 = List(tA)
     
-    assertEquals(PPRootGraph(g1, r1), goalGraph(s1))
+    assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
   
   // Int + Case Class based testing data structures (to avoid creating EMF ones)

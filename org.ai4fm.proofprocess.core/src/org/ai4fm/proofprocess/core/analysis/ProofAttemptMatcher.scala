@@ -8,7 +8,7 @@ import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph
 
 import org.ai4fm.graph.isomorphism.VF2Isomorphism
-import org.ai4fm.proofprocess.{Attempt, Proof, ProofElem, ProofEntry, ProofProcessFactory, ProofStore, Term}
+import org.ai4fm.proofprocess.{Attempt, Proof, ProofElem, ProofEntry, ProofInfo, ProofProcessFactory, ProofStore, Term}
 import org.ai4fm.proofprocess.core.graph.{EmfPProcessTree, PProcessGraph}
 import org.ai4fm.proofprocess.core.graph.PProcessGraph._
 
@@ -93,7 +93,7 @@ object ProofAttemptMatcher {
 
   
   def findCreateAttempt(matcher: ProofEntryMatcher)
-                       (ppGraph: PPRootGraph[ProofEntry], 
+                       (ppGraph: PPRootGraph[ProofEntry, _], 
                         proof: Proof): (Attempt, Map[ProofEntry, ProofEntry]) = {
     
     // analyse attempts in backwards manner and use the last one
@@ -114,8 +114,9 @@ object ProofAttemptMatcher {
       
       // TODO try MCS in the isomorphism mapping; just find the one with the most elements?
       
-      // for now, just add as a new attempt
-      val rootElem = toPProcessTree(ppGraph)
+      // for now, just add as a new attempt - no proof meta-information for a fresh PP tree!
+      val ppGraphCopy: PPRootGraph[ProofEntry, ProofInfo] = ppGraph.copy(meta = Map())
+      val rootElem = toPProcessTree(ppGraphCopy)
       
       val attempt = factory.createAttempt
       attempt.setProof(rootElem)
@@ -128,18 +129,16 @@ object ProofAttemptMatcher {
     }
   }
   
-  def toPProcessTree(ppGraph: PPRootGraph[ProofEntry]): ProofElem =
-    PProcessGraph.toPProcessTree(
-      EmfPProcessTree, EmfPProcessTree.ProofEntryTree(factory.createProofStep))(
-        ppGraph)
+  def toPProcessTree(ppGraph: PPRootGraph[ProofEntry, ProofInfo]): ProofElem =
+    EmfPProcessTree.graphConverter.toPProcessTree(ppGraph)
   
   
   private def matchAttempt(matcher: ProofEntryMatcher)
-                          (ppGraph: PPRootGraph[ProofEntry],
+                          (ppGraph: PPRootGraph[ProofEntry, _],
                            attempt: Attempt): Option[(Attempt, Map[ProofEntry, ProofEntry])] =
     Option(attempt.getProof) flatMap { proofRoot =>
       {
-        val attemptGraph = PProcessGraph.toGraph(EmfPProcessTree)(proofRoot)
+        val attemptGraph = EmfPProcessTree.graphConverter.toGraph(proofRoot)
 
         val attemptMatcher = new AttemptMatcher(matcher)
         attemptMatcher.matchAttempt(ppGraph, attemptGraph, attempt)
@@ -148,12 +147,13 @@ object ProofAttemptMatcher {
 
   private class AttemptMatcher(matcher: ProofEntryMatcher) {
 
-    def matchAttempt(ppGraph: PPRootGraph[ProofEntry],
-                     attemptGraph: PPRootGraph[ProofEntry],
+    def matchAttempt(ppGraph: PPRootGraph[ProofEntry, _],
+                     attemptGraph: PPRootGraph[ProofEntry, ProofInfo],
                      attempt: Attempt): Option[(Attempt, Map[ProofEntry, ProofEntry])] = {
 
-      val PPRootGraph(graph, roots) = ppGraph
-      val PPRootGraph(aGraph, aRoots) = attemptGraph
+      // no additional meta info for PP graph
+      val PPRootGraph(graph, roots, _) = ppGraph
+      val PPRootGraph(aGraph, aRoots, aMeta) = attemptGraph
 
       // for multiple pairs, try matching them together for subgraph isomorphism testing
       val pairs = validRootPairs(aRoots.toSet, roots.toSet)
@@ -173,7 +173,7 @@ object ProofAttemptMatcher {
         val extensionMatch = matchFirstSubGraph(pairs map (_.swap), graph, aGraph)
         
         extensionMatch map { case (mapping, unmapped) => {
-          val extendedRoot = extendAttempt(aGraph, ppGraph, mapping, unmapped)
+          val extendedRoot = extendAttempt(aGraph, aMeta, ppGraph, mapping, unmapped)
           attempt.setProof(extendedRoot)
           
           // add unmapped as identity mapping
@@ -184,7 +184,7 @@ object ProofAttemptMatcher {
       }
       
       // check first if subgraph, otherwise if an extension
-      // note that in both case the same attempt is preserved, just its contents are
+      // note that in both cases the same attempt is preserved, just its contents are
       // updated in the case of extension
       subGraphOfAttempt orElse extensionOfAttempt
     }
@@ -241,7 +241,8 @@ object ProofAttemptMatcher {
   }
 
   private def extendAttempt(originalGraph: PPGraph[ProofEntry],
-                            extensionGraph: PPRootGraph[ProofEntry],
+                            originalMeta: Map[ProofEntry, List[ProofInfo]],
+                            extensionGraph: PPRootGraph[ProofEntry, _],
                             originalToExt: Map[ProofEntry, ProofEntry],
                             unmapped: Set[ProofEntry]): ProofElem = {
 
@@ -254,8 +255,13 @@ object ProofAttemptMatcher {
     // use extension roots, but replace with originals where mappings are available
     val extendedRoots = extensionGraph.roots map ( root => (extToOriginal.get(root) getOrElse root) )
 
-    toPProcessTree(PPRootGraph(extendedGraph, extendedRoots))
+    // note that we do not need to move proof meta-information
+    // since the original nodes are used in extended map
+    toPProcessTree(PPRootGraph(extendedGraph, extendedRoots, originalMeta))
   }
+
+  private def mapKeys[K, V, L](m: Map[K, V], f: K => Option[L]): Map[L, V] =
+    m flatMap { case (k, v) => f(k) map ((_, v)) }
 
   private def extendPPGraph(originalGraph: PPGraph[ProofEntry],
                             extensionGraph: PPGraph[ProofEntry],

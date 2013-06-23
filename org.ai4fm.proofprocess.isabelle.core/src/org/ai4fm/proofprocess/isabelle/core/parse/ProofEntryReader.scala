@@ -1,6 +1,7 @@
 package org.ai4fm.proofprocess.isabelle.core.parse
 
 import scala.collection.JavaConversions._
+import scala.language.existentials
 
 import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph
@@ -96,7 +97,7 @@ trait ProofEntryReader {
 
 
   private def parseProofGraph(initialStep: CommandResults, proofSteps: List[CommandResults])
-      : (PPRootGraph[ProofEntry], ParseEntries) = {
+      : (PPRootGraph[ProofEntry, _], ParseEntries) = {
 
     // create goal steps, which show how input goals are transformed to output goals
     val goalSteps = createGoalSteps(initialStep, proofSteps)
@@ -269,7 +270,7 @@ trait ProofEntryReader {
    * depending on how goals/assumptions change.
    */
   private def stepsToGraph[G <: Eq](steps: List[GoalStep[ProofEntry, G]])
-      : PPRootGraph[ProofEntry] = {
+      : PPRootGraph[ProofEntry, _] = {
 
     // map the possible root nodes to the nearest `proof` command
     // to avoid them hanging from the root, e.g. for assumptions, etc.
@@ -408,4 +409,4 @@ object ProofEntryReader {
 
 case class ParsedProof(proofGoals: List[Term],
                        label: Option[String],
-                       proofGraph: PPRootGraph[ProofEntry])
+                       proofGraph: PPRootGraph[ProofEntry, _])

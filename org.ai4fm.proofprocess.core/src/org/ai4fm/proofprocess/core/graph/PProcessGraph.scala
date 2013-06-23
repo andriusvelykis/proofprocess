@@ -6,107 +6,152 @@ import scalax.collection.GraphPredef._
 import scalax.collection.immutable.Graph
 
 
-/** Utility functions to convert between Scala Graph and ProofProcess tree structure.
-  * 
-  * @author Andrius Velykis
-  */
+/** 
+ * Converter between Scala Graph and ProofProcess tree structure.
+ * 
+ * @author Andrius Velykis
+ */
 object PProcessGraph {
 
   type PPGraph[E] = Graph[E, DiEdge]
   type PPGraphRoots[E] = List[E]
-  
-  case class PPRootGraph[E](graph: PPGraph[E], roots: PPGraphRoots[E])
+ 
+  /**
+   * Encapsulates a ProofProcess graph that can have multiple roots and attached meta-information
+   * for entries.
+   * 
+   * @tparam E  graph entry (node) type
+   * @tparam I  meta-information type
+   */
+  case class PPRootGraph[E, I](graph: PPGraph[E], roots: PPGraphRoots[E], meta: Map[E, List[I]])
   
   object PPRootGraph {
     /** Empty graph */
-    def apply[E]()(implicit entryManifest: Manifest[E]): PPRootGraph[E] = 
-      PPRootGraph(Graph[E, DiEdge](), List())
+    def apply[E, I]()(implicit entryManifest: Manifest[E]): PPRootGraph[E, I] = 
+      PPRootGraph(Graph[E, DiEdge](), List(), Map())
   }
-  
-  
 
-  /** Converts ProofProcess graph represented as tree with the given root element to
-    * a Scala DAG of just the ProofEntry elements, and the list of root entries.
-    *
-    * @return  `(graph, roots)` the pair of created graph and the list of roots to traverse it
-    */
-  def toGraph[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _])
-      (rootElem: Elem)
-      (implicit entryManifest: Manifest[Entry]): PPRootGraph[Entry] = {
+}
+
+
+/**
+ * Provides conversion methods between an proof entry-based Scala graph and a ProofProcess tree
+ * structure.
+ *
+ * @tparam L  the supertype of all proof elements
+ * @tparam E  proof entry type
+ * @tparam S  proof entry sequence type
+ * @tparam P  parallel proof entries type
+ * @tparam I  proof meta-information type
+ *
+ * @param ppTree   the ProofProcess tree element extractors/converters
+ * @param topRoot  a helper method to construct an intermediate artificial root element
+ *                 in case of multiple graph roots
+ *
+ * @author Andrius Velykis
+ */
+class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, P, _, I],
+                                                  topRoot: => E) {
+
+  import PProcessGraph._
+
+  /**
+   * Converts ProofProcess graph represented as tree with the given root element to
+   * a Scala DAG of just the ProofEntry elements, and the list of root entries.
+   *
+   * @param rootElem  the ProofProcess tree represented by its root element
+   *
+   * @return  Graph representation of the given ProofProcess tree, as graph + root nodes.
+   */
+  def toGraph(rootElem: L)(implicit entryManifest: Manifest[E]): PPRootGraph[E, I] = {
     
-    val emptyGraph = PPRootGraph()
+    val emptyGraph = PPRootGraph[E, I]()
 
     // a method that collects the graph with an accumulator (necessary for Seq implementation)
-    def graph0(rootElem: Elem, acc: PPRootGraph[Entry]): PPRootGraph[Entry] = rootElem match {
+    def graph0(rootElem: L,
+               acc: PPRootGraph[E, I],
+               parentMeta: List[I]): PPRootGraph[E, I] = {
 
-      // for proof entry, add it to the graph and connect to all outstanding roots
-      // (this means that this entry step is followed by all outstanding entry steps)
-      // 
-      // normally there should be only a single outstanding root here (or none), but multiple can
-      // happen, e.g., when we have 2 parallels in a row in a sequence: Seq(Entry, Parallel, Parallel, Entry).
-      // This way there should be a merge between parallels, but it is not represented as entry
+      // add this level's meta to the list
+      val elemMeta = ppTree.info(rootElem) :: parentMeta
 
-      // see that we typecast manually here, since the extractors cannot set the subtype correctly.
-      // We perform this pattern matching, then casting
-      case e @ ppTree.entry(_) => {
-        val entry = e.asInstanceOf[Entry]
-        val PPRootGraph(accGraph, accRoots) = acc
+      rootElem match {
 
-        // add the entry to the graph
-        val withEntryEdges = accRoots.foldLeft(accGraph + entry) {
-          // for each root, add an edge from entry to root
-          (accGraph, root) => accGraph + (entry ~> root)
-        }
+        // for proof entry, add it to the graph and connect to all outstanding roots
+        // (this means that this entry step is followed by all outstanding entry steps)
+        // 
+        // normally there should be only a single outstanding root here (or none), but multiple can
+        // happen, e.g., when we have 2 parallels in a row in a sequence: Seq(Entry, Parallel, Parallel, Entry).
+        // This way there should be a merge between parallels, but it is not represented as entry
 
-        // only the entry is a root now
-        PPRootGraph(withEntryEdges, List(entry))
-      }
+        // see that we typecast manually here, since the extractors cannot set the subtype correctly.
+        // We perform this pattern matching, then casting
+        case ppTree.entry(_) => {
+          val entry = rootElem.asInstanceOf[E]
+          val PPRootGraph(accGraph, accRoots, accMeta) = acc
 
-      // for parallel, create subgraphs of each parallel entry,
-      // and then merge these subgraphs and their roots
-      case ppTree.parallel((entries, links)) => {
-
-        // create subgraph based on the accumulated graph
-        val subGraphs = entries map (e => graph0(e, acc))
-
-        val merged = subGraphs.foldRight(emptyGraph) {
-          case (PPRootGraph(subGraph, subRoots), PPRootGraph(foldGraph, foldRoots)) => 
-            PPRootGraph(subGraph ++ foldGraph, subRoots ++ foldRoots)
-        }
-
-        val withLinks =
-          if (!links.isEmpty) {
-            merged.copy(roots = merged.roots ++ links)
+          // add the entry to the graph
+          val withEntryEdges = accRoots.foldLeft(accGraph + entry) {
+            // for each root, add an edge from entry to root
+            (accGraph, root) => accGraph + (entry ~> root)
           }
-          else merged
 
-        withLinks
-      }
+          // only the entry is a root now
+          PPRootGraph(withEntryEdges, List(entry), accMeta + (entry -> elemMeta))
+        }
 
-      // for sequences, just accumulate subgraph from the end, this way elements at the
-      // start are parents/roots to the subsequent elements
-      case ppTree.seq(elems) => elems.foldRight(acc) {
-        (entry, acc) => graph0(entry, acc)
+        // for parallel, create subgraphs of each parallel entry,
+        // and then merge these subgraphs and their roots
+        case ppTree.parallel((entries, links)) => {
+
+          // create subgraph based on the accumulated graph
+          val subGraphs = entries map (e => graph0(e, acc, elemMeta))
+
+          val merged = subGraphs.foldRight(emptyGraph) {
+            case (PPRootGraph(subGraph, subRoots, subMeta),
+                  PPRootGraph(foldGraph, foldRoots, foldMeta)) =>
+              PPRootGraph(subGraph ++ foldGraph, subRoots ++ foldRoots, subMeta ++ foldMeta)
+          }
+
+          val withLinks =
+            if (!links.isEmpty) {
+              merged.copy(roots = merged.roots ++ links)
+            } else merged
+
+          withLinks
+        }
+
+        // for sequences, just accumulate subgraph from the end, this way elements at the
+        // start are parents/roots to the subsequent elements
+        case ppTree.seq(elems) => elems.foldRight(acc) {
+          (entry, acc) => graph0(entry, acc, elemMeta)
+        }
       }
     }
     
     // invoke with empty accumulator and the given root, it will create the graph recursively
-    graph0(rootElem, emptyGraph)
+    graph0(rootElem, emptyGraph, Nil)
   }
-  
-  def toPProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _], topRoot: => Entry)
-      (rootGraph: PPRootGraph[Entry]): Elem = {
-   
-    val PPRootGraph(graph, roots) = rootGraph
+
+
+  /**
+   * Converts ProofProcess graph represented as a Scala graph + roots to a corresponding
+   * ProofProcess tree structure.
+   *
+   * @param rootGraph   the Scala graph representation of ProofProcess data (graph + roots)
+   *
+   * @return  ProofProcess tree representation of the data as the root element of the tree.
+   */
+  def toPProcessTree(rootGraph: PPRootGraph[E, I]): L = {
+
+    val PPRootGraph(graph, roots, meta) = rootGraph
     
     require(!roots.isEmpty)
 
     roots match {
 
       case single :: Nil => // already single root
-        toPProcessTree(ppTree)(graph, single)
+        toPProcessTree(graph, single, meta)
 
       case multiple => {
 
@@ -115,7 +160,7 @@ object PProcessGraph {
         val newRoot = topRoot
         val newGraph = roots.foldRight(graph)((root, accGraph) => accGraph + (newRoot ~> root))
         
-        val tree = toPProcessTree(ppTree)(newGraph, newRoot)
+        val tree = toPProcessTree(newGraph, newRoot, meta)
         
         // the new root will always be the top element in the top sequence
         tree match {
@@ -134,19 +179,36 @@ object PProcessGraph {
     }
     
   }
-  
-  def toPProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem]
-      (ppTree: PProcessTree[Elem, Entry, Seq, Parallel, _])
-      (graph: PPGraph[Entry], root: Entry): Elem = {
-    
-    type MergeMap = Map[Entry, List[Entry]]
+
+
+  /** 
+   * Converts ProofProcess graph represented as a Scala graph + single root to a corresponding
+   * ProofProcess tree structure.
+   *
+   * @param graph   the Scala graph representation of ProofProcess data
+   * @param root    the single root element of the Scala ProofProcess graph
+   * @param meta    meta proof-information for graph entries (entry to its parents)
+   *
+   * @return  ProofProcess tree representation of the data as the root element of the tree.
+   */
+  def toPProcessTree(graph: PPGraph[E], root: E, meta: Map[E, List[I]]): L = {
+    val ppTreeStructure = toPProcessTreeStructure(graph, root)
+    // need to reverse the meta, so that the lowest meta is the last
+    val reverseInfoMeta = meta mapValues (_.reverse)
+    addPProcessTreeMetaInfo(ppTreeStructure, reverseInfoMeta)
+  }
+
+
+  private def toPProcessTreeStructure(graph: PPGraph[E], root: E): L = {
+    // FIXME support meta-information
+    type MergeMap = Map[E, List[E]]
     
     // add the root to the graph to ensure that we can traverse it
     val rootGraph = graph + root
 
     assert(rootGraph.isAcyclic)
     
-    def pullMergeUp(mergeAt: MergeMap, successor: Entry, entry: Entry): MergeMap = {
+    def pullMergeUp(mergeAt: MergeMap, successor: E, entry: E): MergeMap = {
       val succMerges = mergeAt(successor)
       if (!succMerges.isEmpty) {
         mergeAt + (entry -> succMerges)
@@ -155,7 +217,7 @@ object PProcessGraph {
       }
     }
 
-    def toSeq(entry: Elem, following: Elem): Elem = {
+    def toSeq(entry: L, following: L): L = {
       // either prepend to the existing sequence, or create a new one with the entry and the subgraph
       val seq = ppTree.seq
       val entrySeq = (entry, following) match {
@@ -175,7 +237,7 @@ object PProcessGraph {
       entrySeq
     }
     
-    def ensureParallel(elem: Elem): Elem = {
+    def ensureParallel(elem: L): L = {
       // check if the element is already parallel, otherwise wrap it into a parallel
       val par = elem match {
         case ppTree.parallel(_) => elem
@@ -184,14 +246,14 @@ object PProcessGraph {
       par
     }
     
-    def merge(mergeAt: MergeMap, subGraphsInit: Map[Entry, Elem])(
-                entry: Entry, branchRoots: List[Entry]): (Elem, Map[Entry, Elem]) = {
+    def merge(mergeAt: MergeMap, subGraphsInit: Map[E, L])(
+                entry: E, branchRoots: List[E]): (L, Map[E, L]) = {
 
-      type BranchMerges = List[(Entry, List[Entry])]
+      type BranchMerges = List[(E, List[E])]
 
       var _subGraphs = subGraphsInit
 
-      def subGraphs(e: Entry): Option[Elem] = {
+      def subGraphs(e: E): Option[L] = {
         // get and consume - remove from the map
         // this provides a nice depth-first parallel usage, otherwise higher parallel splits
         // re-attach the same branch from lower parallel splits..
@@ -235,7 +297,7 @@ object PProcessGraph {
       //
       // To achieve this, we recursively group the branches by the deepest merge point, and do the merge
       // there, e.g. group B and C on E merge, then group this merged branch with D on G merge.
-      def mergeDeepest(branchMergesDeepestFirst: BranchMerges): Elem = {
+      def mergeDeepest(branchMergesDeepestFirst: BranchMerges): L = {
 
         require(!branchMergesDeepestFirst.isEmpty)
         
@@ -257,7 +319,7 @@ object PProcessGraph {
         val (mergePointBranches, entryBranches) =
           branchMergesDeepestFirst partition { case (root, merges) => mergePoints.contains(root) }
         
-        def groupBranches(branches: BranchMerges): (List[Entry], Map[Entry, BranchMerges]) = {
+        def groupBranches(branches: BranchMerges): (List[E], Map[E, BranchMerges]) = {
           
           // group by the deepest merge point (at the start of the merge list)
           // note that empty branches have been split off already
@@ -292,7 +354,7 @@ object PProcessGraph {
          * Returns the merged element. Note that soft-links are not created for merges, they will
          * be created for outgoing elements in parallels (TODO verify).
          */
-        def mergeGroup(group: BranchMerges, mergePoint: Entry): Elem = {
+        def mergeGroup(group: BranchMerges, mergePoint: E): L = {
 
           // continue recursively for the group (remaining merges)
           val groupElem = mergeDeepest(group)
@@ -358,9 +420,9 @@ object PProcessGraph {
     }
 
     def createSubGraph(mergeAt: MergeMap,
-                       subGraphs: Map[Entry, Elem])(
-                         entry: Entry,
-                         successors: Iterable[Entry]): (Elem, MergeMap, Map[Entry, Elem]) = {
+                       subGraphs: Map[E, L])(
+                         entry: E,
+                         successors: Iterable[E]): (L, MergeMap, Map[E, L]) = {
 
       val succs = successors.toList
       
@@ -409,11 +471,11 @@ object PProcessGraph {
       }
     }
 
-    def handleNode(subGraphs: Map[Entry, Elem],
+    def handleNode(subGraphs: Map[E, L],
                    mergeAt: MergeMap)(
-                     node: Entry,
-                     predecessors: Iterable[Entry],
-                     successors: Iterable[Entry]): (Map[Entry, Elem], MergeMap) = {
+                     node: E,
+                     predecessors: Iterable[E],
+                     successors: Iterable[E]): (Map[E, L], MergeMap) = {
 
       val entry = node
 
@@ -437,7 +499,7 @@ object PProcessGraph {
       (newSubGraphs1, newMergeAt)
     }
     
-    val emptySubGraphs = Map[Entry, Elem]()
+    val emptySubGraphs = Map[E, L]()
     val emptyMergeAt: MergeMap = Map().withDefaultValue(List())
 
     val (subGraphs, mergeAt) = rootGraph.foldNodesRight((emptySubGraphs, emptyMergeAt))({
@@ -454,5 +516,191 @@ object PProcessGraph {
     // this avoids calculating full size of, say, List
     col.take(2).size > 1
   }
+
+
+  private def addPProcessTreeMetaInfo(rootElem: L,
+                                      meta: Map[E, List[I]]): L = {
+    val (infoRoot, parentInfos) = addInfo(meta)(rootElem)
+
+    parentInfos match {
+      case Some(infos) => addInfos(infoRoot, infos)
+      case None => infoRoot
+    }
+  }
+
+  private def addInfo(meta: Map[E, List[I]])(rootElem: L): (L, Option[List[I]]) = rootElem match {
+
+    case ppTree.entry(_) => {
+      val entry = rootElem.asInstanceOf[E]
+
+      val entryInfo = meta.get(entry)
+      entryInfo match {
+
+        // assume that the last element in each meta list is the entry's info
+        case Some(infos) if !infos.isEmpty => {
+          val newEntry = ppTree.addInfo(entry, infos.last)
+          (newEntry, Some(infos.init))
+        }
+
+        // no proof meta-information (also empty list?) is available:
+        // do not add anything and return the entry
+        case _ => (entry, None)
+      }
+    }
+
+    case ppTree.parallel((entries, links)) => {
+      // only add infos to entries (link infos will be added somewhere within)
+
+      val infoEntries = entries map addInfo(meta)
+      val (infoChildren, commonInfos) = addChildrenInfo(infoEntries.toList, true)
+
+      val newParallel = ppTree.parallel((infoChildren.toSet, links))
+      // add the last info to the parallel itself
+
+      // TODO what if the group is actually much higher,
+      // e.g. encompassing the parallel and its siblings?
+      if (commonInfos.isEmpty) {
+        (newParallel, None)
+      } else {
+        (ppTree.addInfo(newParallel, commonInfos.last), Some(commonInfos.init))
+      }
+    }
+
+    case ppTree.seq(elems) => {
+      val infoElems = elems map addInfo(meta)
+      val (infoChildren, commonInfos) = addChildrenInfo(infoElems, false)
+
+      val newSeq = ppTree.seq(infoChildren)
+      if (commonInfos.isEmpty) {
+        (newSeq, None)
+      } else {
+        (ppTree.addInfo(newSeq, commonInfos.last), Some(commonInfos.init))
+      }
+    }
+  }
+
+
+  private def addChildrenInfo(elemInfos0: List[(L, Option[List[I]])],
+                              branchChildren: Boolean): (List[L], List[I]) = {
+    val elemInfos = flattenInfos(elemInfos0)
+
+    val parentInfos = longestCommonPrefixAll(elemInfos.view map (_._2))
+
+    val childInfos =
+      if (parentInfos.isEmpty) elemInfos
+      else {
+        // remove common parents from children infos
+        val parentLength = parentInfos.size
+        elemInfos map { case (e, infos) => (e, infos.drop(parentLength)) }
+      }
+
+    val childrenGroups =
+      if (!branchChildren) {
+        groupChildrenByInfoHeads(childInfos)
+      } else {
+        // do not group - just wrap the element into infos
+        // (this is needed for parallels)
+        childInfos map { case (elem, infos) => addInfos(elem, infos) }
+      }
+
+    (childrenGroups, parentInfos)
+  }
+
+  private def flattenInfos[E, I](elemInfos: List[(E, Option[List[I]])])
+      : List[(E, List[I])] = {
+    val (elems, infos) = elemInfos.unzip
+    val flatInfos = flattenPrev(infos, Nil)
+    elems zip flatInfos
+  }
+
+  /**
+   * Flattens the sequence by using previous non-empty value to replace empty values.
+   * Uses the given initial value if the first element is empty.
+   */
+  private def flattenPrev[A, B](seq: Seq[Option[B]], initial: => B): Seq[B] =
+    if (seq.isEmpty) {
+      Nil
+    } else {
+      // resolve the new head with the given initial value if not available and
+      // accumulate the results based on previous element calculation
+      val newHead = seq.head getOrElse initial
+      (seq.tail scanLeft newHead) { (prev, value) => value getOrElse prev }
+    }
+
+
+  private def longestCommonPrefixAll[A](lists: Seq[List[A]]): List[A] =
+    lists reduceLeft longestCommonPrefix
+
+  private def longestCommonPrefix[A](l1: List[A], l2: List[A]): List[A] = {
+    l1 match {
+      case Nil => Nil
+      case x :: xs => if (l2 != Nil && l2.head == x) x :: longestCommonPrefix(xs, l2.tail) else Nil
+    }
+  }
+
+
+  private def groupChildrenByInfoHeads(elemInfos: List[(L, List[I])]): List[L] = {
+    // group by head element
+    val groups = groupByHead(elemInfos)
+
+    val groupSubtrees =
+      groups map {
+        case (groupInfo, group) => groupInfo match {
+
+          case None => group map (_._1)
+
+          // group with a shared info - wrap into a proof seq and add the info 
+          case Some(info) => {
+            val subTrees = groupChildrenByInfoHeads(group)
+            val seqElem = groupWithInfo(subTrees, info)
+            List(seqElem)
+          }
+        }
+      }
+
+    groupSubtrees.flatten
+  }
+
+  private def groupWithInfo(elems: List[L], info: I): L = ppTree.addInfo(ppTree.seq(elems), info)
+
+
+  private def groupByHead[E, I](elemInfos: Seq[(E, List[I])])
+      : List[(Option[I], List[(E, List[I])])] =
+    // group and also remove empty groups
+    groupByHead0(elemInfos.toList, None, Nil) filterNot { case (_, group) => group.isEmpty }
+
+  private def groupByHead0[E, I](elemInfos: List[(E, List[I])],
+                                 groupHead: Option[I],
+                                 currentGroup: List[(E, List[I])])
+      : List[(Option[I], List[(E, List[I])])] = {
+
+    // need to reverse the group, because it is constructed backwards
+    lazy val groupEntry = (groupHead, currentGroup.reverse)
+
+    elemInfos match {
+
+      case Nil => List(groupEntry)
+
+      case (elem, infos) :: tail => {
+
+        // take the infos tail to use in the group
+        val currentEntry = (elem, if (infos.isEmpty) Nil else infos.tail)
+        val currentHead = infos.headOption
+
+        if (groupHead == currentHead) {
+          // same group - add to the group and continue 
+          groupByHead0(tail, groupHead, currentEntry :: currentGroup)
+        } else {
+          // new group - mark old group and continue recursively with a new group
+          groupEntry :: groupByHead0(tail, currentHead, List(currentEntry))
+        }
+      }
+    }
+  }
+
+
+  private def addInfos(elem: L, infos: List[I]): L = 
+    (infos foldRight elem){ (info, e) => groupWithInfo(List(e), info) }
+
 
 }

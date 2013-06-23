@@ -31,17 +31,17 @@ object GoalGraphMatcher {
    * Creates a graph of proof nodes (provided by function `node`) from a linear proof step
    * structure (step + in/out goals).
    * 
-   * Every proof step can consume some subset of its parent's (or even futher parent's) goals. This
-   * is then recorded as a link between the parent step and the proof step. If the parent has more
-   * outgoing goals than the child has incoming, we get a parallel split (multiple children for a
-   * node). If the child has more incoming goals than the parent has outgoing, we have a merge
-   * point: multiple parents to one child.
+   * Every proof step can consume some subset of its parent's (or even further parent's) goals.
+   * This is then recorded as a link between the parent step and the proof step. If the parent has
+   * more outgoing goals than the child has incoming, we get a parallel split (multiple children
+   * for a node). If the child has more incoming goals than the parent has outgoing, we have a
+   * merge point: multiple parents to one child.
    * 
    * Note: Need to ensure that goal type T can be matched with ==
    */
   def goalGraph[A, N, T](node: GoalStep[A, T] => N)
                         (proofSteps: List[GoalStep[A, T]])
-                        (implicit nodeManifest: Manifest[N]): PPRootGraph[N] = {
+                        (implicit nodeManifest: Manifest[N]): PPRootGraph[N, _] = {
     
     // now go through the proof steps from the start
     // and link each proof step with its calculated parent (based on their goals) into a graph
@@ -49,7 +49,7 @@ object GoalGraphMatcher {
     val LinkContext(graph, roots, _) = (proofSteps foldLeft emptyContext)(linkStep(node) _)
     
     // reverse the roots, since branches are constructed with prepend
-    PPRootGraph(graph, roots.reverse)
+    PPRootGraph(graph, roots.reverse, Map())
   }
 
   private def linkStep[A, N, T](node: GoalStep[A, T] => N)
