@@ -621,10 +621,10 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
     if (seq.isEmpty) {
       Nil
     } else {
+      // resolve the new head with the given initial value if not available and
+      // accumulate the results based on previous element calculation
       val newHead = seq.head getOrElse initial
-      val tail = (seq.tail scanLeft newHead) { (prev, value) => value getOrElse prev }
-
-      newHead +: tail
+      (seq.tail scanLeft newHead) { (prev, value) => value getOrElse prev }
     }
 
 
