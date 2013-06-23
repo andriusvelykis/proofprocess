@@ -539,7 +539,7 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
         // assume that the last element in each meta list is the entry's info
         case Some(infos) if !infos.isEmpty => {
           val newEntry = ppTree.addInfo(entry, infos.last)
-          (newEntry, Some(infos))
+          (newEntry, Some(infos.init))
         }
 
         // no proof meta-information (also empty list?) is available:
