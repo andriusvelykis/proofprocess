@@ -2,24 +2,38 @@ package org.ai4fm.proofprocess.ui.graph
 
 import scala.collection.JavaConversions._
 
-import org.ai4fm.proofprocess.Attempt
-import org.ai4fm.proofprocess.Proof
-import org.ai4fm.proofprocess.ProofElem
-import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.ProofParallel
-import org.ai4fm.proofprocess.ProofSeq
-import org.ai4fm.proofprocess.ProofStore
+import org.ai4fm.proofprocess.{Attempt, Proof, ProofElem, ProofEntry, ProofParallel, ProofSeq, ProofStore}
+import org.ai4fm.proofprocess.core.graph.EmfPProcessTree
+
 import org.eclipse.emf.ecore.EObject
 
-/** Calculates ProofProcess graph structure for different elements.
-  * 
-  * The graph is represented as a map of elements to their children.
-  * 
-  * @author Andrius Velykis
-  */
+/**
+ * Calculates ProofProcess graph structure for different elements.
+ *
+ * The graph is represented as a map of elements to their children.
+ *
+ * @author Andrius Velykis
+ */
 object PProcessGraph {
 
-  def proofTreeGraph(elem: ProofElem): Map[ProofElem, List[ProofElem]] = {
+  def proofTreeGraph(elem: ProofElem): Map[ProofElem, List[ProofElem]] =
+    proofTreeGraphEntries(elem)
+
+  /**
+   * Creates a graph based on the actual links between ProofEntry elements.
+   */
+  def proofTreeGraphEntries(elem: ProofElem): Map[ProofElem, List[ProofElem]] = {
+    val ppGraph = EmfPProcessTree.graphConverter.toGraph(elem)
+    val graph = ppGraph.graph
+    val nodes = graph.nodes
+    (nodes foldLeft Map[ProofElem, List[ProofElem]]())((m, n) =>
+      m + (n.value -> (n.diSuccessors.toList map (_.value))))
+  }
+
+  /**
+   * Creates a graph based on PP EMF tree element decomposition.
+   */
+  def proofTreeGraphEMF(elem: ProofElem): Map[ProofElem, List[ProofElem]] = {
 
     val emptyGraph = Map[ProofElem, List[ProofElem]]()
     

@@ -33,5 +33,8 @@ Import-Package: scala;version="2.10.0",
  scala.collection.mutable;version="2.10.0",
  scala.reflect;version="2.10.0",
  scala.runtime;version="2.10.0",
- scala.util;version="2.10.0"
+ scala.util;version="2.10.0",
+ scalax.collection;version="1.6.1",
+ scalax.collection.generic;version="1.6.1",
+ scalax.collection.immutable;version="1.6.1"
 Export-Package: org.ai4fm.proofprocess.ui
