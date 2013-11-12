@@ -642,7 +642,8 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
 
 
   private def longestCommonPrefixAll[A](lists: Seq[List[A]]): List[A] =
-    lists reduceLeft longestCommonPrefix
+    if (lists.isEmpty) Nil
+    else lists reduceLeft longestCommonPrefix
 
   private def longestCommonPrefix[A](l1: List[A], l2: List[A]): List[A] = {
     l1 match {
