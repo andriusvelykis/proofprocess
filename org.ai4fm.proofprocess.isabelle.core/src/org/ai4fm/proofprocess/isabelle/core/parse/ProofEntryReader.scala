@@ -145,6 +145,21 @@ trait ProofEntryReader {
 //      // will be captured in the next State.
 //      case (_, Chain) => None
 
+      case (Prove, State) => {
+        // Prove -> State (the `proof` command)
+        
+        // Rather than diffing the goals, just assume that everything has changed
+        // (even though in the case of `proof -` nothing changes).
+        // This is needed because `proof` change affects all outstanding goals and this should
+        // be a merge point.
+        // There still is the issue of possibly recording an empty step as "change all" step.
+        // TODO: address the empty steps somehow and record diffs..
+        GoalStep(current,
+          diffInAssms(prev, current) ::: (prev.outGoalProps getOrElse Nil),
+          current.outAssmProps ::: (current.outGoalProps getOrElse Nil))
+
+      }
+
       case (Prove, _) => {
         // Two consecutive Prove steps, so check for goal diffs
         //
