@@ -245,6 +245,19 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
       }
       par
     }
+
+    /**
+     * Flatten parallel upon creation - lifts all given parallel entries 
+     */
+    def createParallel(entries: Set[L], softLinks: Set[E]): L = {
+      val (flatEntries, flatLinks) = (entries map flattenParallel).unzip
+      ppTree.parallel(flatEntries.flatten, flatLinks.flatten ++ softLinks)
+    }
+
+    def flattenParallel(elem: L): (Set[L], Set[E]) = elem match {
+      case ppTree.parallel(entries, links) => (entries, links)
+      case _ => (Set(elem), Set())
+    }
     
     def merge(mergeAt: MergeMap, subGraphsInit: Map[E, L])(
                 entry: E, branchRoots: List[E]): (L, Map[E, L]) = {
@@ -405,7 +418,7 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
           // multiple branches, group into parallel
           // this also handles the case of direct merges
           // also create a parallel if there are soft links
-          ppTree.parallel(branches, softLinks)
+          createParallel(branches, softLinks)
         } else {
           // single branch - return itself
           branches.head
