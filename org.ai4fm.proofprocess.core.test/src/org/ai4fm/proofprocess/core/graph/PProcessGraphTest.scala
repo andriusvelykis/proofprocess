@@ -17,6 +17,16 @@ import org.junit.Test
   */
 class PProcessGraphTest {
 
+  val intPPTree = new PProcessTree[PElem, Entry, Seq, Par, Int, Int] {
+    override def entry = EntryCase
+    override def seq = SeqCase
+    override def parallel = ParCase
+    // TODO better solution?
+    override def info(elem: PElem): Int = 0
+    // FIXME
+    override def addInfo(elem: PElem, info: Int): PElem = elem
+  }
+
   private val graphConverter = new PProcessGraph(intPPTree, Entry(0))
   
   def toPProcessTree(g: PPGraph[Entry], rs: PPGraphRoots[Entry]) = 
@@ -350,16 +360,6 @@ class PProcessGraphTest {
       val (entries, links) = elems
       Par(entries, links)
     }
-  }
-  
-  val intPPTree = new PProcessTree[PElem, Entry, Seq, Par, Int, Int] {
-    override def entry = EntryCase
-    override def seq = SeqCase
-    override def parallel = ParCase
-    // TODO better solution?
-    override def info(elem: PElem): Int = 0
-    // FIXME
-    override def addInfo(elem: PElem, info: Int): PElem = elem
   }
   
   
