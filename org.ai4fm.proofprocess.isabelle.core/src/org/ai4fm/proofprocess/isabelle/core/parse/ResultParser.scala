@@ -27,7 +27,7 @@ object ResultParser {
 
   private val SHOW_COMMANDS = Set("show", "thus")
 
-  private val HAVE_COMMANDS = Set("have", "hence")
+  private val HAVE_COMMANDS = Set("have", "hence", "obtain")
 
   /**
    * Parses command results, such as assumptions, goals, proof type from the command state.

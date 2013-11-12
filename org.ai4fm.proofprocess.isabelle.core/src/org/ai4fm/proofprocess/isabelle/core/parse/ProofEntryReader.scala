@@ -28,6 +28,7 @@ import isabelle.Command
   */
 trait ProofEntryReader {
 
+  private type GoalStepP = GoalStep[CommandResults, EqTerm]
   private type GoalStepT = GoalStep[Command.State, EqTerm]
 
   import ProofEntryReader.ParseEntries
@@ -120,30 +121,23 @@ trait ProofEntryReader {
 
     // drop all Chain steps - they are not required in the analysis..
     val noChainSteps = proofSteps filter (_.stateType != Chain)
+    val outSteps = noChainSteps
 
     // make a list with ingoals-info-outgoals steps
-    val inSteps = initialStep :: noChainSteps
-    val inOutSteps = inSteps zip noChainSteps
+    val inSteps = initialStep :: outSteps
+    val inOutSteps = inSteps zip outSteps
 
     // now try to to make sense of a GoalStep from the before-after results
-    val goalSteps = inOutSteps map Function.tupled(analyseGoalStep0)
+    val goalSteps = inOutSteps map Function.tupled(analyseGoalStep)
 
-    // flatten - some of the goals may have been skipped
-    // (e.g. "done" or "qed" in structured proof)
-    goalSteps.flatten
+    val goalSteps2 = adaptForStructProof(goalSteps)
+
+    goalSteps2 map (s => s.copy(info = s.info.state))
   }
 
-  private def analyseGoalStep0(prev: CommandResults,
-                               current: CommandResults): Option[GoalStepT] = {
-
-    val goalStepOpt = analyseGoalStep(prev, current)
-
-    // if possible, adapt for have/show commands
-    goalStepOpt flatMap (adaptForHaveShow(_, current))
-  }
 
   // FIXME special support for fixing!
-  private def analyseGoalStep(prev: CommandResults, current: CommandResults): Option[GoalStepT] =
+  private def analyseGoalStep(prev: CommandResults, current: CommandResults): GoalStepP =
     (prev.stateType, current.stateType) match {
 
 //      // Skip Chain steps, since they are just links between assumptions and their use.
@@ -165,9 +159,9 @@ trait ProofEntryReader {
         // also diff `in` assumptions,
         // e.g. in `using` case assumptions may be added to the previous one
         // TODO narrow the changed goals further?
-        Some(GoalStep(current.state,
+        GoalStep(current,
           diffInAssms(prev, current) ::: changedIn,
-          current.outAssmProps ::: changedOut))
+          current.outAssmProps ::: changedOut)
 
       }
 
@@ -179,10 +173,10 @@ trait ProofEntryReader {
         val out = if (!current.outAssmProps.isEmpty) current.outAssmProps
         else current.outGoalProps getOrElse Nil
 
-        Some(GoalStep(current.state,
+        GoalStep(current,
           // TODO review: no "in" goals - previous was a state?
           diffInAssms(prev, current),
-          out))
+          out)
       }
     }
 
@@ -195,39 +189,54 @@ trait ProofEntryReader {
 
   /**
    * Additional analysis checks to accommodate have/show commands in structured proof:
-   * 
+   *
    * -  Final steps of such have/show proof are dropped if possible
    * -  "have ..." commands also introduce the assumption, not just an outstanding goal
    *    (note that this assumption technically is not available for the `have` proof itself)
    */
-  private def adaptForHaveShow(goalStep: GoalStepT, current: CommandResults): Option[GoalStepT] =
-    if (current.structFinish.isDefined) {
-      // if this is a "structured proof finish step", i.e. the step that completes
-      // a "have ..." or "show ...", drop it (or clear its out-goals)
+  private def adaptForStructProof(goalSteps: List[GoalStepP]): List[GoalStepP] =
+    adaptForStructProof0(goalSteps)._1
 
-      if (ResultParser.isByCmd(current.state)) {
-        // keep the by cmd analysis.. but remove all out-results
-        val updStep = goalStep.copy(out = Nil)
-        Some(updStep)
+  private def adaptForStructProof0(goalSteps: List[GoalStepP])
+      : (List[GoalStepP], List[Assumption[EqTerm]]) = goalSteps match {
+    case Nil => (Nil, Nil)
+    case step :: steps => {
+      // go backwards through the proof
+      val (updSteps, unclaimedAssms) = adaptForStructProof0(steps)
+
+      if (step.info.structFinish.isDefined) {
+        // if this is a "structured proof finish step", i.e. the step that completes
+        // a "have ..." or "show ...", drop it (or clear its out-goals)
+        //
+        // Also, record the out-assumptions as unclaimed for some "have ..." step
+        // declared before
+        val provedAssms = step.info.outAssmProps
+
+        val allUpdSteps = if (ResultParser.isByCmd(step.info.state)) {
+          // keep the by cmd analysis.. but remove all out-results
+          val updStep = step.copy(out = Nil)
+          updStep :: updSteps
+        } else {
+          // drop the struct finish command (normally either "done" or "qed")
+          updSteps
+        }
+
+        (allUpdSteps, provedAssms)
+
+      } else if (ResultParser.isHaveCmd(step.info.state) && !unclaimedAssms.isEmpty) {
+        // for "have ..." commands, use the unclaimed assumptions as output,
+        // as the command introduces new assumptions proved via "by", "done" or "qed" later.
+        // (also consume the unclaimed assumptions)
+
+        val updStep = step.copy(out = unclaimedAssms ::: step.out)
+        (updStep :: updSteps, Nil)
+
       } else {
-        // drop the struct finish command (normally either "done" or "qed")
-        // but keep the updated stack
-        None
+        // nothing else to adapt
+        (step :: updSteps, unclaimedAssms)
       }
-
-    } else if (ResultParser.isHaveCmd(current.state)) {
-      // for "have ..." commands, the goal also becomes an out-assumption
-      // (it introduces new assumptions)
-
-      // wrap each out-goal into an Assumption and add to the goal step output
-      val goalsAsAssms = current.outGoals map (goals => goals map (Assumption(_))) getOrElse Nil
-      val updStep = goalStep.copy(out = goalsAsAssms ::: goalStep.out)
-      Some(updStep)
-
-    } else {
-      // nothing else to adapt
-      Some(goalStep)
     }
+  }
 
 
   private def diffs[A](l1: Option[List[A]], l2: Option[List[A]]): (List[A], List[A], List[A]) =
