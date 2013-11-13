@@ -53,7 +53,8 @@
     </genClasses>
     <genClasses ecoreClass="ProofProcess.ecore#//ProofParallel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofParallel/entries"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofParallel/links"/>
+      <genFeatures notify="false" children="true" createChild="false" propertySortChoices="true"
+          ecoreFeature="ecore:EReference ProofProcess.ecore#//ProofParallel/links"/>
     </genClasses>
     <genClasses ecoreClass="ProofProcess.ecore#//Attempt">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ProofProcess.ecore#//Attempt/proof"/>

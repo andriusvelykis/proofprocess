@@ -103,6 +103,7 @@ public class ProofParallelItemProvider
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES);
+			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_PARALLEL__LINKS);
 		}
 		return childrenFeatures;
 	}
