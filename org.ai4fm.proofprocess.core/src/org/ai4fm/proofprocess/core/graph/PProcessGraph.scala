@@ -104,19 +104,27 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
         // and then merge these subgraphs and their roots
         case ppTree.parallel((entries, links)) => {
 
-          // create subgraph based on the accumulated graph
-          val subGraphs = entries map (e => graph0(e, acc, elemMeta))
+          // if no entries are available, preserve the accumulated roots,
+          // since they are not consumed
+          val parallelGraph =
+            if (entries.isEmpty) acc
+            else {
+              // create subgraph based on the accumulated graph and merge them
+              val subGraphs = entries map (e => graph0(e, acc, elemMeta))
 
-          val merged = subGraphs.foldRight(emptyGraph) {
-            case (PPRootGraph(subGraph, subRoots, subMeta),
+              val merged = subGraphs.foldRight(emptyGraph) {
+                case (PPRootGraph(subGraph, subRoots, subMeta),
                   PPRootGraph(foldGraph, foldRoots, foldMeta)) =>
-              PPRootGraph(subGraph ++ foldGraph, subRoots ++ foldRoots, subMeta ++ foldMeta)
-          }
+                  PPRootGraph(subGraph ++ foldGraph, subRoots ++ foldRoots, subMeta ++ foldMeta)
+              }
+
+              merged
+            }
 
           val withLinks =
             if (!links.isEmpty) {
-              merged.copy(roots = merged.roots ++ links)
-            } else merged
+              parallelGraph.copy(roots = parallelGraph.roots ++ links)
+            } else parallelGraph
 
           withLinks
         }
