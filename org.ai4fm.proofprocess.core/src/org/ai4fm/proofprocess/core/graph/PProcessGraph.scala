@@ -214,6 +214,8 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
     // add the root to the graph to ensure that we can traverse it
     val rootGraph = graph + root
 
+    type GNode = rootGraph.InnerNodeLike
+
     assert(rootGraph.isAcyclic)
     
     def pullMergeUp(mergeAt: MergeMap, successor: E, entry: E): MergeMap = {
@@ -266,7 +268,59 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
       case ppTree.parallel(entries, links) => (entries, links)
       case _ => (Set(elem), Set())
     }
-    
+
+
+    /**
+     * Checks if the given entry can be merged.
+     *
+     * Merging can only be done if there are no branches going outside the merge "bubble"
+     * (i.e. there can be merges within). This is checked by collecting all parents
+     */
+    def canMerge(entry: E): Boolean = {
+
+      val eNode = rootGraph get entry
+
+      val directParents = eNode.diPredecessors.toSet
+      if (!isMulti(directParents)) false
+      else {
+        // find all parents of each branch, then take their intersection:
+        // this will give all parents accessible via all parent branches of the node,
+        // i.e. the possible merge roots (parallel splits that can be merged at node)
+        val eachBranchParents = directParents map { p => allPredecessors(Set(p)) }
+        val possibleMergeRoots = eachBranchParents reduceLeft { (s1, s2) => s1 intersect s2 }
+        val allParents = eachBranchParents reduceLeft { (s1, s2) => s1 union s2 }
+
+        // TODO optimise to avoid running through the same sub-graphs
+        possibleMergeRoots exists { r => canMergeRoot(r, eNode, allParents) }
+      }
+    }
+
+    def allPredecessors(toVisit: Set[GNode], acc: Set[GNode] = Set()): Set[GNode] =
+      if (toVisit.isEmpty) acc
+      else {
+        val e = toVisit.head
+        val newParents = e.diPredecessors.toSet -- acc
+        val newVisit = (toVisit ++ newParents) - e
+        allPredecessors(newVisit, acc + e)
+      }
+
+
+    def canMergeRoot(root: GNode, mergePoint: GNode, mergeParents: Set[GNode]): Boolean = {
+      // root is allowed to have non-parent branches, but all its "merge parent" successors - not
+      val checkBranches = root.diSuccessors.toSet intersect mergeParents
+      checkBranches forall { child => canMergeSuccs(child, mergePoint, mergeParents) }
+    }
+
+    def canMergeSuccs(n: GNode, mergePoint: GNode, mergeParents: Set[GNode]): Boolean =
+      if (n == mergePoint) {
+        true
+      } else if (mergeParents.contains(n)) {
+        n.diSuccessors forall { child => canMergeSuccs(child, mergePoint, mergeParents) }
+      } else {
+        false
+      }
+
+
     def merge(mergeAt: MergeMap, subGraphsInit: Map[E, L])(
                 entry: E, branchRoots: List[E]): (L, Map[E, L]) = {
 
@@ -382,10 +436,10 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
 
           val directMergeGroupElem =
             if (mergePointBranches.exists(_._1 == mergePoint)) {
-              // ensure the group element is wrapped into a parallel,
-              // so for direct merge with additional normal branch, it will wrap that branch
-              // into a parallel by itself
-              ensureParallel(groupElem)
+              // create a parallel with the merge point as soft link
+              // to record the merge-point branch. This will become a single-branch parallel
+              // with additional soft link.
+              createParallel(Set(groupElem), Set(mergePoint))
             } else {
               groupElem
             }
@@ -464,7 +518,19 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
           case single :: Nil => {
             // sequence:
             // either prepend to the existing sequence, or create a new one with the entry and the subgraph
-            val entrySeq = toSeq(entry, subGraphs(single))
+
+            val follow = subGraphs.get(single) match {
+              case Some(subGraph) => subGraph
+
+              case None => {
+                // no subgraph available - it has already been consumed
+                // in this case, add an empty parallel following the entry with soft link
+                // to the consumed successor
+                ppTree.parallel(Set(), Set(single))
+              }
+            }
+            
+            val entrySeq = toSeq(entry, follow)
 
             // consume the subgraph
             val subGraphs1 = subGraphs - single 
@@ -500,9 +566,9 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
 
       val entry = node
 
-      val isMerge = isMulti(predecessors)
+      val isMerge = isMulti(predecessors) && canMerge(entry)
       val predMergeAt = if (isMerge) {
-        // more than one predecessor - this is a merge point
+        // more than one predecessor and a valid branching structure - this is a merge point
         val entryMerges = mergeAt(entry)
         val mergeQueue = entry :: entryMerges
         predecessors.foldLeft(mergeAt) {

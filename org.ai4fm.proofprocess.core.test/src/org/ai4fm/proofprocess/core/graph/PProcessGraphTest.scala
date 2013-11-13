@@ -145,15 +145,20 @@ class PProcessGraphTest {
   
   @Test
   def branchMergedTwiceInParallelFailing() {
-    
-    try {
-      // cannot convert because e3 has two merges below it (with e4 and e6)
-      toPProcessTree(m3, r1)
-    } catch {
-      case e: IllegalArgumentException => {
-        // expected exception - do nothing! 
-      }
-    }
+    val s3 = Seq(List(1, 
+                      Par(Set(Seq(List(2,
+                                       Par(Set(),
+                                           Set(4)))),
+                              Seq(List(5,
+                                       Par(Set(),
+                                           Set(6)))),
+                              Seq(List(3,
+                                       Par(Set(4,
+                                               6)),
+                                       7))))))
+    val p3 = toPProcessTree(m3, r1)
+    assertEquals(s3, p3)
+    assertGraphEquals(ppRootGraph(m3, r1), toGraph(p3))
   }
   
   val m4 = Graph(e(1) ~> e(2), e(2) ~> e(3))
@@ -161,8 +166,10 @@ class PProcessGraphTest {
   @Test
   def lowRootMerge() {
     // note no root element for multiple roots: starts with a parallel
+    // also note the soft link `-> 3` at root to indicate multi-root
     val s4 = Seq(List(Par(Set(Seq(List(1, 
-                                       2)))), 
+                                       2))),
+                          Set(3)), 
                       3))
     val rDouble = List(e(1), e(3))
     val p4 = toPProcessTree(m4, rDouble)
@@ -170,7 +177,7 @@ class PProcessGraphTest {
     // note that the root e3 gets dropped when converting to graph
     // since we cannot determine whether the parallel is exhaustive,
     // or whether a direct merge is necessary
-    assertGraphEquals(ppRootGraph(m4, List(e(1))), toGraph(p4))
+    assertGraphEquals(ppRootGraph(m4, rDouble), toGraph(p4))
   }
   
   /** One of the branches does not have any steps in it (1 -> 3). This is represented as a
@@ -181,21 +188,19 @@ class PProcessGraphTest {
     *  \ /
     *   3
     * 
-    * This is a similar example to `m4`, but with a single explicit root
+    * This is a similar example to `m4`, but with a single explicit root.
+    * The link 1 -> 3 is recorded as a soft link.
     */
   val m5 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(1) ~> e(3))
   
   @Test
   def directMerge() {
     val s5 = Seq(List(1,
-                      Par(Set(2)), 
+                      Par(Set(2), Set(3)), 
                       3))
     val p5 = toPProcessTree(m5, r1)
     assertEquals(s5, p5)
-    // note that the link 1->3 gets dropped when converting to graph
-    // since we cannot determine whether the parallel is exhaustive,
-    // or whether a direct merge is necessary
-    assertGraphEquals(ppRootGraph(m5 - (e(1) ~> e(3)), r1), toGraph(p5))
+    assertGraphEquals(ppRootGraph(m5, r1), toGraph(p5))
   }
   
   /** Double merge of branches with no steps in them (1 -> 3 and 1 -> 4). This is represented as a
@@ -215,13 +220,15 @@ class PProcessGraphTest {
   @Test
   def directMerge2() {
     val s6 = Seq(List(1, 
-                      Par(Set(Seq(List(Par(Set(2)), 
-                                       3)))),
+                      Par(Set(Seq(List(Par(Set(2),
+                                           Set(3)), 
+                                       3))),
+                          Set(4)),
                       4))
     val p6 = toPProcessTree(m6, r1)
     assertEquals(s6, p6)
     // note that both links 1->3 and 1->4 get dropped when converting to graph
-    assertGraphEquals(ppRootGraph(m6 - (e(1) ~> e(3), e(1) ~> e(4)), r1), toGraph(p6))
+    assertGraphEquals(ppRootGraph(m6, r1), toGraph(p6))
   }
   
   /**
@@ -233,10 +240,6 @@ class PProcessGraphTest {
    *  | 4
    *  |/
    *  5
-   * 
-   * When converting to ProofProcess tree, we get a nice split+merge with 1, 2, 3, 4. Then,
-   * however, this branch is merged at 2 points into 5, which is lost - we assume there is
-   * only one link, thus adding 5 sequentially. Link 2->5 is lost when converting back to a graph.
    */
   val m7 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(2) ~> e(5), 
                  e(3) ~> e(4), e(4) ~> e(5))
@@ -244,15 +247,28 @@ class PProcessGraphTest {
   @Test
   def complexMerge1() {
     val s7 = Seq(List(1, 
-                      Par(Set(3,
-                                       2)),
-                      4,
+                      Par(Set(Seq(List(3,
+                                       4)),
+                              Seq(List(2,
+                                       Par(Set(), Set(4)))))),
                       5))
+
+    // The actual conversion to PPTree currently prefers smaller merges (need to add better layout)
+    val actual7 = Seq(List(1,
+                           Par(Set(Seq(List(3,
+                                            Par(Set(),
+                                                Set(4)))), 
+                                   Seq(List(2,
+                                            Par(Set(4),
+                                                Set(5)), 
+                                       5))))))
     
     val p7 = toPProcessTree(m7, r1)
-    assertEquals(s7, p7)
-    assertGraphEquals(ppRootGraph(m7 - (e(2) ~> e(5)), r1), toGraph(p7))
+    assertEquals(actual7, p7)
+    assertGraphEquals(ppRootGraph(m7, r1), toGraph(p7))
+    assertGraphEquals(ppRootGraph(m7, r1), toGraph(s7))
   }
+
   
   /**
    * A further complex triple-merge extending m7:
@@ -265,24 +281,31 @@ class PProcessGraphTest {
    *  5   |
    *   \ /
    *    6 
-   * 
-   * Just like with m7, we lose the double merges (now also at point 6) when converting to
-   * ProofProcess tree.
    */
   val m8 = m7 + (e(3) ~> e(6), e(5) ~> e(6))
   
   @Test
   def complexMerge2() {
-    val s8 = Seq(List(1, 
-                      Par(Set(3,
-                              2)),
-                      4,
-                      5,
-                      6))
+//    val s8 = Seq(List(1, 
+//                      Par(Set(3,
+//                              2)),
+//                      4,
+//                      5,
+//                      6))
+
+    val actual8 = Seq(List(1,
+                           Par(Set(Seq(List(2,
+                                            Par(Set(),
+                                                Set(4, 5)))),
+                                   Seq(List(3,
+                                            Par(Set(Seq(List(4,
+                                                             5))),
+                                                Set(6)),
+                                            6))))))
 
     val p8 = toPProcessTree(m8, r1)
-    assertEquals(s8, p8)
-    assertGraphEquals(ppRootGraph(m8 - (e(2) ~> e(5), e(3) ~> e(6)), r1), toGraph(p8))
+    assertEquals(actual8, p8)
+    assertGraphEquals(ppRootGraph(m8, r1), toGraph(p8))
   }
 
 
@@ -319,6 +342,78 @@ class PProcessGraphTest {
     val p9 = toPProcessTree(m9, r1)
     assertEquals(s9, p9)
     assertGraphEquals(ppRootGraph(m9, r1), toGraph(p9))
+  }
+
+  
+  /**
+   * A case of additional branching within merged branches
+   *    1
+   *    |
+   *    2
+   *   / \
+   *  3   \
+   *  |   |
+   *  4   6
+   *   \ / \
+   *    5   7
+   * 
+   * 
+   */
+  val m10 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(3) ~> e(4), e(4) ~> e(5), 
+                  e(2) ~> e(6), e(6) ~> e(5), e(6) ~> e(7))
+  
+  @Test
+  def softLink2() {
+    val s10 =  Seq(List(1,
+                        2,
+                        Par(Set(Seq(List(6,
+                                         Par(Set(7),
+                                         Set(5)))),
+                                Seq(List(3,
+                                         4,
+                                         5))))))
+
+    val p10 = toPProcessTree(m10, r1)
+    assertEquals(s10, p10)
+    assertGraphEquals(ppRootGraph(m10, r1), toGraph(p10))
+  }
+
+  /**
+   * A case where double parallel appears in the sequence.
+   *    1
+   *   / \
+   *  2   3
+   *  | X |
+   *  4   5
+   *   \ /
+   *    6
+   *
+   */
+  val m11 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(2) ~> e(5),
+                  e(3) ~> e(4), e(3) ~> e(5), e(4) ~> e(6), e(5) ~> e(6))
+
+  @Test
+  def doubleParallel() {
+    val s11 = Seq(List(1,
+                      Par(Set(2, 3)),
+                      Par(Set(4, 5)),
+                      6))
+
+    // The actual conversion to PPTree cannot recognise the double parallels yet
+    // (it is quite a corner case)
+    val actual11 = Seq(List(1,
+                            Par(Set(Seq(List(3,
+                                             Par(Set(),
+                                                 Set(5, 4)))),
+                                    Seq(List(2,
+                                             Par(Set(5, 4),
+                                                 Set()),
+                                             6))))))
+
+    val p11 = toPProcessTree(m11, r1)
+    assertEquals(actual11, p11)
+    assertGraphEquals(ppRootGraph(m11, r1), toGraph(p11))
+    assertGraphEquals(ppRootGraph(m11, r1), toGraph(s11))
   }
 
   
