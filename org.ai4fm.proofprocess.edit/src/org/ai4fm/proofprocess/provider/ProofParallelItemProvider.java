@@ -125,11 +125,26 @@ public class ProofParallelItemProvider
 	 * This returns ProofParallel.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofParallel"));
+		ProofParallel par = (ProofParallel) object;
+		String iconName;
+		if (par.getLinks().size() > 0) {
+			if (par.getEntries().isEmpty()) {
+				iconName = "ProofId.png";
+			} else if (par.getEntries().size() == 1) {
+				iconName = "ProofParallelLink2.png";
+			} else {
+				iconName = "ProofParallelLink.png";
+			}
+		} else if (par.getEntries().size() == 2) {
+			iconName = "ProofParallel2.gif";
+		} else {
+			iconName = "ProofParallel.gif";
+		}
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/" + iconName));
 	}
 
 	/**
@@ -148,7 +163,7 @@ public class ProofParallelItemProvider
 	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public void notifyChanged(Notification notification) {
@@ -156,7 +171,10 @@ public class ProofParallelItemProvider
 
 		switch (notification.getFeatureID(ProofParallel.class)) {
 			case ProofProcessPackage.PROOF_PARALLEL__ENTRIES:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
+				return;
+			case ProofProcessPackage.PROOF_PARALLEL__LINKS:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
 				return;
 		}
 		super.notifyChanged(notification);
