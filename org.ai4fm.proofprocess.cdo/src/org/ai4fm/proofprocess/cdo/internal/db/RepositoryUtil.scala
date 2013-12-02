@@ -8,9 +8,10 @@ import scala.collection.TraversableOnce.flattenTraversableOnce
 import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 
-import org.ai4fm.proofprocess.cdo.internal.PProcessCDOPlugin.{error, info, log}
+import org.ai4fm.proofprocess.cdo.CopyParticipant
+import org.ai4fm.proofprocess.cdo.internal.PProcessCDOPlugin.{error, info, log, plugin}
 
-import org.eclipse.core.runtime.{IProgressMonitor, NullProgressMonitor}
+import org.eclipse.core.runtime.{CoreException, IProgressMonitor, NullProgressMonitor, Platform}
 import org.eclipse.emf.cdo.eresource.CDOResourceNode
 import org.eclipse.emf.cdo.server.{CDOServerExporter, CDOServerImporter, IRepository}
 import org.eclipse.emf.cdo.session.CDOSession
@@ -18,7 +19,7 @@ import org.eclipse.emf.cdo.transaction.CDOTransaction
 import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.cdo.view.CDOView
 import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.{EClass, EClassifier, EObject, EPackage, EStructuralFeature}
+import org.eclipse.emf.ecore.{EClass, EClassifier, EObject, EPackage, EReference, EStructuralFeature}
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.net4j.util.lifecycle.LifecycleUtil
@@ -129,7 +130,9 @@ object RepositoryUtil {
   private def upgradeData(eObj: EObject): EObject = {
     // use a copier that matches the classes/features in the latest packages
     val copier = new PackageUpgradeCopier
-    copier.copy(eObj)
+    val result = copier.copy(eObj)
+    copier.finish()
+    result
   }
 
   private def exportToTempXML(eObj: EObject): File = {
@@ -312,6 +315,32 @@ object RepositoryUtil {
    */
   private class PackageUpgradeCopier extends EcoreUtil.Copier {
 
+    private def MODEL_EVOLUTION_ID = plugin.pluginId + ".modelEvolution"
+
+    private lazy val copyParticipants: List[CopyParticipant] = {
+      val extensionRegistry = Platform.getExtensionRegistry
+      val extensions = extensionRegistry.getConfigurationElementsFor(MODEL_EVOLUTION_ID)
+
+      try {
+        val execExts = extensions.toList map (_.createExecutableExtension("class"))
+
+        execExts flatMap {
+          _ match {
+            case Some(c: CopyParticipant) => Some(c)
+            case _ => {
+              log(error(msg = Some("Cannot instantiate copy participant extension!")))
+              None
+            }
+          }
+        }
+      } catch {
+        case ex: CoreException => {
+          log(error(Some(ex)))
+          Nil
+        }
+      }
+    }
+
     private val classCache: mutable.Map[EClass, EClass] = mutable.Map()
     private val featureCache: mutable.Map[EStructuralFeature, EStructuralFeature] = mutable.Map()
 
@@ -319,6 +348,23 @@ object RepositoryUtil {
       val reg = EPackage.Registry.INSTANCE
       val packages = reg.keySet.asScala map (reg.getEPackage(_))
       packages.toSet
+    }
+
+    override protected def copyReference(eReference: EReference,
+                                         eObject: EObject,
+                                         copyEObject: EObject) {
+
+      val matchingParticipants = copyParticipants.toStream filter {
+        _.canCopyReference(this, eReference, eObject, copyEObject)
+      }
+
+      // take just the first one
+      val activeParticipant = matchingParticipants.headOption
+      activeParticipant match {
+        case Some(p) => p.copyReference(this, eReference, eObject, copyEObject)
+        case None => super.copyReference(eReference, eObject, copyEObject)
+      }
+
     }
 
     override protected def getTarget(eClass: EClass): EClass =
@@ -359,6 +405,9 @@ object RepositoryUtil {
         }
       }
     }
+
+    def finish() =
+      copyParticipants foreach { p => if (p.canFinish(this)) p.finish(this) }
 
   }
 
