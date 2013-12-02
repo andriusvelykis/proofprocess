@@ -188,5 +188,9 @@ public class IsabelleTraceImpl extends CDOObjectImpl implements IsabelleTrace {
 		}
 		return super.eIsSet(featureID);
 	}
+	
+	public String getText() {
+		return getCommand() != null ? getCommand().getSource() : "<unknown cmd>";
+	}
 
 } //IsabelleTraceImpl

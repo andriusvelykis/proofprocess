@@ -98,6 +98,15 @@ public interface ProofProcessFactory extends EFactory {
 	ProofParallel createProofParallel();
 
 	/**
+	 * Returns a new object of class '<em>Proof Id</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Proof Id</em>'.
+	 * @generated
+	 */
+	ProofId createProofId();
+
+	/**
 	 * Returns a new object of class '<em>Attempt</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

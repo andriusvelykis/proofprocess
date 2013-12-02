@@ -170,6 +170,11 @@ public class ProofSeqItemProvider
 			(createChildParameter
 				(ProofProcessPackage.Literals.PROOF_SEQ__ENTRIES,
 				 ProofProcessFactory.eINSTANCE.createProofParallel()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProofProcessPackage.Literals.PROOF_SEQ__ENTRIES,
+				 ProofProcessFactory.eINSTANCE.createProofId()));
 	}
 
 }

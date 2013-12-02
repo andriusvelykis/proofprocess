@@ -487,22 +487,50 @@ public interface ProofProcessPackage extends EPackage {
 	int PROOF_PARALLEL__ENTRIES = PROOF_ELEM_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Links</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PROOF_PARALLEL__LINKS = PROOF_ELEM_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>Proof Parallel</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROOF_PARALLEL_FEATURE_COUNT = PROOF_ELEM_FEATURE_COUNT + 2;
+	int PROOF_PARALLEL_FEATURE_COUNT = PROOF_ELEM_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.ProofIdImpl <em>Proof Id</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.impl.ProofIdImpl
+	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofId()
+	 * @generated
+	 */
+	int PROOF_ID = 12;
+
+	/**
+	 * The feature id for the '<em><b>Info</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROOF_ID__INFO = PROOF_ELEM__INFO;
+
+	/**
+	 * The feature id for the '<em><b>Entry Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROOF_ID__ENTRY_REF = PROOF_ELEM_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Proof Id</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROOF_ID_FEATURE_COUNT = PROOF_ELEM_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.AttemptImpl <em>Attempt</em>}' class.
@@ -512,7 +540,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getAttempt()
 	 * @generated
 	 */
-	int ATTEMPT = 12;
+	int ATTEMPT = 13;
 
 	/**
 	 * The feature id for the '<em><b>Proof</b></em>' containment reference.
@@ -540,7 +568,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProof()
 	 * @generated
 	 */
-	int PROOF = 13;
+	int PROOF = 14;
 
 	/**
 	 * The feature id for the '<em><b>Goals</b></em>' containment reference list.
@@ -586,7 +614,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofStore()
 	 * @generated
 	 */
-	int PROOF_STORE = 14;
+	int PROOF_STORE = 15;
 
 	/**
 	 * The feature id for the '<em><b>Proofs</b></em>' containment reference list.
@@ -632,7 +660,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeatureType()
 	 * @generated
 	 */
-	int PROOF_FEATURE_TYPE = 15;
+	int PROOF_FEATURE_TYPE = 16;
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.Intent <em>Intent</em>}'.
@@ -975,15 +1003,25 @@ public interface ProofProcessPackage extends EPackage {
 	EReference getProofParallel_Entries();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.ai4fm.proofprocess.ProofParallel#getLinks <em>Links</em>}'.
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.ProofId <em>Proof Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Links</em>'.
-	 * @see org.ai4fm.proofprocess.ProofParallel#getLinks()
-	 * @see #getProofParallel()
+	 * @return the meta object for class '<em>Proof Id</em>'.
+	 * @see org.ai4fm.proofprocess.ProofId
 	 * @generated
 	 */
-	EReference getProofParallel_Links();
+	EClass getProofId();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.ai4fm.proofprocess.ProofId#getEntryRef <em>Entry Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Entry Ref</em>'.
+	 * @see org.ai4fm.proofprocess.ProofId#getEntryRef()
+	 * @see #getProofId()
+	 * @generated
+	 */
+	EReference getProofId_EntryRef();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.Attempt <em>Attempt</em>}'.
@@ -1405,12 +1443,22 @@ public interface ProofProcessPackage extends EPackage {
 		EReference PROOF_PARALLEL__ENTRIES = eINSTANCE.getProofParallel_Entries();
 
 		/**
-		 * The meta object literal for the '<em><b>Links</b></em>' reference list feature.
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.ProofIdImpl <em>Proof Id</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.impl.ProofIdImpl
+		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofId()
+		 * @generated
+		 */
+		EClass PROOF_ID = eINSTANCE.getProofId();
+
+		/**
+		 * The meta object literal for the '<em><b>Entry Ref</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PROOF_PARALLEL__LINKS = eINSTANCE.getProofParallel_Links();
+		EReference PROOF_ID__ENTRY_REF = eINSTANCE.getProofId_EntryRef();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.AttemptImpl <em>Attempt</em>}' class.

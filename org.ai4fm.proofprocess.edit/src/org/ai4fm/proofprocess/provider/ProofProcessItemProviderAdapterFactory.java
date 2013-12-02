@@ -260,6 +260,29 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofId} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ProofIdItemProvider proofIdItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.ProofId}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createProofIdAdapter() {
+		if (proofIdItemProvider == null) {
+			proofIdItemProvider = new ProofIdItemProvider(this);
+		}
+
+		return proofIdItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.Attempt} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -435,6 +458,7 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 		if (proofEntryItemProvider != null) proofEntryItemProvider.dispose();
 		if (proofSeqItemProvider != null) proofSeqItemProvider.dispose();
 		if (proofParallelItemProvider != null) proofParallelItemProvider.dispose();
+		if (proofIdItemProvider != null) proofIdItemProvider.dispose();
 		if (attemptItemProvider != null) attemptItemProvider.dispose();
 		if (proofItemProvider != null) proofItemProvider.dispose();
 		if (proofStoreItemProvider != null) proofStoreItemProvider.dispose();

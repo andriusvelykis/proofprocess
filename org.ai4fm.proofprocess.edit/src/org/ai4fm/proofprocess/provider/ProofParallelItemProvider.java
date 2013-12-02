@@ -10,6 +10,8 @@ package org.ai4fm.proofprocess.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.ProofElem;
+import org.ai4fm.proofprocess.ProofId;
 import org.ai4fm.proofprocess.ProofParallel;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofProcessPackage;
@@ -19,7 +21,6 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -63,31 +64,8 @@ public class ProofParallelItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLinksPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Links feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addLinksPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ProofParallel_links_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ProofParallel_links_feature", "_UI_ProofParallel_type"),
-				 ProofProcessPackage.Literals.PROOF_PARALLEL__LINKS,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
 	}
 
 	/**
@@ -103,7 +81,6 @@ public class ProofParallelItemProvider
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES);
-			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_PARALLEL__LINKS);
 		}
 		return childrenFeatures;
 	}
@@ -130,21 +107,32 @@ public class ProofParallelItemProvider
 	@Override
 	public Object getImage(Object object) {
 		ProofParallel par = (ProofParallel) object;
+		boolean hasIds = hasIds(par);
 		String iconName;
-		if (par.getLinks().size() > 0) {
-			if (par.getEntries().isEmpty()) {
-				iconName = "ProofId.png";
-			} else if (par.getEntries().size() == 1) {
+		if (par.getEntries().size() == 2) {
+			if (hasIds) {
 				iconName = "ProofParallelLink2.png";
 			} else {
-				iconName = "ProofParallelLink.png";
+				iconName = "ProofParallel2.gif";
 			}
-		} else if (par.getEntries().size() == 2) {
-			iconName = "ProofParallel2.gif";
 		} else {
-			iconName = "ProofParallel.gif";
+			if (hasIds) {
+				iconName = "ProofParallelLink.png";
+			} else {
+				iconName = "ProofParallel.gif";
+			}
 		}
 		return overlayImage(object, getResourceLocator().getImage("full/obj16/" + iconName));
+	}
+
+	private boolean hasIds(ProofParallel par) {
+		for (ProofElem elem : par.getEntries()) {
+			if (elem instanceof ProofId) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	/**
@@ -163,7 +151,7 @@ public class ProofParallelItemProvider
 	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	@Override
 	public void notifyChanged(Notification notification) {
@@ -171,9 +159,6 @@ public class ProofParallelItemProvider
 
 		switch (notification.getFeatureID(ProofParallel.class)) {
 			case ProofProcessPackage.PROOF_PARALLEL__ENTRIES:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
-				return;
-			case ProofProcessPackage.PROOF_PARALLEL__LINKS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
 				return;
 		}
@@ -205,6 +190,11 @@ public class ProofParallelItemProvider
 			(createChildParameter
 				(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES,
 				 ProofProcessFactory.eINSTANCE.createProofParallel()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES,
+				 ProofProcessFactory.eINSTANCE.createProofId()));
 	}
 
 }
