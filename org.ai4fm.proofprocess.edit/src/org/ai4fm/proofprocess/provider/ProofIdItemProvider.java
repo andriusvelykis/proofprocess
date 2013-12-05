@@ -12,6 +12,7 @@ import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -80,6 +81,16 @@ public class ProofIdItemProvider
 				 null,
 				 null,
 				 null));
+	}
+
+
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_ID__ENTRY_REF);
+		}
+		return childrenFeatures;
 	}
 
 	/**
