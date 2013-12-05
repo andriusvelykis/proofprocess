@@ -71,7 +71,12 @@ class PProcessGraphTest {
     assertEquals(s2, p2)
     assertGraphEquals(ppRootGraph(g2, r1), toGraph(p2))
   }
-  
+
+  /**
+   *   1
+   *  / \
+   * 2   3
+   */
   @Test
   def parallel() {
     
@@ -83,18 +88,18 @@ class PProcessGraphTest {
     assertEquals(s1, p1)
     assertGraphEquals(ppRootGraph(g1, r1), toGraph(p1))
   }
-  
-  /** Simple merge:
-    *   1
-    *  / \
-    *  2 3
-    *  \ /
-    *   4
-    */
-  val m1 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(3) ~> e(4))
-  
+
+  /**
+   * Simple merge:
+   *   1
+   *  / \
+   * 2   3
+   *  \ /
+   *   4
+   */
   @Test
   def simpleMerge() {
+    val m1 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(3) ~> e(4))
     val s1 = Seq(List(1, 
                       Par(Set(2, 
                               3)), 
@@ -105,20 +110,21 @@ class PProcessGraphTest {
   }
   
   
-  /** Double merge, first merge two branches (2 and 3), and then merge the result with another one (5-6)
-    * at merge point 7:
-    *    1
-    *  / | \
-    *  2 3 5
-    *  \ / |
-    *   4  6
-    *   \ /
-    *    7
-    */
-  val m2 = m1 + (e(1) ~> e(5), e(5) ~> e(6), e(6) ~> e(7), e(4) ~> e(7))
-  
+  /**
+   * Double merge, first merge two branches (2 and 3), and then merge the result with
+   * another one (5-6) at merge point 7:
+   *    1
+   *  / | \
+   *  2 3 5
+   *  \ / |
+   *   4  6
+   *   \ /
+   *    7
+   */
   @Test
   def doubleMerge() {
+    val m2 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(3) ~> e(4), 
+                   e(1) ~> e(5), e(5) ~> e(6), e(6) ~> e(7), e(4) ~> e(7))
     val s2 = Seq(List(e(1),
                       Par(Set(Seq(List(Par(Set(2, 
                                                3)), 
@@ -131,21 +137,21 @@ class PProcessGraphTest {
     assertGraphEquals(ppRootGraph(m2, r1), toGraph(p2))
   }
 
-  /** Branch merged twice with two other different branches in parallel (branch 3 is merged with both 2 and 5
-    * at distinct merge points (4 and 6). This is currently not supported, as it cannot be easily mapped
-    * into ProofProcess tree structure (should not occur in proofs actually):
-    *     1
-    *  /  | \
-    *  2  3  5
-    *  \ /\ /
-    *   4  6
-    *   \ /
-    *    7
-    */
-  val m3 = m2 + (e(3) ~> e(6))
-  
+  /**
+   * Branch merged twice with two other different branches in parallel
+   * (branch 3 is merged with both 2 and 5 at distinct merge points (4 and 6).
+   *     1
+   *  /  | \
+   *  2  3  5
+   *  \ /\ /
+   *   4  6
+   *   \ /
+   *    7
+   */
   @Test
-  def branchMergedTwiceInParallelFailing() {
+  def branchMergedTwiceInParallel() {
+    val m3 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(3) ~> e(4), 
+                   e(1) ~> e(5), e(5) ~> e(6), e(6) ~> e(7), e(4) ~> e(7), e(3) ~> e(6))
     val s3 = Seq(List(1, 
                       Par(Set(Seq(List(2,
                                        Id(4))),
@@ -160,12 +166,12 @@ class PProcessGraphTest {
     assertGraphEquals(ppRootGraph(m3, r1), toGraph(p3))
   }
   
-  val m4 = Graph(e(1) ~> e(2), e(2) ~> e(3))
   
   @Test
   def lowRootMerge() {
     // note no root element for multiple roots: starts with a parallel
     // also note the soft link `-> 3` at root to indicate multi-root
+    val m4 = Graph(e(1) ~> e(2), e(2) ~> e(3))
     val s4 = Seq(List(Par(Set(Seq(List(1, 
                                        2)),
                               Id(3))), 
@@ -178,22 +184,22 @@ class PProcessGraphTest {
     // or whether a direct merge is necessary
     assertGraphEquals(ppRootGraph(m4, rDouble), toGraph(p4))
   }
-  
-  /** One of the branches does not have any steps in it (1 -> 3). This is represented as a
-    * parallel with a single branch and a merge point.
-    *   1
-    *  / \
-    *  2  |
-    *  \ /
-    *   3
-    * 
-    * This is a similar example to `m4`, but with a single explicit root.
-    * The link 1 -> 3 is recorded as a soft link.
-    */
-  val m5 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(1) ~> e(3))
-  
+
+  /**
+   * One of the branches does not have any steps in it (1 -> 3). This is represented as a
+   * parallel with a single branch and a merge point.
+   *   1
+   *  / \
+   *  2  |
+   *  \ /
+   *   3
+   *
+   * This is a similar example to `m4`, but with a single explicit root.
+   * The link 1 -> 3 is recorded as a soft link.
+   */
   @Test
   def directMerge() {
+    val m5 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(1) ~> e(3))
     val s5 = Seq(List(1,
                       Par(Set(2,
                               Id(3))), 
@@ -202,23 +208,25 @@ class PProcessGraphTest {
     assertEquals(s5, p5)
     assertGraphEquals(ppRootGraph(m5, r1), toGraph(p5))
   }
+
   
-  /** Double merge of branches with no steps in them (1 -> 3 and 1 -> 4). This is represented as a
-    * nested parallel with a single branch and merge points following.
-    *     1
-    *  /  | \
-    *  2  | |
-    *  \ /  |
-    *   3   |
-    *    \ /
-    *     4
-    * 
-    * This is the same example as `m4`, but with a single explicit root
-    */
-  val m6 = m5 + (e(3) ~> e(4), e(1) ~> e(4))
-  
+  /**
+   * Double merge of branches with no steps in them (1 -> 3 and 1 -> 4). This is represented as a
+   * nested parallel with a single branch and merge points following.
+   *     1
+   *  /  | \
+   *  2  | |
+   *  \ /  |
+   *   3   |
+   *    \ /
+   *     4
+   *
+   * This is the same example as `m4`, but with a single explicit root
+   */
   @Test
   def directMerge2() {
+    val m6 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(1) ~> e(3),
+                   e(3) ~> e(4), e(1) ~> e(4))
     val s6 = Seq(List(1, 
                       Par(Set(Seq(List(Par(Set(2,
                                                Id(3))), 
@@ -241,11 +249,10 @@ class PProcessGraphTest {
    *  |/
    *  5
    */
-  val m7 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(2) ~> e(5), 
-                 e(3) ~> e(4), e(4) ~> e(5))
-  
   @Test
   def complexMerge1() {
+    val m7 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(2) ~> e(5), 
+                   e(3) ~> e(4), e(4) ~> e(5))
     val s7 = Seq(List(1, 
                       Par(Set(Seq(List(3,
                                        4,
@@ -283,10 +290,10 @@ class PProcessGraphTest {
    *   \ /
    *    6 
    */
-  val m8 = m7 + (e(3) ~> e(6), e(5) ~> e(6))
-  
   @Test
   def complexMerge2() {
+    val m8 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(2) ~> e(5), 
+                   e(3) ~> e(4), e(4) ~> e(5), e(3) ~> e(6), e(5) ~> e(6))
 //    val s8 = Seq(List(1, 
 //                      Par(Set(3,
 //                              2)),
@@ -324,11 +331,10 @@ class PProcessGraphTest {
    * 
    * The 2->7 will have a soft link.
    */
-  val m9 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(3) ~> e(4), e(4) ~> e(5), 
-                 e(3) ~> e(6), e(6) ~> e(7), e(2) ~> e(7))
-  
   @Test
   def softLink() {
+    val m9 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(3) ~> e(4), e(4) ~> e(5), 
+                   e(3) ~> e(6), e(6) ~> e(7), e(2) ~> e(7))
     val s9 = Seq(List(1,
                       2,
                       Par(Set(Seq(List(3,
@@ -357,14 +363,11 @@ class PProcessGraphTest {
    *  4   6
    *   \ / \
    *    5   7
-   * 
-   * 
    */
-  val m10 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(3) ~> e(4), e(4) ~> e(5), 
-                  e(2) ~> e(6), e(6) ~> e(5), e(6) ~> e(7))
-  
   @Test
   def softLink2() {
+    val m10 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(3) ~> e(4), e(4) ~> e(5), 
+                    e(2) ~> e(6), e(6) ~> e(5), e(6) ~> e(7))
     val s10 =  Seq(List(1,
                         2,
                         Par(Set(Seq(List(6,
@@ -390,11 +393,10 @@ class PProcessGraphTest {
    *    6
    *
    */
-  val m11 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(2) ~> e(5),
-                  e(3) ~> e(4), e(3) ~> e(5), e(4) ~> e(6), e(5) ~> e(6))
-
   @Test
   def doubleParallel() {
+    val m11 = Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(2) ~> e(5),
+                    e(3) ~> e(4), e(3) ~> e(5), e(4) ~> e(6), e(5) ~> e(6))
     val s11 = Seq(List(1,
                       Par(Set(2, 3)),
                       Par(Set(4, 5)),
@@ -427,14 +429,11 @@ class PProcessGraphTest {
    *  4   7  8
    *   \ / 
    *    5   
-   * 
-   * 
    */
-  val m12 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(3) ~> e(4), e(4) ~> e(5), 
-                  e(2) ~> e(6), e(6) ~> e(7), e(6) ~> e(8), e(7) ~> e(5))
-  
   @Test
   def softLink3() {
+    val m12 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(3) ~> e(4), e(4) ~> e(5), 
+                    e(2) ~> e(6), e(6) ~> e(7), e(6) ~> e(8), e(7) ~> e(5))
     val s12 = Seq(List(1,
                        2, Par(Set(Seq(List(6,
                                            Par(Set(8,
@@ -460,15 +459,12 @@ class PProcessGraphTest {
    * 4   5 8   9
    *  \ /   \ /
    *   6     10
-   * 
-   * 
    */
-  val m13 = Graph(e(1) ~> e(2),
-                  e(2) ~> e(3), e(3) ~> e(4), e(3) ~> e(5), e(4) ~> e(6), e(5) ~> e(6), 
-                  e(2) ~> e(7), e(7) ~> e(8), e(7) ~> e(9), e(8) ~> e(10), e(9) ~> e(10))
-  
   @Test
   def parallelMerged() {
+    val m13 = Graph(e(1) ~> e(2),
+                    e(2) ~> e(3), e(3) ~> e(4), e(3) ~> e(5), e(4) ~> e(6), e(5) ~> e(6), 
+                    e(2) ~> e(7), e(7) ~> e(8), e(7) ~> e(9), e(8) ~> e(10), e(9) ~> e(10))
     val s13 = Seq(List(1,
                        2,
                        Par(Set(Seq(List(7,
