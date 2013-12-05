@@ -415,6 +415,75 @@ class PProcessGraphTest {
     assertGraphEquals(ppRootGraph(m11, r1), toGraph(p11))
     assertGraphEquals(ppRootGraph(m11, r1), toGraph(s11))
   }
+  
+  /**
+   * A case of additional branching within merged branches
+   *    1
+   *    |
+   *    2
+   *   / \
+   *  3   6
+   *  |   | \
+   *  4   7  8
+   *   \ / 
+   *    5   
+   * 
+   * 
+   */
+  val m12 = Graph(e(1) ~> e(2), e(2) ~> e(3), e(3) ~> e(4), e(4) ~> e(5), 
+                  e(2) ~> e(6), e(6) ~> e(7), e(6) ~> e(8), e(7) ~> e(5))
+  
+  @Test
+  def softLink3() {
+    val s12 = Seq(List(1,
+                       2, Par(Set(Seq(List(6,
+                                           Par(Set(8,
+                                                   Seq(List(7,
+                                                            Id(5))))))),
+                                  Seq(List(3,
+                                           4,
+                                           5))))))
+
+    val p12 = toPProcessTree(m12, r1)
+    assertEquals(s12, p12)
+    assertGraphEquals(ppRootGraph(m12, r1), toGraph(p12))
+  }
+  
+  /**
+   * A case of merges happening in parallel
+   *      1
+   *      |
+   *      2
+   *    /   \
+   *   3     7
+   *  / \   / \
+   * 4   5 8   9
+   *  \ /   \ /
+   *   6     10
+   * 
+   * 
+   */
+  val m13 = Graph(e(1) ~> e(2),
+                  e(2) ~> e(3), e(3) ~> e(4), e(3) ~> e(5), e(4) ~> e(6), e(5) ~> e(6), 
+                  e(2) ~> e(7), e(7) ~> e(8), e(7) ~> e(9), e(8) ~> e(10), e(9) ~> e(10))
+  
+  @Test
+  def parallelMerged() {
+    val s13 = Seq(List(1,
+                       2,
+                       Par(Set(Seq(List(7,
+                                        Par(Set(9,
+                                                8)),
+                                        10)),
+                               Seq(List(3,
+                                        Par(Set(5,
+                                                4)),
+                                        6))))))
+
+    val p13 = toPProcessTree(m13, r1)
+    assertEquals(s13, p13)
+    assertGraphEquals(ppRootGraph(m13, r1), toGraph(p13))
+  }
 
   
   // Int + Case Class based testing data structures (to avoid creating EMF ones)
