@@ -17,10 +17,11 @@ import org.junit.Test
   */
 class PProcessGraphTest {
 
-  val intPPTree = new PProcessTree[PElem, Entry, Seq, Par, Int, Int] {
+  val intPPTree = new PProcessTree[PElem, Entry, Seq, Par, Id, Int, Int] {
     override def entry = EntryCase
     override def seq = SeqCase
     override def parallel = ParCase
+    override def id = IdCase
     // TODO better solution?
     override def info(elem: PElem): Int = 0
     // FIXME
@@ -147,11 +148,9 @@ class PProcessGraphTest {
   def branchMergedTwiceInParallelFailing() {
     val s3 = Seq(List(1, 
                       Par(Set(Seq(List(2,
-                                       Par(Set(),
-                                           Set(4)))),
+                                       Id(4))),
                               Seq(List(5,
-                                       Par(Set(),
-                                           Set(6)))),
+                                       Id(6))),
                               Seq(List(3,
                                        Par(Set(4,
                                                6)),
@@ -168,8 +167,8 @@ class PProcessGraphTest {
     // note no root element for multiple roots: starts with a parallel
     // also note the soft link `-> 3` at root to indicate multi-root
     val s4 = Seq(List(Par(Set(Seq(List(1, 
-                                       2))),
-                          Set(3)), 
+                                       2)),
+                              Id(3))), 
                       3))
     val rDouble = List(e(1), e(3))
     val p4 = toPProcessTree(m4, rDouble)
@@ -196,7 +195,8 @@ class PProcessGraphTest {
   @Test
   def directMerge() {
     val s5 = Seq(List(1,
-                      Par(Set(2), Set(3)), 
+                      Par(Set(2,
+                              Id(3))), 
                       3))
     val p5 = toPProcessTree(m5, r1)
     assertEquals(s5, p5)
@@ -220,10 +220,10 @@ class PProcessGraphTest {
   @Test
   def directMerge2() {
     val s6 = Seq(List(1, 
-                      Par(Set(Seq(List(Par(Set(2),
-                                           Set(3)), 
-                                       3))),
-                          Set(4)),
+                      Par(Set(Seq(List(Par(Set(2,
+                                               Id(3))), 
+                                       3)),
+                              Id(4))),
                       4))
     val p6 = toPProcessTree(m6, r1)
     assertEquals(s6, p6)
@@ -248,19 +248,20 @@ class PProcessGraphTest {
   def complexMerge1() {
     val s7 = Seq(List(1, 
                       Par(Set(Seq(List(3,
-                                       4)),
+                                       4,
+                                       Id(5))),
                               Seq(List(2,
-                                       Par(Set(), Set(4)))))),
+                                       Par(Set(Id(4),
+                                               Id(5))))))),
                       5))
 
     // The actual conversion to PPTree currently prefers smaller merges (need to add better layout)
     val actual7 = Seq(List(1,
                            Par(Set(Seq(List(3,
-                                            Par(Set(),
-                                                Set(4)))), 
+                                            Id(4))), 
                                    Seq(List(2,
-                                            Par(Set(4),
-                                                Set(5)), 
+                                            Par(Set(4,
+                                                    Id(5))), 
                                        5))))))
     
     val p7 = toPProcessTree(m7, r1)
@@ -295,12 +296,12 @@ class PProcessGraphTest {
 
     val actual8 = Seq(List(1,
                            Par(Set(Seq(List(2,
-                                            Par(Set(),
-                                                Set(4, 5)))),
+                                            Par(Set(Id(4),
+                                                    Id(5))))),
                                    Seq(List(3,
                                             Par(Set(Seq(List(4,
-                                                             5))),
-                                                Set(6)),
+                                                             5)),
+                                                    Id(6))),
                                             6))))))
 
     val p8 = toPProcessTree(m8, r1)
@@ -335,8 +336,8 @@ class PProcessGraphTest {
                                                         5)),
                                                Seq(List(6,
                                                         7))))
-                                       ))),
-                          Set(7)) // <-- soft link
+                                       )),
+                              Id(7))) // <-- soft link
                       ))
 
     val p9 = toPProcessTree(m9, r1)
@@ -367,8 +368,8 @@ class PProcessGraphTest {
     val s10 =  Seq(List(1,
                         2,
                         Par(Set(Seq(List(6,
-                                         Par(Set(7),
-                                         Set(5)))),
+                                         Par(Set(7,
+                                                 Id(5))))),
                                 Seq(List(3,
                                          4,
                                          5))))))
@@ -403,11 +404,10 @@ class PProcessGraphTest {
     // (it is quite a corner case)
     val actual11 = Seq(List(1,
                             Par(Set(Seq(List(3,
-                                             Par(Set(),
-                                                 Set(5, 4)))),
+                                             Par(Set(Id(5),
+                                                     Id(4))))),
                                     Seq(List(2,
-                                             Par(Set(5, 4),
-                                                 Set()),
+                                             Par(Set(5, 4)),
                                              6))))))
 
     val p11 = toPProcessTree(m11, r1)
@@ -424,11 +424,9 @@ class PProcessGraphTest {
   sealed trait PElem
   case class Entry(e: Int) extends PElem
   case class Seq(seq: List[PElem]) extends PElem
-  case class Par(par: Set[PElem], links: Set[Entry]) extends PElem
+  case class Par(par: Set[PElem]) extends PElem
+  case class Id(e: Entry) extends PElem
 
-  object Par {
-    def apply(elems: Set[PElem]): Par = Par(elems, Set())
-  }
   
   object EntryCase extends CaseObject[PElem, Entry, Int]{
     def unapply(e: PElem): Option[Int] = e match {
@@ -446,15 +444,20 @@ class PProcessGraphTest {
     def apply(elems: List[PElem]) = Seq(elems)
   }
   
-  object ParCase extends CaseObject[PElem, Par, (Set[PElem], Set[Entry])] {
+  object ParCase extends CaseObject[PElem, Par, Set[PElem]] {
     def unapply(e: PElem) = e match {
-        case Par(entries, links) => Some(entries, links)
+        case Par(elems) => Some(elems)
         case _ => None
       }
-    def apply(elems: (Set[PElem], Set[Entry])) = {
-      val (entries, links) = elems
-      Par(entries, links)
-    }
+    def apply(elems: Set[PElem]) = Par(elems)
+  }
+
+  object IdCase extends CaseObject[PElem, Id, Entry] {
+    def unapply(e: PElem) = e match {
+        case Id(entry) => Some(entry)
+        case _ => None
+      }
+    def apply(e: Entry) = Id(e)
   }
   
   

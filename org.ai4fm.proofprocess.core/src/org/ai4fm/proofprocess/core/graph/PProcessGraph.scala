@@ -42,6 +42,7 @@ object PProcessGraph {
  * @tparam E  proof entry type
  * @tparam S  proof entry sequence type
  * @tparam P  parallel proof entries type
+ * @tparam Id Id reference proof entry type
  * @tparam I  proof meta-information type
  *
  * @param ppTree   the ProofProcess tree element extractors/converters
@@ -50,8 +51,9 @@ object PProcessGraph {
  *
  * @author Andrius Velykis
  */
-class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, P, _, I],
-                                                  topRoot: => E) {
+class PProcessGraph[L, E <: L, S <: L, P <: L, Id <: L, I](
+    ppTree: PProcessTree[L, E, S, P, Id, _, I],
+    topRoot: => E) {
 
   import PProcessGraph._
 
@@ -102,37 +104,34 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
 
         // for parallel, create subgraphs of each parallel entry,
         // and then merge these subgraphs and their roots
-        case ppTree.parallel((entries, links)) => {
+        case ppTree.parallel(elems) => {
 
           // if no entries are available, preserve the accumulated roots,
           // since they are not consumed
-          val parallelGraph =
-            if (entries.isEmpty) acc
-            else {
-              // create subgraph based on the accumulated graph and merge them
-              val subGraphs = entries map (e => graph0(e, acc, elemMeta))
+          if (elems.isEmpty) acc
+          else {
+            // create subgraph based on the accumulated graph and merge them
+            val subGraphs = elems map (e => graph0(e, acc, elemMeta))
 
-              val merged = subGraphs.foldRight(emptyGraph) {
-                case (PPRootGraph(subGraph, subRoots, subMeta),
-                  PPRootGraph(foldGraph, foldRoots, foldMeta)) =>
-                  PPRootGraph(subGraph ++ foldGraph, subRoots ++ foldRoots, subMeta ++ foldMeta)
-              }
-
-              merged
+            val merged = subGraphs.foldRight(emptyGraph) {
+              case (PPRootGraph(subGraph, subRoots, subMeta),
+                PPRootGraph(foldGraph, foldRoots, foldMeta)) =>
+                PPRootGraph(subGraph ++ foldGraph, subRoots ++ foldRoots, subMeta ++ foldMeta)
             }
 
-          val withLinks =
-            if (!links.isEmpty) {
-              parallelGraph.copy(roots = parallelGraph.roots ++ links)
-            } else parallelGraph
-
-          withLinks
+            merged
+          }
         }
 
         // for sequences, just accumulate subgraph from the end, this way elements at the
         // start are parents/roots to the subsequent elements
         case ppTree.seq(elems) => elems.foldRight(acc) {
           (entry, acc) => graph0(entry, acc, elemMeta)
+        }
+
+        // for Id refs, just make the entry the root
+        case ppTree.id(entry) => {
+          acc.copy(roots = List(entry))
         }
       }
     }
@@ -251,7 +250,7 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
       // check if the element is already parallel, otherwise wrap it into a parallel
       val par = elem match {
         case ppTree.parallel(_) => elem
-        case _ => ppTree.parallel(Set(elem), Set())
+        case _ => ppTree.parallel(Set(elem))
       }
       par
     }
@@ -259,14 +258,14 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
     /**
      * Flatten parallel upon creation - lifts all given parallel entries 
      */
-    def createParallel(entries: Set[L], softLinks: Set[E]): L = {
-      val (flatEntries, flatLinks) = (entries map flattenParallel).unzip
-      ppTree.parallel(flatEntries.flatten, flatLinks.flatten ++ softLinks)
+    def createParallel(entries: Set[L]): L = {
+      val flatElems = entries map flattenParallel
+      ppTree.parallel(flatElems.flatten)
     }
 
-    def flattenParallel(elem: L): (Set[L], Set[E]) = elem match {
-      case ppTree.parallel(entries, links) => (entries, links)
-      case _ => (Set(elem), Set())
+    def flattenParallel(elem: L): Set[L] = elem match {
+      case ppTree.parallel(elems) => elems
+      case _ => Set(elem)
     }
 
 
@@ -436,10 +435,10 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
 
           val directMergeGroupElem =
             if (mergePointBranches.exists(_._1 == mergePoint)) {
-              // create a parallel with the merge point as soft link
-              // to record the merge-point branch. This will become a single-branch parallel
-              // with additional soft link.
-              createParallel(Set(groupElem), Set(mergePoint))
+              // create a parallel with the merge point as proof Id reference
+              // to record the merge-point branch. This will become a parallel of a proper
+              // branch and a Id reference.
+              createParallel(Set(groupElem, ppTree.id(mergePoint)))
             } else {
               groupElem
             }
@@ -462,25 +461,24 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
         }
         
         val groupRoots = mergeGroups map { case (mergePoint, group) => mergeGroup(group, mergePoint) }
-        
+
         // resolve parallel subgraphs:
         // - subGraphs if there are unclaimed subgraphs
-        // - soft links if the subGraphs have already been used (are not available)
-        val leafSubGraphs0 = leafBranches map { b => (b, subGraphs(b)) }
-        val leafSubGraphs = (leafSubGraphs0 map (_._2)).flatten
-        val leafSoftLinks = leafSubGraphs0 filter (_._2.isEmpty) map (_._1)
-
-        // do not create soft links for group merges
-        val softLinks = /*groupSoftLinks.flatten.toSet ++ */leafSoftLinks.toSet
+        // - proof Id references if the subGraphs have already been used (are not available)
+        val resolvedLeafBranches = leafBranches map { b =>
+          subGraphs(b) match {
+            case Some(subGraph) => subGraph
+            case None => ppTree.id(b)
+          }
+        }
 
         // now that we have the merged groups, join them with the leaf branches into a single
         // parallel split
-        val branches = groupRoots.toSet ++ leafSubGraphs.toSet
-        if (isMulti(branches) || !softLinks.isEmpty) {
+        val branches = groupRoots.toSet ++ resolvedLeafBranches.toSet
+        if (isMulti(branches)) {
           // multiple branches, group into parallel
           // this also handles the case of direct merges
-          // also create a parallel if there are soft links
-          createParallel(branches, softLinks)
+          createParallel(branches)
         } else {
           // single branch - return itself
           branches.head
@@ -524,9 +522,8 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
 
               case None => {
                 // no subgraph available - it has already been consumed
-                // in this case, add an empty parallel following the entry with soft link
-                // to the consumed successor
-                ppTree.parallel(Set(), Set(single))
+                // in this case, add an Id to the consumed successor
+                ppTree.id(single)
               }
             }
             
@@ -635,13 +632,11 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
       }
     }
 
-    case ppTree.parallel((entries, links)) => {
-      // only add infos to entries (link infos will be added somewhere within)
+    case ppTree.parallel(elems) => {
+      val infoElems = elems map addInfo(meta)
+      val (infoChildren, commonInfos) = addChildrenInfo(infoElems.toList, true)
 
-      val infoEntries = entries map addInfo(meta)
-      val (infoChildren, commonInfos) = addChildrenInfo(infoEntries.toList, true)
-
-      val newParallel = ppTree.parallel((infoChildren.toSet, links))
+      val newParallel = ppTree.parallel(infoChildren.toSet)
       // add the last info to the parallel itself
 
       // TODO what if the group is actually much higher,
@@ -664,6 +659,9 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, I](ppTree: PProcessTree[L, E, S, 
         (ppTree.addInfo(newSeq, commonInfos.last), Some(commonInfos.init))
       }
     }
+
+    // do nothing for IDs
+    case ppTree.id(_) => (rootElem.asInstanceOf[Id], None)
   }
 
 

@@ -11,7 +11,8 @@ package org.ai4fm.proofprocess.core.graph
   * 
   * @author Andrius Velykis
   */
-trait PProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, EntryData, Info] {
+trait PProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Id <: Elem, 
+                   EntryData, Info] {
 
   import PProcessTree._
   
@@ -19,7 +20,9 @@ trait PProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, EntryData
   
   def seq: CaseObject[Elem, Seq, List[Elem]]
   
-  def parallel: CaseObject[Elem, Parallel, (Set[Elem], Set[Entry])]
+  def parallel: CaseObject[Elem, Parallel, Set[Elem]]
+
+  def id: CaseObject[Elem, Id, Entry]
 
   def info(elem: Elem): Info
 
