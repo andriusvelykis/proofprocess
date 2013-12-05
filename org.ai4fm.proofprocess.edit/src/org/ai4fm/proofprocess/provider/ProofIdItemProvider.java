@@ -6,7 +6,7 @@ package org.ai4fm.proofprocess.provider;
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.ProofParallel;
+import org.ai4fm.proofprocess.ProofId;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -101,7 +101,7 @@ public class ProofIdItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		return getText(getString("_UI_ProofId_type"), "", (ProofParallel) object);
+		return getText(getString("_UI_ProofId_type"), "", (ProofId) object);
 	}
 
 	/**
