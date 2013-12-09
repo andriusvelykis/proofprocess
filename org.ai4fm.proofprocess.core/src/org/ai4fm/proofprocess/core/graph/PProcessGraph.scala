@@ -235,28 +235,6 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, Id <: L, I](
       }
       entrySeq
     }
-    
-    def ensureParallel(elem: L): L = {
-      // check if the element is already parallel, otherwise wrap it into a parallel
-      val par = elem match {
-        case ppTree.parallel(_) => elem
-        case _ => ppTree.parallel(Set(elem))
-      }
-      par
-    }
-
-    /**
-     * Flatten parallel upon creation - lifts all given parallel entries 
-     */
-    def createParallel(entries: Set[L]): L = {
-      val flatElems = entries map flattenParallel
-      ppTree.parallel(flatElems.flatten)
-    }
-
-    def flattenParallel(elem: L): Set[L] = elem match {
-      case ppTree.parallel(elems) => elems
-      case _ => Set(elem)
-    }
 
 
     def handleNode(subGraphs: Map[E, L],
