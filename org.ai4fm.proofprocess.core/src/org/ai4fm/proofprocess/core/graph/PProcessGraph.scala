@@ -216,164 +216,167 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, Id <: L, I](
 
     assert(rootGraph.isAcyclic)
     
-    def toSeq(entry: L, following: L): L = {
-      // either prepend to the existing sequence, or create a new one with the entry and the subgraph
-      val seq = ppTree.seq
-      val entrySeq = (entry, following) match {
-        
-        // both sequences - merge them together
-        case (seq(entries1), seq(entries2)) => seq(entries1 ::: entries2)
-        
-        // following sequence 
-        case (e, seq(entries)) => seq(e :: entries)
-        
-        // preceding sequence 
-        case (seq(entries), e) => seq(entries ::: List(e))
-        
-        // both non-sequences, just merge together
-        case _ => seq(List(entry, following))
-      }
-      entrySeq
-    }
-
-
-    def handleNode(subGraphs: Map[E, L],
-                   mergeInfo0: MergeInfo)(
-                     node: E,
-                     predecessors: Iterable[E],
-                     successors: Iterable[E]): (Map[E, L], MergeInfo) = {
-
-      val entry = node
-
-      val mergeInfo = mergeInfo0 + (entry, predecessors)
-
-      val (entrySubGraph, newMergeInfo) =
-        createSubGraph(mergeInfo, subGraphs)(entry, successors)
-
-      val newSubGraphs = subGraphs + (entry -> entrySubGraph)
-
-      (newSubGraphs, newMergeInfo)
-    }
-
-    def createSubGraph(mergeInfo: MergeInfo,
-                       subGraphs: Map[E, L])(
-                         entry: E,
-                         successors: Iterable[E]): (L, MergeInfo) = {
-
-      def resolveSubGraph(e: E): L =
-        if (mergeInfo.isMergePoint(e)) {
-          // for every merge point, create an Id ref
-          ppTree.id(e)
-        } else {
-          // subgraph should be available
-          subGraphs(e)
-        }
-
-      def merge(resolveBranch: E => L,
-                mergeOrder: List[Set[E]],
-                roots: Set[E]): L = {
-
-        // a recursive method to perform the deeper merges
-        def merge0(mergeOrder: List[Set[E]],
-                   pendingRoots: Set[E],
-                   pendingJoin: Option[L]): L = {
-          val (mergePoints :: remainingMerges) = mergeOrder
-
-          // only some of the branches may participate in the merge
-          val consumedRoots0 = (mergePoints map mergeInfo.getPreMergeRoots).flatten
-          // add the merge points to consumption (in case of direct merges)
-          // (direct merges are links from the split directly to the merge)
-          val consumedRoots = consumedRoots0 ++ mergePoints
-          
-          val (consumed, remainingRoots) = pendingRoots partition consumedRoots.contains
-
-          val mergeElem =
-            // if multiple merge points at this level, join them in parallel
-            // (this will become parallel followed by parallel)
-            if (isMulti(mergePoints)) ppTree.parallel(mergePoints map subGraphs)
-            else subGraphs(mergePoints.head)
-
-          // join the consumed branches with pending join element (from higher merge)
-          val consumedBranches = consumed map resolveBranch
-          val branchElem = ppTree.parallel(pendingJoin.toSet ++ consumedBranches)
-          val fullSplitMerge = toSeq(branchElem, mergeElem)
-
-          if (remainingMerges.isEmpty) {
-            if (remainingRoots.isEmpty) fullSplitMerge
-            else {
-              // add the remaining ones as parallel branches
-              val leafBranches = remainingRoots map resolveBranch
-              ppTree.parallel(Set(fullSplitMerge) ++ leafBranches)
-            }
-          }
-          else merge0(remainingMerges, remainingRoots, Some(fullSplitMerge))
-        }
-
-        merge0(mergeOrder, roots, None)
-      }
-
-      val succs = successors.toList
-
-      // check how many successors: leaf (no succs), sequence (one succ) or parallel (multiple)
-      succs match {
-
-        // this is an end of a branch, or end of the proof, so the entry is leaf one
-        case Nil => (entry, mergeInfo)
-
-        // sequence:
-        // either prepend to the existing sequence,
-        // or create a new one with the entry and the subgraph
-        case single :: Nil => {
-
-          val follow = resolveSubGraph(single)
-          val entrySeq = toSeq(entry, follow)
-
-          (entrySeq, mergeInfo)
-        }
-
-        // parallel split:
-        case multiple => {
-          
-          val merges = mergeInfo findMerges entry
-          val splitMergeElem =
-            if (merges.isEmpty) {
-              // no merges - a straightforward parallel split
-              val branches = multiple.toSet map resolveSubGraph
-              ppTree.parallel(branches)
-              
-            } else {
-              
-              val orderedMerges = mergeInfo orderMerges merges
-              merge(resolveSubGraph, orderedMerges, multiple.toSet)
-            }
-
-          // add the initial split element to the beginning of the split+merge
-          val entryParallel = toSeq(entry, splitMergeElem)
-
-          // remove merge info
-          val consumedMergeInfo =
-            if (merges.isEmpty) mergeInfo
-            else (merges foldLeft mergeInfo){ (info, m) => info - m }
-
-          (entryParallel, consumedMergeInfo)
-        }
-      }
-
-    }
-
     val (subGraphs, _) = (rootGraph foldNodesRight (Map[E, L](), MergeInfo()))({
-      case ((node, predecessors, successors), (subGraphs, mergeInfo)) => 
-        handleNode(subGraphs, mergeInfo)(node, predecessors, successors)
+      case ((node, preds, succs), (subGraphs, mergeInfo)) => 
+        createNodePProcessTree(subGraphs, mergeInfo)(node, preds, succs)
     })(List(root))
     
     // after the down->up traversal, find the subgraph for the root
     subGraphs(root)
   }
+
+  private def createNodePProcessTree(subGraphs: Map[E, L],
+                                     mergeInfo0: MergeInfo)(
+                                       node: E,
+                                       predecessors: Iterable[E],
+                                       successors: Iterable[E]): (Map[E, L], MergeInfo) = {
+
+    val entry = node
+
+    val mergeInfo = mergeInfo0 + (entry, predecessors)
+
+    val (entrySubGraph, newMergeInfo) =
+      createSubGraph(mergeInfo, subGraphs)(entry, successors)
+
+    val newSubGraphs = subGraphs + (entry -> entrySubGraph)
+
+    (newSubGraphs, newMergeInfo)
+  }
   
+  private def createSubGraph(mergeInfo: MergeInfo,
+                             subGraphs: Map[E, L])(
+                               entry: E,
+                               successors: Iterable[E]): (L, MergeInfo) = {
+
+    val resolveElem = resolveSubGraph(mergeInfo, subGraphs) _
+
+    val succs = successors.toList
+
+    // check how many successors: leaf (no succs), sequence (one succ) or parallel (multiple)
+    succs match {
+
+      // this is an end of a branch, or end of the proof, so the entry is leaf one
+      case Nil => (entry, mergeInfo)
+
+      // sequence:
+      // either prepend to the existing sequence,
+      // or create a new one with the entry and the subgraph
+      case single :: Nil => {
+
+        val follow = resolveElem(single)
+        val entrySeq = toSeq(entry, follow)
+
+        (entrySeq, mergeInfo)
+      }
+
+      // parallel split:
+      case multiple => {
+
+        val merges = mergeInfo findMerges entry
+        val splitMergeElem =
+          if (merges.isEmpty) {
+            // no merges - a straightforward parallel split
+            val branches = multiple.toSet map resolveElem
+            ppTree.parallel(branches)
+
+          } else {
+
+            val orderedMerges = mergeInfo orderMerges merges
+            merge(mergeInfo, subGraphs, orderedMerges, multiple.toSet)
+          }
+
+        // add the initial split element to the beginning of the split+merge
+        val entryParallel = toSeq(entry, splitMergeElem)
+
+        // remove merge info
+        val consumedMergeInfo =
+          if (merges.isEmpty) mergeInfo
+          else (merges foldLeft mergeInfo) { (info, m) => info - m }
+
+        (entryParallel, consumedMergeInfo)
+      }
+    }
+
+  }
+
+  private def resolveSubGraph(mergeInfo: MergeInfo, subGraphs: Map[E, L])(e: E): L =
+    if (mergeInfo.isMergePoint(e)) {
+      // for every merge point, create an Id ref
+      ppTree.id(e)
+    } else {
+      // subgraph should be available
+      subGraphs(e)
+    }
+
+  private def merge(mergeInfo: MergeInfo,
+                    subGraphs: Map[E, L],
+                    mergeOrder: List[Set[E]],
+                    roots: Set[E]): L = {
+
+    val resolveElem = resolveSubGraph(mergeInfo, subGraphs) _
+
+    // a recursive method to perform the deeper merges
+    def merge0(mergeOrder: List[Set[E]],
+               pendingRoots: Set[E],
+               pendingJoin: Option[L]): L = {
+      val (mergePoints :: remainingMerges) = mergeOrder
+
+      // only some of the branches may participate in the merge
+      val consumedRoots0 = (mergePoints map mergeInfo.getPreMergeRoots).flatten
+      // add the merge points to consumption (in case of direct merges)
+      // (direct merges are links from the split directly to the merge)
+      val consumedRoots = consumedRoots0 ++ mergePoints
+
+      val (consumed, remainingRoots) = pendingRoots partition consumedRoots.contains
+
+      val mergeElem =
+        // if multiple merge points at this level, join them in parallel
+        // (this will become parallel followed by parallel)
+        if (isMulti(mergePoints)) ppTree.parallel(mergePoints map subGraphs)
+        else subGraphs(mergePoints.head)
+
+      // join the consumed branches with pending join element (from higher merge)
+      val consumedBranches = consumed map resolveElem
+      val branchElem = ppTree.parallel(pendingJoin.toSet ++ consumedBranches)
+      val fullSplitMerge = toSeq(branchElem, mergeElem)
+
+      if (remainingMerges.isEmpty) {
+        if (remainingRoots.isEmpty) fullSplitMerge
+        else {
+          // add the remaining ones as parallel branches
+          val leafBranches = remainingRoots map resolveElem
+          ppTree.parallel(Set(fullSplitMerge) ++ leafBranches)
+        }
+      } else merge0(remainingMerges, remainingRoots, Some(fullSplitMerge))
+    }
+
+    merge0(mergeOrder, roots, None)
+  }
+
   private def isMulti(col: Iterable[_]): Boolean = {
     // try taking 2 and check if the result is bigger than a single element
     // this avoids calculating full size of, say, List
     col.take(2).size > 1
+  }
+
+  private def toSeq(entry: L, following: L): L = {
+    // either prepend to the existing sequence, or create a new one with the entry and the subgraph
+    val seq = ppTree.seq
+    val entrySeq = (entry, following) match {
+
+      // both sequences - merge them together
+      case (seq(entries1), seq(entries2)) => seq(entries1 ::: entries2)
+
+      // following sequence 
+      case (e, seq(entries)) => seq(e :: entries)
+
+      // preceding sequence 
+      case (seq(entries), e) => seq(entries ::: List(e))
+
+      // both non-sequences, just merge together
+      case _ => seq(List(entry, following))
+    }
+    entrySeq
   }
 
   
