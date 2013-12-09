@@ -8,9 +8,10 @@ import scala.collection.TraversableOnce.flattenTraversableOnce
 import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 
-import org.ai4fm.proofprocess.cdo.internal.PProcessCDOPlugin.{error, info, log}
+import org.ai4fm.proofprocess.cdo.CopyParticipant
+import org.ai4fm.proofprocess.cdo.internal.PProcessCDOPlugin.{error, info, log, plugin}
 
-import org.eclipse.core.runtime.{IProgressMonitor, NullProgressMonitor}
+import org.eclipse.core.runtime.{CoreException, IProgressMonitor, NullProgressMonitor, Platform}
 import org.eclipse.emf.cdo.eresource.CDOResourceNode
 import org.eclipse.emf.cdo.server.{CDOServerExporter, CDOServerImporter, IRepository}
 import org.eclipse.emf.cdo.session.CDOSession
@@ -18,7 +19,8 @@ import org.eclipse.emf.cdo.transaction.CDOTransaction
 import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.cdo.view.CDOView
 import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.{EClass, EClassifier, EObject, EPackage, EStructuralFeature}
+import org.eclipse.emf.ecore.{EClass, EClassifier, EObject, EPackage, EReference, EStructuralFeature}
+import org.eclipse.emf.ecore.resource.{Resource, ResourceSet}
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.net4j.util.lifecycle.LifecycleUtil
@@ -99,13 +101,17 @@ object RepositoryUtil {
 
     val resourceContents = resourcePaths flatMap resourceContent(repoView)
     // note that Map.mapValues is lazy!
-    val exportFiles = resourceContents map { case (path, eObj) => (path, upgradeExport(eObj)) }
 
-    exportFiles foreach {
+    // need to export everything together to get cross-refs correctly
+    val (resolvedPaths, resolvedObjs) = resourceContents.unzip
+    val exportFiles = upgradeExport(resolvedObjs)
+    val exportInfo = resolvedPaths zip exportFiles
+
+    exportInfo foreach {
       case (path, file) => log(info("Exported converted data for " + path + " to " + file))
     }
 
-    exportFiles.toMap
+    exportInfo.toMap
   }
 
   private def collectResourcePaths(view: CDOView): Seq[String] = {
@@ -121,24 +127,34 @@ object RepositoryUtil {
     rootElem map ((path, _))
   }
 
-  private def upgradeExport(eObj: EObject): File = {
-    val upgraded = upgradeData(eObj)
+  private def upgradeExport(eObjs: Seq[EObject]): Seq[File] = {
+    val upgraded = upgradeData(eObjs)
     exportToTempXML(upgraded)
   }
 
-  private def upgradeData(eObj: EObject): EObject = {
+  private def upgradeData(eObjs: Seq[EObject]): Seq[EObject] = {
     // use a copier that matches the classes/features in the latest packages
+    // note: need to use a single copier to resolve cross references correctly
     val copier = new PackageUpgradeCopier
-    copier.copy(eObj)
+
+    val results = eObjs map copier.copy
+    copier.copyReferences()
+
+    results
   }
 
-  private def exportToTempXML(eObj: EObject): File = {
+  private def exportToTempXML(eObjs: Seq[EObject]): Seq[File] = {
+    // Obtain a new resource set
+    // note: need to use a single resource set when saving to ensure correct
+    // cross references
+    val resSet = new ResourceSetImpl
 
+    eObjs map exportToTempXML(resSet)
+  }
+
+  private def exportToTempXML(resSet: ResourceSet)(eObj: EObject): File = {
     val tempExportFile = File.createTempFile("proofprocess-export", ".xml")
     val tempExportUri = URI.createFileURI(tempExportFile.getAbsolutePath)
-
-    // Obtain a new resource set
-    val resSet = new ResourceSetImpl
 
     // Create a resource
     val resource = resSet.createResource(tempExportUri)
@@ -158,6 +174,7 @@ object RepositoryUtil {
 
     tempExportFile
   }
+
 
   def exportRepository(repo: IRepository): File = {
     val tempExportFile = File.createTempFile("proofprocess-cdo-repo-export", ".xml")
@@ -233,63 +250,83 @@ object RepositoryUtil {
     }
 
 
-  def importData(session: CDOSession, resources: Map[String, File]) {
+  def importData(session: CDOSession, resourceFiles: Map[String, File]) {
     val transaction = session.openTransaction()
 
     try {
-      resources foreach Function.tupled(importResource(transaction))
+
+      val validFiles = checkFiles(resourceFiles.toList)
+      val (resourcePaths, files) = validFiles.unzip
+
+      // Obtain a new resource set
+      // note: need to use a single resource set to resolve cross-references correctly
+      val resSet = new ResourceSetImpl
+      val resources = files map createResource(resSet)
+
+      // load resources and join them back with the paths
+      val loaded = resources map loadResource
+      val loadedPaths = resourcePaths zip loaded
+      val validLoads = loadedPaths flatMap widenOpt2[String, EObject]
+
+      // resolve all proxies from cross-document references
+      EcoreUtil.resolveAll(resSet)
+      
+      // do the import and commit
+      validLoads foreach Function.tupled(createResourceContents(transaction))
+      commitImport(transaction)
+
     } finally {
       transaction.close()
     }
   }
 
-  private def importResource(transaction: CDOTransaction)(path: String, file: File) {
+  private def checkFiles[A](files: Seq[(A, File)]): Seq[(A, File)] = {
+    val (validFiles, invalidFiles) = files partition { case (_, file) => file.exists }
 
-    loadXMLFile(file) match {
-      case None => // ignore
-      case Some(rootObj) => {
-        createResourceContents(transaction)(path, rootObj)
-      }
+    // report bad files
+    invalidFiles foreach {
+      case (_, file) =>
+        log(error(msg = Some("Cannot locate data file to import: " + file.getAbsolutePath)))
     }
+    
+    validFiles
   }
 
-  private def loadXMLFile(file: File): Option[EObject] = {
+  private def createResource(resSet: ResourceSet)(file: File): Resource = {
     val fileUri = URI.createFileURI(file.getAbsolutePath)
+    resSet.createResource(fileUri)
+  }
 
-    // Obtain a new resource set
-    val resSet = new ResourceSetImpl
-
-    // Create a resource
-    val emfResource = resSet.createResource(fileUri)
-
-    if (file.exists) {
-      try {
-        // load EMF resource
-        emfResource.load(null)
-      } catch {
-        case e: IOException => log(error(Some(e)))
-      }
-
-      emfResource.getContents.asScala.headOption
-    } else {
-      log(error(msg = Some("Cannot locate data file to import: " + file.getAbsolutePath)))
-      None
+  private def loadResource(emfResource: Resource): Option[EObject] = {
+    try {
+      // load EMF resource
+      emfResource.load(null)
+    } catch {
+      case e: IOException => log(error(Some(e)))
     }
+
+    emfResource.getContents.asScala.headOption
   }
 
   private def createResourceContents(transaction: CDOTransaction)(path: String, root: EObject) {
     val emfResource = transaction.getOrCreateResource(path)
     emfResource.getContents.add(root)
+    log(info("Added " + path))
+  }
+  
+  private def commitImport(transaction: CDOTransaction) {
     // FIXME
     val monitor = null
 
     try {
       transaction.commit(monitor)
-      log(info("Imported " + path))
+      log(info("Finished importing"))
     } catch {
       case e: CommitException => log(error(Some(e)))
     }
   }
+
+  private def widenOpt2[A, B](arg: (A, Option[B])): Option[(A, B)] = arg._2 map { (arg._1, _) }
 
   private def withRepoSession(dbLoc: java.net.URI, repoName: String)(f: CDOSession => Unit) {
     val repoInfo = new PProcessRepository(dbLoc, repoName)
@@ -312,6 +349,32 @@ object RepositoryUtil {
    */
   private class PackageUpgradeCopier extends EcoreUtil.Copier {
 
+    private def MODEL_EVOLUTION_ID = plugin.pluginId + ".modelEvolution"
+
+    private lazy val copyParticipants: List[CopyParticipant] = {
+      val extensionRegistry = Platform.getExtensionRegistry
+      val extensions = extensionRegistry.getConfigurationElementsFor(MODEL_EVOLUTION_ID)
+
+      try {
+        val execExts = extensions.toList map (_.createExecutableExtension("class"))
+
+        execExts flatMap {
+          _ match {
+            case c: CopyParticipant => Some(c)
+            case _ => {
+              log(error(msg = Some("Cannot instantiate copy participant extension!")))
+              None
+            }
+          }
+        }
+      } catch {
+        case ex: CoreException => {
+          log(error(Some(ex)))
+          Nil
+        }
+      }
+    }
+
     private val classCache: mutable.Map[EClass, EClass] = mutable.Map()
     private val featureCache: mutable.Map[EStructuralFeature, EStructuralFeature] = mutable.Map()
 
@@ -319,6 +382,23 @@ object RepositoryUtil {
       val reg = EPackage.Registry.INSTANCE
       val packages = reg.keySet.asScala map (reg.getEPackage(_))
       packages.toSet
+    }
+
+    override protected def copyReference(eReference: EReference,
+                                         eObject: EObject,
+                                         copyEObject: EObject) {
+
+      val matchingParticipants = copyParticipants.toStream filter {
+        _.canCopyReference(this, eReference, eObject, copyEObject)
+      }
+
+      // take just the first one
+      val activeParticipant = matchingParticipants.headOption
+      activeParticipant match {
+        case Some(p) => p.copyReference(this, eReference, eObject, copyEObject)
+        case None => super.copyReference(eReference, eObject, copyEObject)
+      }
+
     }
 
     override protected def getTarget(eClass: EClass): EClass =
@@ -359,6 +439,14 @@ object RepositoryUtil {
         }
       }
     }
+
+    override def copyReferences() {
+      super.copyReferences()
+      finish()
+    }
+
+    def finish() =
+      copyParticipants foreach { p => if (p.canFinish(this)) p.finish(this) }
 
   }
 

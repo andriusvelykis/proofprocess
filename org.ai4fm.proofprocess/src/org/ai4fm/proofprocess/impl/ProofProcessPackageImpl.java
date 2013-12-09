@@ -15,6 +15,7 @@ import org.ai4fm.proofprocess.ProofEntry;
 import org.ai4fm.proofprocess.ProofFeature;
 import org.ai4fm.proofprocess.ProofFeatureDef;
 import org.ai4fm.proofprocess.ProofFeatureType;
+import org.ai4fm.proofprocess.ProofId;
 import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofParallel;
 import org.ai4fm.proofprocess.ProofProcessFactory;
@@ -123,6 +124,13 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * @generated
 	 */
 	private EClass proofParallelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass proofIdEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -537,8 +545,17 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProofParallel_Links() {
-		return (EReference)proofParallelEClass.getEStructuralFeatures().get(1);
+	public EClass getProofId() {
+		return proofIdEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProofId_EntryRef() {
+		return (EReference)proofIdEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -722,7 +739,9 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 
 		proofParallelEClass = createEClass(PROOF_PARALLEL);
 		createEReference(proofParallelEClass, PROOF_PARALLEL__ENTRIES);
-		createEReference(proofParallelEClass, PROOF_PARALLEL__LINKS);
+
+		proofIdEClass = createEClass(PROOF_ID);
+		createEReference(proofIdEClass, PROOF_ID__ENTRY_REF);
 
 		attemptEClass = createEClass(ATTEMPT);
 		createEReference(attemptEClass, ATTEMPT__PROOF);
@@ -772,6 +791,7 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		proofEntryEClass.getESuperTypes().add(this.getProofElem());
 		proofSeqEClass.getESuperTypes().add(this.getProofElem());
 		proofParallelEClass.getESuperTypes().add(this.getProofElem());
+		proofIdEClass.getESuperTypes().add(this.getProofElem());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(intentEClass, Intent.class, "Intent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -817,7 +837,9 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 
 		initEClass(proofParallelEClass, ProofParallel.class, "ProofParallel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProofParallel_Entries(), this.getProofElem(), null, "entries", null, 1, -1, ProofParallel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
-		initEReference(getProofParallel_Links(), this.getProofEntry(), null, "links", null, 0, -1, ProofParallel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(proofIdEClass, ProofId.class, "ProofId", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getProofId_EntryRef(), this.getProofEntry(), null, "entryRef", null, 1, 1, ProofId.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(attemptEClass, Attempt.class, "Attempt", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAttempt_Proof(), this.getProofElem(), null, "proof", null, 1, 1, Attempt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

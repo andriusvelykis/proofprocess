@@ -12,7 +12,7 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://org/ai4fm/proofprocess/zeves/v1.0.0.12"
+            uri="http://org/ai4fm/proofprocess/zeves/v1.0.0.13"
             class="org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage"
             genModel="model/ZEvesProofProcess.genmodel"/>
    </extension>
@@ -29,6 +29,10 @@
       <resource
             location="model/history/ZEvesProofProcess-v1.0.0.11.ecore"
             uri="http://org/ai4fm/proofprocess/zeves/v1.0.0.11">
+      </resource>
+      <resource
+            location="model/history/ZEvesProofProcess-v1.0.0.12.ecore"
+            uri="http://org/ai4fm/proofprocess/zeves/v1.0.0.12">
       </resource>
    </extension>
    <extension

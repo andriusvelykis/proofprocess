@@ -2,7 +2,7 @@ package org.ai4fm.proofprocess.core.graph
 
 import scala.collection.JavaConverters._
 
-import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofInfo, ProofParallel, ProofProcessFactory, ProofSeq, ProofStep}
+import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofId, ProofInfo, ProofParallel, ProofProcessFactory, ProofSeq, ProofStep}
 import org.ai4fm.proofprocess.core.graph.PProcessTree.CaseObject
 
 
@@ -11,7 +11,8 @@ import org.ai4fm.proofprocess.core.graph.PProcessTree.CaseObject
   * @author Andrius Velykis
   */
 object EmfPProcessTree 
-  extends PProcessTree[ProofElem, ProofEntry, ProofSeq, ProofParallel, ProofStep, ProofInfo] {
+  extends PProcessTree[ProofElem, ProofEntry, ProofSeq, ProofParallel, ProofId,
+                       ProofStep, ProofInfo] {
 
   /** A singleton instance of PProcessGraph graph-tree converter for EMF ProofProcess data. */
   lazy val graphConverter =
@@ -22,6 +23,7 @@ object EmfPProcessTree
   override val entry = ProofEntryTree
   override val seq = ProofSeqTree
   override val parallel = ProofParallelTree
+  override val id = ProofIdTree
 
   override def info(elem: ProofElem): ProofInfo = elem.getInfo
 
@@ -64,22 +66,35 @@ object EmfPProcessTree
 
 
   object ProofParallelTree
-      extends CaseObject[ProofElem, ProofParallel, (Set[ProofElem], Set[ProofEntry])] {
+      extends CaseObject[ProofElem, ProofParallel, Set[ProofElem]] {
 
-    override def apply(elems: (Set[ProofElem], Set[ProofEntry])): ProofParallel = {
-      val (entries, links) = elems
+    override def apply(elems: Set[ProofElem]): ProofParallel = {
       val par = factory.createProofParallel
-      par.getEntries.addAll(entries.asJava)
-      par.getLinks.addAll(links.asJava)
+      par.getEntries.addAll(elems.asJava)
       par.setInfo(factory.createProofInfo)
       par
     }
 
-    override def unapply(e: ProofElem): Option[(Set[ProofElem], Set[ProofEntry])] = e match {
-      case par: ProofParallel => Some((
-        par.getEntries.asScala.toSet,
-        par.getLinks.asScala.toSet))
+    override def unapply(e: ProofElem): Option[Set[ProofElem]] = e match {
+      case par: ProofParallel => Some(par.getEntries.asScala.toSet)
 
+      case _ => None
+    }
+  }
+
+
+  object ProofIdTree
+      extends CaseObject[ProofElem, ProofId, ProofEntry] {
+
+    override def apply(e: ProofEntry): ProofId = {
+      val id = factory.createProofId
+      id.setEntryRef(e)
+      id.setInfo(factory.createProofInfo)
+      id
+    }
+
+    override def unapply(e: ProofElem): Option[ProofEntry] = e match {
+      case id: ProofId => Some(id.getEntryRef)
       case _ => None
     }
   }

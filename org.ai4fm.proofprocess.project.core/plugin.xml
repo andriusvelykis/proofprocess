@@ -14,5 +14,11 @@
          </adapter>
       </factory>
    </extension>
+   <extension
+         point="org.ai4fm.proofprocess.cdo.modelEvolution">
+      <participant
+            class="org.ai4fm.proofprocess.project.core.internal.model.ParallelLinksCopyParticipant">
+      </participant>
+   </extension>
 
 </plugin>

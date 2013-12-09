@@ -17,7 +17,6 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.ai4fm.proofprocess.ProofParallel#getEntries <em>Entries</em>}</li>
- *   <li>{@link org.ai4fm.proofprocess.ProofParallel#getLinks <em>Links</em>}</li>
  * </ul>
  * </p>
  *
@@ -41,21 +40,5 @@ public interface ProofParallel extends ProofElem {
 	 * @generated
 	 */
 	EList<ProofElem> getEntries();
-
-	/**
-	 * Returns the value of the '<em><b>Links</b></em>' reference list.
-	 * The list contents are of type {@link org.ai4fm.proofprocess.ProofEntry}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Links</em>' reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Links</em>' reference list.
-	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getProofParallel_Links()
-	 * @model
-	 * @generated
-	 */
-	EList<ProofEntry> getLinks();
 
 } // ProofParallel

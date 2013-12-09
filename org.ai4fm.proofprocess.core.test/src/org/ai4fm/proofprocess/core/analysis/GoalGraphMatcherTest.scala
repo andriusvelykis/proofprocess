@@ -39,7 +39,7 @@ class GoalGraphMatcherTest {
     ))
     
     val g1: PPGraph[GoalStep] = Graph(GoalStep("A", List(1), List()))
-    val r1 = List(GoalStep("A", List(1), List()))
+    val r1 = Set(GoalStep("A", List(1), List()))
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
@@ -56,7 +56,7 @@ class GoalGraphMatcherTest {
     ))
     
     val g1 = Graph(GoalStep("A", List(1), List(2)) ~> GoalStep("B", List(2), List()))
-    val r1 = List(GoalStep("A", List(1), List(2)))
+    val r1 = Set(GoalStep("A", List(1), List(2)))
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
@@ -74,7 +74,7 @@ class GoalGraphMatcherTest {
     
     // no links in the graph, both steps are root ones
     val g1: PPGraph[GoalStep] = Graph(GoalStep("A", List(1), List()), GoalStep("B", List(2), List()))
-    val r1 = List(GoalStep("A", List(1), List()), GoalStep("B", List(2), List()))
+    val r1 = Set(GoalStep("A", List(1), List()), GoalStep("B", List(2), List()))
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
@@ -93,7 +93,7 @@ class GoalGraphMatcherTest {
     
     val tA = GoalStep("A", List(1), List(2, 3))
     val g1 = Graph(tA ~> GoalStep("B", List(2), List()), tA ~> GoalStep("C", List(3), List()))
-    val r1 = List(tA)
+    val r1 = Set(tA)
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
@@ -117,7 +117,7 @@ class GoalGraphMatcherTest {
     val tD = GoalStep("D", List(3), List(5))
     
     val g1 = Graph(tA ~> tB, tB ~> GoalStep("C", List(4), List()), tA ~> tD, tD ~> GoalStep("E", List(5), List()))
-    val r1 = List(tA)
+    val r1 = Set(tA)
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
     
@@ -152,7 +152,7 @@ class GoalGraphMatcherTest {
     val tD = GoalStep("D", List(4, 5), List())
     
     val g1 = Graph(tA ~> tB, tB ~> tD, tA ~> tC, tC ~> tD)
-    val r1 = List(tA)
+    val r1 = Set(tA)
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
@@ -176,7 +176,7 @@ class GoalGraphMatcherTest {
     
     // this is a merge from the root
     val g1 = Graph(tA ~> tC, tB ~> tC)
-    val r1 = List(tA, tB)
+    val r1 = Set(tA, tB)
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
@@ -202,7 +202,7 @@ class GoalGraphMatcherTest {
     // this is a merge from the root with B being accessible in 2 ways: 
     // directly from top and from A
     val g1 = Graph(tA ~> tB, tC)
-    val r1 = List(tA, tB, tC)
+    val r1 = Set(tA, tB, tC)
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
@@ -225,7 +225,7 @@ class GoalGraphMatcherTest {
     
     // this is a merge from the root (B is accessible from the root and from A)
     val g1 = Graph(tA ~> tB)
-    val r1 = List(tA, tB)
+    val r1 = Set(tA, tB)
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
@@ -252,7 +252,7 @@ class GoalGraphMatcherTest {
     
     // this is a merge from the root (B is accessible from the root and from A)
     val g1 = Graph(tA ~> tB, tB ~> tD, tC ~> tD)
-    val r1 = List(tA, tB, tC)
+    val r1 = Set(tA, tB, tC)
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
@@ -276,7 +276,7 @@ class GoalGraphMatcherTest {
     
     // note that B is "on a side", since A links to C
     val g1 = Graph(tA ~> tB, tB ~> tC, tA ~> tC)
-    val r1 = List(tA)
+    val r1 = Set(tA)
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }
@@ -305,7 +305,7 @@ class GoalGraphMatcherTest {
     
     // note the complex merge patterns: this cannot actually be represented as PProcessTree
     val g1 = Graph(tA ~> tB, tA ~> tC, tB ~> tD, tB ~> tE, tC ~> tD, tC ~> tF, tD ~> tE, tE ~> tF)
-    val r1 = List(tA)
+    val r1 = Set(tA)
     
     assertGraphEquals(ppRootGraph(g1, r1), goalGraph(s1))
   }

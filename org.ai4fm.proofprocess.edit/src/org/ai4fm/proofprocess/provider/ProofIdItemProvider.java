@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
 package org.ai4fm.proofprocess.provider;
 
@@ -10,32 +6,28 @@ package org.ai4fm.proofprocess.provider;
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.ProofElem;
 import org.ai4fm.proofprocess.ProofId;
-import org.ai4fm.proofprocess.ProofParallel;
-import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.ProofParallel} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.ProofId} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ProofParallelItemProvider
+public class ProofIdItemProvider
 	extends ProofElemItemProvider
 	implements
 		IEditingDomainItemProvider,
@@ -49,7 +41,7 @@ public class ProofParallelItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ProofParallelItemProvider(AdapterFactory adapterFactory) {
+	public ProofIdItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -64,75 +56,52 @@ public class ProofParallelItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addEntryRefPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
-	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * This adds a property descriptor for the Entry Ref feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	protected void addEntryRefPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_ProofId_entryRef_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_ProofId_entryRef_feature", "_UI_ProofId_type"),
+				 ProofProcessPackage.Literals.PROOF_ID__ENTRY_REF,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
+	}
+
+
 	@Override
 	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES);
+			childrenFeatures.add(ProofProcessPackage.Literals.PROOF_ID__ENTRY_REF);
 		}
 		return childrenFeatures;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EStructuralFeature getChildFeature(Object object, Object child) {
-		// Check the type of the specified child object and return the proper feature to use for
-		// adding (see {@link AddCommand}) it as a child.
-
-		return super.getChildFeature(object, child);
-	}
-
-	/**
-	 * This returns ProofParallel.gif.
+	 * This returns ProofId.png.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		ProofParallel par = (ProofParallel) object;
-		boolean hasIds = hasIds(par);
-		String iconName;
-		if (par.getEntries().size() == 2) {
-			if (hasIds) {
-				iconName = "ProofParallelLink2.png";
-			} else {
-				iconName = "ProofParallel2.gif";
-			}
-		} else {
-			if (hasIds) {
-				iconName = "ProofParallelLink.png";
-			} else {
-				iconName = "ProofParallel.gif";
-			}
-		}
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/" + iconName));
-	}
-
-	private boolean hasIds(ProofParallel par) {
-		for (ProofElem elem : par.getEntries()) {
-			if (elem instanceof ProofId) {
-				return true;
-			}
-		}
-		
-		return false;
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ProofId.png"));
 	}
 
 	/**
@@ -143,7 +112,7 @@ public class ProofParallelItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		return getText(getString("_UI_ProofParallel_type"), "", (ProofParallel) object);
+		return getText(getString("_UI_ProofId_type"), "", (ProofId) object);
 	}
 
 	/**
@@ -156,12 +125,6 @@ public class ProofParallelItemProvider
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
-
-		switch (notification.getFeatureID(ProofParallel.class)) {
-			case ProofProcessPackage.PROOF_PARALLEL__ENTRIES:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
-				return;
-		}
 		super.notifyChanged(notification);
 	}
 
@@ -175,26 +138,6 @@ public class ProofParallelItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES,
-				 ProofProcessFactory.eINSTANCE.createProofEntry()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES,
-				 ProofProcessFactory.eINSTANCE.createProofSeq()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES,
-				 ProofProcessFactory.eINSTANCE.createProofParallel()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(ProofProcessPackage.Literals.PROOF_PARALLEL__ENTRIES,
-				 ProofProcessFactory.eINSTANCE.createProofId()));
 	}
 
 }
