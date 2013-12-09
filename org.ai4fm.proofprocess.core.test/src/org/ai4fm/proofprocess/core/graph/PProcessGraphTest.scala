@@ -340,8 +340,6 @@ class PProcessGraphTest {
    *  4   6 |
    *  |   |/
    *  5   7
-   * 
-   * The 2->7 will have a soft link.
    */
   @Test
   def softLink() {
