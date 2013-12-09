@@ -45,16 +45,16 @@ class PProcessGraphTest {
 
   private def ppRootGraph[E](graph: PPGraph[E], roots: PPGraphRoots[E]): PPRootGraph[E, _] =
     PPRootGraph(graph, roots, Map())
-  
+
+  val r1 = Set(e(1))
+
   @Test
   def rootInEmptyGraph() {
     val e1 = e(1)
-    val convertedTree = toPProcessTree(Graph(), List(e1))
+    val convertedTree = toPProcessTree(Graph(), r1)
     assertEquals(e1, convertedTree)
-    assertGraphEquals(ppRootGraph(Graph(e1), List(e1)), toGraph(convertedTree))
+    assertGraphEquals(ppRootGraph(Graph(e1), r1), toGraph(convertedTree))
   }
-  
-  val r1 = List(e(1))
   
   @Test
   def sequences() {
@@ -103,8 +103,10 @@ class PProcessGraphTest {
       Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(3) ~> e(4))
     val testTree = 
       Seq(List(1, 
-               Par(Set(2, 
-                       3)), 
+               Par(Set(Seq(List(2,
+                                Id(4))), 
+                       Seq(List(3,
+                                Id(4))))), 
                4))
     val convertedTree = toPProcessTree(testGraph, r1)
     assertEquals(testTree, convertedTree)
@@ -129,12 +131,16 @@ class PProcessGraphTest {
       Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(3) ~> e(4), 
             e(1) ~> e(5), e(5) ~> e(6), e(6) ~> e(7), e(4) ~> e(7))
     val testTree = 
-      Seq(List(e(1),
-               Par(Set(Seq(List(Par(Set(2, 
-                                        3)), 
-                                4)),
+      Seq(List(1,
+               Par(Set(Seq(List(Par(Set(Seq(List(2,
+                                                 Id(4))),
+                                        Seq(List(3,
+                                                 Id(4))))),
+                                4,
+                                Id(7))),
                        Seq(List(5,
-                                6)))),
+                                6,
+                                Id(7))))),
                7))
     val convertedTree = toPProcessTree(testGraph, r1)
     assertEquals(testTree, convertedTree)
@@ -160,14 +166,18 @@ class PProcessGraphTest {
             e(3) ~> e(6))
     val testTree =
       Seq(List(1,
-               Par(Set(Seq(List(5,
-                                Id(6))),
-                       Seq(List(2,
-                                4)),
-                       Seq(List(3,
-                                Par(Set(6,
-                                        Id(4))),
-                                7))))))
+               Par(Set(Seq(List(Par(Set(Seq(List(2,
+                                                 Id(4))),
+                                        Seq(List(3,
+                                                 Par(Set(Id(4),
+                                                         Id(6))))),
+                                        Seq(List(5,
+                                                 Id(6))))),
+                                Par(Set(Seq(List(4,
+                                                 Id(7))),
+                                        Seq(List(6,
+                                                 Id(7))))))))),
+               7))
     val convertedTree = toPProcessTree(testGraph, r1)
     assertEquals(testTree, convertedTree)
     assertGraphEquals(ppRootGraph(testGraph, r1), toGraph(convertedTree))
@@ -177,26 +187,22 @@ class PProcessGraphTest {
   @Test
   def lowRootMerge() {
     // note no root element for multiple roots: starts with a parallel
-    // also note the soft link `-> 3` at root to indicate multi-root
     val testGraph =
       Graph(e(1) ~> e(2), e(2) ~> e(3))
     val testTree =
-      Seq(List(Par(Set(Seq(List(1, 
-                                2)),
-                       Id(3))), 
+      Seq(List(Par(Set(Seq(List(1,
+                                2,
+                                Id(3))),
+                       Id(3))),
                3))
-    val rDouble = List(e(1), e(3))
+    val rDouble = Set(e(1), e(3))
     val convertedTree = toPProcessTree(testGraph, rDouble)
     assertEquals(testTree, convertedTree)
-    // note that the root e3 gets dropped when converting to graph
-    // since we cannot determine whether the parallel is exhaustive,
-    // or whether a direct merge is necessary
     assertGraphEquals(ppRootGraph(testGraph, rDouble), toGraph(convertedTree))
   }
 
   /**
-   * One of the branches does not have any steps in it (1 -> 3). This is represented as a
-   * parallel with a single branch and a merge point.
+   * One of the branches does not have any steps in it (1 -> 3).
    *   1
    *  / \
    *  2  |
@@ -204,7 +210,6 @@ class PProcessGraphTest {
    *   3
    *
    * This is a similar example to `testGraph`, but with a single explicit root.
-   * The link 1 -> 3 is recorded as a soft link.
    */
   @Test
   def directMerge() {
@@ -212,8 +217,9 @@ class PProcessGraphTest {
       Graph(e(1) ~> e(2), e(2) ~> e(3), e(1) ~> e(3))
     val testTree =
       Seq(List(1,
-               Par(Set(2,
-                       Id(3))), 
+               Par(Set(Seq(List(2,
+                                Id(3))),
+                       Id(3))),
                3))
     val convertedTree = toPProcessTree(testGraph, r1)
     assertEquals(testTree, convertedTree)
@@ -240,10 +246,12 @@ class PProcessGraphTest {
       Graph(e(1) ~> e(2), e(2) ~> e(3), e(1) ~> e(3),
             e(3) ~> e(4), e(1) ~> e(4))
     val testTree =
-      Seq(List(1, 
-               Par(Set(Seq(List(Par(Set(2,
-                                        Id(3))), 
-                                3)),
+      Seq(List(1,
+               Par(Set(Seq(List(Par(Set(Seq(List(2,
+                                                 Id(3))),
+                                        Id(3))),
+                                3,
+                                Id(4))),
                        Id(4))),
                4))
     val convertedTree = toPProcessTree(testGraph, r1)
@@ -268,28 +276,19 @@ class PProcessGraphTest {
       Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(2) ~> e(5), 
             e(3) ~> e(4), e(4) ~> e(5))
     val testTree =
-      Seq(List(1, 
-               Par(Set(Seq(List(3,
+      Seq(List(1,
+               Par(Set(Seq(List(Par(Set(Seq(List(2,
+                                                 Par(Set(Id(4),
+                                                         Id(5))))),
+                                        Seq(List(3,
+                                                 Id(4))))),
                                 4,
-                                Id(5))),
-                       Seq(List(2,
-                                Par(Set(Id(4),
-                                        Id(5))))))),
+                                Id(5))))),
                5))
 
-    // The actual conversion to PPTree currently prefers smaller merges (need to add better layout)
-    val actual7 = Seq(List(1,
-                           Par(Set(Seq(List(3,
-                                            Id(4))), 
-                                   Seq(List(2,
-                                            Par(Set(4,
-                                                    Id(5))), 
-                                       5))))))
-    
     val convertedTree = toPProcessTree(testGraph, r1)
-    assertEquals(actual7, convertedTree)
+    assertEquals(testTree, convertedTree)
     assertGraphEquals(ppRootGraph(testGraph, r1), toGraph(convertedTree))
-    assertGraphEquals(ppRootGraph(testGraph, r1), toGraph(testTree))
   }
 
   
@@ -310,27 +309,22 @@ class PProcessGraphTest {
     val testGraph =
       Graph(e(1) ~> e(2), e(1) ~> e(3), e(2) ~> e(4), e(2) ~> e(5), 
             e(3) ~> e(4), e(4) ~> e(5), e(3) ~> e(6), e(5) ~> e(6))
-//    val testTree =
-//      Seq(List(1, 
-//               Par(Set(3,
-//                       2)),
-//               4,
-//               5,
-//               6))
-
-    val actual8 =
+    val testTree =
       Seq(List(1,
-               Par(Set(Seq(List(2,
-                                Par(Set(Id(4),
-                                        Id(5))))),
-                       Seq(List(3,
-                                Par(Set(Seq(List(4,
-                                                 5)),
-                                        Id(6))),
-                                6))))))
+               Par(Set(Seq(List(Par(Set(Seq(List(Par(Set(Seq(List(2,
+                                                                  Par(Set(Id(4),
+                                                                          Id(5))))),
+                                                         Seq(List(3,
+                                                                  Par(Set(Id(4),
+                                                                          Id(6))))))),
+                                                 4,
+                                                 Id(5))))),
+                                5,
+                                Id(6))))),
+               6))
 
     val convertedTree = toPProcessTree(testGraph, r1)
-    assertEquals(actual8, convertedTree)
+    assertEquals(testTree, convertedTree)
     assertGraphEquals(ppRootGraph(testGraph, r1), toGraph(convertedTree))
   }
 
@@ -361,10 +355,9 @@ class PProcessGraphTest {
                                 Par(Set(Seq(List(4,
                                                  5)),
                                         Seq(List(6,
-                                                 7))))
-                                )),
-                       Id(7))) // <-- soft link
-               ))
+                                                 Id(7))))))),
+                       Id(7))),
+               7))
 
     val convertedTree = toPProcessTree(testGraph, r1)
     assertEquals(testTree, convertedTree)
@@ -392,12 +385,13 @@ class PProcessGraphTest {
     val testTree =
       Seq(List(1,
                2,
-               Par(Set(Seq(List(6,
-                                Par(Set(7,
-                                        Id(5))))),
-                       Seq(List(3,
+               Par(Set(Seq(List(3,
                                 4,
-                                5))))))
+                                Id(5))),
+                       Seq(List(6,
+                                Par(Set(Id(5),
+                                        7)))))),
+               5))
 
     val convertedTree = toPProcessTree(testGraph, r1)
     assertEquals(testTree, convertedTree)
@@ -422,25 +416,21 @@ class PProcessGraphTest {
             e(3) ~> e(4), e(3) ~> e(5), e(4) ~> e(6), e(5) ~> e(6))
     val testTree =
       Seq(List(1,
-               Par(Set(2, 3)),
-               Par(Set(4, 5)),
+               Par(Set(Seq(List(Par(Set(Seq(List(2,
+                                                 Par(Set(Id(4),
+                                                         Id(5))))),
+                                        Seq(List(3,
+                                                 Par(Set(Id(4),
+                                                         Id(5))))))),
+                                Par(Set(Seq(List(4,
+                                                 Id(6))),
+                                        Seq(List(5,
+                                                 Id(6))))))))),
                6))
 
-    // The actual conversion to PPTree cannot recognise the double parallels yet
-    // (it is quite a corner case)
-    val actual11 =
-      Seq(List(1,
-               Par(Set(Seq(List(3,
-                                Par(Set(Id(5),
-                                        Id(4))))),
-                       Seq(List(2,
-                                Par(Set(5, 4)),
-                                6))))))
-
     val convertedTree = toPProcessTree(testGraph, r1)
-    assertEquals(actual11, convertedTree)
+    assertEquals(testTree, convertedTree)
     assertGraphEquals(ppRootGraph(testGraph, r1), toGraph(convertedTree))
-    assertGraphEquals(ppRootGraph(testGraph, r1), toGraph(testTree))
   }
   
   /**
@@ -463,13 +453,14 @@ class PProcessGraphTest {
     val testTree =
       Seq(List(1,
                2,
-               Par(Set(Seq(List(6,
-                                Par(Set(8,
-                                        Seq(List(7,
-                                                 Id(5))))))),
-                       Seq(List(3,
+               Par(Set(Seq(List(3,
                                 4,
-                                5))))))
+                                Id(5))),
+                       Seq(List(6,
+                                Par(Set(Seq(List(7,
+                                                 Id(5))),
+                                        8)))))),
+               5))
 
     val convertedTree = toPProcessTree(testGraph, r1)
     assertEquals(testTree, convertedTree)
@@ -497,14 +488,19 @@ class PProcessGraphTest {
     val testTree =
       Seq(List(1,
                2,
-               Par(Set(Seq(List(7,
-                                Par(Set(9,
-                                        8)),
-                                10)),
-                       Seq(List(3,
-                                Par(Set(5,
-                                        4)),
-                                6))))))
+               Par(Set(Seq(List(3,
+                                Par(Set(Seq(List(4,
+                                                 Id(6))),
+                                        Seq(List(5,
+                                                 Id(6))))),
+                                6)),
+                       Seq(List(7,
+                                Par(Set(Seq(List(8,
+                                                 Id(10))),
+                                        Seq(List(9,
+                                                 Id(10))))),
+                                10))))))
+
 
     val convertedTree = toPProcessTree(testGraph, r1)
     assertEquals(testTree, convertedTree)
