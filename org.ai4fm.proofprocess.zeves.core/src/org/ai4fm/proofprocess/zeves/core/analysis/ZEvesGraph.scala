@@ -26,7 +26,7 @@ object ZEvesGraph {
     }
     
     // drop the cases from the roots now
-    PPRootGraph(graph, caseRoots.map(_._1), Map())
+    PPRootGraph(graph, caseRoots.map(_._1).toSet, Map())
   }
 
   private def handleProofEntry(entry: ProofEntry,

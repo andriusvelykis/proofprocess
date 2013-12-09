@@ -14,7 +14,7 @@ import scalax.collection.immutable.Graph
 object PProcessGraph {
 
   type PPGraph[E] = Graph[E, DiEdge]
-  type PPGraphRoots[E] = List[E]
+  type PPGraphRoots[E] = Set[E]
  
   /**
    * Encapsulates a ProofProcess graph that can have multiple roots and attached meta-information
@@ -28,7 +28,7 @@ object PProcessGraph {
   object PPRootGraph {
     /** Empty graph */
     def apply[E, I]()(implicit entryManifest: Manifest[E]): PPRootGraph[E, I] = 
-      PPRootGraph(Graph[E, DiEdge](), List(), Map())
+      PPRootGraph(Graph[E, DiEdge](), Set(), Map())
   }
 
 }
@@ -99,7 +99,7 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, Id <: L, I](
           }
 
           // only the entry is a root now
-          PPRootGraph(withEntryEdges, List(entry), accMeta + (entry -> elemMeta))
+          PPRootGraph(withEntryEdges, Set(entry), accMeta + (entry -> elemMeta))
         }
 
         // for parallel, create subgraphs of each parallel entry,
@@ -131,7 +131,7 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, Id <: L, I](
 
         // for Id refs, just make the entry the root
         case ppTree.id(entry) => {
-          acc.copy(roots = List(entry))
+          acc.copy(roots = Set(entry))
         }
       }
     }

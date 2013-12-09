@@ -36,7 +36,7 @@ object GoalGraphMatcher2 {
     val LinkContext(graph, _) = (proofSteps foldLeft emptyContext)(linkStep)
     
     // as roots, just take everything without any `in` edges
-    val roots = (graph.nodes filter (_.inDegree == 0) map (_.value)).toList
+    val roots = (graph.nodes filter (_.inDegree == 0) map (_.value)).toSet
     
     PPRootGraph(graph, roots, Map())
   }

@@ -22,7 +22,7 @@ object GoalGraphMatcher {
   
   private case class LinkContext[N, T](
       graph: PPGraph[N],
-      roots: PPGraphRoots[N],
+      roots: List[N],
       branches: List[Branch[N, T]])
   
   private case class Branch[N, T](end: N, outGoals: List[T])
@@ -49,7 +49,7 @@ object GoalGraphMatcher {
     val LinkContext(graph, roots, _) = (proofSteps foldLeft emptyContext)(linkStep(node) _)
     
     // reverse the roots, since branches are constructed with prepend
-    PPRootGraph(graph, roots.reverse, Map())
+    PPRootGraph(graph, roots.reverse.toSet, Map())
   }
 
   private def linkStep[A, N, T](node: GoalStep[A, T] => N)
