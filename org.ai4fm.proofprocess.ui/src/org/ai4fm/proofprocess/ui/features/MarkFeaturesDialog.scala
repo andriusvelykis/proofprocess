@@ -20,6 +20,7 @@ import org.eclipse.core.databinding.observable.list.MultiList
 import org.eclipse.emf.cdo.transaction.CDOSavepoint
 import org.eclipse.emf.cdo.util.CommitException
 import org.eclipse.emf.databinding.EMFObservables.{observeList, observeValue}
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.action.Action
@@ -326,7 +327,8 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val addSavePoint = transaction map (_.setSavepoint())
 
     val newFeature = ppFactory.createProofFeature
-    newFeature.getParams.addAll(initialTerms.asJava)
+    val termsCopy = initialTerms map cloneTerm
+    newFeature.getParams.addAll(termsCopy.asJava)
 
     // add immediately
     val featuresList = if (inFeature) elem.getInfo.getInFeatures else elem.getInfo.getOutFeatures
@@ -546,7 +548,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     val isOutFeature = elem.getInfo.getOutFeatures.contains(feature)
     val isOutTerm = !isInTerm && (isOutFeature || feature.getParams.isEmpty)
 
-    feature.getParams.add(param)
+    feature.getParams.add(cloneTerm(param))
     
     if (isOutTerm != isOutFeature) {
       // move to the correct feature list - just swap the lists
@@ -557,6 +559,9 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
     }
     
   }
+
+  // TODO review and generalise!
+  private def cloneTerm(term: Term): Term = EcoreUtil.copy(term)
 
 
   private def createTextField(toolkit: FormToolkit,
