@@ -3,20 +3,28 @@ package org.ai4fm.proofprocess.zeves.core.parse
 import java.util.Queue
 import java.util.concurrent.ConcurrentLinkedQueue
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConversions.asScalaBuffer
 
 import org.ai4fm.proofprocess.core.parse.TrackingToggle
+import org.ai4fm.proofprocess.project.core.PProcessDataStore
 import org.ai4fm.proofprocess.zeves.core.analysis.ProofAnalyzer
 import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.error
-import org.eclipse.core.runtime.{CoreException, IProgressMonitor, IStatus, Status}
-import org.eclipse.core.runtime.jobs.{IJobChangeEvent, Job, JobChangeAdapter}
+import org.eclipse.core.runtime.CoreException
+import org.eclipse.core.runtime.IProgressMonitor
+import org.eclipse.core.runtime.IStatus
+import org.eclipse.core.runtime.Status
+import org.eclipse.core.runtime.jobs.IJobChangeEvent
+import org.eclipse.core.runtime.jobs.Job
+import org.eclipse.core.runtime.jobs.JobChangeAdapter
 
+import SnapshotUtil.isError
+import SnapshotUtil.isProof
+import SnapshotUtil.proofEntries
 import net.sourceforge.czt.session.SectionInfo
-import net.sourceforge.czt.zeves.snapshot.{ISnapshotEntry, SnapshotChangedEvent}
-import net.sourceforge.czt.zeves.snapshot.SnapshotChangedEvent.SnapshotChangeType._
+import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
+import net.sourceforge.czt.zeves.snapshot.SnapshotChangedEvent
+import net.sourceforge.czt.zeves.snapshot.SnapshotChangedEvent.SnapshotChangeType.ADD
 import net.sourceforge.czt.zeves.snapshot.ZEvesSnapshot
-
-import SnapshotUtil.{isError, isProof, proofEntries}
 
 
 /** @author Andrius Velykis
@@ -35,6 +43,11 @@ class SnapshotTracker(snapshot: ZEvesSnapshot) {
     }
   }
 
+  /**
+   * Caches PP data store transactions and roots
+   */
+  private val ppDataStore = new PProcessDataStore
+
   def init() {
     snapshotEvents.init
     tracking.init
@@ -43,6 +56,7 @@ class SnapshotTracker(snapshot: ZEvesSnapshot) {
   def dispose() {
     tracking.dispose
     snapshotEvents.dispose
+    ppDataStore.dispose
   }
 
   /** A concurrent queue is used for pending events, because the queue is
@@ -170,7 +184,7 @@ class SnapshotTracker(snapshot: ZEvesSnapshot) {
     val orderedSpans = proofSpans.reverse
     orderedSpans foreach { proofSpan =>
       // delegate to the proof analyzer
-      ProofAnalyzer.analyze(event.sectInfo, proofSpan)
+      ProofAnalyzer.analyze(event.sectInfo, proofSpan, ppDataStore.apply)
     }
     
     println("Analysing event " + (System.currentTimeMillis - start))

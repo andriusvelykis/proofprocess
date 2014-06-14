@@ -7,6 +7,9 @@
             adaptableType="org.eclipse.core.resources.IResource"
             class="org.ai4fm.proofprocess.project.core.ResourcePProcAdapter">
          <adapter
+               type="org.ai4fm.proofprocess.core.store.IPProcessStoreProvider">
+         </adapter>
+         <adapter
                type="org.ai4fm.proofprocess.core.store.IProofStoreProvider">
          </adapter>
          <adapter

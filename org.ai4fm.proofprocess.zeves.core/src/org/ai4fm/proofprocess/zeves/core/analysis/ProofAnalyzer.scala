@@ -2,19 +2,36 @@ package org.ai4fm.proofprocess.zeves.core.analysis
 
 import java.util.Scanner
 
+import org.ai4fm.filehistory.FileHistoryProject
 import org.ai4fm.filehistory.FileVersion
-import org.ai4fm.proofprocess.{Attempt, Loc, ProofEntry, ProofStore, Term}
-import org.ai4fm.proofprocess.core.analysis.ProofAttemptMatcher._
+import org.ai4fm.proofprocess.Attempt
+import org.ai4fm.proofprocess.Loc
+import org.ai4fm.proofprocess.ProofEntry
+import org.ai4fm.proofprocess.ProofStore
+import org.ai4fm.proofprocess.Term
+import org.ai4fm.proofprocess.core.analysis.ProofAttemptMatcher.findCreateAttempt
+import org.ai4fm.proofprocess.core.analysis.ProofAttemptMatcher.findCreateProof
 import org.ai4fm.proofprocess.core.util.PProcessUtil
-import org.ai4fm.proofprocess.project.core.{ProofHistoryManager, ProofManager}
-import org.ai4fm.proofprocess.project.core.util.{ProofProcessUtil, ResourceUtil}
-import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.{error, log}
-import org.ai4fm.proofprocess.zeves.core.parse.{ProofEntryData, ProofEntryReader}
+import org.ai4fm.proofprocess.project.core.PProcessDataManager
+import org.ai4fm.proofprocess.project.core.PProcessDataManager.PProcessData
+import org.ai4fm.proofprocess.project.core.ProofHistoryManager
+import org.ai4fm.proofprocess.project.core.util.ProofProcessUtil
+import org.ai4fm.proofprocess.project.core.util.ResourceUtil
+import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.error
+import org.ai4fm.proofprocess.zeves.core.internal.ZEvesPProcessCorePlugin.log
+import org.ai4fm.proofprocess.zeves.core.parse.ProofEntryData
+import org.ai4fm.proofprocess.zeves.core.parse.ProofEntryReader
 import org.eclipse.core.resources.IProject
-import org.eclipse.core.runtime.{CoreException, IPath, IProgressMonitor, NullProgressMonitor, Path, Status}
+import org.eclipse.core.runtime.CoreException
+import org.eclipse.core.runtime.IPath
+import org.eclipse.core.runtime.IProgressMonitor
+import org.eclipse.core.runtime.Path
+import org.eclipse.core.runtime.Status
 import org.eclipse.emf.ecore.util.EcoreUtil
 
-import net.sourceforge.czt.session.{Key, SectionInfo, Source}
+import net.sourceforge.czt.session.Key
+import net.sourceforge.czt.session.SectionInfo
+import net.sourceforge.czt.session.Source
 import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
 
 
@@ -23,28 +40,45 @@ import net.sourceforge.czt.zeves.snapshot.ISnapshotEntry
 object ProofAnalyzer {
 
   @throws(classOf[CoreException])
-  def analyze(sectInfo: SectionInfo, proofSnapshot: List[ISnapshotEntry])
-             (implicit monitor: IProgressMonitor) = if (!proofSnapshot.isEmpty) {
+  def analyze(sectInfo: SectionInfo,
+              proofSnapshot: List[ISnapshotEntry],
+              ppData: IProject => PProcessData)
+      (implicit monitor: IProgressMonitor) = if (!proofSnapshot.isEmpty) {
 
     // take the last step as "active entry"
     val activeEntry = proofSnapshot.last
-    val proofEntriesOpt = readProofEntries(sectInfo, proofSnapshot, activeEntry)
 
-    proofEntriesOpt foreach {
-      case (project, proofStore, proofEntryData) => {
+    val filePath = Path.fromOSString(activeEntry.getFilePath)
+    Option(ResourceUtil.findProject(filePath)) match {
+      case None => {
+        // cannot load PP data without a file project
+        error(msg = Some("Unable to locate project for resource " + filePath))
+        Status.OK_STATUS;
+      }
 
-        val (_, matchMapping) = analyzeEntries(proofStore, proofEntryData)
+      case Some(project) => {
+        val PProcessData(proofStore, proofLog, fileHistory) = ppData(project)
 
-        // map snapshot entries to actually matched proof entries for logging
-        val entryMatchMap = PProcessUtil.chainMaps(proofEntryData.entryMap, matchMapping)
-        logActivity(project, entryMatchMap, activeEntry);
+        val textLocFn =
+          syncFileVersion(sectInfo, project, fileHistory, activeEntry, filePath, monitor)
 
-        // FIXME commit here or after all analysis? or somewhere else altogether?
-        commit(proofStore)
+        proofEntries(sectInfo, proofStore, proofSnapshot, textLocFn) match {
+          case None => // no valid proof entries read
+          case Some(proofEntryData) => {
+            val (_, matchMapping) = analyzeEntries(proofStore, proofEntryData)
+
+            // map snapshot entries to actually matched proof entries for logging
+            val entryMatchMap = PProcessUtil.chainMaps(proofEntryData.entryMap, matchMapping)
+            ProofActivityLogger.logProof(proofLog, entryMatchMap, List(activeEntry))
+
+            // FIXME commit here or after all analysis? or somewhere else altogether?
+            PProcessDataManager.commitTransaction(proofStore, monitor)
+          }
+        }
+
+        Status.OK_STATUS;
       }
     }
-
-    Status.OK_STATUS;
   }
   
   private def chainMaps[A, B, C](m1: Map[A, B], m2: Map[B, C]): A => Option[C] = {
@@ -53,44 +87,8 @@ object ProofAnalyzer {
     // unpack the nested option
     chained andThen (_ getOrElse None)
   }
+
   
-  @throws(classOf[CoreException])
-  private def readProofEntries(sectInfo: SectionInfo, proofSnapshot: List[ISnapshotEntry],
-                               activeEntry: ISnapshotEntry)
-                               (implicit monitor: IProgressMonitor): Option[(IProject, ProofStore, ProofEntryData)] = {
-
-    val filePath = Path.fromOSString(activeEntry.getFilePath)
-    val project = Option(ResourceUtil.findProject(filePath))
-    
-    project match {
-      
-      case None => {
-        // cannot locate the project, therefore cannot access proof process model
-        error(msg = Some("Unable to locate project for resource " + filePath))
-        None
-      }
-      
-      case Some(project) => {
-        
-        // load/resolve the proof project
-        val proofProject = ProofManager.proofProject(project, monitor)
-
-        // TODO make path relative for file history
-        val fileVersion = syncFileVersion(sectInfo, project, activeEntry, filePath)
-
-        def textLoc(snapshotEntry: ISnapshotEntry): Loc = {
-          val pos = snapshotEntry.getPosition
-          ProofProcessUtil.createTextLoc(fileVersion, pos.getOffset, pos.getLength);
-        }
-        
-        val proofInfoOpt = proofEntries(sectInfo, proofProject, proofSnapshot, textLoc)
-
-        proofInfoOpt.map((project, proofProject, _))
-      }
-    }
-    
-  }
-
   private def proofEntries(sectInfo: SectionInfo, proofStore: ProofStore,
                            proofSnapshot: List[ISnapshotEntry], entryLoc: ISnapshotEntry => Loc) = {
 
@@ -111,8 +109,12 @@ object ProofAnalyzer {
   }
 
   @throws(classOf[CoreException])
-  private def syncFileVersion(sectInfo: SectionInfo, project: IProject, activeEntry: ISnapshotEntry,
-                              filePath: IPath)(implicit monitor: IProgressMonitor): FileVersion = {
+  private def syncFileVersion(sectInfo: SectionInfo,
+                              project: IProject,
+                              history: FileHistoryProject,
+                              activeEntry: ISnapshotEntry,
+                              filePath: IPath,
+                              monitor: IProgressMonitor): ISnapshotEntry => Loc = {
 
     val text = try {
 
@@ -130,7 +132,18 @@ object ProofAnalyzer {
 
     val posEnd = activeEntry.getPosition.offset + activeEntry.getPosition.length
 
-    ProofHistoryManager.syncFileVersion(project, filePath, text, Some(posEnd), monitor)
+    val historyMan = ProofHistoryManager.historyManager(project, history)
+    val fileVersion = ProofHistoryManager.syncFileVersion(
+      historyMan, history, project,
+      filePath, text, Some(posEnd), monitor)
+
+    // location resolution function
+    def textLoc(snapshotEntry: ISnapshotEntry): Loc = {
+      val pos = snapshotEntry.getPosition
+      ProofProcessUtil.createTextLoc(fileVersion, pos.getOffset, pos.getLength);
+    }
+
+    textLoc
   }
 
   private def snapshotEntrySource(sectInfo: SectionInfo, entry: ISnapshotEntry): Source = {
@@ -164,20 +177,6 @@ object ProofAnalyzer {
     }
   }
   
-  @throws(classOf[CoreException])
-  private def logActivity(project: IProject,
-                          proofEntries: ISnapshotEntry => Option[ProofEntry],
-                          activeEntry: ISnapshotEntry)
-                         (implicit monitor: IProgressMonitor) {
-
-    val proofLog = ProofManager.proofLog(project, monitor)
-    ProofActivityLogger.logProof(proofLog, proofEntries, List(activeEntry))
-  }
-
-  private def commit(proofStore: ProofStore) {
-    ProofManager.commitTransaction(proofStore, new NullProgressMonitor)
-  }
-
   private def analyzeEntries(proofStore: ProofStore,
                              entryData: ProofEntryData): (Attempt, Map[ProofEntry, ProofEntry]) = {
 

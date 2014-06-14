@@ -22,10 +22,7 @@ import org.eclipse.emf.ecore.{EObject, EStructuralFeature}
  * 
  * @author Andrius Velykis
  */
-class ProjectProofEntryTracker(project: IProject) extends IProofEntryTracker {
-  
-  @throws(classOf[CoreException])
-  lazy val proofLog: ProofLog = ProofManager.proofLog(project)
+class ProjectProofEntryTracker(proofLog: ProofLog) extends IProofEntryTracker {
   
   var observer: Option[DelayedListFeatureObserver[_, _]] = None
   

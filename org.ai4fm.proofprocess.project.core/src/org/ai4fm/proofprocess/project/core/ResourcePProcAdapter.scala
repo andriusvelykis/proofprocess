@@ -1,26 +1,31 @@
 package org.ai4fm.proofprocess.project.core
 
-import org.ai4fm.proofprocess.core.store.IProofStoreProvider
-import org.eclipse.core.runtime.IAdapterFactory
-import org.eclipse.core.resources.IResource
-import org.ai4fm.proofprocess.project.core.store.ProjectProofStoreProvider
+import org.ai4fm.proofprocess.core.store.IPProcessStoreProvider
 import org.ai4fm.proofprocess.core.store.IProofEntryTracker
-import org.ai4fm.proofprocess.project.core.store.ProjectProofEntryTracker
+import org.ai4fm.proofprocess.core.store.IProofStoreProvider
+import org.ai4fm.proofprocess.project.core.store.ProjectPProcessStoreProvider
+import org.eclipse.core.resources.IResource
+import org.eclipse.core.runtime.IAdapterFactory
+
+object ResourcePProcAdapter {
+  private val PPSTORE_CLS = List(
+    classOf[IPProcessStoreProvider],
+    classOf[IProofStoreProvider],
+    classOf[IProofEntryTracker])
+}
 
 class ResourcePProcAdapter extends IAdapterFactory {
 
+  import ResourcePProcAdapter._
+
   override def getAdapter(adaptableObject: Object, adapterType: Class[_]): Object =
-    if (classOf[IProofStoreProvider] == adapterType)
+    if (PPSTORE_CLS.contains(adapterType)) {
       adaptableObject match {
-        case res: IResource if (res.getProject() != null) => new ProjectProofStoreProvider(res.getProject())
+        case res: IResource if (res.getProject() != null) =>
+          new ProjectPProcessStoreProvider(res.getProject())
         case _ => null
       }
-    else if (classOf[IProofEntryTracker] == adapterType)
-      adaptableObject match {
-        case res: IResource if (res.getProject() != null) => new ProjectProofEntryTracker(res.getProject())
-        case _ => null
-      }
-    else null
+    } else null
 
   override def getAdapterList(): Array[Class[_]] =
     Array(classOf[IProofStoreProvider], classOf[IProofEntryTracker])

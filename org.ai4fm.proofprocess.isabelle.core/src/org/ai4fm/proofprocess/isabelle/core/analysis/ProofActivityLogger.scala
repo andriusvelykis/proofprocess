@@ -3,8 +3,10 @@ package org.ai4fm.proofprocess.isabelle.core.analysis
 import java.util.Date
 
 import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.log.{ProofLog, ProofProcessLogFactory, ProofProcessLogPackage}
-import org.ai4fm.proofprocess.project.core.ProofManager
+import org.ai4fm.proofprocess.log.ProofLog
+import org.ai4fm.proofprocess.log.ProofProcessLogFactory
+import org.ai4fm.proofprocess.log.ProofProcessLogPackage
+import org.ai4fm.proofprocess.project.core.PProcessDataManager.commitTransaction
 import org.ai4fm.proofprocess.project.core.util.EmfUtil
 import org.eclipse.core.runtime.NullProgressMonitor
 
@@ -34,7 +36,7 @@ object ProofActivityLogger {
 
     if (!changedStates.isEmpty) {
       // save the logged info
-      ProofManager.commitTransaction(proofLog, new NullProgressMonitor)
+      commitTransaction(proofLog, new NullProgressMonitor)
     }
   }
 

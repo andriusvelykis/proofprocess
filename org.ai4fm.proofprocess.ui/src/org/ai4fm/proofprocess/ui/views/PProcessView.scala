@@ -1,6 +1,6 @@
 package org.ai4fm.proofprocess.ui.views
 
-import org.ai4fm.proofprocess.core.store.{IProofEntryTracker, IProofStoreProvider}
+import org.ai4fm.proofprocess.core.store.IPProcessStoreProvider
 import org.ai4fm.proofprocess.core.util.PProcessUtil
 
 import org.eclipse.core.resources.IResource
@@ -23,11 +23,10 @@ class PProcessView extends PageBookView {
 
   override protected def doCreatePage(part: IWorkbenchPart): PageRec = {
     // must resolve without None
-    val proofStoreProvider = getProofStore(part).get
-    val proofEntryTracker = getProofEntryTracker(part)
+    val ppStoreProvider = getPProcessStore(part).get
 
     // create a page with the proof store provider
-    val proofProcessPage = new PProcessPage(this, proofStoreProvider, proofEntryTracker)
+    val proofProcessPage = new PProcessPage(this, ppStoreProvider, Some(ppStoreProvider))
     initPage(proofProcessPage)
     proofProcessPage.createControl(getPageBook())
 
@@ -44,13 +43,10 @@ class PProcessView extends PageBookView {
     part.orNull
   }
 
-  override protected def isImportant(part: IWorkbenchPart) = getProofStore(part).isDefined
+  override protected def isImportant(part: IWorkbenchPart) = getPProcessStore(part).isDefined
 
-  private def getProofStore(part: IWorkbenchPart): Option[IProofStoreProvider] =
-    getResourceAdapter(part, classOf[IProofStoreProvider])
-  
-  private def getProofEntryTracker(part: IWorkbenchPart): Option[IProofEntryTracker] =
-    getResourceAdapter(part, classOf[IProofEntryTracker])
+  private def getPProcessStore(part: IWorkbenchPart): Option[IPProcessStoreProvider] =
+    getResourceAdapter(part, classOf[IPProcessStoreProvider])
   
   private def getResourceAdapter[A](part: IWorkbenchPart, adapterClass: Class[A]): Option[A] =
     // force load adapters (likely in different plugins, which may be not loaded yet)
