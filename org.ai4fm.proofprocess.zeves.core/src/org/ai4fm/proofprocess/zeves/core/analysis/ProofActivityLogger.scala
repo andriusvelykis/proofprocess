@@ -3,8 +3,10 @@ package org.ai4fm.proofprocess.zeves.core.analysis
 import java.util.Date
 
 import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.log.{ProofLog, ProofProcessLogFactory, ProofProcessLogPackage}
-import org.ai4fm.proofprocess.project.core.ProofManager
+import org.ai4fm.proofprocess.log.ProofLog
+import org.ai4fm.proofprocess.log.ProofProcessLogFactory
+import org.ai4fm.proofprocess.log.ProofProcessLogPackage
+import org.ai4fm.proofprocess.project.core.PProcessDataManager.commitTransaction
 import org.ai4fm.proofprocess.project.core.util.EmfUtil
 import org.ai4fm.proofprocess.zeves.core.parse.SnapshotUtil.ProofSnapshotEntry
 import org.eclipse.core.runtime.IProgressMonitor
@@ -33,7 +35,7 @@ object ProofActivityLogger {
 
     if (!snapshotEntries.isEmpty) {
       // save the logged info
-      ProofManager.commitTransaction(proofLog, monitor)
+      commitTransaction(proofLog, monitor)
     }
   }
 

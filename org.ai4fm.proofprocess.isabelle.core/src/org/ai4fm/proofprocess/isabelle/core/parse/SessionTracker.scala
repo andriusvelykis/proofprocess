@@ -9,12 +9,21 @@ import org.ai4fm.proofprocess.core.parse.TrackingToggle
 import org.ai4fm.proofprocess.isabelle.core.IsabellePProcessCorePlugin.error
 import org.ai4fm.proofprocess.isabelle.core.analysis.ProofAnalyzer
 import org.ai4fm.proofprocess.isabelle.core.patch.IsabellePatcher
-import org.eclipse.core.runtime.{CoreException, IProgressMonitor, IStatus, Status}
-import org.eclipse.core.runtime.jobs.{IJobChangeEvent, Job, JobChangeAdapter}
+import org.ai4fm.proofprocess.project.core.PProcessDataStore
+import org.eclipse.core.runtime.CoreException
+import org.eclipse.core.runtime.IProgressMonitor
+import org.eclipse.core.runtime.IStatus
+import org.eclipse.core.runtime.Status
+import org.eclipse.core.runtime.jobs.IJobChangeEvent
+import org.eclipse.core.runtime.jobs.Job
+import org.eclipse.core.runtime.jobs.JobChangeAdapter
 
-import isabelle.{Command, Document, Session}
+import isabelle.Command
+import isabelle.Document
+import isabelle.Session
 import isabelle.eclipse.core.IsabelleCore
-import isabelle.eclipse.core.util.{LoggingActor, SessionEvents}
+import isabelle.eclipse.core.util.LoggingActor
+import isabelle.eclipse.core.util.SessionEvents
 
 
 /**
@@ -44,6 +53,11 @@ class SessionTracker extends SessionEvents {
     }
   }
 
+  /**
+   * Caches PP data store transactions and roots
+   */
+  private val ppDataStore = new PProcessDataStore
+
   def init() {
     initSessionEvents()
     tracking.init()
@@ -51,6 +65,7 @@ class SessionTracker extends SessionEvents {
   def dispose() {
     tracking.dispose()
     disposeSessionEvents()
+    ppDataStore.dispose()
   }
 
   /** A concurrent queue is used for pending events, because the queue is
@@ -141,7 +156,7 @@ class SessionTracker extends SessionEvents {
     if (patcher.checkIsabellePatched()) {
 
       // delegate to the proof analyzer
-      ProofAnalyzer.analyze(event.docState, event.changedCommands, monitor)
+      ProofAnalyzer.analyze(event.docState, event.changedCommands, ppDataStore.apply, monitor)
 
     } else {
       Status.CANCEL_STATUS

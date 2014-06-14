@@ -1,14 +1,18 @@
 package org.ai4fm.proofprocess.project.ui.actions
 
 import org.ai4fm.proofprocess.cdo.PProcessCDO
-import org.ai4fm.proofprocess.project.core.ProofManager
-
-import org.eclipse.core.commands.{AbstractHandler, ExecutionEvent, ExecutionException}
+import org.ai4fm.proofprocess.project.core.PProcessDataManager.repoInfo
+import org.eclipse.core.commands.AbstractHandler
+import org.eclipse.core.commands.ExecutionEvent
+import org.eclipse.core.commands.ExecutionException
 import org.eclipse.core.resources.IProject
-import org.eclipse.core.runtime.{IProgressMonitor, IStatus, Status}
+import org.eclipse.core.runtime.IProgressMonitor
+import org.eclipse.core.runtime.IStatus
+import org.eclipse.core.runtime.Status
 import org.eclipse.core.runtime.jobs.Job
 import org.eclipse.jface.dialogs.MessageDialog
-import org.eclipse.jface.viewers.{ISelection, IStructuredSelection}
+import org.eclipse.jface.viewers.ISelection
+import org.eclipse.jface.viewers.IStructuredSelection
 import org.eclipse.ui.handlers.HandlerUtil
 
 
@@ -43,7 +47,7 @@ class UpgradeRepoHandler extends AbstractHandler {
 
   private def upgradeProjectRepo(event: ExecutionEvent, project: IProject) {
 
-    val (databaseLoc, repoName) = ProofManager.projectPProcessRepositoryInfo(project)
+    val (databaseLoc, repoName) = repoInfo(project)
 
     val shell = HandlerUtil.getActiveShell(event);
     val dialogTitle = "Upgrade/Compact Repository"
