@@ -21,7 +21,7 @@
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
     <osgi-version-qualifier>${maven.build.timestamp}</osgi-version-qualifier>
 
-    <scala.version>2.10.1</scala.version>
+    <scala.version>2.10.4</scala.version>
     <graph-core.version>1.6.1</graph-core.version>
   </properties>
 
