@@ -1,17 +1,23 @@
 package org.ai4fm.proofprocess.project.core.store
 
-import scala.collection.JavaConverters._
+import scala.collection.JavaConverters.asScalaBufferConverter
 
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.core.store.IProofEntryTracker
-import org.ai4fm.proofprocess.log.{Activity, ProofActivity, ProofLog, ProofProcessLogPackage}
-import org.ai4fm.proofprocess.project.core.ProofManager
-import org.eclipse.core.databinding.observable.{ChangeEvent, IChangeListener, Observables, Realm}
-import org.eclipse.core.databinding.observable.value.{IValueChangeListener, ValueChangeEvent, WritableValue}
-import org.eclipse.core.resources.IProject
+import org.ai4fm.proofprocess.log.Activity
+import org.ai4fm.proofprocess.log.ProofActivity
+import org.ai4fm.proofprocess.log.ProofLog
+import org.ai4fm.proofprocess.log.ProofProcessLogPackage
+import org.eclipse.core.databinding.observable.ChangeEvent
+import org.eclipse.core.databinding.observable.IChangeListener
+import org.eclipse.core.databinding.observable.Observables
+import org.eclipse.core.databinding.observable.value.IValueChangeListener
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent
+import org.eclipse.core.databinding.observable.value.WritableValue
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.emf.databinding.EMFProperties
-import org.eclipse.emf.ecore.{EObject, EStructuralFeature}
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 
 
 /**
