@@ -1,8 +1,13 @@
 package org.ai4fm.proofprocess.zeves.core.analysis
 
+import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.Trace
-import org.ai4fm.proofprocess.core.analysis.{FeatureEqualityHelper, ProofEntryMatcher}
-import org.ai4fm.proofprocess.zeves.{ZEvesProofProcessPackage, ZEvesTrace}
+import org.ai4fm.proofprocess.core.analysis.FeatureEqualityHelper
+import org.ai4fm.proofprocess.core.analysis.ProofEntryMatcher
+import org.ai4fm.proofprocess.zeves.CztTerm
+import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage
+import org.ai4fm.proofprocess.zeves.ZEvesTrace
+
 
 /**
  * Proof entry matcher for Z/EVES ProofProcess data.
@@ -12,6 +17,11 @@ import org.ai4fm.proofprocess.zeves.{ZEvesProofProcessPackage, ZEvesTrace}
  * @author Andrius Velykis
  */
 object ZEvesProofEntryMatcher extends ProofEntryMatcher {
+
+  override def matchTerm(term1: Term, term2: Term): Boolean = (term1, term2) match {
+    case (t1: CztTerm, t2: CztTerm) => t1.getTerm.equals(t2.getTerm)
+    case _ => super.matchTerm(term1, term2)
+  }
 
   override def matchTrace(trace1: Trace, trace2: Trace): Boolean = (trace1, trace2) match {
     
