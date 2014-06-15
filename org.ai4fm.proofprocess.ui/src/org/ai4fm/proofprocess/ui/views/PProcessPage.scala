@@ -8,6 +8,7 @@ import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.core.prefs.PreferenceTracker
 import org.ai4fm.proofprocess.core.store.IProofEntryTracker
 import org.ai4fm.proofprocess.core.store.IProofStoreProvider
+import org.ai4fm.proofprocess.ui.actions.CollapseAllAction
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.error
 import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.log
 import org.ai4fm.proofprocess.ui.prefs.PProcessUIPreferences.TRACK_LATEST_PROOF_ENTRY
@@ -33,11 +34,13 @@ import org.eclipse.jface.viewers.Viewer
 import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.widgets.Composite
+import org.eclipse.ui.IActionBars
 import org.eclipse.ui.IViewPart
 import org.eclipse.ui.IWorkbenchActionConstants
 import org.eclipse.ui.commands.ICommandService
 import org.eclipse.ui.dialogs.FilteredTree
 import org.eclipse.ui.dialogs.PatternFilter
+import org.eclipse.ui.handlers.CollapseAllHandler
 import org.eclipse.ui.handlers.IHandlerService
 import org.eclipse.ui.part.Page
 
@@ -99,6 +102,8 @@ class PProcessPage(viewPart: IViewPart,
 
     // register as global selection provider
     getSite().setSelectionProvider(treeViewer.getViewer);
+
+    registerToolbarActions(getSite.getActionBars)
     
     // load the proof process in a separate job, otherwise it delays the startup
     val loadJob = new Job("Loading proof process") {
@@ -158,6 +163,27 @@ class PProcessPage(viewPart: IViewPart,
 
     collect0(eobj, List())
   }
+
+  private def registerToolbarActions(actionBars: IActionBars) {
+    
+    // action to collapse the PP tree
+    val collapseAllAction = new CollapseAllAction(treeViewer.getViewer)
+    
+    // add actions to toolbar
+    Option(actionBars.getToolBarManager()) foreach { mgr =>
+      {
+        mgr.prependToGroup("view", collapseAllAction)
+      }
+    }
+
+    // register as the handler
+    val handlerService = getSite.getService(classOf[IHandlerService]).asInstanceOf[IHandlerService]
+    handlerService.activateHandler(
+      CollapseAllHandler.COMMAND_ID,
+      new CollapseAllHandler(treeViewer.getViewer))
+
+  }
+
 
   /**
    * A filter for ProofProcess view tree: only filters on proofs

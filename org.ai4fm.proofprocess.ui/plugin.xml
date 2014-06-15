@@ -96,6 +96,14 @@
       <menuContribution
             allPopups="false"
             locationURI="toolbar:org.ai4fm.proofprocess.ui.PProcessView">
+         <separator
+               name="view"
+               visible="false">
+         </separator>
+         <separator
+               name="link"
+               visible="false">
+         </separator>
          <command
                commandId="org.ai4fm.proofprocess.ui.trackLatestProofEntryToggle"
                icon="icons/synced.gif"
