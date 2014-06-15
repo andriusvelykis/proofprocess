@@ -22,8 +22,7 @@ class PProcessGraphTest {
     override def seq = SeqCase
     override def parallel = ParCase
     override def id = IdCase
-    // TODO better solution?
-    override def info(elem: PElem): Int = 0
+    override def info(elem: PElem): Option[Int] = None
     // FIXME
     override def addInfo(elem: PElem, info: Int): PElem = elem
   }

@@ -25,7 +25,17 @@ object EmfPProcessTree
   override val parallel = ProofParallelTree
   override val id = ProofIdTree
 
-  override def info(elem: ProofElem): ProofInfo = elem.getInfo
+  override def info(elem: ProofElem): Option[ProofInfo] =
+    if (isEmptyInfo(elem.getInfo)) None
+    else Some(elem.getInfo)
+
+  private def isEmptyInfo(info: ProofInfo): Boolean =
+    Option(info.getIntent).isEmpty ||
+      isEmpty(info.getNarrative) ||
+      info.getInFeatures.isEmpty ||
+      info.getOutFeatures.isEmpty
+
+  private def isEmpty(str: String): Boolean = Option(str).isEmpty || str.isEmpty
 
   override def addInfo(elem: ProofElem, info: ProofInfo): ProofElem = {
     elem.setInfo(addProofInfo(elem.getInfo, info))

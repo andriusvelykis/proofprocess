@@ -74,8 +74,11 @@ class PProcessGraph[L, E <: L, S <: L, P <: L, Id <: L, I](
                acc: PPRootGraph[E, I],
                parentMeta: List[I]): PPRootGraph[E, I] = {
 
-      // add this level's meta to the list
-      val elemMeta = ppTree.info(rootElem) :: parentMeta
+      // add this level's meta to the list if not empty
+      val elemMeta = ppTree.info(rootElem) match {
+        case Some(info) => info :: parentMeta
+        case None => parentMeta
+      }
 
       rootElem match {
 

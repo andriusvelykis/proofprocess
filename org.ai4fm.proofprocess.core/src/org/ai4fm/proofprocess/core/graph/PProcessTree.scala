@@ -24,7 +24,7 @@ trait PProcessTree[Elem, Entry <: Elem, Seq <: Elem, Parallel <: Elem, Id <: Ele
 
   def id: CaseObject[Elem, Id, Entry]
 
-  def info(elem: Elem): Info
+  def info(elem: Elem): Option[Info]
 
   def addInfo(elem: Elem, info: Info): Elem
 
