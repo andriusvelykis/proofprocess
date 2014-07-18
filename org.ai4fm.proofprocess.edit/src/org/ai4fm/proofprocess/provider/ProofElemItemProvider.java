@@ -245,20 +245,14 @@ public class ProofElemItemProvider
 			if (child instanceof ProofInfo) {
 				ProofInfo proofInfo = (ProofInfo) child;
 
-				// if proof info has no data apart from the intent, do not show it
-				boolean emptyInfo = 
-						(proofInfo.getNarrative() == null || proofInfo.getNarrative().isEmpty())
-						&& proofInfo.getInFeatures().isEmpty()
-						&& proofInfo.getOutFeatures().isEmpty();
-				if (!emptyInfo) {
-					filteredChildren.add(proofInfo);
-				} else {
-					// show just the intent if available
-					Object intent = proofInfo.getIntent();
-					if (intent != null) {
-						filteredChildren.add(intent);
-					}
+				// ignore the ProofInfo object, but show its children data
+				Object intent = proofInfo.getIntent();
+				if (intent != null) {
+					filteredChildren.add(intent);
 				}
+
+				filteredChildren.addAll(proofInfo.getInFeatures());
+				filteredChildren.addAll(proofInfo.getOutFeatures());
 			} else {
 				filteredChildren.add(child);
 			}
