@@ -246,10 +246,10 @@ public class ProofElemItemProvider
 				ProofInfo proofInfo = (ProofInfo) child;
 
 				// ignore the ProofInfo object, but show its children data
-				Object intent = proofInfo.getIntent();
-				if (intent != null) {
-					filteredChildren.add(intent);
-				}
+//				Object intent = proofInfo.getIntent();
+//				if (intent != null) {
+//					filteredChildren.add(intent);
+//				}
 
 				filteredChildren.addAll(proofInfo.getInFeatures());
 				filteredChildren.addAll(proofInfo.getOutFeatures());
