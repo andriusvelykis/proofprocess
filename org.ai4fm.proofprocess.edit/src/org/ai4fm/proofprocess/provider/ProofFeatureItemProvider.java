@@ -246,8 +246,11 @@ public class ProofFeatureItemProvider
 		String featureDefStr = featureDef != null ? featureDef.getName() : "<?feature>";
 
 		String paramsStr = renderParameters(feature.getParams());
+
+		String misc = feature.getMisc();
+		String miscStr = (misc != null && !misc.isEmpty()) ? " - " + misc : "";
 		
-		return featureDefStr + " (" + paramsStr + ")";
+		return featureDefStr + " (" + paramsStr + ")" + miscStr;
 	}
 
 	private String renderParameters(List<Term> params) {
