@@ -290,6 +290,9 @@ public class ProofFeatureItemProvider
 			case ProofProcessPackage.PROOF_FEATURE__PARAMS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
 				return;
+			case ProofProcessPackage.PROOF_FEATURE__MISC:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
 		}
 		super.notifyChanged(notification);
 	}
