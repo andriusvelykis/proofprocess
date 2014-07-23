@@ -1,8 +1,13 @@
 package org.ai4fm.proofprocess.core.store
 
-import scala.collection.JavaConverters._
+import scala.collection.JavaConverters.asScalaBufferConverter
 
-import org.ai4fm.proofprocess.{ProofElem, ProofEntry, ProofParallel, ProofSeq, Term}
+import org.ai4fm.proofprocess.ProofElem
+import org.ai4fm.proofprocess.ProofEntry
+import org.ai4fm.proofprocess.ProofId
+import org.ai4fm.proofprocess.ProofParallel
+import org.ai4fm.proofprocess.ProofSeq
+import org.ai4fm.proofprocess.Term
 
 
 /**
@@ -20,7 +25,7 @@ object ProofElemComposition {
 
     case parallel: ProofParallel => {
       // TODO review what to do with links? E.g. how about assumptions..?
-      val parEntries = parallel.getEntries.asScala //++ parallel.getLinks.asScala
+      val parEntries = noLinks(parallel.getEntries.asScala) //++ parallel.getLinks.asScala
 
       if (parEntries.isEmpty) {
         Nil
@@ -31,7 +36,7 @@ object ProofElemComposition {
     }
 
     case seq: ProofSeq => {
-      val seqEntries = seq.getEntries.asScala
+      val seqEntries = noLinks(seq.getEntries.asScala)
 
       if (seqEntries.isEmpty) {
         Nil
@@ -41,7 +46,15 @@ object ProofElemComposition {
         composeEntries(seqEntries.last, before)(f)
       }
     }
+    
+    case link: ProofId => Nil
   }
+
+  /**
+   * Filter ProofId elements, which do not contribute to composition.
+   */
+  private def noLinks[A](seq: Seq[A]): Seq[A] =
+    seq filter (e => !e.isInstanceOf[ProofId])
 
   def composeInGoals(elem: ProofElem): Seq[(Term, ProofEntry)] =
     composeEntries(elem, true) { entry => entry.getProofStep.getInGoals.asScala }
