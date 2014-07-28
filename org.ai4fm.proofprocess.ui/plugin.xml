@@ -78,6 +78,12 @@
             id="org.ai4fm.proofprocess.ui.ungroupSteps"
             name="Ungroup Steps">
       </command>
+      <command
+            defaultHandler="org.ai4fm.proofprocess.ui.actions.ExportPlainTextHandler"
+            description="Export to Plain Text"
+            id="org.ai4fm.proofprocess.ui.exportPlainText"
+            name="Export to Plain Text">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -113,6 +119,14 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:org.ai4fm.proofprocess.ui.PProcessView?after=edit">
+         <command
+               commandId="org.ai4fm.proofprocess.ui.exportPlainText"
+               style="push">
+         </command>
+         <separator
+               name="features"
+               visible="true">
+         </separator>
          <command
                commandId="org.ai4fm.proofprocess.ui.markFeatures"
                style="push">
