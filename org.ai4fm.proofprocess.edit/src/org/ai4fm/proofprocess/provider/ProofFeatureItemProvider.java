@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.ai4fm.proofprocess.ProofFeature;
 import org.ai4fm.proofprocess.ProofFeatureDef;
-import org.ai4fm.proofprocess.ProofFeatureType;
 import org.ai4fm.proofprocess.ProofInfo;
 import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofProcessPackage;
