@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess.zeves.util;
 
+import org.ai4fm.proofprocess.DisplayTerm;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 
@@ -73,13 +74,6 @@ public class ZEvesProofProcessSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case ZEvesProofProcessPackage.DISPLAY_TERM: {
-				DisplayTerm displayTerm = (DisplayTerm)theEObject;
-				T result = caseDisplayTerm(displayTerm);
-				if (result == null) result = caseTerm(displayTerm);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ZEvesProofProcessPackage.UNPARSED_TERM: {
 				UnparsedTerm unparsedTerm = (UnparsedTerm)theEObject;
 				T result = caseUnparsedTerm(unparsedTerm);

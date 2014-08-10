@@ -35,7 +35,7 @@ public class IsabelleProofProcessFactoryImpl extends EFactoryImpl implements Isa
 	 */
 	public static IsabelleProofProcessFactory init() {
 		try {
-			IsabelleProofProcessFactory theIsabelleProofProcessFactory = (IsabelleProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/isabelle/v1.0.0.13"); 
+			IsabelleProofProcessFactory theIsabelleProofProcessFactory = (IsabelleProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory(IsabelleProofProcessPackage.eNS_URI);
 			if (theIsabelleProofProcessFactory != null) {
 				return theIsabelleProofProcessFactory;
 			}

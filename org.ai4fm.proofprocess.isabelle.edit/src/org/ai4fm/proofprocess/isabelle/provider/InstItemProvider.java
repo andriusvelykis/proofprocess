@@ -10,6 +10,7 @@ package org.ai4fm.proofprocess.isabelle.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.Inst;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
@@ -240,6 +241,11 @@ public class InstItemProvider
 			(createChildParameter
 				(IsabelleProofProcessPackage.Literals.INST__TERM,
 				 IsabelleProofProcessFactory.eINSTANCE.createJudgementTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.INST__TERM,
+				 ProofProcessFactory.eINSTANCE.createStringTerm()));
 	}
 
 	/**

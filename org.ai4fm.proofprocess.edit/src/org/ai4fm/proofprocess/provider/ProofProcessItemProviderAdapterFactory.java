@@ -99,6 +99,29 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.StringTerm} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected StringTermItemProvider stringTermItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.ai4fm.proofprocess.StringTerm}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createStringTermAdapter() {
+		if (stringTermItemProvider == null) {
+			stringTermItemProvider = new StringTermItemProvider(this);
+		}
+
+		return stringTermItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.ai4fm.proofprocess.ProofStep} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -451,6 +474,7 @@ public class ProofProcessItemProviderAdapterFactory extends ProofProcessAdapterF
 	 */
 	public void dispose() {
 		if (intentItemProvider != null) intentItemProvider.dispose();
+		if (stringTermItemProvider != null) stringTermItemProvider.dispose();
 		if (proofStepItemProvider != null) proofStepItemProvider.dispose();
 		if (proofInfoItemProvider != null) proofInfoItemProvider.dispose();
 		if (proofFeatureDefItemProvider != null) proofFeatureDefItemProvider.dispose();

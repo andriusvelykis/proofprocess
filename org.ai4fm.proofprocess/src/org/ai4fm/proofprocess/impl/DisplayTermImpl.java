@@ -1,13 +1,9 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
-package org.ai4fm.proofprocess.isabelle.impl;
+package org.ai4fm.proofprocess.impl;
 
-import org.ai4fm.proofprocess.isabelle.DisplayTerm;
-import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
+import org.ai4fm.proofprocess.DisplayTerm;
+import org.ai4fm.proofprocess.ProofProcessPackage;
 
 import org.eclipse.emf.ecore.EClass;
 
@@ -20,7 +16,7 @@ import org.eclipse.emf.internal.cdo.CDOObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.isabelle.impl.DisplayTermImpl#getDisplay <em>Display</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.impl.DisplayTermImpl#getDisplay <em>Display</em>}</li>
  * </ul>
  * </p>
  *
@@ -53,7 +49,7 @@ public abstract class DisplayTermImpl extends CDOObjectImpl implements DisplayTe
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return IsabelleProofProcessPackage.Literals.DISPLAY_TERM;
+		return ProofProcessPackage.Literals.DISPLAY_TERM;
 	}
 
 	/**
@@ -71,9 +67,8 @@ public abstract class DisplayTermImpl extends CDOObjectImpl implements DisplayTe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getDisplay() {
-		return (String)eDynamicGet(IsabelleProofProcessPackage.DISPLAY_TERM__DISPLAY, IsabelleProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY, true, true);
+		return (String)eDynamicGet(ProofProcessPackage.DISPLAY_TERM__DISPLAY, ProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY, true, true);
 	}
 
 	/**
@@ -81,9 +76,8 @@ public abstract class DisplayTermImpl extends CDOObjectImpl implements DisplayTe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setDisplay(String newDisplay) {
-		eDynamicSet(IsabelleProofProcessPackage.DISPLAY_TERM__DISPLAY, IsabelleProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY, newDisplay);
+		eDynamicSet(ProofProcessPackage.DISPLAY_TERM__DISPLAY, ProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY, newDisplay);
 	}
 
 	/**
@@ -94,7 +88,7 @@ public abstract class DisplayTermImpl extends CDOObjectImpl implements DisplayTe
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case IsabelleProofProcessPackage.DISPLAY_TERM__DISPLAY:
+			case ProofProcessPackage.DISPLAY_TERM__DISPLAY:
 				return getDisplay();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -108,7 +102,7 @@ public abstract class DisplayTermImpl extends CDOObjectImpl implements DisplayTe
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case IsabelleProofProcessPackage.DISPLAY_TERM__DISPLAY:
+			case ProofProcessPackage.DISPLAY_TERM__DISPLAY:
 				setDisplay((String)newValue);
 				return;
 		}
@@ -123,7 +117,7 @@ public abstract class DisplayTermImpl extends CDOObjectImpl implements DisplayTe
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case IsabelleProofProcessPackage.DISPLAY_TERM__DISPLAY:
+			case ProofProcessPackage.DISPLAY_TERM__DISPLAY:
 				setDisplay(DISPLAY_EDEFAULT);
 				return;
 		}
@@ -138,7 +132,7 @@ public abstract class DisplayTermImpl extends CDOObjectImpl implements DisplayTe
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case IsabelleProofProcessPackage.DISPLAY_TERM__DISPLAY:
+			case ProofProcessPackage.DISPLAY_TERM__DISPLAY:
 				return DISPLAY_EDEFAULT == null ? getDisplay() != null : !DISPLAY_EDEFAULT.equals(getDisplay());
 		}
 		return super.eIsSet(featureID);

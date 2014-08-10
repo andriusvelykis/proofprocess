@@ -80,6 +80,14 @@ public class ProofProcessAdapterFactory extends AdapterFactoryImpl {
 				return createTermAdapter();
 			}
 			@Override
+			public Adapter caseDisplayTerm(DisplayTerm object) {
+				return createDisplayTermAdapter();
+			}
+			@Override
+			public Adapter caseStringTerm(StringTerm object) {
+				return createStringTermAdapter();
+			}
+			@Override
 			public Adapter caseLoc(Loc object) {
 				return createLocAdapter();
 			}
@@ -180,6 +188,34 @@ public class ProofProcessAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTermAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.DisplayTerm <em>Display Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.DisplayTerm
+	 * @generated
+	 */
+	public Adapter createDisplayTermAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.StringTerm <em>String Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.ai4fm.proofprocess.StringTerm
+	 * @generated
+	 */
+	public Adapter createStringTermAdapter() {
 		return null;
 	}
 

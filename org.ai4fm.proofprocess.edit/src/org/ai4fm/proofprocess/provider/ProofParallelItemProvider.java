@@ -159,7 +159,7 @@ public class ProofParallelItemProvider
 
 		switch (notification.getFeatureID(ProofParallel.class)) {
 			case ProofProcessPackage.PROOF_PARALLEL__ENTRIES:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, true));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);

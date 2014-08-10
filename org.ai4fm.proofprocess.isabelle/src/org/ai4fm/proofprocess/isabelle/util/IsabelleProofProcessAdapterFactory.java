@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess.isabelle.util;
 
+import org.ai4fm.proofprocess.DisplayTerm;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 
@@ -75,10 +76,6 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 	protected IsabelleProofProcessSwitch<Adapter> modelSwitch =
 		new IsabelleProofProcessSwitch<Adapter>() {
 			@Override
-			public Adapter caseDisplayTerm(DisplayTerm object) {
-				return createDisplayTermAdapter();
-			}
-			@Override
 			public Adapter caseMarkupTerm(MarkupTerm object) {
 				return createMarkupTermAdapter();
 			}
@@ -127,6 +124,10 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 				return createTermAdapter();
 			}
 			@Override
+			public Adapter caseDisplayTerm(DisplayTerm object) {
+				return createDisplayTermAdapter();
+			}
+			@Override
 			public Adapter caseTrace(Trace object) {
 				return createTraceAdapter();
 			}
@@ -151,13 +152,13 @@ public class IsabelleProofProcessAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.isabelle.DisplayTerm <em>Display Term</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.ai4fm.proofprocess.DisplayTerm <em>Display Term</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.ai4fm.proofprocess.isabelle.DisplayTerm
+	 * @see org.ai4fm.proofprocess.DisplayTerm
 	 * @generated
 	 */
 	public Adapter createDisplayTermAdapter() {

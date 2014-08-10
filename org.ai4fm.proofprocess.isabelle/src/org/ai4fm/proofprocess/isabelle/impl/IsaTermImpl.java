@@ -7,6 +7,7 @@
 package org.ai4fm.proofprocess.isabelle.impl;
 
 import isabelle.Term.Term;
+import org.ai4fm.proofprocess.impl.DisplayTermImpl;
 import org.ai4fm.proofprocess.isabelle.IsaTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 

@@ -357,7 +357,7 @@ class MarkFeaturesDialog(parent: Shell, elem: ProofElem) extends StatusDialog(pa
 
     editFeature = Some(feature)
 
-    val newDialog = new FeatureInfoDialog(intentLink.getShell, proofStore, feature,
+    val newDialog = new FeatureInfoDialog(intentLink.getShell, proofStore, elem, feature,
       Some(stopEditFeature(savePoint)))
     featureInfoDialog = Some(newDialog)
     newDialog.open()

@@ -35,6 +35,15 @@ public interface ProofProcessFactory extends EFactory {
 	Intent createIntent();
 
 	/**
+	 * Returns a new object of class '<em>String Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>String Term</em>'.
+	 * @generated
+	 */
+	StringTerm createStringTerm();
+
+	/**
 	 * Returns a new object of class '<em>Proof Step</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -1,17 +1,13 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
-package org.ai4fm.proofprocess.zeves.provider;
+package org.ai4fm.proofprocess.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.zeves.DisplayTerm;
-import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
+import org.ai4fm.proofprocess.DisplayTerm;
+import org.ai4fm.proofprocess.ProofProcessPackage;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -30,7 +26,7 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.zeves.DisplayTerm} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.DisplayTerm} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
@@ -82,7 +78,7 @@ public class DisplayTermItemProvider
 				 getResourceLocator(),
 				 getString("_UI_DisplayTerm_display_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_DisplayTerm_display_feature", "_UI_DisplayTerm_type"),
-				 ZEvesProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY,
+				 ProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY,
 				 true,
 				 false,
 				 false,
@@ -117,7 +113,7 @@ public class DisplayTermItemProvider
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(DisplayTerm.class)) {
-			case ZEvesProofProcessPackage.DISPLAY_TERM__DISPLAY:
+			case ProofProcessPackage.DISPLAY_TERM__DISPLAY:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}
@@ -144,7 +140,7 @@ public class DisplayTermItemProvider
 	 */
 	@Override
 	public ResourceLocator getResourceLocator() {
-		return ZEvesProofProcessEditPlugin.INSTANCE;
+		return ProofProcessEditPlugin.INSTANCE;
 	}
 
 }

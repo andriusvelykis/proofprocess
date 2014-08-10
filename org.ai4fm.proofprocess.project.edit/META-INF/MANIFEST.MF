@@ -8,7 +8,8 @@ Bundle-Activator: org.ai4fm.proofprocess.project.provider.ProjectProofProcessEdi
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.ai4fm.proofprocess.project.provider
+Export-Package: org.ai4fm.proofprocess.project.provider,
+ org.ai4fm.proofprocess.log.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.ai4fm.proofprocess.project;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,

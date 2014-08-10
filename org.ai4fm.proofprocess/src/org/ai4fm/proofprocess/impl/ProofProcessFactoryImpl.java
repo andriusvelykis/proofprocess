@@ -32,7 +32,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	 */
 	public static ProofProcessFactory init() {
 		try {
-			ProofProcessFactory theProofProcessFactory = (ProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory("http://org/ai4fm/proofprocess/v1.0.0.13"); 
+			ProofProcessFactory theProofProcessFactory = (ProofProcessFactory)EPackage.Registry.INSTANCE.getEFactory(ProofProcessPackage.eNS_URI);
 			if (theProofProcessFactory != null) {
 				return theProofProcessFactory;
 			}
@@ -62,6 +62,7 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ProofProcessPackage.INTENT: return (EObject)createIntent();
+			case ProofProcessPackage.STRING_TERM: return (EObject)createStringTerm();
 			case ProofProcessPackage.PROOF_STEP: return (EObject)createProofStep();
 			case ProofProcessPackage.PROOF_INFO: return (EObject)createProofInfo();
 			case ProofProcessPackage.PROOF_FEATURE_DEF: return (EObject)createProofFeatureDef();
@@ -117,6 +118,16 @@ public class ProofProcessFactoryImpl extends EFactoryImpl implements ProofProces
 	public Intent createIntent() {
 		IntentImpl intent = new IntentImpl();
 		return intent;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StringTerm createStringTerm() {
+		StringTermImpl stringTerm = new StringTermImpl();
+		return stringTerm;
 	}
 
 	/**

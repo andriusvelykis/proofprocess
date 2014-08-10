@@ -6,9 +6,10 @@ package org.ai4fm.proofprocess.isabelle.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.ProofProcessFactory;
+import org.ai4fm.proofprocess.DisplayTerm;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.isabelle.AssumptionTerm;
-import org.ai4fm.proofprocess.isabelle.DisplayTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 
@@ -194,6 +195,11 @@ public class AssumptionTermItemProvider
 			(createChildParameter
 				(IsabelleProofProcessPackage.Literals.ASSUMPTION_TERM__TERM,
 				 IsabelleProofProcessFactory.eINSTANCE.createJudgementTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.ASSUMPTION_TERM__TERM,
+				 ProofProcessFactory.eINSTANCE.createStringTerm()));
 	}
 
 	/**

@@ -3,13 +3,13 @@ package org.ai4fm.proofprocess.isabelle.core.prover
 import isabelle.Symbol
 import isabelle.eclipse.core.IsabelleCore
 import org.ai4fm.proofprocess.Attempt
+import org.ai4fm.proofprocess.DisplayTerm
 import org.ai4fm.proofprocess.{Proof => PPProof}
 import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofParallel
 import org.ai4fm.proofprocess.ProofSeq
 import org.ai4fm.proofprocess.Term
-import org.ai4fm.proofprocess.isabelle.DisplayTerm
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace
 import org.ai4fm.proofprocess.isabelle.{IsaTerm => PPIsaTerm}

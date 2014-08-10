@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="proofprocess" nsURI="http://org/ai4fm/proofprocess/v1.0.0.13"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="proofprocess" nsURI="http://org/ai4fm/proofprocess/v1.0.0.14"
     nsPrefix="proof">
   <eClassifiers xsi:type="ecore:EClass" name="Intent">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -9,6 +9,10 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral=""/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Term" abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DisplayTerm" abstract="true" eSuperTypes="#//Term">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StringTerm" eSuperTypes="#//DisplayTerm"/>
   <eClassifiers xsi:type="ecore:EClass" name="Loc" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Trace" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ProofStep">
