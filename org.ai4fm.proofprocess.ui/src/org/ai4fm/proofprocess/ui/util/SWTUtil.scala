@@ -70,6 +70,12 @@ object SWTUtil {
       def open(event: OpenEvent) { p() }
     }
 
+  implicit def fnToSelectionChangedListener(p: SelectionChangedEvent => Any)
+      : ISelectionChangedListener =
+    new ISelectionChangedListener() {
+      override def selectionChanged(e: SelectionChangedEvent) { p(e) }
+    }
+
   implicit def control2PimpedControl(control: Control): PimpedControl = new PimpedControl(control)
 
   class PimpedControl(control: Control) {
