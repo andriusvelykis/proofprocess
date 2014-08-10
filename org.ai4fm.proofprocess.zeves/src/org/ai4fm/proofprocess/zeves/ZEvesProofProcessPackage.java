@@ -44,7 +44,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://org/ai4fm/proofprocess/zeves/v1.0.0.13";
+	String eNS_URI = "http://org/ai4fm/proofprocess/zeves/v1.0.0.14";
 
 	/**
 	 * The package namespace name.
