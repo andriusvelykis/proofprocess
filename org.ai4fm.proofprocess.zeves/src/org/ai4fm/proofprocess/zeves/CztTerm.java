@@ -7,6 +7,7 @@
 package org.ai4fm.proofprocess.zeves;
 
 import net.sourceforge.czt.base.ast.Term;
+import org.ai4fm.proofprocess.DisplayTerm;
 
 /**
  * <!-- begin-user-doc -->

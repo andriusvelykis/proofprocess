@@ -7,6 +7,7 @@
 package org.ai4fm.proofprocess.isabelle;
 
 import isabelle.Term.Term;
+import org.ai4fm.proofprocess.DisplayTerm;
 
 /**
  * <!-- begin-user-doc -->

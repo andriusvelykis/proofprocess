@@ -6,8 +6,9 @@ package org.ai4fm.proofprocess.isabelle.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.ProofProcessFactory;
+import org.ai4fm.proofprocess.DisplayTerm;
 import org.ai4fm.proofprocess.Term;
-import org.ai4fm.proofprocess.isabelle.DisplayTerm;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessFactory;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.JudgementTerm;
@@ -223,6 +224,11 @@ public class JudgementTermItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__ASSMS,
+				 ProofProcessFactory.eINSTANCE.createStringTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
 				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL,
 				 IsabelleProofProcessFactory.eINSTANCE.createMarkupTerm()));
 
@@ -255,6 +261,11 @@ public class JudgementTermItemProvider
 			(createChildParameter
 				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL,
 				 IsabelleProofProcessFactory.eINSTANCE.createJudgementTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(IsabelleProofProcessPackage.Literals.JUDGEMENT_TERM__GOAL,
+				 ProofProcessFactory.eINSTANCE.createStringTerm()));
 	}
 
 	/**

@@ -117,6 +117,62 @@ public interface ProofProcessPackage extends EPackage {
 	int TERM_FEATURE_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.DisplayTermImpl <em>Display Term</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.impl.DisplayTermImpl
+	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getDisplayTerm()
+	 * @generated
+	 */
+	int DISPLAY_TERM = 2;
+
+	/**
+	 * The feature id for the '<em><b>Display</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DISPLAY_TERM__DISPLAY = TERM_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Display Term</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DISPLAY_TERM_FEATURE_COUNT = TERM_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.ai4fm.proofprocess.impl.StringTermImpl <em>String Term</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.ai4fm.proofprocess.impl.StringTermImpl
+	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getStringTerm()
+	 * @generated
+	 */
+	int STRING_TERM = 3;
+
+	/**
+	 * The feature id for the '<em><b>Display</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TERM__DISPLAY = DISPLAY_TERM__DISPLAY;
+
+	/**
+	 * The number of structural features of the '<em>String Term</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.Loc <em>Loc</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -124,7 +180,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getLoc()
 	 * @generated
 	 */
-	int LOC = 2;
+	int LOC = 4;
 
 	/**
 	 * The number of structural features of the '<em>Loc</em>' class.
@@ -143,7 +199,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getTrace()
 	 * @generated
 	 */
-	int TRACE = 3;
+	int TRACE = 5;
 
 	/**
 	 * The number of structural features of the '<em>Trace</em>' class.
@@ -162,7 +218,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofStep()
 	 * @generated
 	 */
-	int PROOF_STEP = 4;
+	int PROOF_STEP = 6;
 
 	/**
 	 * The feature id for the '<em><b>In Goals</b></em>' containment reference list.
@@ -217,7 +273,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofInfo()
 	 * @generated
 	 */
-	int PROOF_INFO = 5;
+	int PROOF_INFO = 7;
 
 	/**
 	 * The feature id for the '<em><b>Intent</b></em>' reference.
@@ -272,7 +328,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeatureDef()
 	 * @generated
 	 */
-	int PROOF_FEATURE_DEF = 6;
+	int PROOF_FEATURE_DEF = 8;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -309,7 +365,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeature()
 	 * @generated
 	 */
-	int PROOF_FEATURE = 7;
+	int PROOF_FEATURE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' reference.
@@ -364,7 +420,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofElem()
 	 * @generated
 	 */
-	int PROOF_ELEM = 8;
+	int PROOF_ELEM = 10;
 
 	/**
 	 * The feature id for the '<em><b>Info</b></em>' containment reference.
@@ -392,7 +448,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofEntry()
 	 * @generated
 	 */
-	int PROOF_ENTRY = 9;
+	int PROOF_ENTRY = 11;
 
 	/**
 	 * The feature id for the '<em><b>Info</b></em>' containment reference.
@@ -429,7 +485,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofSeq()
 	 * @generated
 	 */
-	int PROOF_SEQ = 10;
+	int PROOF_SEQ = 12;
 
 	/**
 	 * The feature id for the '<em><b>Info</b></em>' containment reference.
@@ -466,7 +522,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofParallel()
 	 * @generated
 	 */
-	int PROOF_PARALLEL = 11;
+	int PROOF_PARALLEL = 13;
 
 	/**
 	 * The feature id for the '<em><b>Info</b></em>' containment reference.
@@ -503,7 +559,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofId()
 	 * @generated
 	 */
-	int PROOF_ID = 12;
+	int PROOF_ID = 14;
 
 	/**
 	 * The feature id for the '<em><b>Info</b></em>' containment reference.
@@ -540,7 +596,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getAttempt()
 	 * @generated
 	 */
-	int ATTEMPT = 13;
+	int ATTEMPT = 15;
 
 	/**
 	 * The feature id for the '<em><b>Proof</b></em>' containment reference.
@@ -568,7 +624,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProof()
 	 * @generated
 	 */
-	int PROOF = 14;
+	int PROOF = 16;
 
 	/**
 	 * The feature id for the '<em><b>Goals</b></em>' containment reference list.
@@ -614,7 +670,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofStore()
 	 * @generated
 	 */
-	int PROOF_STORE = 15;
+	int PROOF_STORE = 17;
 
 	/**
 	 * The feature id for the '<em><b>Proofs</b></em>' containment reference list.
@@ -660,7 +716,7 @@ public interface ProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getProofFeatureType()
 	 * @generated
 	 */
-	int PROOF_FEATURE_TYPE = 16;
+	int PROOF_FEATURE_TYPE = 18;
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.Intent <em>Intent</em>}'.
@@ -703,6 +759,37 @@ public interface ProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getTerm();
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.DisplayTerm <em>Display Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Display Term</em>'.
+	 * @see org.ai4fm.proofprocess.DisplayTerm
+	 * @generated
+	 */
+	EClass getDisplayTerm();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.DisplayTerm#getDisplay <em>Display</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Display</em>'.
+	 * @see org.ai4fm.proofprocess.DisplayTerm#getDisplay()
+	 * @see #getDisplayTerm()
+	 * @generated
+	 */
+	EAttribute getDisplayTerm_Display();
+
+	/**
+	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.StringTerm <em>String Term</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>String Term</em>'.
+	 * @see org.ai4fm.proofprocess.StringTerm
+	 * @generated
+	 */
+	EClass getStringTerm();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.Loc <em>Loc</em>}'.
@@ -1197,6 +1284,34 @@ public interface ProofProcessPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TERM = eINSTANCE.getTerm();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.DisplayTermImpl <em>Display Term</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.impl.DisplayTermImpl
+		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getDisplayTerm()
+		 * @generated
+		 */
+		EClass DISPLAY_TERM = eINSTANCE.getDisplayTerm();
+
+		/**
+		 * The meta object literal for the '<em><b>Display</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DISPLAY_TERM__DISPLAY = eINSTANCE.getDisplayTerm_Display();
+
+		/**
+		 * The meta object literal for the '{@link org.ai4fm.proofprocess.impl.StringTermImpl <em>String Term</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.ai4fm.proofprocess.impl.StringTermImpl
+		 * @see org.ai4fm.proofprocess.impl.ProofProcessPackageImpl#getStringTerm()
+		 * @generated
+		 */
+		EClass STRING_TERM = eINSTANCE.getStringTerm();
 
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.Loc <em>Loc</em>}' class.

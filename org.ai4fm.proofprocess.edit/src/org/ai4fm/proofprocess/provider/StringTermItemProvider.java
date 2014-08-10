@@ -1,42 +1,31 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
-package org.ai4fm.proofprocess.isabelle.provider;
+package org.ai4fm.proofprocess.provider;
 
 
 import java.util.Collection;
 import java.util.List;
 
-import org.ai4fm.proofprocess.isabelle.DisplayTerm;
-import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
+import org.ai4fm.proofprocess.StringTerm;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
-import org.eclipse.emf.common.util.ResourceLocator;
-
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.ai4fm.proofprocess.isabelle.DisplayTerm} object.
+ * This is the item provider adapter for a {@link org.ai4fm.proofprocess.StringTerm} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class DisplayTermItemProvider
-	extends ItemProviderAdapter
+public class StringTermItemProvider
+	extends DisplayTermItemProvider
 	implements
 		IEditingDomainItemProvider,
 		IStructuredItemContentProvider,
@@ -49,7 +38,7 @@ public class DisplayTermItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DisplayTermItemProvider(AdapterFactory adapterFactory) {
+	public StringTermItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -64,31 +53,19 @@ public class DisplayTermItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addDisplayPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Display feature.
+	 * This returns StringTerm.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addDisplayPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_DisplayTerm_display_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_DisplayTerm_display_feature", "_UI_DisplayTerm_type"),
-				 IsabelleProofProcessPackage.Literals.DISPLAY_TERM__DISPLAY,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
+	@Override
+	public Object getImage(Object object) {
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/StringTerm"));
 	}
 
 	/**
@@ -99,10 +76,10 @@ public class DisplayTermItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((DisplayTerm)object).getDisplay();
+		String label = ((StringTerm)object).getDisplay();
 		return label == null || label.length() == 0 ?
-			getString("_UI_DisplayTerm_type") :
-			getString("_UI_DisplayTerm_type") + " " + label;
+			getString("_UI_StringTerm_type") :
+			getString("_UI_StringTerm_type") + " " + label;
 	}
 
 	/**
@@ -115,12 +92,6 @@ public class DisplayTermItemProvider
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
-
-		switch (notification.getFeatureID(DisplayTerm.class)) {
-			case IsabelleProofProcessPackage.DISPLAY_TERM__DISPLAY:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-				return;
-		}
 		super.notifyChanged(notification);
 	}
 
@@ -134,17 +105,6 @@ public class DisplayTermItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return IsabelleProofProcessEditPlugin.INSTANCE;
 	}
 
 }

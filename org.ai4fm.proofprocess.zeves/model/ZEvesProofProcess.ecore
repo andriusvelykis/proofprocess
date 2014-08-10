@@ -5,11 +5,8 @@
   <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
     <details key="conversionDelegates" value="http://org/ai4fm/proofprocess/zeves/conversion/v1.0.0"/>
   </eAnnotations>
-  <eClassifiers xsi:type="ecore:EClass" name="DisplayTerm" abstract="true" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//Term">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UnparsedTerm" eSuperTypes="#//DisplayTerm"/>
-  <eClassifiers xsi:type="ecore:EClass" name="CztTerm" eSuperTypes="#//DisplayTerm">
+  <eClassifiers xsi:type="ecore:EClass" name="UnparsedTerm" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//DisplayTerm"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CztTerm" eSuperTypes="../../org.ai4fm.proofprocess/model/ProofProcess.ecore#//DisplayTerm">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="term" lowerBound="1" eType="#//ZmlTerm">
       <eAnnotations source="http://www.eclipse.org/CDO/DBStore">
         <details key="columnType" value="CLOB"/>

@@ -6,6 +6,8 @@
  */
 package org.ai4fm.proofprocess.zeves;
 
+import org.ai4fm.proofprocess.DisplayTerm;
+
 
 /**
  * <!-- begin-user-doc -->

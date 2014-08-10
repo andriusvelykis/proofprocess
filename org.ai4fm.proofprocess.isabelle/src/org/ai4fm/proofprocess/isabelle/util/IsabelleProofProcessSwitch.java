@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess.isabelle.util;
 
+import org.ai4fm.proofprocess.DisplayTerm;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 
@@ -73,13 +74,6 @@ public class IsabelleProofProcessSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case IsabelleProofProcessPackage.DISPLAY_TERM: {
-				DisplayTerm displayTerm = (DisplayTerm)theEObject;
-				T result = caseDisplayTerm(displayTerm);
-				if (result == null) result = caseTerm(displayTerm);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case IsabelleProofProcessPackage.MARKUP_TERM: {
 				MarkupTerm markupTerm = (MarkupTerm)theEObject;
 				T result = caseMarkupTerm(markupTerm);

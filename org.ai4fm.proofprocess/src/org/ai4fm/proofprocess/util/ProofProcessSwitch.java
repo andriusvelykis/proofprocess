@@ -82,6 +82,21 @@ public class ProofProcessSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ProofProcessPackage.DISPLAY_TERM: {
+				DisplayTerm displayTerm = (DisplayTerm)theEObject;
+				T result = caseDisplayTerm(displayTerm);
+				if (result == null) result = caseTerm(displayTerm);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ProofProcessPackage.STRING_TERM: {
+				StringTerm stringTerm = (StringTerm)theEObject;
+				T result = caseStringTerm(stringTerm);
+				if (result == null) result = caseDisplayTerm(stringTerm);
+				if (result == null) result = caseTerm(stringTerm);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ProofProcessPackage.LOC: {
 				Loc loc = (Loc)theEObject;
 				T result = caseLoc(loc);
@@ -201,6 +216,36 @@ public class ProofProcessSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTerm(Term object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Display Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Display Term</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDisplayTerm(DisplayTerm object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>String Term</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>String Term</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStringTerm(StringTerm object) {
 		return null;
 	}
 

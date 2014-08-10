@@ -10,6 +10,7 @@ package org.ai4fm.proofprocess.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.ProofStep;
 
@@ -155,6 +156,39 @@ public class ProofStepItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProofProcessPackage.Literals.PROOF_STEP__IN_GOALS,
+				 ProofProcessFactory.eINSTANCE.createStringTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProofProcessPackage.Literals.PROOF_STEP__OUT_GOALS,
+				 ProofProcessFactory.eINSTANCE.createStringTerm()));
+	}
+
+	/**
+	 * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+		Object childFeature = feature;
+		Object childObject = child;
+
+		boolean qualify =
+			childFeature == ProofProcessPackage.Literals.PROOF_STEP__IN_GOALS ||
+			childFeature == ProofProcessPackage.Literals.PROOF_STEP__OUT_GOALS;
+
+		if (qualify) {
+			return getString
+				("_UI_CreateChild_text2",
+				 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+		}
+		return super.getCreateChildText(owner, feature, child, selection);
 	}
 
 	/**

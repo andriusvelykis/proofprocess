@@ -186,6 +186,11 @@ public class ProofItemProvider
 
 		newChildDescriptors.add
 			(createChildParameter
+				(ProofProcessPackage.Literals.PROOF__GOALS,
+				 ProofProcessFactory.eINSTANCE.createStringTerm()));
+
+		newChildDescriptors.add
+			(createChildParameter
 				(ProofProcessPackage.Literals.PROOF__ATTEMPTS,
 				 ProofProcessFactory.eINSTANCE.createAttempt()));
 	}

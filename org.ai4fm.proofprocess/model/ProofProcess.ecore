@@ -9,6 +9,10 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral=""/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Term" abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DisplayTerm" abstract="true" eSuperTypes="#//Term">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StringTerm" eSuperTypes="#//DisplayTerm"/>
   <eClassifiers xsi:type="ecore:EClass" name="Loc" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Trace" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ProofStep">

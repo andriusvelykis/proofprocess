@@ -12,7 +12,9 @@ import java.util.List;
 
 import org.ai4fm.proofprocess.ProofFeature;
 import org.ai4fm.proofprocess.ProofFeatureDef;
+import org.ai4fm.proofprocess.ProofFeatureType;
 import org.ai4fm.proofprocess.ProofInfo;
+import org.ai4fm.proofprocess.ProofProcessFactory;
 import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.Term;
 
@@ -307,6 +309,11 @@ public class ProofFeatureItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add
+			(createChildParameter
+				(ProofProcessPackage.Literals.PROOF_FEATURE__PARAMS,
+				 ProofProcessFactory.eINSTANCE.createStringTerm()));
 	}
 
 	/**

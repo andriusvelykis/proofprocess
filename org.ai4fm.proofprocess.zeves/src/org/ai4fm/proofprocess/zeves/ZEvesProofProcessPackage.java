@@ -63,34 +63,6 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	ZEvesProofProcessPackage eINSTANCE = org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.DisplayTermImpl <em>Display Term</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.ai4fm.proofprocess.zeves.impl.DisplayTermImpl
-	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getDisplayTerm()
-	 * @generated
-	 */
-	int DISPLAY_TERM = 0;
-
-	/**
-	 * The feature id for the '<em><b>Display</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DISPLAY_TERM__DISPLAY = ProofProcessPackage.TERM_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Display Term</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DISPLAY_TERM_FEATURE_COUNT = ProofProcessPackage.TERM_FEATURE_COUNT + 1;
-
-	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.UnparsedTermImpl <em>Unparsed Term</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -98,7 +70,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getUnparsedTerm()
 	 * @generated
 	 */
-	int UNPARSED_TERM = 1;
+	int UNPARSED_TERM = 0;
 
 	/**
 	 * The feature id for the '<em><b>Display</b></em>' attribute.
@@ -107,7 +79,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNPARSED_TERM__DISPLAY = DISPLAY_TERM__DISPLAY;
+	int UNPARSED_TERM__DISPLAY = ProofProcessPackage.DISPLAY_TERM__DISPLAY;
 
 	/**
 	 * The number of structural features of the '<em>Unparsed Term</em>' class.
@@ -116,7 +88,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNPARSED_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 0;
+	int UNPARSED_TERM_FEATURE_COUNT = ProofProcessPackage.DISPLAY_TERM_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '<em>Zml Term</em>' data type.
@@ -126,7 +98,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getZmlTerm()
 	 * @generated
 	 */
-	int ZML_TERM = 4;
+	int ZML_TERM = 3;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.ZEvesTraceImpl <em>ZEves Trace</em>}' class.
@@ -136,7 +108,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getZEvesTrace()
 	 * @generated
 	 */
-	int ZEVES_TRACE = 3;
+	int ZEVES_TRACE = 2;
 
 	/**
 	 * The meta object id for the '{@link org.ai4fm.proofprocess.zeves.impl.CztTermImpl <em>Czt Term</em>}' class.
@@ -146,7 +118,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getCztTerm()
 	 * @generated
 	 */
-	int CZT_TERM = 2;
+	int CZT_TERM = 1;
 
 
 	/**
@@ -156,7 +128,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CZT_TERM__DISPLAY = DISPLAY_TERM__DISPLAY;
+	int CZT_TERM__DISPLAY = ProofProcessPackage.DISPLAY_TERM__DISPLAY;
 
 	/**
 	 * The feature id for the '<em><b>Term</b></em>' attribute.
@@ -165,7 +137,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CZT_TERM__TERM = DISPLAY_TERM_FEATURE_COUNT + 0;
+	int CZT_TERM__TERM = ProofProcessPackage.DISPLAY_TERM_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Czt Term</em>' class.
@@ -174,7 +146,7 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CZT_TERM_FEATURE_COUNT = DISPLAY_TERM_FEATURE_COUNT + 1;
+	int CZT_TERM_FEATURE_COUNT = ProofProcessPackage.DISPLAY_TERM_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Used Lemmas</b></em>' attribute list.
@@ -212,27 +184,6 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 */
 	int ZEVES_TRACE_FEATURE_COUNT = ProofProcessPackage.TRACE_FEATURE_COUNT + 3;
 
-
-	/**
-	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.DisplayTerm <em>Display Term</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Display Term</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.DisplayTerm
-	 * @generated
-	 */
-	EClass getDisplayTerm();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.ai4fm.proofprocess.zeves.DisplayTerm#getDisplay <em>Display</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Display</em>'.
-	 * @see org.ai4fm.proofprocess.zeves.DisplayTerm#getDisplay()
-	 * @see #getDisplayTerm()
-	 * @generated
-	 */
-	EAttribute getDisplayTerm_Display();
 
 	/**
 	 * Returns the meta object for class '{@link org.ai4fm.proofprocess.zeves.UnparsedTerm <em>Unparsed Term</em>}'.
@@ -341,24 +292,6 @@ public interface ZEvesProofProcessPackage extends EPackage {
 	 * @generated
 	 */
 	interface Literals {
-		/**
-		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.DisplayTermImpl <em>Display Term</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.ai4fm.proofprocess.zeves.impl.DisplayTermImpl
-		 * @see org.ai4fm.proofprocess.zeves.impl.ZEvesProofProcessPackageImpl#getDisplayTerm()
-		 * @generated
-		 */
-		EClass DISPLAY_TERM = eINSTANCE.getDisplayTerm();
-
-		/**
-		 * The meta object literal for the '<em><b>Display</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DISPLAY_TERM__DISPLAY = eINSTANCE.getDisplayTerm_Display();
-
 		/**
 		 * The meta object literal for the '{@link org.ai4fm.proofprocess.zeves.impl.UnparsedTermImpl <em>Unparsed Term</em>}' class.
 		 * <!-- begin-user-doc -->

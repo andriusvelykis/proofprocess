@@ -1,12 +1,7 @@
 /**
- * <copyright>
- * </copyright>
- *
- * $Id$
  */
-package org.ai4fm.proofprocess.isabelle;
+package org.ai4fm.proofprocess;
 
-import org.ai4fm.proofprocess.Term;
 
 /**
  * <!-- begin-user-doc -->
@@ -16,11 +11,11 @@ import org.ai4fm.proofprocess.Term;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.ai4fm.proofprocess.isabelle.DisplayTerm#getDisplay <em>Display</em>}</li>
+ *   <li>{@link org.ai4fm.proofprocess.DisplayTerm#getDisplay <em>Display</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getDisplayTerm()
+ * @see org.ai4fm.proofprocess.ProofProcessPackage#getDisplayTerm()
  * @model abstract="true"
  * @generated
  */
@@ -35,14 +30,14 @@ public interface DisplayTerm extends Term {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Display</em>' attribute.
 	 * @see #setDisplay(String)
-	 * @see org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage#getDisplayTerm_Display()
+	 * @see org.ai4fm.proofprocess.ProofProcessPackage#getDisplayTerm_Display()
 	 * @model
 	 * @generated
 	 */
 	String getDisplay();
 
 	/**
-	 * Sets the value of the '{@link org.ai4fm.proofprocess.isabelle.DisplayTerm#getDisplay <em>Display</em>}' attribute.
+	 * Sets the value of the '{@link org.ai4fm.proofprocess.DisplayTerm#getDisplay <em>Display</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Display</em>' attribute.

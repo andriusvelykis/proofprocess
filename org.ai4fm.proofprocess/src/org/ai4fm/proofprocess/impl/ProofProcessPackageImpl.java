@@ -7,6 +7,7 @@
 package org.ai4fm.proofprocess.impl;
 
 import org.ai4fm.proofprocess.Attempt;
+import org.ai4fm.proofprocess.DisplayTerm;
 import org.ai4fm.proofprocess.Intent;
 import org.ai4fm.proofprocess.Loc;
 import org.ai4fm.proofprocess.Proof;
@@ -23,6 +24,7 @@ import org.ai4fm.proofprocess.ProofProcessPackage;
 import org.ai4fm.proofprocess.ProofSeq;
 import org.ai4fm.proofprocess.ProofStep;
 import org.ai4fm.proofprocess.ProofStore;
+import org.ai4fm.proofprocess.StringTerm;
 import org.ai4fm.proofprocess.Term;
 import org.ai4fm.proofprocess.Trace;
 
@@ -54,6 +56,20 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	 * @generated
 	 */
 	private EClass termEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass displayTermEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass stringTermEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -259,6 +275,33 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 	@Override
 	public EClass getTerm() {
 		return termEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDisplayTerm() {
+		return displayTermEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDisplayTerm_Display() {
+		return (EAttribute)displayTermEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getStringTerm() {
+		return stringTermEClass;
 	}
 
 	/**
@@ -702,6 +745,11 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 
 		termEClass = createEClass(TERM);
 
+		displayTermEClass = createEClass(DISPLAY_TERM);
+		createEAttribute(displayTermEClass, DISPLAY_TERM__DISPLAY);
+
+		stringTermEClass = createEClass(STRING_TERM);
+
 		locEClass = createEClass(LOC);
 
 		traceEClass = createEClass(TRACE);
@@ -788,6 +836,8 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		displayTermEClass.getESuperTypes().add(this.getTerm());
+		stringTermEClass.getESuperTypes().add(this.getDisplayTerm());
 		proofEntryEClass.getESuperTypes().add(this.getProofElem());
 		proofSeqEClass.getESuperTypes().add(this.getProofElem());
 		proofParallelEClass.getESuperTypes().add(this.getProofElem());
@@ -799,6 +849,11 @@ public class ProofProcessPackageImpl extends EPackageImpl implements ProofProces
 		initEAttribute(getIntent_Description(), ecorePackage.getEString(), "description", "", 1, 1, Intent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(termEClass, Term.class, "Term", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(displayTermEClass, DisplayTerm.class, "DisplayTerm", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDisplayTerm_Display(), ecorePackage.getEString(), "display", null, 0, 1, DisplayTerm.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(stringTermEClass, StringTerm.class, "StringTerm", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(locEClass, Loc.class, "Loc", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

@@ -6,6 +6,7 @@
  */
 package org.ai4fm.proofprocess.zeves.impl;
 
+import org.ai4fm.proofprocess.impl.DisplayTermImpl;
 import org.ai4fm.proofprocess.zeves.UnparsedTerm;
 import org.ai4fm.proofprocess.zeves.ZEvesProofProcessPackage;
 

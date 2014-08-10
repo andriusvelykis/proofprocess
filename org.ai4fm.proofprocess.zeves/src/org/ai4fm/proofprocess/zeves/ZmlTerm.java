@@ -25,7 +25,7 @@ import net.sourceforge.czt.base.ast.Term;
  * @model
  * @generated
  */
-public interface ZmlTerm extends DisplayTerm {
+public interface ZmlTerm {
 	/**
 	 * Returns the value of the '<em><b>Term</b></em>' attribute.
 	 * <!-- begin-user-doc -->

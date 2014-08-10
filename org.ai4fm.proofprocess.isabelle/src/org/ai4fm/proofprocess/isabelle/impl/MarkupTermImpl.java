@@ -7,6 +7,7 @@
 package org.ai4fm.proofprocess.isabelle.impl;
 
 import isabelle.XML.Tree;
+import org.ai4fm.proofprocess.impl.DisplayTermImpl;
 import org.ai4fm.proofprocess.isabelle.IsabelleProofProcessPackage;
 import org.ai4fm.proofprocess.isabelle.MarkupTerm;
 
