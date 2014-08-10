@@ -1,31 +1,46 @@
 package org.ai4fm.proofprocess.ui.features
 
+import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ProofFeature
 import org.ai4fm.proofprocess.ProofProcessPackage.{Literals => PPLiterals}
 import org.ai4fm.proofprocess.ProofStore
 import org.ai4fm.proofprocess.core.util.PProcessUtil
-import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.{error, log, plugin}
+import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.error
+import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.log
+import org.ai4fm.proofprocess.ui.internal.PProcessUIPlugin.plugin
 import org.ai4fm.proofprocess.ui.util.SWTUtil._
-
 import org.eclipse.core.databinding.DataBindingContext
 import org.eclipse.core.databinding.observable.list.IObservableList
-import org.eclipse.core.databinding.observable.value.{IValueChangeListener, ValueChangeEvent}
+import org.eclipse.core.databinding.observable.value.IValueChangeListener
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent
 import org.eclipse.emf.databinding.EMFObservables
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.jface.databinding.swt.WidgetProperties
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider
 import org.eclipse.jface.dialogs.StatusDialog
-import org.eclipse.jface.layout.{GridDataFactory, GridLayoutFactory}
-import org.eclipse.jface.resource.{JFaceResources, LocalResourceManager}
-import org.eclipse.jface.viewers.{DoubleClickEvent, TableViewer}
+import org.eclipse.jface.layout.GridDataFactory
+import org.eclipse.jface.layout.GridLayoutFactory
+import org.eclipse.jface.resource.JFaceResources
+import org.eclipse.jface.resource.LocalResourceManager
+import org.eclipse.jface.viewers.DoubleClickEvent
+import org.eclipse.jface.viewers.TableViewer
 import org.eclipse.jface.window.Window
 import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics.Point
-import org.eclipse.swt.widgets.{Composite, Control, Shell}
-import org.eclipse.ui.forms.events.{ExpansionAdapter, ExpansionEvent, HyperlinkAdapter, HyperlinkEvent}
-import org.eclipse.ui.forms.widgets.{FormToolkit, Section}
-import org.eclipse.ui.forms.widgets.ExpandableComposite.{EXPANDED, NO_TITLE_FOCUS_BOX, TITLE_BAR, TWISTIE}
+import org.eclipse.swt.widgets.Composite
+import org.eclipse.swt.widgets.Control
+import org.eclipse.swt.widgets.Shell
+import org.eclipse.ui.forms.events.ExpansionAdapter
+import org.eclipse.ui.forms.events.ExpansionEvent
+import org.eclipse.ui.forms.events.HyperlinkAdapter
+import org.eclipse.ui.forms.events.HyperlinkEvent
+import org.eclipse.ui.forms.widgets.ExpandableComposite.EXPANDED
+import org.eclipse.ui.forms.widgets.ExpandableComposite.NO_TITLE_FOCUS_BOX
+import org.eclipse.ui.forms.widgets.ExpandableComposite.TITLE_BAR
+import org.eclipse.ui.forms.widgets.ExpandableComposite.TWISTIE
+import org.eclipse.ui.forms.widgets.FormToolkit
+import org.eclipse.ui.forms.widgets.Section
 
 
 /**
@@ -35,6 +50,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite.{EXPANDED, NO_TITLE_FOCU
  */
 class FeatureInfoDialog(parent: Shell,
                         proofStore: => Option[ProofStore],
+                        elem: ProofElem,
                         feature: ProofFeature,
                         callback: Option[Int => Unit] = None)
     extends StatusDialog(parent) {
@@ -243,6 +259,14 @@ class FeatureInfoDialog(parent: Shell,
         case Some(elem) => terms.remove(elem)
         case _ =>
       }
+    }
+
+    val stringButton = toolkit.createButton(buttons, "Custom...", SWT.PUSH)
+    stringButton.setLayoutData(fillHorizontal.create)
+
+    stringButton.addSelectionListener { () =>
+      val dialog = new StringTermDialog(stringButton.getShell, elem, feature)
+      dialog.open()
     }
 
     container
