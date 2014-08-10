@@ -72,14 +72,23 @@ public class StringTermItemProvider
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
 		String label = ((StringTerm)object).getDisplay();
 		return label == null || label.length() == 0 ?
 			getString("_UI_StringTerm_type") :
-			getString("_UI_StringTerm_type") + " " + label;
+			// label only if display is available
+			/*getString("_UI_StringTerm_type") + " " + */flattenTrim(label);
+	}
+
+	/**
+	 * Trims the text of whitespace and compacts/replaces all consecutive whitespace (including
+	 * linebreaks) with single space - flattens the text.
+	 */
+	private String flattenTrim(String text) {
+		return text.trim().replaceAll("\\s+", " ");
 	}
 
 	/**
