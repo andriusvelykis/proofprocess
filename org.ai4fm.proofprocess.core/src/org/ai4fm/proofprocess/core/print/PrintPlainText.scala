@@ -1,9 +1,9 @@
 package org.ai4fm.proofprocess.core.print
 
 import scala.collection.JavaConverters.asScalaBufferConverter
-import scala.util.Try
 
 import org.ai4fm.proofprocess.Attempt
+import org.ai4fm.proofprocess.DisplayTerm
 import org.ai4fm.proofprocess.Proof
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofFeature
@@ -149,21 +149,9 @@ object PrintPlainText {
       Some(str)
     }
 
-  private def printTerm(term: Term): String = invokeGetDisplay(term) match {
-    case Some(str) => str
+  private def printTerm(term: Term): String = term match {
+    case display: DisplayTerm => display.getDisplay
     case _ => "Cannot print term: " + term
-  }
-
-  private def invokeGetDisplay(term: Term): Option[String] = {
-    val clss = classes(term.getClass) 
-    val methods = clss flatMap { cls => Try(cls.getMethod("getDisplay")).toOption }
-
-    val result = methods.headOption flatMap { mthd => Try(mthd.invoke(term)).toOption }
-
-    result match {
-      case Some(str: String) => Some(str)
-      case _ => None
-    }
   }
 
   private def classes(cls: Class[_]): Stream[Class[_]] = {
