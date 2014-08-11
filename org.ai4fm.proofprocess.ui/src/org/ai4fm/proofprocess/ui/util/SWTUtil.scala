@@ -1,5 +1,6 @@
 package org.ai4fm.proofprocess.ui.util
 
+import scala.collection.JavaConverters.asScalaBufferConverter
 import scala.language.implicitConversions
 import scala.util.Try
 
@@ -105,6 +106,11 @@ object SWTUtil {
       case Some(ss: IStructuredSelection) => Option(ss.getFirstElement)
       case _ => None
     }
+
+  def selectionElements(sel: ISelection): List[Any] = Option(sel) match {
+    case Some(ss: IStructuredSelection) => ss.toList.asScala.toList
+    case _ => Nil
+  }
 
 
   /**
