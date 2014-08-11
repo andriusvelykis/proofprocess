@@ -31,13 +31,10 @@ import isabelle.eclipse.core.IsabelleCore
   */
 object ProverDataConverter {
   
-  def entry(entry: ProofEntry): (Why, List[TermRef], List[TermRef]) = {
+  private def why(entry: ProofEntry): Why = {
     val intentName = Option(entry.getInfo.getIntent).map(_.getName).getOrElse("")
     
     val proofStep = entry.getProofStep
-    val inGoals = terms(proofStep.getInGoals.asScala.toList)
-    val outGoals = terms(proofStep.getOutGoals.asScala.toList)
-    
     val commandOpt = proofStep.getTrace match {
       case isaTrace: IsabelleTrace => Some(command(isaTrace.getCommand))
       case _ => None
@@ -45,7 +42,7 @@ object ProverDataConverter {
     
     val cmd = commandOpt getOrElse { Tac(String.valueOf(proofStep.getTrace)) }
     
-    (Why(intentName, cmd), inGoals, outGoals)
+    Why(intentName, cmd)
   }
 
   private def goalProofState(term: Term): ProofState = term match {
@@ -73,7 +70,7 @@ object ProverDataConverter {
       case ((node, preds, succs), subGraphs) => {
         val branches = succs.toList map subGraphs
         
-        val (why, _, _) = entry(node)
+        val w = why(node)
 
         // TODO relies on only the goal being set..
         val handledGoals = succs.toList map { _.getProofStep.getInGoals.asScala.toList }
@@ -84,7 +81,7 @@ object ProverDataConverter {
         val unhandledBranches = unhandledStates map { state => ProofGoal(state, Gap()) }
 
         val allBranches = branches.flatten ::: unhandledBranches
-        val proof = Proof(why, allBranches)
+        val proof = Proof(w, allBranches)
 
         val inGoals = node.getProofStep.getInGoals.asScala.toList
         
@@ -142,7 +139,7 @@ object ProverDataConverter {
   private def eqTerms(t1: Term, t2: Term): Boolean =
     EcoreUtil.equals(t1, t2)
   
-  def command(cmd: IsabelleCommand): Tac = {
+  private def command(cmd: IsabelleCommand): Tac = {
     val res = cmd match {
       // TODO multiple branches (e.g. apply (auto, simp))
       case isa.ProofMethCommand(tacs) if tacs.size == 1 => {
@@ -163,7 +160,7 @@ object ProverDataConverter {
     res getOrElse (Tac(cmd.getSource))
   }
 
-  def argBranch(branch: NamedTermTree): List[String] = {
+  private def argBranch(branch: NamedTermTree): List[String] = {
     val branchName = branch.getName
     val branchArgs = branch.getTerms.asScala.toList map encodeTermStr
     
@@ -173,7 +170,7 @@ object ProverDataConverter {
     branchName :: branchArgs
   }
 
-  def encodeTermStr(t: Term): String = t match {
+  private def encodeTermStr(t: Term): String = t match {
     // use StrTerm always for now
     case t: PPIsaTerm => encode(t.getDisplay) //IsaTerm(t.getTerm)
     case s: DisplayTerm => encode(s.getDisplay)
@@ -181,21 +178,11 @@ object ProverDataConverter {
     case _ => "<unsupported term " + t.getClass.getName + ">"
   }
 
-  def encodeTerm(t: Term): TermRef = StrTerm(encodeTermStr(t))
-    
-  def terms(ts: List[Term]): List[TermRef] =
-    // TODO something about markup terms?
-    ts.map({
-      // use StrTerm always for now
-      case t: PPIsaTerm => StrTerm(encode(t.getDisplay)) //IsaTerm(t.getTerm)
-      case s: DisplayTerm => StrTerm(encode(s.getDisplay))
-      // FIXME a bit of a hack (also handle assumptions!)
-      case j: JudgementTerm => terms(List(j.getGoal)).head
-    })
+  private def encodeTerm(t: Term): TermRef = StrTerm(encodeTermStr(t))
     
   // TODO move encoding to capture process?
   // E.g. so that we could access and convert the data without running Isabelle
-  def encode(termStr: String): String =
+  private def encode(termStr: String): String =
     if (IsabelleCore.isabelle.isInit) Symbol.encode(termStr) else termStr
     
 }
