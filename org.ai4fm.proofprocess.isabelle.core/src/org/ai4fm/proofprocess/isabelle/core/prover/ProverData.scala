@@ -21,7 +21,8 @@ object ProverData {
   case class Gap() extends ProofTree
   // in Proof, the goals represent proof state after the step
   case class Proof(why: Why, goals: List[ProofGoal]) extends ProofTree
-  case class Failure(failures: List[ProofTree], valid: Option[ProofTree]) extends ProofTree
+  case class Failure(failures: List[List[ProofGoal]],
+                     valid: Option[List[ProofGoal]]) extends ProofTree
   
   // ProofGoal is the start of a proof tree/subtree (e.g. initial goals)
   case class ProofGoal(state: ProofState, cont: ProofTree)
@@ -56,15 +57,17 @@ object ProverData {
       Elem(Markup("Tac", List(("val", tac.name))), tac.args map encodeTacArgs)
     
     def encodeWhy(w: Why) = Elem(Markup("Why", List(("why_info", w.why))), List(encodeTac(w.tac)))
-    
+
+    def encodePGs(goals: List[ProofGoal]) = elem("Goals", goals map encodePG)
+
     def encodePT(pt: ProofTree): Tree = pt match {
       case Gap() => elem("Gap")
       case Proof(why, goals) => elem("Proof", List(
           encodeWhy(why),
-          elem("Goals", goals map encodePG)))
+          encodePGs(goals)))
       case Failure(failures, valid) => elem("Failure", List(
-          elem("Failures", failures map encodePT),
-          elem("Valid", List(encodeOpt(valid map encodePT)))))
+          elem("Failures", failures map encodePGs),
+          elem("Valid", List(encodeOpt(valid map encodePGs)))))
     }
     
     def encodePG(g: ProofGoal) = elem("Goal", List(encodePS(g.state), encodePT(g.cont)))

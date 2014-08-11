@@ -11,6 +11,7 @@ import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.core.graph.EmfPProcessTree
 import org.ai4fm.proofprocess.core.graph.FoldableGraph.toFoldableGraph
+import org.ai4fm.proofprocess.core.store.ProofElemComposition
 import org.ai4fm.proofprocess.isabelle.{IsaTerm => PPIsaTerm}
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace
@@ -30,7 +31,40 @@ import isabelle.eclipse.core.IsabelleCore
   * @author Andrius Velykis
   */
 object ProverDataConverter {
-  
+
+  def proof(proof: PPProof): (String, List[ProofGoal]) = {
+    val attempts = proof.getAttempts.asScala.toList
+
+    val succFailAttempt = attempts groupBy { attempt =>
+      val outGoals = ProofElemComposition.composeOutGoals(attempt.getProof)
+      val success = outGoals.isEmpty
+      success
+    }
+
+    val successAttempts = succFailAttempt.getOrElse(true, Nil)
+    val failedAttempts = succFailAttempt.getOrElse(false, Nil)
+
+    // if there are more successful ones, take the last one
+    val succ = successAttempts.lastOption
+    // add the remaining successful ones to the failed list for now..
+    val failed = initOption(successAttempts) ::: failedAttempts
+
+    val succConv = succ map attemptTree
+    val failedConv = failed map attemptTree
+
+    val attemptsConv = Failure(failedConv, succConv)
+    
+    // not very good approach, as it sets multiple attempts for each top-level goal..
+    val proofGoals = proof.getGoals.asScala.toList
+    val proofStates = proofGoals map goalProofState
+    val proofTrees = proofStates map { state => ProofGoal(state, attemptsConv) }
+    
+    (proofLabel(proof), proofTrees)
+  }
+
+  private def initOption[A](list: List[A]): List[A] =
+    if (list.isEmpty) Nil else list.init
+
   private def why(entry: ProofEntry): Why = {
     val intentName = Option(entry.getInfo.getIntent).map(_.getName).getOrElse("")
     
@@ -61,7 +95,15 @@ object ProverDataConverter {
     }
   }
 
-  def attempt(proof: PPProof, attempt: Attempt): (String, List[ProofGoal]) = {
+  def attempt(proof: PPProof, attempt: Attempt): (String, List[ProofGoal]) =
+    (proofLabel(proof), attemptTree(attempt))
+
+  private def proofLabel(proof: PPProof): String = {
+    val label = Option(proof.getLabel) filterNot (_.isEmpty) 
+    label getOrElse "Untitled proof " + UUID.randomUUID.toString
+  }
+
+  private def attemptTree(attempt: Attempt): List[ProofGoal] = {
     val attemptRoot = attempt.getProof
     val ppGraph = EmfPProcessTree.graphConverter.toGraph(attemptRoot)
 
@@ -103,12 +145,7 @@ object ProverDataConverter {
     
     // after the down->up traversal, find the subgraph for the roots
     val rootGoals0 = ppGraph.roots.toList map subGraphs
-    val rootGoals = rootGoals0.flatten
-
-    val proofLabel = Option(proof.getLabel) filterNot (_.isEmpty) 
-    val label = proofLabel getOrElse "Untitled proof " + UUID.randomUUID.toString
-
-    (label, rootGoals)
+    rootGoals0.flatten
   }
 
   // need a custom diff, because EMF objects do not implement .equals()
