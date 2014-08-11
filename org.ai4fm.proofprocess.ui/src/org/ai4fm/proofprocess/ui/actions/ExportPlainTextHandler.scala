@@ -2,7 +2,10 @@ package org.ai4fm.proofprocess.ui.actions
 
 import scala.collection.JavaConverters.asScalaIteratorConverter
 
+import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.core.print.PrintPlainText
+import org.ai4fm.proofprocess.core.util.PProcessUtil.getAdapter
+import org.ai4fm.proofprocess.ui.TermSelectionSourceProvider
 import org.eclipse.core.commands.AbstractHandler
 import org.eclipse.core.commands.ExecutionEvent
 import org.eclipse.core.commands.ExecutionException
@@ -35,7 +38,8 @@ class ExportPlainTextHandler extends AbstractHandler {
   
   private def exportPlainText(event: ExecutionEvent)(prfElem: Any) {
 
-    val printed = PrintPlainText.print(prfElem)
+    val printer = new PrintPlainText(termPrinter)
+    val printed = printer.print(prfElem)
 
     val fileDialog = new FileDialog(HandlerUtil.getActiveShell(event), SWT.SAVE)
     fileDialog.setText("Select File to Export ProofProcess Data as Plain Text")
@@ -50,6 +54,12 @@ class ExportPlainTextHandler extends AbstractHandler {
       })
     }
     
+  }
+
+  private def termPrinter(t: Term): Option[String] = {
+    val termSourceProvider = getAdapter(t, classOf[TermSelectionSourceProvider], true)
+    // TODO review null
+    termSourceProvider map { _.getTermSource(null).rendered.getString }
   }
 
   private def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) {

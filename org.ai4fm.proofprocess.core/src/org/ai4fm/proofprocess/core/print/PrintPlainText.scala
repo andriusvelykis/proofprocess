@@ -19,7 +19,7 @@ import org.ai4fm.proofprocess.Term
  * 
  * @author Andrius Velykis
  */
-object PrintPlainText {
+class PrintPlainText(termPrinter: Term => Option[String] = _ => None) {
 
   def print(elem: Any): String = elem match {
 
@@ -151,7 +151,7 @@ object PrintPlainText {
 
   private def printTerm(term: Term): String = term match {
     case display: DisplayTerm => display.getDisplay
-    case _ => "Cannot print term: " + term
+    case _ => termPrinter(term) getOrElse "Cannot print term: " + term
   }
 
   private def classes(cls: Class[_]): Stream[Class[_]] = {
