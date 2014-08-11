@@ -1,23 +1,28 @@
 package org.ai4fm.proofprocess.isabelle.core.prover
 
-import isabelle.Symbol
-import isabelle.eclipse.core.IsabelleCore
+import java.util.UUID
+
+import scala.collection.JavaConverters.asScalaBufferConverter
+
 import org.ai4fm.proofprocess.Attempt
 import org.ai4fm.proofprocess.DisplayTerm
 import org.ai4fm.proofprocess.{Proof => PPProof}
-import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ProofEntry
-import org.ai4fm.proofprocess.ProofParallel
-import org.ai4fm.proofprocess.ProofSeq
 import org.ai4fm.proofprocess.Term
+import org.ai4fm.proofprocess.core.graph.EmfPProcessTree
+import org.ai4fm.proofprocess.core.graph.FoldableGraph.toFoldableGraph
+import org.ai4fm.proofprocess.isabelle.{IsaTerm => PPIsaTerm}
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace
-import org.ai4fm.proofprocess.isabelle.{IsaTerm => PPIsaTerm}
 import org.ai4fm.proofprocess.isabelle.JudgementTerm
 import org.ai4fm.proofprocess.isabelle.NameTerm
+import org.ai4fm.proofprocess.isabelle.NamedTermTree
 import org.ai4fm.proofprocess.isabelle.core.parse.{IsaCommands => isa}
 import org.ai4fm.proofprocess.isabelle.core.prover.ProverData._
-import scala.collection.JavaConversions._
+import org.eclipse.emf.ecore.util.EcoreUtil
+
+import isabelle.Symbol
+import isabelle.eclipse.core.IsabelleCore
 
 
 /** Converters from ProofProcess data to ProverData objects to send to Isabelle.
@@ -26,136 +31,157 @@ import scala.collection.JavaConversions._
   */
 object ProverDataConverter {
   
-  private type ITerm = isabelle.Term.Term
-  
-  def attempt(proof: PPProof, attempt: Attempt): ProofGoal = {
-    val rootElem = attempt.getProof
-    val (rootTree, inGoals) = proofTree(rootElem)
-    
-    val initialGoals = terms(proof.getGoals.toList)
-    
-    def goalState(cont: ProofTree)(goal: TermRef) = ProofGoal(nameGoalState(goal), cont)
-    
-    // check for goals not handled by the proof
-    val additionalGaps = initialGoals.diff(inGoals).map(goalState(Gap()))
-    
-    val root = if (additionalGaps.isEmpty) {
-      rootTree
-    } else {
-      // some of the initial goals may have been unhandled in the proof (e.g. unfinished proof on a single branch)
-      Proof(Why("Unhandled initial goals", Unknown("")), inGoals.map(goalState(rootTree)) ::: additionalGaps)
-    }
-    
-    // for the root goal, assume that proof has one initial goal
-    goalState(root)(initialGoals.head)
-  }
-  
-  // only works for nice single-goal trees at the moment
-  private def proofTree(elem: ProofElem): (ProofTree, List[TermRef]) = elem match {
-    
-    case e: ProofEntry => {
-      val (why, inGoals, outGoals) = entry(e)
-      val goalStates = outGoals.map(nameGoalState)
-      
-      val proofGoals = goalStates.map(state => ProofGoal(state, Gap()))
-      (Proof(why, proofGoals), inGoals)
-    }
-    case s: ProofSeq => s.getEntries.foldRight[(ProofTree, List[TermRef])]((Gap(), Nil)) {
-      case (entry, (result, resultInGoals)) => {
-        val (entryTree, inGoals) = proofTree(entry)
-        (replaceEnds(result, resultInGoals)(entryTree, None), inGoals)
-      }
-    }
-    // special handling for parallel
-    case p: ProofParallel => {
-      val branchInfos = p.getEntries.toList.map(proofTree)
-      // do not support parallels with no inGoals - actually use just the first of inGoals
-      // multiple inGoals not supported
-      val branches = branchInfos.filterNot(_._2.isEmpty).map{case (entry, inGoals) => (entry, inGoals.head)}
-      
-      // package the branches into a Proof
-      val inGoals = branches.map(_._2)
-      val branchPGs = branches.map{ case (entry, inGoal) => ProofGoal(nameGoalState(inGoal), entry)}
-      
-      (Proof(Why("prover-data-converter-parallel", Unknown("")), branchPGs), inGoals)
-    }
-  }
-
-  private def matchTerm(t1: TermRef, t2: TermRef): Boolean =
-    t1 == t2
-  
-  private def replaceEnds(replacement: ProofTree, replInGoals: List[TermRef])(tree: ProofTree, outGoal: Option[TermRef]): ProofTree =
-    (tree, replacement) match {
-      // for goals, go deeper and replace each cont Gap() with the replacement
-      case (Proof(why, proofGoals), _) => Proof(why, proofGoals.map(
-        goal => ProofGoal(goal.state, replaceEnds(replacement, replInGoals)(goal.cont, Some(goal.state.goal)))))
-      case (Gap(), Proof(Why("prover-data-converter-parallel", _), parGoals)) => {
-        val replGoal = replInGoals.indexWhere(g => outGoal.filter(matchTerm(_, g)).isDefined)
-        if (replGoal >= 0) {
-          // use the parallel goal
-          parGoals(replGoal).cont
-        } else {
-          // use the Gap
-          Gap()
-        }
-      }
-      case (Gap(), _) => replacement
-      // skip all non-proofs here
-      case _ => replacement
-    }
-  
   def entry(entry: ProofEntry): (Why, List[TermRef], List[TermRef]) = {
     val intentName = Option(entry.getInfo.getIntent).map(_.getName).getOrElse("")
     
     val proofStep = entry.getProofStep
-    val inGoals = terms(proofStep.getInGoals.toList)
-    val outGoals = terms(proofStep.getOutGoals.toList)
+    val inGoals = terms(proofStep.getInGoals.asScala.toList)
+    val outGoals = terms(proofStep.getOutGoals.asScala.toList)
     
     val commandOpt = proofStep.getTrace match {
       case isaTrace: IsabelleTrace => Some(command(isaTrace.getCommand))
       case _ => None
     }
     
-    val cmd = commandOpt getOrElse {Unknown(String.valueOf(proofStep.getTrace))}
+    val cmd = commandOpt getOrElse { Tac(String.valueOf(proofStep.getTrace)) }
     
     (Why(intentName, cmd), inGoals, outGoals)
   }
-  
-  private def nameGoalState(term: TermRef): ProofState = {
-    // for now just pack the term into the proof state without naming assumptions/fixes
-    // TODO name assumptions
-    ProofState(Nil, Nil, term)
+
+  private def goalProofState(term: Term): ProofState = term match {
+    case j: JudgementTerm => {
+      val assms = j.getAssms.asScala.toList
+      val namedAssms = assms.zipWithIndex map { case (assm, i) => ("assm" + i, encodeTerm(assm)) }
+      val goal = encodeTerm(j.getGoal)
+      // TODO support fixes!
+      ProofState(Nil, namedAssms, goal)
+    }
+
+    case _ => {
+      val encoded = encodeTerm(term)
+      // for now just pack the term into the proof state without naming assumptions/fixes
+      ProofState(Nil, Nil, encoded)
+    }
   }
+
+  def attempt(proof: PPProof, attempt: Attempt): (String, List[ProofGoal]) = {
+    val attemptRoot = attempt.getProof
+    val ppGraph = EmfPProcessTree.graphConverter.toGraph(attemptRoot)
+
+    val emptyMap = Map[ProofEntry, List[ProofGoal]]()
+    val subGraphs = (ppGraph.graph foldNodesRight emptyMap)({
+      case ((node, preds, succs), subGraphs) => {
+        val branches = succs.toList map subGraphs
+        
+        val (why, _, _) = entry(node)
+
+        // TODO relies on only the goal being set..
+        val handledGoals = succs.toList map { _.getProofStep.getInGoals.asScala.toList }
+        val outGoals = node.getProofStep.getOutGoals.asScala.toList
+        val unhandledGoals = diffTerms(outGoals, handledGoals.flatten)
+
+        val unhandledStates = unhandledGoals map goalProofState
+        val unhandledBranches = unhandledStates map { state => ProofGoal(state, Gap()) }
+
+        val allBranches = branches.flatten ::: unhandledBranches
+        val proof = Proof(why, allBranches)
+
+        val inGoals = node.getProofStep.getInGoals.asScala.toList
+        
+        // TODO the may be more inGoals than branches.. e.g. if "apply auto" handles
+        // multiple branches.
+        // Need to handle this somehow, e.g. by duplicating branches with multiple inGoals?
+        // Note that this only works if there is no outGoals, otherwise we cannot match inGoals
+        // with resulting outGoals
+
+        // note that this produces duplicate trees for mid-proof "auto" command.
+        // So for correct execution, such auto commands should be avoided or limited to
+        // a single goal, i.e. "apply (auto)[1]"
+        val inStates = inGoals map goalProofState
+        val stepGoals = inStates map { state => ProofGoal(state, proof) }
+        
+        subGraphs + (node -> stepGoals)
+      }
+    })(ppGraph.roots)
+    
+    // after the down->up traversal, find the subgraph for the roots
+    val rootGoals0 = ppGraph.roots.toList map subGraphs
+    val rootGoals = rootGoals0.flatten
+
+    val proofLabel = Option(proof.getLabel) filterNot (_.isEmpty) 
+    val label = proofLabel getOrElse "Untitled proof " + UUID.randomUUID.toString
+
+    (label, rootGoals)
+  }
+
+  // need a custom diff, because EMF objects do not implement .equals()
+  private def diffTerms(l1: List[Term], l2: List[Term]): List[Term] = l1 match {
+    case Nil => Nil
+    case t1 :: ts1 => {
+      val (found, ts2) = removeTerm(l2, t1)
+      if (found) {
+        diffTerms(ts1, ts2)
+      } else {
+        t1 :: diffTerms(ts1, l2)
+      }
+    }
+  }
+
+  private def removeTerm(terms: List[Term], target: Term): (Boolean, List[Term]) =
+    terms match {
+    case Nil => (false, Nil)
+    case t :: ts =>
+    if (eqTerms(t, target)) {
+      (true, ts)
+    } else {
+      val (found, rest) = removeTerm(ts, target)
+      (found, t :: rest)
+    }
+  }
+
+  private def eqTerms(t1: Term, t2: Term): Boolean =
+    EcoreUtil.equals(t1, t2)
   
-  def command(cmd: IsabelleCommand): Meth = {
+  def command(cmd: IsabelleCommand): Tac = {
     val res = cmd match {
       // TODO multiple branches (e.g. apply (auto, simp))
-      case isa.ProofMethCommand(methods) if methods.size == 1 => methods.head match {
-        case isa.Auto(simp, intro, dest) => Some(Tactic(Auto(thms(simp), thms(intro), thms(dest))))
-        case isa.Force(simp, intro, dest) => Some(Tactic(Force(thms(simp), thms(intro), thms(dest))))
-        case isa.Blast(intro, dest) => Some(Tactic(Blast(thms(dest), thms(intro))))
-        case isa.Simp(add, del, only) => Some(Tactic(Simp(thms(add), thms(del), only.map(thms _))))
-        case isa.Metis(facts) => Some(Tactic(Metis(thms(facts))))
-        case isa.SubgoalTac(facts) => Some(Tactic(Conj(terms(facts).head)))
-        case isa.Induct(rules, args, _, _) => Some(Tactic(Induction(thms(rules).headOption, terms(args).headOption)))
-        case isa.Rule(facts) => Some(Rule(thms(facts).head))
-        case isa.Intro(facts) => Some(Rule(thms(facts).head))
-        case isa.ERule(facts) => Some(Erule(None, thms(facts).head))
-        case isa.Elim(facts) => Some(Erule(None, thms(facts).head))
-        case isa.FRule(facts) => Some(Frule(None, thms(facts).head))
-        case isa.CaseTac(facts) => Some(Case(terms(facts).head))
-        case _ => None 
+      case isa.ProofMethCommand(tacs) if tacs.size == 1 => {
+        val tac = tacs.head
+        val tacName = tac.getName
+        val termArgs = tac.getTerms.asScala.toList map encodeTermStr
+
+        val branches = tac.getBranches.asScala.toList map argBranch
+
+        val allArgs = (termArgs :: branches) filterNot (_.isEmpty)
+
+        Some(Tac(tacName, allArgs))
       }
       // TODO support others (e.g. "unfolding" etc)
       case _ => None
     }
 
-    res.getOrElse(Unknown(cmd.getSource))
+    res getOrElse (Tac(cmd.getSource))
   }
-  
-  def thms(terms: List[Term]): List[ThmName] =
-    // TODO support insts
-    terms.map({ case t: NameTerm => Thm(t.getName) })
+
+  def argBranch(branch: NamedTermTree): List[String] = {
+    val branchName = branch.getName
+    val branchArgs = branch.getTerms.asScala.toList map encodeTermStr
+    
+    // deeper branches not supported?
+
+    // just join the name with args
+    branchName :: branchArgs
+  }
+
+  def encodeTermStr(t: Term): String = t match {
+    // use StrTerm always for now
+    case t: PPIsaTerm => encode(t.getDisplay) //IsaTerm(t.getTerm)
+    case s: DisplayTerm => encode(s.getDisplay)
+    case nt: NameTerm => encode(nt.getName)
+    case _ => "<unsupported term " + t.getClass.getName + ">"
+  }
+
+  def encodeTerm(t: Term): TermRef = StrTerm(encodeTermStr(t))
     
   def terms(ts: List[Term]): List[TermRef] =
     // TODO something about markup terms?

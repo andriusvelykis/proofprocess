@@ -41,7 +41,7 @@ class ExportPProcessToIsabelleHandler extends AbstractHandler {
     val proof = attempt.eContainer().asInstanceOf[Proof]
     
     val proofTree = ProverDataConverter.attempt(proof, attempt)
-    val encoded = ProverData.Encode.encodePG(proofTree)
+    val encoded = ProverData.Encode.encodeTheory(List(proofTree).toMap)
     val yxml = YXML.string_of_tree(encoded)
 
     val fileDialog = new FileDialog(HandlerUtil.getActiveShell(event), SWT.SAVE)
