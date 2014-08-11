@@ -99,7 +99,7 @@ object ProverDataConverter {
     (proofLabel(proof), attemptTree(attempt))
 
   private def proofLabel(proof: PPProof): String = {
-    val label = Option(proof.getLabel) filterNot (_.isEmpty) 
+    val label = Option(proof.getLabel) filterNot (_.isEmpty) map encode
     label getOrElse "Untitled proof " + UUID.randomUUID.toString
   }
 
