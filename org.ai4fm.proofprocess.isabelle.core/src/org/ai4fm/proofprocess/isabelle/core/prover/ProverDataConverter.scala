@@ -8,6 +8,7 @@ import org.ai4fm.proofprocess.Attempt
 import org.ai4fm.proofprocess.DisplayTerm
 import org.ai4fm.proofprocess.{Proof => PPProof}
 import org.ai4fm.proofprocess.ProofEntry
+import org.ai4fm.proofprocess.ProofInfo
 import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.core.graph.EmfPProcessTree
 import org.ai4fm.proofprocess.core.graph.FoldableGraph.toFoldableGraph
@@ -65,8 +66,17 @@ object ProverDataConverter {
   private def initOption[A](list: List[A]): List[A] =
     if (list.isEmpty) Nil else list.init
 
-  private def why(entry: ProofEntry): Why = {
-    val intentName = Option(entry.getInfo.getIntent).map(_.getName).getOrElse("")
+  private def why(entry: ProofEntry, infos: List[ProofInfo]): Why = {
+
+    val validInfos = infos filterNot (info => Option(info.getIntent).isEmpty)
+
+    // try taking the second info, if available
+    // the first info is normally just a "Tactic application".
+    // If the second info is available, that one is usually the user's why
+    val info2 = if (!validInfos.isEmpty) validInfos.tail.headOption else None
+    val info = info2 orElse infos.headOption
+    
+    val intentName = info flatMap { i => Option(i.getIntent) } map { _.getName } getOrElse ""
     
     val proofStep = entry.getProofStep
     val commandOpt = proofStep.getTrace match {
@@ -107,12 +117,14 @@ object ProverDataConverter {
     val attemptRoot = attempt.getProof
     val ppGraph = EmfPProcessTree.graphConverter.toGraph(attemptRoot)
 
+    val infos = ppGraph.meta.withDefaultValue(Nil)
+
     val emptyMap = Map[ProofEntry, List[ProofGoal]]()
     val subGraphs = (ppGraph.graph foldNodesRight emptyMap)({
       case ((node, preds, succs), subGraphs) => {
         val branches = succs.toList map subGraphs
         
-        val w = why(node)
+        val w = why(node, infos(node))
 
         // TODO relies on only the goal being set..
         val handledGoals = succs.toList map { _.getProofStep.getInGoals.asScala.toList }
