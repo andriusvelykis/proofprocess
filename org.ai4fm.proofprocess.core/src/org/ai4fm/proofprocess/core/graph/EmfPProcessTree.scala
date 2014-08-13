@@ -30,9 +30,9 @@ object EmfPProcessTree
     else Some(elem.getInfo)
 
   private def isEmptyInfo(info: ProofInfo): Boolean =
-    Option(info.getIntent).isEmpty ||
-      isEmpty(info.getNarrative) ||
-      info.getInFeatures.isEmpty ||
+    Option(info.getIntent).isEmpty &&
+      isEmpty(info.getNarrative) &&
+      info.getInFeatures.isEmpty &&
       info.getOutFeatures.isEmpty
 
   private def isEmpty(str: String): Boolean = Option(str).isEmpty || str.isEmpty
