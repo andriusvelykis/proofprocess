@@ -22,7 +22,7 @@ object ProverData {
   // in Proof, the goals represent proof state after the step
   case class Proof(why: Why, goals: List[ProofGoal]) extends ProofTree
   case class Failure(failures: List[List[ProofGoal]],
-                     valid: Option[List[ProofGoal]]) extends ProofTree
+                     valid: List[List[ProofGoal]]) extends ProofTree
   
   // ProofGoal is the start of a proof tree/subtree (e.g. initial goals)
   case class ProofGoal(state: ProofState, cont: ProofTree)
@@ -67,7 +67,7 @@ object ProverData {
           encodePGs(goals)))
       case Failure(failures, valid) => elem("Failure", List(
           elem("Failures", failures map encodePGs),
-          elem("Valid", List(encodeOpt(valid map encodePGs)))))
+          elem("Valid", valid map encodePGs)))
     }
     
     def encodePG(g: ProofGoal) = elem("Goal", List(encodePS(g.state), encodePT(g.cont)))

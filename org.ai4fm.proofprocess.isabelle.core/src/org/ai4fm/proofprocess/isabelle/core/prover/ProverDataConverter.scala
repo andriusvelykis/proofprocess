@@ -45,13 +45,8 @@ object ProverDataConverter {
     val successAttempts = succFailAttempt.getOrElse(true, Nil)
     val failedAttempts = succFailAttempt.getOrElse(false, Nil)
 
-    // if there are more successful ones, take the last one
-    val succ = successAttempts.lastOption
-    // add the remaining successful ones to the failed list for now..
-    val failed = initOption(successAttempts) ::: failedAttempts
-
-    val succConv = succ map attemptTree
-    val failedConv = failed map attemptTree
+    val succConv = successAttempts map attemptTree
+    val failedConv = failedAttempts map attemptTree
 
     val attemptsConv = Failure(failedConv, succConv)
     
