@@ -1,5 +1,10 @@
 package org.ai4fm.proofprocess.isabelle.ui.actions
 
+import java.io.File
+
+import scala.xml.PrettyPrinter
+import scala.xml.XML
+
 import org.ai4fm.proofprocess.Attempt
 import org.ai4fm.proofprocess.Proof
 import org.ai4fm.proofprocess.isabelle.core.prover.ProverData
@@ -57,7 +62,6 @@ class ExportPProcessToIsabelleHandler extends AbstractHandler {
   private def exportToFile(event: ExecutionEvent, thy: List[(String, List[ProofGoal])]) {
     
     val encoded = ProverData.Encode.encodeTheory(thy.toMap)
-    println(encoded)
     val yxml = YXML.string_of_tree(encoded)
 
     val fileDialog = new FileDialog(HandlerUtil.getActiveShell(event), SWT.SAVE)
@@ -65,11 +69,23 @@ class ExportPProcessToIsabelleHandler extends AbstractHandler {
     fileDialog.setOverwrite(true)
     fileDialog.setFilterExtensions(Array("*.yxml", "*.*"))
     fileDialog.setFileName("attempt.yxml")
-    val savePath = Option(fileDialog.open())
+    val savePath = Option(fileDialog.open()) map { path => new java.io.File(path) }
 
-    savePath foreach { path =>
-      printToFile(new java.io.File(path))(p => {
+    savePath foreach { f =>
+      printToFile(f)(p => {
         p.println(yxml)
+      })
+    }
+
+    val saveXmlPath = savePath map { f => new File(f.getParentFile, f.getName + ".xml") }
+
+    saveXmlPath foreach { f =>
+      printToFile(f)(w => {
+        val encodedXML = XML.loadString(encoded.toString)
+        val xmlPretty = new PrettyPrinter(100, 2)
+        val xmlOut = new StringBuilder
+        xmlPretty.format(encodedXML, xmlOut)
+        w.println(xmlOut)
       })
     }
     

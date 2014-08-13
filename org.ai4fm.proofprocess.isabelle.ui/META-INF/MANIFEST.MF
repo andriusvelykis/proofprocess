@@ -25,4 +25,5 @@ Import-Package: org.eclipse.help,
  scala.collection.mutable;version="2.10.0",
  scala.concurrent;version="2.10.0",
  scala.concurrent.duration;version="2.10.0",
- scala.runtime;version="2.10.0"
+ scala.runtime;version="2.10.0",
+ scala.xml;version="2.10.0"
