@@ -61,7 +61,7 @@ class ExportPProcessToIsabelleHandler extends AbstractHandler {
     val yxml = YXML.string_of_tree(encoded)
 
     val fileDialog = new FileDialog(HandlerUtil.getActiveShell(event), SWT.SAVE)
-    fileDialog.setText("Select File to Export ProofProcess Data as Isabelle YXML")
+    fileDialog.setText("Select File to Export ProofProcess Data as Tinker YXML")
     fileDialog.setOverwrite(true)
     fileDialog.setFilterExtensions(Array("*.yxml", "*.*"))
     fileDialog.setFileName("attempt.yxml")

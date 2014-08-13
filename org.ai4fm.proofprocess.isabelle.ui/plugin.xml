@@ -5,7 +5,7 @@
          point="org.eclipse.ui.commands">
       <command
             defaultHandler="org.ai4fm.proofprocess.isabelle.ui.actions.ExportPProcessToIsabelleHandler"
-            description="Export ProofProcess Data to Isabelle"
+            description="Export ProofProcess Data to Tinker"
             id="org.ai4fm.proofprocess.isabelle.ui.exportPProcessToIsabelle"
             name="Export ProofProcess Data">
       </command>
