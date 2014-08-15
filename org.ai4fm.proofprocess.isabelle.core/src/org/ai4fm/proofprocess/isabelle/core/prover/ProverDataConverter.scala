@@ -13,6 +13,7 @@ import org.ai4fm.proofprocess.Term
 import org.ai4fm.proofprocess.core.graph.EmfPProcessTree
 import org.ai4fm.proofprocess.core.graph.FoldableGraph.toFoldableGraph
 import org.ai4fm.proofprocess.core.store.ProofElemComposition
+import org.ai4fm.proofprocess.isabelle.InstTerm
 import org.ai4fm.proofprocess.isabelle.{IsaTerm => PPIsaTerm}
 import org.ai4fm.proofprocess.isabelle.IsabelleCommand
 import org.ai4fm.proofprocess.isabelle.IsabelleTrace
@@ -189,11 +190,11 @@ object ProverDataConverter {
       case isa.ProofMethCommand(tacs) if tacs.size == 1 => {
         val tac = tacs.head
         val tacName = tac.getName
-        val termArgs = tac.getTerms.asScala.toList map encodeTermStr
+        val termArgs = tac.getTerms.asScala.toList map encodeTermArgs
 
         val branches = tac.getBranches.asScala.toList map argBranch
 
-        val allArgs = (termArgs :: branches) filterNot (_.isEmpty)
+        val allArgs = (termArgs.flatten ::: branches) filterNot (_.isEmpty)
 
         Some(Tac(tacName, allArgs))
       }
@@ -212,6 +213,19 @@ object ProverDataConverter {
 
     // just join the name with args
     branchName :: branchArgs
+  }
+
+  private def encodeTermArgs(t: Term): List[List[String]] = t match {
+    case instT: InstTerm => {
+      val insts = instT.getInsts.asScala.toList
+      // TODO also use index of the inst?
+      val encodedInsts = insts map { i => List(i.getName, encodeTermStr(i.getTerm)) }
+
+      val targetT = instT.getTerm
+      encodeTermArgs(targetT) ::: encodedInsts
+    }
+
+    case _ => List(List(encodeTermStr(t)))
   }
 
   private def encodeTermStr(t: Term): String = t match {
