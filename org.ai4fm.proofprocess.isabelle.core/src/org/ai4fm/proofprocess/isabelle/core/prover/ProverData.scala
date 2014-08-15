@@ -51,7 +51,9 @@ object ProverData {
     
     def encodeOpt(opt: Option[Tree]) = encodeOpts(opt.map(List(_)))
 
-    def encodeTacArgs(args: List[String]) = elem ("Arg", args map XML.Text)
+    def encodeArg(arg: String) = elem ("Arg", List(XML.Text(arg)))
+
+    def encodeTacArgs(args: List[String]) = elem ("Args", args map encodeArg)
     
     def encodeTac(tac: Tac) =
       Elem(Markup("Tac", List(("val", tac.name))), tac.args map encodeTacArgs)
