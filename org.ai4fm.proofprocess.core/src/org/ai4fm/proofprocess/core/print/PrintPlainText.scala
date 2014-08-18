@@ -4,9 +4,12 @@ import scala.collection.JavaConverters.asScalaBufferConverter
 
 import org.ai4fm.proofprocess.Attempt
 import org.ai4fm.proofprocess.DisplayTerm
+import org.ai4fm.proofprocess.Intent
 import org.ai4fm.proofprocess.Proof
+import org.ai4fm.proofprocess.ProofElem
 import org.ai4fm.proofprocess.ProofEntry
 import org.ai4fm.proofprocess.ProofFeature
+import org.ai4fm.proofprocess.ProofFeatureDef
 import org.ai4fm.proofprocess.ProofId
 import org.ai4fm.proofprocess.ProofInfo
 import org.ai4fm.proofprocess.ProofParallel
@@ -90,7 +93,10 @@ class PrintPlainText(termPrinter: Term => Option[String] = _ => None) {
       val label = "# Proofs of " + prf.getLabel + " (" + attemptsStr + ")"
 
       val prfStr = label :: (prf.getAttempts.asScala.toList map print)
-      prfStr.mkString("\n\n")
+
+      val infoStr = prfStr ::: List("", "", printUsedIntentsFeatures(prf.getAttempts.asScala))
+      
+      infoStr.mkString("\n\n")
     }
 
     case _ => "Printing not supported: " + elem.getClass
@@ -157,6 +163,70 @@ class PrintPlainText(termPrinter: Term => Option[String] = _ => None) {
   private def classes(cls: Class[_]): Stream[Class[_]] = {
     val superCls = Option(cls.getSuperclass) map classes
     cls #:: (superCls getOrElse Stream.empty)
+  }
+
+  private def printUsedIntentsFeatures(attempts: Iterable[Attempt]): String = {
+
+    val attemptInfos = attempts map { a => collectUsedIntentsFeatures(a.getProof) }
+
+    val (intents, features) = flattenPairs(attemptInfos)
+
+    List(
+      "---",
+      "## Used intents",
+      printNameDescList(intents){ _.getName }{ _.getDescription },
+      "## Used features",
+      printNameDescList(features){ _.getName }{ _.getDescription }
+    ).mkString("\n\n")
+  }
+
+  private def flattenPairs[A, B](elems: Iterable[(Set[A], Set[B])]): (Set[A], Set[B]) =
+    (elems foldLeft (Set[A](), Set[B]())) {
+      case ((acc1, acc2), (s1, s2)) => (acc1 ++ s1, acc2 ++ s2)
+    }
+
+  private def collectUsedIntentsFeatures(elem: ProofElem): (Set[Intent], Set[ProofFeatureDef]) = {
+    val intents = collectInfos(elem) { info => Option(info.getIntent).toSet }
+    val features = collectInfos(elem) { info =>
+      featureDefs(info.getInFeatures) ++ featureDefs(info.getOutFeatures)
+    }
+
+    (intents, features)
+  }
+
+  private def collectInfos[A](elem: ProofElem)(collect: ProofInfo => Set[A]): Set[A] = {
+    val elemInfos = collect(elem.getInfo)
+
+    val children = elem match {
+      case seq: ProofSeq => seq.getEntries.asScala
+      case par: ProofParallel => par.getEntries.asScala
+      case _ => Nil
+    }
+
+    val withChildInfos = (children foldLeft elemInfos) {
+      (infos, child) => infos ++ collectInfos(child)(collect)
+    }
+    withChildInfos
+  }
+
+  private def featureDefs(features: java.util.List[ProofFeature]): Set[ProofFeatureDef] = {
+    val featDefs = features.asScala map (_.getName)
+    featDefs.toSet
+  }
+
+  private def printNameDescList[A](elems: Iterable[A])
+                                    (name: A => String)(desc: A => String): String = {
+    val sorted = elems.toList.sortBy(name)
+    val printed = sorted map { e =>
+      val str = List(
+        Some("#### " + name(e)),
+        printNarrative(desc(e))
+      ).flatten.mkString("\n\n")
+
+      bullet(str)
+    }
+
+    printed.mkString("\n\n")
   }
   
 }
