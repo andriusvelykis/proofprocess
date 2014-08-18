@@ -178,7 +178,7 @@ class FeatureInfoDialog(parent: Shell,
     val featureDescField = toolkit.createText(container, "", SWT.MULTI | SWT.WRAP | SWT.V_SCROLL)
     featureDescField.setLayoutData(fillHorizontal.hint(100, 30).create)
     featureDescField.setEditable(false)
-    featureDescField.setEnabled(false)
+//    featureDescField.setEnabled(false)
 
     def updateFeatureLink() = Option(feature.getName) match {
 
