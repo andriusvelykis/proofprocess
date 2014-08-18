@@ -65,7 +65,7 @@ class NameDescDialog(parentShell: Shell,
 
     val descLabel = toolkit.createLabel(form.getBody, "Description: ")
     descLabel.setLayoutData(GridDataFactory.swtDefaults.align(SWT.BEGINNING, SWT.BEGINNING).create)
-    val descField = toolkit.createText(form.getBody, "", SWT.SINGLE)
+    val descField = toolkit.createText(form.getBody, "", SWT.MULTI | SWT.WRAP | SWT.V_SCROLL)
     descField.setLayoutData(fillBoth.hint(100, 50).create)
 
     databindingContext.bindValue(WidgetProperties.text(SWT.Modify).observe(descField), desc)
