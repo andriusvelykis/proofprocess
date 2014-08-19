@@ -84,6 +84,11 @@
             id="org.ai4fm.proofprocess.ui.exportPlainText"
             name="Export to Plain Text">
       </command>
+      <command
+            description="Move Selected Proof Branch Up"
+            id="org.ai4fm.proofprocess.ui.proofElemUp"
+            name="Move Up">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -142,6 +147,10 @@
          </command>
          <command
                commandId="org.ai4fm.proofprocess.ui.ungroupSteps"
+               style="push">
+         </command>
+         <command
+               commandId="org.ai4fm.proofprocess.ui.proofElemUp"
                style="push">
          </command>
          <separator
@@ -262,6 +271,27 @@
                               value="org.ai4fm.proofprocess.ProofParallel">
                         </instanceof>
                      </or>
+                  </iterate>
+               </and>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.ai4fm.proofprocess.ui.actions.ProofElemUpHandler"
+            commandId="org.ai4fm.proofprocess.ui.proofElemUp">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <and>
+                  <count
+                        value="1">
+                  </count>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="org.ai4fm.proofprocess.ProofElem">
+                     </instanceof>
                   </iterate>
                </and>
             </with>
