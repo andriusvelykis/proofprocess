@@ -254,9 +254,14 @@
                   <iterate
                         ifEmpty="false"
                         operator="and">
-                     <instanceof
-                           value="org.ai4fm.proofprocess.ProofSeq">
-                     </instanceof>
+                     <or>
+                        <instanceof
+                              value="org.ai4fm.proofprocess.ProofSeq">
+                        </instanceof>
+                        <instanceof
+                              value="org.ai4fm.proofprocess.ProofParallel">
+                        </instanceof>
+                     </or>
                   </iterate>
                </and>
             </with>

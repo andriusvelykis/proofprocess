@@ -33,6 +33,7 @@ class UngroupStepsHandler extends AbstractHandler {
 
     selection match {
       case Some(e: ProofSeq) => ungroup(event, e, e.getEntries.asScala)
+      case Some(e: ProofParallel) => ungroup(event, e, e.getEntries.asScala)
       case _ => // ignore
     }
 
@@ -52,9 +53,9 @@ class UngroupStepsHandler extends AbstractHandler {
     val transaction = PProcessUtil.cdoTransaction(elem)
     val savePoint = transaction map (_.setSavepoint())
 
-    val ungroupSuccess =
-      Option(elem.eContainer) match {
-
+    val ungroupSuccess = elem match {
+      case _: ProofSeq => Option(elem.eContainer) match {
+  
         case Some(seq: ProofSeq) => ungroupToSeq(seq, elem, children)
 
         case Some(parallel: ProofParallel) =>
@@ -66,8 +67,19 @@ class UngroupStepsHandler extends AbstractHandler {
           else { attempt.setProof(children.head); true }
 
         case bad => error("Invalid parent of the group: " + bad)
+      }
+
+      case _: ProofParallel => Option(elem.eContainer) match {
+  
+        case Some(parallel: ProofParallel) =>
+          replaceInList(parallel.getEntries, elem, children.asJava)
+
+        case bad => error("Can only ungroup a nested parallel split.")
 
       }
+
+      case _ => error("Invalid group: " + elem)
+    }
 
     def userConfirm =
       MessageDialog.openConfirm(HandlerUtil.getActiveShell(event), dialogTitle,

@@ -47,11 +47,15 @@ class GroupStepsHandler extends AbstractHandler {
 
         case Some(parentParallel: ProofParallel) =>
           if (topElems.size > 1) {
-            error("Cannot group parallel proofs.")
+            val last = topElems.last
+            val insertIndex = parentParallel.getEntries.indexOf(last) + 1 - topElems.size
+            groupElements(event, topElems, toParallel,
+              g => parentParallel.getEntries.add(insertIndex, g))
           } else {
             val head = topElems.head
             val insertIndex = parentParallel.getEntries.indexOf(head)
-            groupElements(event, topElems, g => parentParallel.getEntries.add(insertIndex, g))
+            groupElements(event, topElems, toSeq,
+              g => parentParallel.getEntries.add(insertIndex, g))
           }
 
         case Some(parentSeq: ProofSeq) => {
@@ -59,12 +63,13 @@ class GroupStepsHandler extends AbstractHandler {
           if (groupedIndex < 0) {
             error("Steps to be grouped must be uniformly selected.")
           } else {
-            groupElements(event, topElems, g => parentSeq.getEntries.add(groupedIndex, g))
+            groupElements(event, topElems, toSeq,
+              g => parentSeq.getEntries.add(groupedIndex, g))
           }
         }
 
         case Some(parentAttempt: Attempt) =>
-          groupElements(event, topElems, parentAttempt.setProof)
+          groupElements(event, topElems, toSeq, parentAttempt.setProof)
 
         case Some(unknown) => 
           error("Steps must belong to some proof. Currently they belong to: " + unknown)
@@ -116,18 +121,17 @@ class GroupStepsHandler extends AbstractHandler {
 
   private def groupElements(event: ExecutionEvent,
                             elems: Seq[ProofElem],
+                            toGroup: Seq[ProofElem] => ProofElem,
                             addGroup: ProofElem => Unit) {
     val transaction = PProcessUtil.cdoTransaction(elems.head)
     val savePoint = transaction map (_.setSavepoint())
 
-    val seq = factory.createProofSeq
-    seq.setInfo(factory.createProofInfo)
-    seq.getEntries.addAll(elems.asJava)
+    val group = toGroup(elems)
 
     // add to the correct place
-    addGroup(seq)
+    addGroup(group)
 
-    val dialog = new MarkFeaturesDialog(HandlerUtil.getActiveShell(event), seq)
+    val dialog = new MarkFeaturesDialog(HandlerUtil.getActiveShell(event), group)
 
     if (dialog.open() == Window.OK) {
       commit(transaction)
@@ -135,6 +139,20 @@ class GroupStepsHandler extends AbstractHandler {
       savePoint foreach (_.rollback())
     }
     
+  }
+
+  private def toSeq(elems: Seq[ProofElem]): ProofSeq = {
+    val seq = factory.createProofSeq
+    seq.setInfo(factory.createProofInfo)
+    seq.getEntries.addAll(elems.asJava)
+    seq
+  }
+
+  private def toParallel(elems: Seq[ProofElem]): ProofParallel = {
+    val par = factory.createProofParallel
+    par.setInfo(factory.createProofInfo)
+    par.getEntries.addAll(elems.asJava)
+    par
   }
 
   private def commit(transaction: Option[CDOTransaction]) =
