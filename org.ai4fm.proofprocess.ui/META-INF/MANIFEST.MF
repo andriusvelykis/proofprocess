@@ -17,9 +17,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.databinding,
  org.eclipse.jface.databinding,
  org.eclipse.help,
- org.eclipse.gef4.zest.core;bundle-version="0.1.0",
- org.eclipse.gef4.zest.layouts;bundle-version="0.1.0",
- org.eclipse.gef4.zest.jface;bundle-version="0.1.0",
+ org.eclipse.gef4.zest.core;bundle-version="[0.1.0,0.1.0.201304130203]",
+ org.eclipse.gef4.zest.layouts;bundle-version="[0.1.0,0.1.0.201304130203]",
+ org.eclipse.gef4.zest.jface;bundle-version="[0.1.0,0.1.0.201304130203]",
  org.eclipse.draw2d;bundle-version="3.7.0",
  org.eclipse.ui.forms;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
